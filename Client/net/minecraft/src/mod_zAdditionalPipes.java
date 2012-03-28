@@ -27,7 +27,7 @@ public class mod_zAdditionalPipes extends BaseModMp {
     /*
     * ChuckLoader Handler
     */
-    static class ChunkLoadingHandler implements IChunkLoadHandler {
+    private class ChunkLoadingHandler implements IChunkLoadHandler {
 
         @Override
         public void addActiveChunks(World world, Set<ChunkCoordIntPair> chunkList) {
@@ -39,10 +39,10 @@ public class mod_zAdditionalPipes extends BaseModMp {
 
                     if (!chunkList.contains(chunkCoords)) {
                         chunkList.add(chunkCoords);
-                        System.out.println("Adding chunk: " + chunkCoords);
+                        log("Adding chunk: " + chunkCoords, LOG_INFO);
                     }
                     else {
-                        System.out.println(chunkCoords + " already there.");
+                        log(chunkCoords + " already there.", LOG_INFO);
                     }
                 }
             }
@@ -57,13 +57,13 @@ public class mod_zAdditionalPipes extends BaseModMp {
                 for (ChunkCoordIntPair chunkCoords : loadArea) {
                     
                     if (chunk.worldObj.getChunkFromChunkCoords(chunkCoords.chunkXPos, chunkCoords.chunkZPos).equals(chunk)) {
-                        System.out.println("Keeping chunk: " + chunk.getChunkCoordIntPair());
+                        log("Keeping chunk: " + chunk.getChunkCoordIntPair(), LOG_INFO);
                         return false;
                     }
                 }
             }
             
-            System.out.println("Unloading chunk: " + chunk.getChunkCoordIntPair());
+            log("Unloading chunk: " + chunk.getChunkCoordIntPair(), LOG_INFO);
             return true;
         }
     }
@@ -170,7 +170,6 @@ public class mod_zAdditionalPipes extends BaseModMp {
 
     public static int CurrentGUICount 	= 0;
 
-
     // Config Setup
     private static Configuration config;
     public static boolean isInGame 			= false;
@@ -178,6 +177,12 @@ public class mod_zAdditionalPipes extends BaseModMp {
     public static boolean wrenchOpensGui 	= false;
     public static boolean allowWPRemove 	= false; //Remove waterproofing/redstone
     public static double PowerLossCfg 		= .995;
+    
+    //Log
+    public static final int LOG_ERROR = 1;
+    public static final int LOG_WARNING = 2;
+    public static final int LOG_INFO = 3;
+    public int logLevel;
 
     public static Minecraft mc = ModLoader.getMinecraftInstance();
 
@@ -241,6 +246,15 @@ public class mod_zAdditionalPipes extends BaseModMp {
         MinecraftForge.registerChunkLoadHandler(new ChunkLoadingHandler());
         
     }
+    
+    public void log(String msg, int debugLevel) {
+        
+        if (debugLevel > logLevel) {
+            return;
+        }
+        
+        System.out.println("Additional Pipes: " + msg);
+    }
 
     public static World getWorld(int dimension) {
         if(mc.theWorld.worldProvider.isHellWorld && dimension == -1) {
@@ -303,6 +317,7 @@ public class mod_zAdditionalPipes extends BaseModMp {
         wrenchOpensGui 	= Boolean.parseBoolean(config.getOrCreateBooleanProperty("wrenchOpensGui", Configuration.CATEGORY_GENERAL, false).value);
         allowWPRemove 	= Boolean.parseBoolean(config.getOrCreateBooleanProperty("EnableWaterProofRemoval", Configuration.CATEGORY_GENERAL, false).value);
         PowerLossCfg    = Double.parseDouble(config.getOrCreateProperty("powerloss", Configuration.CATEGORY_GENERAL, Double.toString(PowerLossCfg)).value);
+        logLevel = Integer.parseInt(config.getOrCreateProperty("logLevel", Configuration.CATEGORY_GENERAL, "1").value);
 
         System.out.println("Teleport Pipes Power Loss Configuration: " + PowerLossCfg);
 
