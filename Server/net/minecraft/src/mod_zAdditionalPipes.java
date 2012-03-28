@@ -50,11 +50,16 @@ public class mod_zAdditionalPipes extends BaseModMp {
 
             for (TileChunkLoader tile : TileChunkLoader.chunkLoaderList) {
 
-                if (chunk.worldObj.getChunkFromBlockCoords(tile.xCoord, tile.zCoord).equals(chunk)) {
-                    System.out.println("Keeping chunk: " + chunk.getChunkCoordIntPair());
-                    return false;
+                List<ChunkCoordIntPair> loadArea = tile.getLoadArea();
+                for (ChunkCoordIntPair chunkCoords : loadArea) {
+                    
+                    if (chunk.worldObj.getChunkFromChunkCoords(chunkCoords.chunkXPos, chunkCoords.chunkZPos).equals(chunk)) {
+                        System.out.println("Keeping chunk: " + chunk.getChunkCoordIntPair());
+                        return false;
+                    }
                 }
             }
+            
             System.out.println("Unloading chunk: " + chunk.getChunkCoordIntPair());
             return true;
         }
