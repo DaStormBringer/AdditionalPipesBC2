@@ -1,16 +1,11 @@
 package net.minecraft.src;
 
 import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-
+import java.util.Set;
 import net.minecraft.client.Minecraft;
-
 import net.minecraft.src.buildcraft.api.APIProxy;
 import net.minecraft.src.buildcraft.api.LaserKind;
 import net.minecraft.src.buildcraft.core.Box;
@@ -18,37 +13,48 @@ import net.minecraft.src.buildcraft.core.CoreProxy;
 import net.minecraft.src.buildcraft.transport.BlockGenericPipe;
 import net.minecraft.src.buildcraft.transport.Pipe;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
-import net.minecraft.src.buildcraft.zeldo.MutiPlayerProxy;
 import net.minecraft.src.buildcraft.zeldo.ChunkLoader.BlockChunkLoader;
-import net.minecraft.src.buildcraft.zeldo.gui.GuiAdvancedWoodPipe;
-import net.minecraft.src.buildcraft.zeldo.gui.GuiDistributionPipe;
-import net.minecraft.src.buildcraft.zeldo.gui.GuiItemTeleportPipe;
-import net.minecraft.src.buildcraft.zeldo.gui.GuiLiquidTeleportPipe;
-import net.minecraft.src.buildcraft.zeldo.gui.GuiPowerTeleportPipe;
+import net.minecraft.src.buildcraft.zeldo.ChunkLoader.TileChunkLoader;
+import net.minecraft.src.buildcraft.zeldo.MutiPlayerProxy;
+import net.minecraft.src.buildcraft.zeldo.gui.*;
 import net.minecraft.src.buildcraft.zeldo.logic.PipeLogicAdvancedWood;
-import net.minecraft.src.buildcraft.zeldo.pipes.PipeItemTeleport;
-import net.minecraft.src.buildcraft.zeldo.pipes.PipeItemsAdvancedInsertion;
-import net.minecraft.src.buildcraft.zeldo.pipes.PipeItemsAdvancedWood;
-import net.minecraft.src.buildcraft.zeldo.pipes.PipeItemsDistributor;
-import net.minecraft.src.buildcraft.zeldo.pipes.PipeItemsRedstone;
-import net.minecraft.src.buildcraft.zeldo.pipes.PipeLiquidsRedstone;
-import net.minecraft.src.buildcraft.zeldo.pipes.PipeLiquidsTeleport;
-import net.minecraft.src.buildcraft.zeldo.pipes.PipePowerTeleport;
-import net.minecraft.src.forge.Configuration;
-import net.minecraft.src.forge.MinecraftForgeClient;
-import net.minecraft.src.forge.Property;
-import net.minecraft.src.forge.IChunkLoadHandler;
+import net.minecraft.src.buildcraft.zeldo.pipes.*;
+import net.minecraft.src.forge.*;
 
 public class mod_zAdditionalPipes extends BaseModMp {
+    
     public static mod_zAdditionalPipes instance;
-    @SuppressWarnings("serial")
-    public static class chunkXZ implements Serializable {
-        public int x;
-        public int z;
+    
+    /*
+* ChuckLoader Handler
+*/
+    static class ChunkLoadingHandler implements IChunkLoadHandler {
 
-        public chunkXZ(int ax, int az) {
-            x = ax;
-            z = az;
+        @Override
+        public void addActiveChunks(World world, Set<ChunkCoordIntPair> chunkList) {
+
+            for (TileChunkLoader tile : TileChunkLoader.chunkLoaderList) {
+                
+                List<ChunkCoordIntPair> loadArea = tile.getLoadArea();
+                for (ChunkCoordIntPair chunkCoords : loadArea) {
+
+                    if (!chunkList.contains(chunkCoords)) {
+                        chunkList.add(chunkCoords);
+                    }
+                }
+            }
+        }
+
+        @Override
+        public boolean canUnloadChunk(Chunk chunk) {
+
+            for (TileChunkLoader tile : TileChunkLoader.chunkLoaderList) {
+
+                if (chunk.worldObj.getChunkFromBlockCoords(tile.xCoord, tile.yCoord).equals(chunk)) {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 
@@ -163,85 +169,66 @@ public class mod_zAdditionalPipes extends BaseModMp {
     public static boolean allowWPRemove 	= false; //Remove waterproofing/redstone
     public static double PowerLossCfg 		= .995;
 
-    //ChunkLoader Variables
-    public int chunkTestTime 	= 500;
-    public long lastCheckTime 	= 0;
-    public static List<chunkXZ> keepLoadedChunks = new ArrayList<chunkXZ>();
-
     public static Minecraft mc = ModLoader.getMinecraftInstance();
 
+    public static List<Integer> pipeIds = new LinkedList<>();
 
-    public static List<Integer> pipeIds = new LinkedList<Integer>();
-
-    public KeyBinding key_lasers 			= new KeyBinding("key_lasers", 67); //F9
-    public static boolean lasers_showing 	= false;
-    public static List<Box> laser_box 		= new LinkedList<Box>();
+    public KeyBinding laserKeyBinding = new KeyBinding("laserKeyBinding", 67);
+    public static List<Box> lasers = new LinkedList<>();
 
     @Override
     public void keyboardEvent(KeyBinding keybinding) {
-        System.out.println("Keyboard Event");
 
-        if(keybinding == this.key_lasers) {
-            if (!lasers_showing) {
-                System.out.println("Lasers on...");
-                lasers_showing = true;
+        if(keybinding == laserKeyBinding) {
+            toggleLasers();
+        }
+    }
+    
+    public void toggleLasers() {
+        
+        if (!lasers.isEmpty()) {
 
-                for (int i = 0; i < keepLoadedChunks.size(); i++) {
-                    Box temp[] = {new Box(), new Box(), new Box(), new Box(), new Box()};
-                    Box InsideLasers[] = {new Box(), new Box(), new Box(), new Box(), new Box()}; //new Box[5];
-
-                    int y = (int) mc.thePlayer.posY;
-
-                    temp[0].initialize(keepLoadedChunks.get(i).x * 16, y, keepLoadedChunks.get(i).z * 16, keepLoadedChunks.get(i).x * 16 + 16, y, keepLoadedChunks.get(i).z * 16 + 16);
-                    InsideLasers[0].initialize(keepLoadedChunks.get(i).x * 16 + 7, y, keepLoadedChunks.get(i).z * 16 + 7, keepLoadedChunks.get(i).x * 16 + 9, y, keepLoadedChunks.get(i).z * 16 + 9);
-
-                    temp[1].initialize((keepLoadedChunks.get(i).x - 1) * 16, y, keepLoadedChunks.get(i).z * 16, (keepLoadedChunks.get(i).x - 1) * 16 + 16, y, keepLoadedChunks.get(i).z * 16 + 16);
-                    InsideLasers[1].initialize((keepLoadedChunks.get(i).x - 1) * 16 + 7, y, keepLoadedChunks.get(i).z * 16 + 7, (keepLoadedChunks.get(i).x - 1) * 16 + 9, y, keepLoadedChunks.get(i).z * 16 + 9);
-
-                    temp[2].initialize((keepLoadedChunks.get(i).x + 1) * 16, y, keepLoadedChunks.get(i).z * 16, (keepLoadedChunks.get(i).x + 1) * 16 + 16, y, keepLoadedChunks.get(i).z * 16 + 16);
-                    InsideLasers[2].initialize((keepLoadedChunks.get(i).x + 1) * 16 + 7, y, keepLoadedChunks.get(i).z * 16 + 7, (keepLoadedChunks.get(i).x + 1) * 16 + 9, y, keepLoadedChunks.get(i).z * 16 + 9);
-
-                    temp[3].initialize(keepLoadedChunks.get(i).x * 16, y, (keepLoadedChunks.get(i).z + 1) * 16, keepLoadedChunks.get(i).x * 16 + 16, y, (keepLoadedChunks.get(i).z + 1) * 16 + 16);
-                    InsideLasers[3].initialize(keepLoadedChunks.get(i).x * 16 + 7, y, (keepLoadedChunks.get(i).z + 1) * 16 + 7, keepLoadedChunks.get(i).x * 16 + 9, y, (keepLoadedChunks.get(i).z + 1) * 16 + 9);
-
-                    temp[4].initialize(keepLoadedChunks.get(i).x * 16, y, (keepLoadedChunks.get(i).z - 1) * 16, keepLoadedChunks.get(i).x * 16 + 16, y, (keepLoadedChunks.get(i).z - 1) * 16 + 16);
-                    InsideLasers[4].initialize(keepLoadedChunks.get(i).x * 16 + 7, y, (keepLoadedChunks.get(i).z - 1) * 16 + 7, keepLoadedChunks.get(i).x * 16 + 9, y, (keepLoadedChunks.get(i).z - 1) * 16 + 9);
-
-                    for (int a = 0; a < temp.length; a++) {
-                        if (!laser_box.contains(temp[a])) { //Don't want to display the same one 6 times now do we? :p
-                            temp[a].createLasers(mc.theWorld, LaserKind.Blue);
-                            InsideLasers[a].createLasers(mc.theWorld, LaserKind.Red);
-                            laser_box.add(temp[a]);
-                            laser_box.add(InsideLasers[a]);
-                        }
-                    }
-                }
+            for (Box laser : lasers) {
+                laser.deleteLasers();
             }
-            else {
-                System.out.println("Lasers off...");
-                lasers_showing = false;
-                List<Box> delete = new LinkedList<Box>();
 
-                for (int i = 0; i < laser_box.size(); i++) {
-                    Box temp = laser_box.get(i);
-                    temp.deleteLasers();
-                    delete.add(temp);
-                }
+            lasers.clear();
+        }
+        else {
 
-                laser_box.removeAll(delete);
+            int playerY = (int) mc.thePlayer.posY;
 
-                if (MutiPlayerProxy.isOnServer()) {
-                    keepLoadedChunks.clear();
+            //Loop through chunks to with chunkloader
+            for (TileChunkLoader tile : TileChunkLoader.chunkLoaderList) {
+
+                List<ChunkCoordIntPair> chunkCoords = tile.getLoadArea();
+
+                for (ChunkCoordIntPair coords : chunkCoords) {
+
+                    int chunkX = coords.chunkXPos * 16;
+                    int chunkZ = coords.chunkZPos * 16;
+
+                    Box outsideLaser = new Box();
+                    outsideLaser.initialize(chunkX, playerY, chunkZ, chunkX + 16, playerY, chunkZ + 16);
+                    outsideLaser.createLasers(mc.theWorld, LaserKind.Blue);
+                    lasers.add(outsideLaser);
+
+                    Box insideLaser = new Box();
+                    insideLaser.initialize(chunkX + 7, playerY, chunkZ + 7, chunkX + 9, playerY, chunkZ + 9);
+                    insideLaser.createLasers(mc.theWorld, LaserKind.Red);
+                    lasers.add(insideLaser);
                 }
             }
         }
     }
 
     public mod_zAdditionalPipes() {
-        ModLoader.setInGameHook(this, true, true);
+        
         ModLoader.setInGUIHook(this, true, true);
-        ModLoader.registerKey(this, this.key_lasers, false);
-        ModLoader.addLocalization("key_lasers", "Turn on/off chunk loader boundries");
+        ModLoader.registerKey(this, laserKeyBinding, false);
+        ModLoader.addLocalization("laserKeyBinding", "Turn on/off chunk loader boundries");
+        
+        MinecraftForge.registerChunkLoadHandler(new ChunkLoadingHandler());
     }
 
     public static World getWorld(int dimension) {
@@ -253,56 +240,6 @@ public class mod_zAdditionalPipes extends BaseModMp {
         }
 
         return null;
-    }
-    @Override
-    public boolean onTickInGame(float f, Minecraft minecraft) {
-
-        if (MutiPlayerProxy.isOnServer()) {
-            return true;
-        }
-
-        if (System.currentTimeMillis() - chunkTestTime >= lastCheckTime) {
-            lastCheckTime = System.currentTimeMillis();
-
-            if (lagFix) {
-                minecraft.theWorld.autosavePeriod = 6000;
-            }
-
-            Iterator<chunkXZ> chunks = keepLoadedChunks.iterator();
-
-            while (chunks.hasNext()) {
-
-                chunkXZ chunkxz = chunks.next();
-
-                if(!minecraft.theWorld.chunkProvider.chunkExists(chunkxz.x, chunkxz.z)) {
-                    minecraft.theWorld.chunkProvider.loadChunk(chunkxz.x, chunkxz.z);
-                    //		IChunkLoadHandler.addActiveChunks(mc.theWorld, (chunkxz.x, chunkxz.z));
-
-                }
-                else {
-                    //TODO: Perform a update routine
-                }
-
-                if(!minecraft.theWorld.chunkProvider.chunkExists(chunkxz.x + 1, chunkxz.z)) {
-                    minecraft.theWorld.chunkProvider.loadChunk(chunkxz.x + 1, chunkxz.z);
-                }
-
-                if(!minecraft.theWorld.chunkProvider.chunkExists(chunkxz.x - 1, chunkxz.z)) {
-                    minecraft.theWorld.chunkProvider.loadChunk(chunkxz.x - 1, chunkxz.z);
-                }
-
-                if(!minecraft.theWorld.chunkProvider.chunkExists(chunkxz.x, chunkxz.z + 1)) {
-                    minecraft.theWorld.chunkProvider.loadChunk(chunkxz.x, chunkxz.z + 1);
-                }
-
-                if(!minecraft.theWorld.chunkProvider.chunkExists(chunkxz.x, chunkxz.z - 1)) {
-                    minecraft.theWorld.chunkProvider.loadChunk(chunkxz.x, chunkxz.z - 1);
-                }
-            }
-
-        }
-
-        return true;
     }
 
     public boolean wasMutiPlayer = false;
@@ -317,7 +254,6 @@ public class mod_zAdditionalPipes extends BaseModMp {
                     PipeItemTeleport.ItemTeleportPipes.clear();
                     PipeLiquidsTeleport.LiquidTeleportPipes.clear();
                     PipePowerTeleport.PowerTeleportPipes.clear();
-                    keepLoadedChunks.clear();
                     MutiPlayerProxy.NeedsLoad = true;
                     isInGame = true;
                 }
@@ -341,6 +277,7 @@ public class mod_zAdditionalPipes extends BaseModMp {
 
     @Override
     public void modsLoaded () {
+        
         super.modsLoaded();
         ModLoaderMp.registerGUI(this, GUI_ADVANCEDWOOD_REC);
         ModLoaderMp.registerGUI(this, GUI_ENERGY_REC);
