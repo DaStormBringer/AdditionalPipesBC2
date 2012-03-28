@@ -25,104 +25,103 @@ import net.minecraft.src.buildcraft.zeldo.pipes.PipeItemsDistributor;
 
 public class PipeLogicDistributor extends PipeLogic {
 
-	public void switchPosition() {
-		int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+    public void switchPosition() {
+        int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 
-		int nextMetadata = metadata;
+        int nextMetadata = metadata;
 
-		for (int l = 0; l < 6; ++l) {
-			nextMetadata ++;
+        for (int l = 0; l < 6; ++l) {
+            nextMetadata ++;
 
-			if (nextMetadata > 5) {
-				nextMetadata = 0;
-			}
+            if (nextMetadata > 5) {
+                nextMetadata = 0;
+            }
 
-			Position pos = new Position(xCoord, yCoord, zCoord, Orientations.values()[nextMetadata]);
-			pos.moveForwards(1.0);
+            Position pos = new Position(xCoord, yCoord, zCoord, Orientations.values()[nextMetadata]);
+            pos.moveForwards(1.0);
 
-			TileEntity tile = worldObj.getBlockTileEntity((int) pos.x, (int) pos.y, (int) pos.z);
+            TileEntity tile = worldObj.getBlockTileEntity((int) pos.x, (int) pos.y, (int) pos.z);
 
-			if (tile instanceof TileGenericPipe) {
-				if (((TileGenericPipe) tile).pipe.logic instanceof PipeLogicWood || ((TileGenericPipe) tile).pipe.logic instanceof PipeLogicAdvancedWood) {
-					continue;
-				}
-			}
+            if (tile instanceof TileGenericPipe) {
+                if (((TileGenericPipe) tile).pipe.logic instanceof PipeLogicWood || ((TileGenericPipe) tile).pipe.logic instanceof PipeLogicAdvancedWood) {
+                    continue;
+                }
+            }
 
-			if (tile instanceof IPipeEntry || tile instanceof IInventory || tile instanceof ILiquidContainer || tile instanceof TileGenericPipe) {
-				if (((PipeItemsDistributor)this.container.pipe).distData[nextMetadata] > 0) {
-					worldObj.setBlockMetadata(xCoord, yCoord, zCoord, nextMetadata);
-					return;
-				}
-			}
-		}
-	}
-	public void switchIfNeeded()
-	{
-		int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+            if (tile instanceof IPipeEntry || tile instanceof IInventory || tile instanceof ILiquidContainer || tile instanceof TileGenericPipe) {
+                if (((PipeItemsDistributor)this.container.pipe).distData[nextMetadata] > 0) {
+                    worldObj.setBlockMetadata(xCoord, yCoord, zCoord, nextMetadata);
+                    return;
+                }
+            }
+        }
+    }
+    public void switchIfNeeded() {
+        int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 
-		int nextMetadata = metadata;
+        int nextMetadata = metadata;
 
-		for (int l = 0; l < 6; ++l) {
-			if (nextMetadata > 5) {
-				nextMetadata = 0;
-			}
+        for (int l = 0; l < 6; ++l) {
+            if (nextMetadata > 5) {
+                nextMetadata = 0;
+            }
 
-			Position pos = new Position(xCoord, yCoord, zCoord, Orientations.values()[nextMetadata]);
-			pos.moveForwards(1.0);
+            Position pos = new Position(xCoord, yCoord, zCoord, Orientations.values()[nextMetadata]);
+            pos.moveForwards(1.0);
 
-			TileEntity tile = worldObj.getBlockTileEntity((int) pos.x, (int) pos.y, (int) pos.z);
+            TileEntity tile = worldObj.getBlockTileEntity((int) pos.x, (int) pos.y, (int) pos.z);
 
-			if (tile instanceof TileGenericPipe) {
-				if (((TileGenericPipe) tile).pipe.logic instanceof PipeLogicWood || ((TileGenericPipe) tile).pipe.logic instanceof PipeLogicAdvancedWood) {
-					continue;
-				}
-			}
+            if (tile instanceof TileGenericPipe) {
+                if (((TileGenericPipe) tile).pipe.logic instanceof PipeLogicWood || ((TileGenericPipe) tile).pipe.logic instanceof PipeLogicAdvancedWood) {
+                    continue;
+                }
+            }
 
-			if (tile instanceof IPipeEntry || tile instanceof IInventory || tile instanceof ILiquidContainer || tile instanceof TileGenericPipe) {
-				if (((PipeItemsDistributor)this.container.pipe).distData[nextMetadata] > 0) {
-					worldObj.setBlockMetadata(xCoord, yCoord, zCoord, nextMetadata);
-					return;
-				}
-			}
-			nextMetadata ++;
-		}
-	}
+            if (tile instanceof IPipeEntry || tile instanceof IInventory || tile instanceof ILiquidContainer || tile instanceof TileGenericPipe) {
+                if (((PipeItemsDistributor)this.container.pipe).distData[nextMetadata] > 0) {
+                    worldObj.setBlockMetadata(xCoord, yCoord, zCoord, nextMetadata);
+                    return;
+                }
+            }
+
+            nextMetadata ++;
+        }
+    }
 
 
-	@Override
-	public void onBlockPlaced()
-	{
-		super.onBlockPlaced();
+    @Override
+    public void onBlockPlaced() {
+        super.onBlockPlaced();
 
-		worldObj.setBlockMetadata(xCoord, yCoord, zCoord, 1);
-		switchPosition();
-	}
+        worldObj.setBlockMetadata(xCoord, yCoord, zCoord, 1);
+        switchPosition();
+    }
 
-	@Override
-	public boolean blockActivated(EntityPlayer entityplayer) {
-		super.blockActivated(entityplayer);
+    @Override
+    public boolean blockActivated(EntityPlayer entityplayer) {
+        super.blockActivated(entityplayer);
 
-		if (entityplayer.getCurrentEquippedItem() != null
-				&& entityplayer.getCurrentEquippedItem().getItem() == BuildCraftCore.wrenchItem) {
+        if (entityplayer.getCurrentEquippedItem() != null
+                && entityplayer.getCurrentEquippedItem().getItem() == BuildCraftCore.wrenchItem) {
 
-			switchPosition();
-			worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
+            switchPosition();
+            worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
 
-			return true;
-		}
+            return true;
+        }
 
-		if (entityplayer.getCurrentEquippedItem() != null && mod_zAdditionalPipes.ItemIsPipe(entityplayer.getCurrentEquippedItem().getItem().shiftedIndex))  {
-			return false;
-		}
+        if (entityplayer.getCurrentEquippedItem() != null && mod_zAdditionalPipes.ItemIsPipe(entityplayer.getCurrentEquippedItem().getItem().shiftedIndex))  {
+            return false;
+        }
 
-		MutiPlayerProxy.displayGUIDistribution(entityplayer, this.container);
+        MutiPlayerProxy.displayGUIDistribution(entityplayer, this.container);
 
-		return true;
-	}
+        return true;
+    }
 
-	@Override
-	public boolean outputOpen(Orientations to) {
-		return to.ordinal() == worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-	}
+    @Override
+    public boolean outputOpen(Orientations to) {
+        return to.ordinal() == worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+    }
 
 }
