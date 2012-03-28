@@ -18,22 +18,15 @@ public class BlockChunkLoader extends BlockContainer {
 
     @Override
     public void onBlockAdded(World world, int i, int j, int k) {
-        MutiPlayerProxy.AddChunkToList(i, k);
     }
 
     @Override
     public void onBlockRemoval(World world, int i, int j, int k) {
-        MutiPlayerProxy.DeleteChunkFromList(i, k);
     }
 
     @Override
     public TileEntity getBlockEntity() {
-        try {
-            return new TileChunkLoader();
-        }
-        catch(Exception exception) {
-            throw new RuntimeException(exception);
-        }
+        return new TileChunkLoader();
     }
 
 }

@@ -1,48 +1,65 @@
 package net.minecraft.src;
 
 import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
+import java.util.Set;
 import net.minecraft.server.MinecraftServer;
-
-import net.minecraft.src.World;
-import net.minecraft.src.WorldInfo;
-
 import net.minecraft.src.buildcraft.core.CoreProxy;
 import net.minecraft.src.buildcraft.transport.BlockGenericPipe;
 import net.minecraft.src.buildcraft.transport.Pipe;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
-import net.minecraft.src.buildcraft.zeldo.MutiPlayerProxy;
 import net.minecraft.src.buildcraft.zeldo.ChunkLoader.BlockChunkLoader;
+import net.minecraft.src.buildcraft.zeldo.ChunkLoader.TileChunkLoader;
+import net.minecraft.src.buildcraft.zeldo.MutiPlayerProxy;
 import net.minecraft.src.buildcraft.zeldo.logic.PipeLogicAdvancedWood;
-import net.minecraft.src.buildcraft.zeldo.pipes.PipeItemTeleport;
-import net.minecraft.src.buildcraft.zeldo.pipes.PipeItemsAdvancedInsertion;
-import net.minecraft.src.buildcraft.zeldo.pipes.PipeItemsAdvancedWood;
-import net.minecraft.src.buildcraft.zeldo.pipes.PipeItemsDistributor;
-import net.minecraft.src.buildcraft.zeldo.pipes.PipeItemsRedstone;
-import net.minecraft.src.buildcraft.zeldo.pipes.PipeLiquidsRedstone;
-import net.minecraft.src.buildcraft.zeldo.pipes.PipeLiquidsTeleport;
-import net.minecraft.src.buildcraft.zeldo.pipes.PipePowerTeleport;
+import net.minecraft.src.buildcraft.zeldo.pipes.*;
 import net.minecraft.src.forge.Configuration;
-import net.minecraft.src.forge.DimensionManager;
+import net.minecraft.src.forge.IChunkLoadHandler;
+import net.minecraft.src.forge.MinecraftForge;
 import net.minecraft.src.forge.Property;
 
 public class mod_zAdditionalPipes extends BaseModMp {
-    @SuppressWarnings("serial")
-    public static class chunkXZ implements Serializable {
-        public int x;
-        public int z;
+    
+    /*
+    * ChuckLoader Handler
+    */
+    static class ChunkLoadingHandler implements IChunkLoadHandler {
 
-        public chunkXZ(int ax, int az) {
-            x = ax;
-            z = az;
+        @Override
+        public void addActiveChunks(World world, Set<ChunkCoordIntPair> chunkList) {
+
+            for (TileChunkLoader tile : TileChunkLoader.chunkLoaderList) {
+                
+                List<ChunkCoordIntPair> loadArea = tile.getLoadArea();
+                for (ChunkCoordIntPair chunkCoords : loadArea) {
+
+                    if (!chunkList.contains(chunkCoords)) {
+                        chunkList.add(chunkCoords);
+                        System.out.println("Adding chunk: " + chunkCoords);
+                    }
+                    else {
+                        System.out.println(chunkCoords + " already there.");
+                    }
+                }
+            }
+        }
+
+        @Override
+        public boolean canUnloadChunk(Chunk chunk) {
+
+            for (TileChunkLoader tile : TileChunkLoader.chunkLoaderList) {
+
+                if (chunk.worldObj.getChunkFromBlockCoords(tile.xCoord, tile.zCoord).equals(chunk)) {
+                    System.out.println("Keeping chunk: " + chunk.getChunkCoordIntPair());
+                    return false;
+                }
+            }
+            System.out.println("Unloading chunk: " + chunk.getChunkCoordIntPair());
+            return true;
         }
     }
-
+    
     public String Version() {
         return "2.1.0 (Minecraft 1.2.4, Buildcraft 2.2.14, Forge 2.0.0.67)";
     }
@@ -156,79 +173,17 @@ public class mod_zAdditionalPipes extends BaseModMp {
 
     public static MinecraftServer mcs = ModLoader.getMinecraftServerInstance();
 
-    //ChunkLoader Variables
-    public int chunkTestTime = 500;
-    public long lastCheckTime = 0;
-    public static List<chunkXZ> keepLoadedChunks = new ArrayList<chunkXZ>();
-
-    public static List<Integer> pipeIds = new LinkedList<Integer>();
+    public static List<Integer> pipeIds = new LinkedList<>();
 
     public mod_zAdditionalPipes() {
-        ModLoader.setInGameHook(this, true, true);
+        
+        MinecraftForge.registerChunkLoadHandler(new ChunkLoadingHandler());
     }
 
-    public static List<chunkXZ> chunksToAdd = new ArrayList<chunkXZ>();
-    public static List<chunkXZ> chunksToRemove = new ArrayList<chunkXZ>();
-
-    @Override
-    public void onTickInGame(MinecraftServer minecraft) {
-
-        if(System.currentTimeMillis() - (long)chunkTestTime >= lastCheckTime) {
-            lastCheckTime = System.currentTimeMillis();
-
-
-            Iterator iterator = chunksToAdd.iterator();
-
-            while (iterator.hasNext()) {
-                chunkXZ chunkxz = (chunkXZ)iterator.next();
-                MutiPlayerProxy.AddChunkToList2(chunkxz.x, chunkxz.z);
-            }
-
-            chunksToAdd.clear();
-
-            iterator = chunksToRemove.iterator();
-
-            while (iterator.hasNext()) {
-                chunkXZ chunkxz = (chunkXZ)iterator.next();
-                MutiPlayerProxy.DeleteChunkFromList2(chunkxz.x, chunkxz.z);
-            }
-
-            chunksToRemove.clear();
-
-            iterator = keepLoadedChunks.iterator();
-
-            while (iterator.hasNext()) {
-                chunkXZ chunkxz = (chunkXZ)iterator.next();
-
-                //	System.out.print("A: " + minecraft.worldMngr[0].chunkProvider.provideChunk(chunkxz.x,chunkxz.z).isChunkLoaded + "\n");
-                if(!DimensionManager.getWorld(0).chunkProvider.chunkExists(chunkxz.x, chunkxz.z)) {
-                    DimensionManager.getWorld(0).chunkProvider.loadChunk(chunkxz.x, chunkxz.z);
-                }
-
-                if(!DimensionManager.getWorld(0).chunkProvider.chunkExists(chunkxz.x + 1, chunkxz.z)) {
-                    DimensionManager.getWorld(0).chunkProvider.loadChunk(chunkxz.x + 1, chunkxz.z);
-                }
-
-                if(!DimensionManager.getWorld(0).chunkProvider.chunkExists(chunkxz.x - 1, chunkxz.z)) {
-                    DimensionManager.getWorld(0).chunkProvider.loadChunk(chunkxz.x - 1, chunkxz.z);
-                }
-
-                if(!DimensionManager.getWorld(0).chunkProvider.chunkExists(chunkxz.x, chunkxz.z + 1)) {
-                    DimensionManager.getWorld(0).chunkProvider.loadChunk(chunkxz.x, chunkxz.z + 1);
-                }
-
-                if(!DimensionManager.getWorld(0).chunkProvider.chunkExists(chunkxz.x, chunkxz.z - 1)) {
-                    DimensionManager.getWorld(0).chunkProvider.loadChunk(chunkxz.x, chunkxz.z - 1);
-                }
-            }
-
-            //ModLoader.getMinecraftServerInstance().log("ChunkLoading Refresh Complete");
-        }
-
-    }
     public static File getSaveDirectory() {
         return new File((new PropertyManager(new File("server.properties"))).getStringProperty("level-name", "world"));
     }
+    
     @Override
     public void modsLoaded () {
 
