@@ -1,7 +1,6 @@
 package net.minecraft.src;
 
 import java.io.File;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -26,13 +25,13 @@ public class mod_zAdditionalPipes extends BaseModMp {
     public static mod_zAdditionalPipes instance;
     
     /*
-* ChuckLoader Handler
-*/
+    * ChuckLoader Handler
+    */
     static class ChunkLoadingHandler implements IChunkLoadHandler {
 
         @Override
         public void addActiveChunks(World world, Set<ChunkCoordIntPair> chunkList) {
-
+            
             for (TileChunkLoader tile : TileChunkLoader.chunkLoaderList) {
                 
                 List<ChunkCoordIntPair> loadArea = tile.getLoadArea();
@@ -40,6 +39,10 @@ public class mod_zAdditionalPipes extends BaseModMp {
 
                     if (!chunkList.contains(chunkCoords)) {
                         chunkList.add(chunkCoords);
+                        System.out.println("Adding chunk: " + chunkCoords);
+                    }
+                    else {
+                        System.out.println(chunkCoords + " already there.");
                     }
                 }
             }
@@ -47,13 +50,15 @@ public class mod_zAdditionalPipes extends BaseModMp {
 
         @Override
         public boolean canUnloadChunk(Chunk chunk) {
-
+            
             for (TileChunkLoader tile : TileChunkLoader.chunkLoaderList) {
 
-                if (chunk.worldObj.getChunkFromBlockCoords(tile.xCoord, tile.yCoord).equals(chunk)) {
+                if (chunk.worldObj.getChunkFromBlockCoords(tile.xCoord, tile.zCoord).equals(chunk)) {
+                    System.out.println("Keeping chunk: " + chunk.getChunkCoordIntPair());
                     return false;
                 }
             }
+            System.out.println("Unloading chunk: " + chunk.getChunkCoordIntPair());
             return true;
         }
     }
@@ -229,6 +234,7 @@ public class mod_zAdditionalPipes extends BaseModMp {
         ModLoader.addLocalization("laserKeyBinding", "Turn on/off chunk loader boundries");
         
         MinecraftForge.registerChunkLoadHandler(new ChunkLoadingHandler());
+        
     }
 
     public static World getWorld(int dimension) {
