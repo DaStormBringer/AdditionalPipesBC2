@@ -20,36 +20,41 @@ import net.minecraft.src.buildcraft.zeldo.pipes.PipeLiquidsTeleport;
 
 public class PipeLogicLiquidTeleport extends PipeLogic {
 
-	@Override
-	public boolean blockActivated(EntityPlayer entityplayer) {
-		if (entityplayer.getCurrentEquippedItem() != null && mod_zAdditionalPipes.ItemIsPipe(entityplayer.getCurrentEquippedItem().getItem().shiftedIndex))  {
-			return false;
-		}
-		if (mod_zAdditionalPipes.wrenchOpensGui && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().getItem() != BuildCraftCore.wrenchItem) {
-			return false;
-		}
-		PipeLiquidsTeleport a = (PipeLiquidsTeleport) this.container.pipe;
-		if (a.Owner == null || a.Owner.equalsIgnoreCase("")) {
-			a.Owner = entityplayer.username;
-		}
-		MutiPlayerProxy.displayGUILiquidTeleport(entityplayer, this.container);
+    @Override
+    public boolean blockActivated(EntityPlayer entityplayer) {
+        if (entityplayer.getCurrentEquippedItem() != null && mod_zAdditionalPipes.ItemIsPipe(entityplayer.getCurrentEquippedItem().getItem().shiftedIndex))  {
+            return false;
+        }
 
-		return true;
-	}
-	@Override
-	public boolean isPipeConnected(TileEntity tile) {
-		Pipe pipe2 = null;
+        if (mod_zAdditionalPipes.wrenchOpensGui && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().getItem() != BuildCraftCore.wrenchItem) {
+            return false;
+        }
 
-		if (tile instanceof TileGenericPipe) {
-			pipe2 = ((TileGenericPipe) tile).pipe;
-		}
+        PipeLiquidsTeleport a = (PipeLiquidsTeleport) this.container.pipe;
 
-		if (BuildCraftTransport.alwaysConnectPipes) {
-			return super.isPipeConnected(tile);
-		} else {
-			return (pipe2 == null || !(pipe2.logic instanceof PipeLogicLiquidTeleport))
-					&& super.isPipeConnected(tile);
-		}
-	}
+        if (a.Owner == null || a.Owner.equalsIgnoreCase("")) {
+            a.Owner = entityplayer.username;
+        }
+
+        MutiPlayerProxy.displayGUILiquidTeleport(entityplayer, this.container);
+
+        return true;
+    }
+    @Override
+    public boolean isPipeConnected(TileEntity tile) {
+        Pipe pipe2 = null;
+
+        if (tile instanceof TileGenericPipe) {
+            pipe2 = ((TileGenericPipe) tile).pipe;
+        }
+
+        if (BuildCraftTransport.alwaysConnectPipes) {
+            return super.isPipeConnected(tile);
+        }
+        else {
+            return (pipe2 == null || !(pipe2.logic instanceof PipeLogicLiquidTeleport))
+                   && super.isPipeConnected(tile);
+        }
+    }
 
 }
