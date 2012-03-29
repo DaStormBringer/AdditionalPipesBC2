@@ -32,6 +32,9 @@ public class mod_zAdditionalPipes extends BaseModMp {
         @Override
         public void addActiveChunks(World world, Set<ChunkCoordIntPair> chunkList) {
             
+            if (mc.theWorld.isRemote)
+                return;
+            
             for (TileChunkLoader tile : TileChunkLoader.chunkLoaderList) {
                 
                 List<ChunkCoordIntPair> loadArea = tile.getLoadArea();
@@ -51,6 +54,9 @@ public class mod_zAdditionalPipes extends BaseModMp {
         @Override
         public boolean canUnloadChunk(Chunk chunk) {
 
+            if (mc.theWorld.isRemote)
+                return true;
+            
             for (TileChunkLoader tile : TileChunkLoader.chunkLoaderList) {
 
                 List<ChunkCoordIntPair> loadArea = tile.getLoadArea();
