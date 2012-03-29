@@ -192,10 +192,10 @@ public class mod_zAdditionalPipes extends BaseModMp {
 
     public static Minecraft mc = ModLoader.getMinecraftInstance();
 
-    public static List<Integer> pipeIds = new LinkedList<>();
+    public static List<Integer> pipeIds = new LinkedList<Integer>();
 
     public KeyBinding laserKeyBinding = new KeyBinding("laserKeyBinding", 67);
-    public static List<Box> lasers = new LinkedList<>();
+    public static List<Box> lasers = new LinkedList<Box>();
 
     @Override
     public void keyboardEvent(KeyBinding keybinding) {

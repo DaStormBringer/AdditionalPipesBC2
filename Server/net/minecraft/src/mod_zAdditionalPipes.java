@@ -184,7 +184,7 @@ public class mod_zAdditionalPipes extends BaseModMp {
 
     public static MinecraftServer mcs = ModLoader.getMinecraftServerInstance();
 
-    public static List<Integer> pipeIds = new LinkedList<>();
+    public static List<Integer> pipeIds = new LinkedList<Integer>();
 
     public mod_zAdditionalPipes() {
         

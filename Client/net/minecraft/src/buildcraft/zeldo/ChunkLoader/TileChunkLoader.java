@@ -8,7 +8,7 @@ import net.minecraft.src.TileEntity;
 
 public class TileChunkLoader extends TileEntity {
 
-    public static List<TileChunkLoader> chunkLoaderList = new LinkedList<>();
+    public static List<TileChunkLoader> chunkLoaderList = new LinkedList<TileChunkLoader>();
     
     public TileChunkLoader() {
        if (!chunkLoaderList.contains(this)) {
@@ -22,7 +22,7 @@ public class TileChunkLoader extends TileEntity {
     */
     public List getLoadArea() {
 
-        List<ChunkCoordIntPair> loadArea = new LinkedList<>();
+        List<ChunkCoordIntPair> loadArea = new LinkedList<ChunkCoordIntPair>();
 
         Chunk centerChunk = worldObj.getChunkFromBlockCoords(xCoord, zCoord);
 
