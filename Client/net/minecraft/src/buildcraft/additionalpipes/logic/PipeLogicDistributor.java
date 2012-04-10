@@ -95,20 +95,19 @@ public class PipeLogicDistributor extends PipeLogic {
 
         ItemStack equippedItem = entityplayer.getCurrentEquippedItem();
         
-        if (equippedItem == null) {
-            return true;
-        }
-        
-        if (equippedItem.getItem() == BuildCraftCore.wrenchItem) {
+        if (equippedItem != null) {
+            
+            if (equippedItem.getItem() == BuildCraftCore.wrenchItem) {
 
-            switchPosition();
-            worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
+                switchPosition();
+                worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
 
-            return true;
-        }
+                return true;
+            }
 
-        if (equippedItem.getItem() instanceof IPipe) {
-            return false;
+            if (equippedItem.getItem() instanceof IPipe) {
+                return false;
+            }
         }
         
         entityplayer.openGui(mod_AdditionalPipes.instance, GuiHandler.PIPE_DIST, 

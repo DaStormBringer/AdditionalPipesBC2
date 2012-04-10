@@ -27,16 +27,15 @@ public class PipeLogicItemTeleport extends PipeLogic {
         
         ItemStack equippedItem = entityplayer.getCurrentEquippedItem();
         
-        if (equippedItem == null) {
-            return true;
-        }
-        
-        if (equippedItem.getItem() instanceof IPipe)  {
-            return false;
-        }
+        if (equippedItem != null) {
+            
+            if (equippedItem.getItem() instanceof IPipe)  {
+                return false;
+            }
 
-        if (equippedItem.getItem() == BuildCraftCore.wrenchItem && !mod_AdditionalPipes.wrenchOpensGui) {
-            return false;
+            if (equippedItem.getItem() == BuildCraftCore.wrenchItem && !mod_AdditionalPipes.wrenchOpensGui) {
+                return false;
+            }
         }
 
         entityplayer.openGui(mod_AdditionalPipes.instance, GuiHandler.PIPE_TP_ITEM, 
