@@ -7,16 +7,12 @@
  */
 package net.minecraft.src.buildcraft.additionalpipes.logic;
 
-import net.minecraft.src.BuildCraftCore;
-import net.minecraft.src.BuildCraftTransport;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.TileEntity;
-import net.minecraft.src.mod_zAdditionalPipes;
+import net.minecraft.src.buildcraft.additionalpipes.GuiHandler;
+import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemTeleport;
 import net.minecraft.src.buildcraft.transport.Pipe;
 import net.minecraft.src.buildcraft.transport.PipeLogic;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
-import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
-import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemTeleport;
+import net.minecraft.src.*;
 
 public class PipeLogicItemTeleport extends PipeLogic {
 
@@ -36,7 +32,8 @@ public class PipeLogicItemTeleport extends PipeLogic {
             a.Owner = entityplayer.username;
         }
 
-        MutiPlayerProxy.displayGUIItemTeleport(entityplayer, this.container);
+        entityplayer.openGui(mod_zAdditionalPipes.instance, GuiHandler.PIPE_TP_ITEM, 
+                container.worldObj, container.xCoord, container.yCoord, container.zCoord);
 
         return true;
     }
