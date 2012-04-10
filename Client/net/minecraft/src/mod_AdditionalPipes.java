@@ -38,7 +38,7 @@ public class mod_AdditionalPipes extends NetworkMod {
 
     @Override
     public String getVersion() {
-        return "2.1.0 (Minecraft 1.2.4, Buildcraft 2.2.14, Forge 2.0.0.67)";
+        return "2.1.0 (Minecraft 1.2.5, Buildcraft 2.2.15, Forge 3.0.0.72)";
     }
 
     public static int MASTER_TEXTURE_OFFSET = 0;// 8 * 16;
