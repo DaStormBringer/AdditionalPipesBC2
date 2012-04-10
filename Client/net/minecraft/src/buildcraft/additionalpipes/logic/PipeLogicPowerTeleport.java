@@ -11,7 +11,7 @@ import net.minecraft.src.BuildCraftCore;
 import net.minecraft.src.BuildCraftTransport;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.TileEntity;
-import net.minecraft.src.mod_zAdditionalPipes;
+import net.minecraft.src.mod_AdditionalPipes;
 import net.minecraft.src.buildcraft.transport.Pipe;
 import net.minecraft.src.buildcraft.transport.PipeLogic;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
@@ -22,11 +22,11 @@ public class PipeLogicPowerTeleport extends PipeLogic {
 
     @Override
     public boolean blockActivated(EntityPlayer entityplayer) {
-        if (entityplayer.getCurrentEquippedItem() != null && mod_zAdditionalPipes.ItemIsPipe(entityplayer.getCurrentEquippedItem().getItem().shiftedIndex))  {
+        if (entityplayer.getCurrentEquippedItem() != null && mod_AdditionalPipes.ItemIsPipe(entityplayer.getCurrentEquippedItem().getItem().shiftedIndex))  {
             return false;
         }
 
-        if (mod_zAdditionalPipes.wrenchOpensGui && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().getItem() != BuildCraftCore.wrenchItem) {
+        if (mod_AdditionalPipes.wrenchOpensGui && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().getItem() != BuildCraftCore.wrenchItem) {
             return false;
         }
 

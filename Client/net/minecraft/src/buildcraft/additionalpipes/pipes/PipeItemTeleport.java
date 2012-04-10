@@ -15,7 +15,7 @@ import java.util.Random;
 import net.minecraft.src.IInventory;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
-import net.minecraft.src.mod_zAdditionalPipes;
+import net.minecraft.src.mod_AdditionalPipes;
 import net.minecraft.src.buildcraft.api.APIProxy;
 import net.minecraft.src.buildcraft.api.EntityPassiveItem;
 import net.minecraft.src.buildcraft.api.IPipeEntry;
@@ -47,7 +47,7 @@ public class PipeItemTeleport extends Pipe implements IPipeTransportItemsHook {
 
     @Override
     public int getBlockTexture() {
-        return mod_zAdditionalPipes.DEFUALT_ITEM_TELEPORT_TEXTURE;
+        return mod_AdditionalPipes.DEFUALT_ITEM_TELEPORT_TEXTURE;
     }
 
     public void removeOldPipes() {

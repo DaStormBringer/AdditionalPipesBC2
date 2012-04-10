@@ -15,7 +15,7 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
-import net.minecraft.src.mod_zAdditionalPipes;
+import net.minecraft.src.mod_AdditionalPipes;
 import net.minecraft.src.buildcraft.api.EntityPassiveItem;
 import net.minecraft.src.buildcraft.api.ILiquidContainer;
 import net.minecraft.src.buildcraft.api.IPowerReceptor;
@@ -35,8 +35,8 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
 
     private PowerProvider powerProvider;
 
-    private int baseTexture = mod_zAdditionalPipes.DEFUALT_ADVANCEDWOOD_TEXTURE;
-    private int plainTexture = mod_zAdditionalPipes.DEFUALT_ADVANCEDWOOD_TEXTURE_CLOSED;
+    private int baseTexture = mod_AdditionalPipes.DEFUALT_ADVANCEDWOOD_TEXTURE;
+    private int plainTexture = mod_AdditionalPipes.DEFUALT_ADVANCEDWOOD_TEXTURE_CLOSED;
     private @TileNetworkData int nextTexture = baseTexture;
 
     public PipeItemsAdvancedWood(int itemID) {

@@ -16,7 +16,7 @@ import net.minecraft.src.IInventory;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.Packet230ModLoader;
 import net.minecraft.src.TileEntity;
-import net.minecraft.src.mod_zAdditionalPipes;
+import net.minecraft.src.mod_AdditionalPipes;
 import net.minecraft.src.buildcraft.api.APIProxy;
 import net.minecraft.src.buildcraft.api.EntityPassiveItem;
 import net.minecraft.src.buildcraft.api.IPipeEntry;
@@ -49,7 +49,7 @@ public class PipeItemTeleport extends Pipe implements IPipeTransportItemsHook {
     @Override
     public int getBlockTexture() {
         MutiPlayerProxy.bindTex();
-        return mod_zAdditionalPipes.DEFUALT_ITEM_TELEPORT_TEXTURE;
+        return mod_AdditionalPipes.DEFUALT_ITEM_TELEPORT_TEXTURE;
     }
 
     public void removeOldPipes() {
@@ -277,8 +277,8 @@ public class PipeItemTeleport extends Pipe implements IPipeTransportItemsHook {
     public Packet230ModLoader getDescPipe() {
         Packet230ModLoader packet = new Packet230ModLoader();
 
-        packet.modId = mod_zAdditionalPipes.instance.getId();
-        packet.packetType = mod_zAdditionalPipes.PACKET_SET_ITEM;
+        packet.modId = mod_AdditionalPipes.instance.getId();
+        packet.packetType = mod_AdditionalPipes.PACKET_SET_ITEM;
         packet.isChunkDataPacket = true;
 
         packet.dataInt = new int [5];
@@ -287,7 +287,7 @@ public class PipeItemTeleport extends Pipe implements IPipeTransportItemsHook {
         packet.dataInt [1] = yCoord;
         packet.dataInt [2] = zCoord;
         packet.dataInt [3] = myFreq;
-        packet.dataInt [4] = mod_zAdditionalPipes.boolToInt(canReceive);
+        packet.dataInt [4] = mod_AdditionalPipes.boolToInt(canReceive);
 
         packet.dataString = new String[1];
         packet.dataString[0] = Owner;

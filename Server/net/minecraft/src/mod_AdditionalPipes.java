@@ -1,30 +1,38 @@
 package net.minecraft.src;
 
-import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemsDistributor;
-import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemTeleport;
-import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemsRedstone;
-import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeLiquidsRedstone;
-import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
-import net.minecraft.src.buildcraft.additionalpipes.pipes.PipePowerTeleport;
-import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeLiquidsTeleport;
-import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemsAdvancedInsertion;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.src.buildcraft.core.CoreProxy;
-import net.minecraft.src.buildcraft.transport.BlockGenericPipe;
-import net.minecraft.src.buildcraft.transport.Pipe;
-import net.minecraft.src.buildcraft.transport.TileGenericPipe;
 import net.minecraft.src.buildcraft.additionalpipes.ChunkLoader.BlockChunkLoader;
 import net.minecraft.src.buildcraft.additionalpipes.ChunkLoader.TileChunkLoader;
 import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
 import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicAdvancedWood;
+import net.minecraft.src.buildcraft.additionalpipes.pipes.*;
+import net.minecraft.src.buildcraft.core.CoreProxy;
+import net.minecraft.src.buildcraft.transport.BlockGenericPipe;
+import net.minecraft.src.buildcraft.transport.Pipe;
+import net.minecraft.src.buildcraft.transport.TileGenericPipe;
 import net.minecraft.src.forge.*;
 
 
-public class mod_zAdditionalPipes extends NetworkMod {
+public class mod_AdditionalPipes extends NetworkMod {
+
+    @Override
+    public boolean clientSideRequired() {
+        return true;
+    }
+
+    @Override
+    public boolean serverSideRequired() {
+        return false;
+    }
+    
+    @Override
+    public String getPriorities() {
+        return "after:mod_BuildcraftTransport";
+    }
     
     /*
     * ChuckLoader Handler
@@ -179,7 +187,7 @@ public class mod_zAdditionalPipes extends NetworkMod {
     private static Configuration config;
     public int mpOilGuiId = -113;
     public int mpItemGuiId = -114;
-    public static mod_zAdditionalPipes instance;
+    public static mod_AdditionalPipes instance;
     public static boolean isInGame = false;
     public static boolean lagFix = false;
     public static boolean wrenchOpensGui = false;
@@ -197,7 +205,7 @@ public class mod_zAdditionalPipes extends NetworkMod {
 
     public static List<Integer> pipeIds = new LinkedList<Integer>();
 
-    public mod_zAdditionalPipes() {
+    public mod_AdditionalPipes() {
         
         MinecraftForge.registerChunkLoadHandler(new ChunkLoadingHandler());
     }
@@ -233,14 +241,14 @@ public class mod_zAdditionalPipes extends NetworkMod {
 
         config.save();
 
-        pipeItemTeleport 		= createPipe(mod_zAdditionalPipes.DEFUALT_ITEM_TELEPORT_ID, PipeItemTeleport.class, "Item Teleport Pipe", BuildCraftCore.diamondGearItem, Block.glass, BuildCraftCore.diamondGearItem, null);
-        pipeLiquidTeleport 		= createPipe(mod_zAdditionalPipes.DEFUALT_LIQUID_TELEPORT_ID, PipeLiquidsTeleport.class, "Waterproof Teleport Pipe", BuildCraftTransport.pipeWaterproof, pipeItemTeleport, null, null);
-        pipePowerTeleport 		= createPipe(mod_zAdditionalPipes.DEFUALT_POWER_TELEPORT_ID, PipePowerTeleport.class, "Power Teleport Pipe", Item.redstone, pipeItemTeleport, null, null);
-        pipeDistributor 		= createPipe(mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TELEPORT_ID, PipeItemsDistributor.class, "Distribution Transport Pipe", Item.redstone, Item.ingotIron, Block.glass, Item.ingotIron);
-        pipeAdvancedWood 		= createPipe(mod_zAdditionalPipes.DEFUALT_ADVANCEDWOOD_ID, PipeItemsAdvancedWood.class, "Advanced Wooden Transport Pipe", Item.redstone, Block.planks, Block.glass, Block.planks);
-        pipeAdvancedInsertion 	= createPipe(mod_zAdditionalPipes.DEFUALT_Insertion_ID, PipeItemsAdvancedInsertion.class, "Advanced Insertion Transport Pipe", Item.redstone, Block.stone, Block.glass, Block.stone);
-        pipeRedStone 			= createPipe(mod_zAdditionalPipes.DEFUALT_RedStone_ID, PipeItemsRedstone.class, "Redstone Transport Pipe", Item.redstone, Block.glass, Item.redstone, null);
-        pipeRedStoneLiquid 		= createPipe(mod_zAdditionalPipes.DEFUALT_RedStoneLiquid_ID, PipeLiquidsRedstone.class, "Waterproof Redstone Pipe", BuildCraftTransport.pipeWaterproof, pipeRedStone, null, null);
+        pipeItemTeleport 		= createPipe(mod_AdditionalPipes.DEFUALT_ITEM_TELEPORT_ID, PipeItemTeleport.class, "Item Teleport Pipe", BuildCraftCore.diamondGearItem, Block.glass, BuildCraftCore.diamondGearItem, null);
+        pipeLiquidTeleport 		= createPipe(mod_AdditionalPipes.DEFUALT_LIQUID_TELEPORT_ID, PipeLiquidsTeleport.class, "Waterproof Teleport Pipe", BuildCraftTransport.pipeWaterproof, pipeItemTeleport, null, null);
+        pipePowerTeleport 		= createPipe(mod_AdditionalPipes.DEFUALT_POWER_TELEPORT_ID, PipePowerTeleport.class, "Power Teleport Pipe", Item.redstone, pipeItemTeleport, null, null);
+        pipeDistributor 		= createPipe(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TELEPORT_ID, PipeItemsDistributor.class, "Distribution Transport Pipe", Item.redstone, Item.ingotIron, Block.glass, Item.ingotIron);
+        pipeAdvancedWood 		= createPipe(mod_AdditionalPipes.DEFUALT_ADVANCEDWOOD_ID, PipeItemsAdvancedWood.class, "Advanced Wooden Transport Pipe", Item.redstone, Block.planks, Block.glass, Block.planks);
+        pipeAdvancedInsertion 	= createPipe(mod_AdditionalPipes.DEFUALT_Insertion_ID, PipeItemsAdvancedInsertion.class, "Advanced Insertion Transport Pipe", Item.redstone, Block.stone, Block.glass, Block.stone);
+        pipeRedStone 			= createPipe(mod_AdditionalPipes.DEFUALT_RedStone_ID, PipeItemsRedstone.class, "Redstone Transport Pipe", Item.redstone, Block.glass, Item.redstone, null);
+        pipeRedStoneLiquid 		= createPipe(mod_AdditionalPipes.DEFUALT_RedStoneLiquid_ID, PipeLiquidsRedstone.class, "Waterproof Redstone Pipe", BuildCraftTransport.pipeWaterproof, pipeRedStone, null, null);
 
         //ChunkLoader
         ModLoader.registerTileEntity(net.minecraft.src.buildcraft.additionalpipes.ChunkLoader.TileChunkLoader.class, "ChunkLoader");
@@ -372,8 +380,8 @@ public class mod_zAdditionalPipes extends NetworkMod {
     public static Packet230ModLoader getCountPacket(int Count) {
         Packet230ModLoader packet = new Packet230ModLoader();
 
-        packet.modId = mod_zAdditionalPipes.instance.getId();
-        packet.packetType = mod_zAdditionalPipes.PACKET_GUI_COUNT;
+        packet.modId = mod_AdditionalPipes.instance.getId();
+        packet.packetType = mod_AdditionalPipes.PACKET_GUI_COUNT;
         packet.isChunkDataPacket = true;
 
         packet.dataInt = new int[1];
@@ -464,12 +472,12 @@ public class mod_zAdditionalPipes extends NetworkMod {
         pipeIds.add(BuildCraftTransport.pipePowerStone.shiftedIndex);
         pipeIds.add(BuildCraftTransport.pipePowerWood.shiftedIndex);
 
-        pipeIds.add(mod_zAdditionalPipes.pipeAdvancedInsertion.shiftedIndex);
-        pipeIds.add(mod_zAdditionalPipes.pipeAdvancedWood.shiftedIndex);
-        pipeIds.add(mod_zAdditionalPipes.pipeDistributor.shiftedIndex);
-        pipeIds.add(mod_zAdditionalPipes.pipeItemTeleport.shiftedIndex);
-        pipeIds.add(mod_zAdditionalPipes.pipeLiquidTeleport.shiftedIndex);
-        pipeIds.add(mod_zAdditionalPipes.pipePowerTeleport.shiftedIndex);
+        pipeIds.add(mod_AdditionalPipes.pipeAdvancedInsertion.shiftedIndex);
+        pipeIds.add(mod_AdditionalPipes.pipeAdvancedWood.shiftedIndex);
+        pipeIds.add(mod_AdditionalPipes.pipeDistributor.shiftedIndex);
+        pipeIds.add(mod_AdditionalPipes.pipeItemTeleport.shiftedIndex);
+        pipeIds.add(mod_AdditionalPipes.pipeLiquidTeleport.shiftedIndex);
+        pipeIds.add(mod_AdditionalPipes.pipePowerTeleport.shiftedIndex);
     }
     public static boolean ItemIsPipe(int ItemID) {
         if (pipeIds.contains(ItemID)) {
@@ -481,19 +489,5 @@ public class mod_zAdditionalPipes extends NetworkMod {
 
     @Override
     public void load() {
-        // TODO Auto-generated method stub
-
     }
-
-	@Override
-	public boolean clientSideRequired() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean serverSideRequired() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 }

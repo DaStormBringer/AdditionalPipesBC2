@@ -18,11 +18,11 @@ public class PipeLogicItemTeleport extends PipeLogic {
 
     @Override
     public boolean blockActivated(EntityPlayer entityplayer) {
-        if (entityplayer.getCurrentEquippedItem() != null && mod_zAdditionalPipes.ItemIsPipe(entityplayer.getCurrentEquippedItem().getItem().shiftedIndex))  {
+        if (entityplayer.getCurrentEquippedItem() != null && mod_AdditionalPipes.ItemIsPipe(entityplayer.getCurrentEquippedItem().getItem().shiftedIndex))  {
             return false;
         }
 
-        if (mod_zAdditionalPipes.wrenchOpensGui && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().getItem() != BuildCraftCore.wrenchItem) {
+        if (mod_AdditionalPipes.wrenchOpensGui && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().getItem() != BuildCraftCore.wrenchItem) {
             return false;
         }
 
@@ -32,7 +32,7 @@ public class PipeLogicItemTeleport extends PipeLogic {
             a.Owner = entityplayer.username;
         }
 
-        entityplayer.openGui(mod_zAdditionalPipes.instance, GuiHandler.PIPE_TP_ITEM, 
+        entityplayer.openGui(mod_AdditionalPipes.instance, GuiHandler.PIPE_TP_ITEM, 
                 container.worldObj, container.xCoord, container.yCoord, container.zCoord);
 
         return true;

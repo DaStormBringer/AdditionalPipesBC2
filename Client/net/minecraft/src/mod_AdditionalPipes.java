@@ -9,21 +9,17 @@ import net.minecraft.src.buildcraft.additionalpipes.ChunkLoader.TileChunkLoader;
 import net.minecraft.src.buildcraft.additionalpipes.ChunkLoadingHandler;
 import net.minecraft.src.buildcraft.additionalpipes.GuiHandler;
 import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
-import net.minecraft.src.buildcraft.additionalpipes.gui.*;
-import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicAdvancedWood;
 import net.minecraft.src.buildcraft.additionalpipes.pipes.*;
-import net.minecraft.src.buildcraft.api.APIProxy;
 import net.minecraft.src.buildcraft.api.LaserKind;
 import net.minecraft.src.buildcraft.core.Box;
 import net.minecraft.src.buildcraft.core.CoreProxy;
 import net.minecraft.src.buildcraft.transport.BlockGenericPipe;
 import net.minecraft.src.buildcraft.transport.Pipe;
-import net.minecraft.src.buildcraft.transport.TileGenericPipe;
 import net.minecraft.src.forge.*;
 
-public class mod_zAdditionalPipes extends NetworkMod {
+public class mod_AdditionalPipes extends NetworkMod {
     
-    public static mod_zAdditionalPipes instance;
+    public static mod_AdditionalPipes instance;
 
     @Override
     public boolean clientSideRequired() {
@@ -33,6 +29,11 @@ public class mod_zAdditionalPipes extends NetworkMod {
     @Override
     public boolean serverSideRequired() {
         return false;
+    }
+    
+    @Override
+    public String getPriorities() {
+        return "after:mod_BuildcraftTransport";
     }
 
     @Override
@@ -204,7 +205,7 @@ public class mod_zAdditionalPipes extends NetworkMod {
         }
     }
 
-    public mod_zAdditionalPipes() {
+    public mod_AdditionalPipes() {
         
         ModLoader.setInGUIHook(this, true, true);
         ModLoader.registerKey(this, laserKeyBinding, false);
@@ -288,14 +289,14 @@ public class mod_zAdditionalPipes extends NetworkMod {
 
         AddImageOverride();
         config.save();
-        pipeItemTeleport 		= createPipe(mod_zAdditionalPipes.DEFUALT_ITEM_TELEPORT_ID, PipeItemTeleport.class, "Item Teleport Pipe", BuildCraftCore.diamondGearItem, Block.glass, BuildCraftCore.diamondGearItem, null);
-        pipeLiquidTeleport 		= createPipe(mod_zAdditionalPipes.DEFUALT_LIQUID_TELEPORT_ID, PipeLiquidsTeleport.class, "Waterproof Teleport Pipe", BuildCraftTransport.pipeWaterproof, pipeItemTeleport, null, null);
-        pipePowerTeleport 		= createPipe(mod_zAdditionalPipes.DEFUALT_POWER_TELEPORT_ID, PipePowerTeleport.class, "Power Teleport Pipe", Item.redstone, pipeItemTeleport, null, null);
-        pipeDistributor 		= createPipe(mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TELEPORT_ID, PipeItemsDistributor.class, "Distribution Transport Pipe", Item.redstone, Item.ingotIron, Block.glass, Item.ingotIron);
-        pipeAdvancedWood 		= createPipe(mod_zAdditionalPipes.DEFUALT_ADVANCEDWOOD_ID, PipeItemsAdvancedWood.class, "Advanced Wooden Transport Pipe", Item.redstone, Block.planks, Block.glass, Block.planks);
-        pipeAdvancedInsertion 	= createPipe(mod_zAdditionalPipes.DEFUALT_Insertion_ID, PipeItemsAdvancedInsertion.class, "Advanced Insertion Transport Pipe", Item.redstone, Block.stone, Block.glass, Block.stone);
-        pipeRedStone 			= createPipe(mod_zAdditionalPipes.DEFUALT_RedStone_ID, PipeItemsRedstone.class, "Redstone Transport Pipe", Item.redstone, Block.glass, Item.redstone, null);
-        pipeRedStoneLiquid 		= createPipe(mod_zAdditionalPipes.DEFUALT_RedStoneLiquid_ID, PipeLiquidsRedstone.class, "Waterproof Redstone Pipe", BuildCraftTransport.pipeWaterproof, pipeRedStone, null, null);
+        pipeItemTeleport 		= createPipe(mod_AdditionalPipes.DEFUALT_ITEM_TELEPORT_ID, PipeItemTeleport.class, "Item Teleport Pipe", BuildCraftCore.diamondGearItem, Block.glass, BuildCraftCore.diamondGearItem, null);
+        pipeLiquidTeleport 		= createPipe(mod_AdditionalPipes.DEFUALT_LIQUID_TELEPORT_ID, PipeLiquidsTeleport.class, "Waterproof Teleport Pipe", BuildCraftTransport.pipeWaterproof, pipeItemTeleport, null, null);
+        pipePowerTeleport 		= createPipe(mod_AdditionalPipes.DEFUALT_POWER_TELEPORT_ID, PipePowerTeleport.class, "Power Teleport Pipe", Item.redstone, pipeItemTeleport, null, null);
+        pipeDistributor 		= createPipe(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TELEPORT_ID, PipeItemsDistributor.class, "Distribution Transport Pipe", Item.redstone, Item.ingotIron, Block.glass, Item.ingotIron);
+        pipeAdvancedWood 		= createPipe(mod_AdditionalPipes.DEFUALT_ADVANCEDWOOD_ID, PipeItemsAdvancedWood.class, "Advanced Wooden Transport Pipe", Item.redstone, Block.planks, Block.glass, Block.planks);
+        pipeAdvancedInsertion 	= createPipe(mod_AdditionalPipes.DEFUALT_Insertion_ID, PipeItemsAdvancedInsertion.class, "Advanced Insertion Transport Pipe", Item.redstone, Block.stone, Block.glass, Block.stone);
+        pipeRedStone 			= createPipe(mod_AdditionalPipes.DEFUALT_RedStone_ID, PipeItemsRedstone.class, "Redstone Transport Pipe", Item.redstone, Block.glass, Item.redstone, null);
+        pipeRedStoneLiquid 		= createPipe(mod_AdditionalPipes.DEFUALT_RedStoneLiquid_ID, PipeLiquidsRedstone.class, "Waterproof Redstone Pipe", BuildCraftTransport.pipeWaterproof, pipeRedStone, null, null);
 
 
         MinecraftForgeClient.registerItemRenderer(pipeItemTeleport.shiftedIndex, mod_BuildCraftTransport.instance);
@@ -355,22 +356,22 @@ public class mod_zAdditionalPipes extends NetworkMod {
     public static void AddImageOverride() {
         try {
 
-            DEFUALT_ITEM_TELEPORT_TEXTURE 	= CoreProxy.addCustomTexture(mod_zAdditionalPipes.DEFUALT_ITEM_TELEPORT_TEXTURE_FILE);
-            DEFUALT_RedStoneLiquid_TEXTURE 	= CoreProxy.addCustomTexture(mod_zAdditionalPipes.DEFUALT_RedStoneLiquid_FILE);
-            DEFUALT_LIQUID_TELEPORT_TEXTURE = CoreProxy.addCustomTexture(mod_zAdditionalPipes.DEFUALT_LIQUID_TELEPORT_TEXTURE_FILE);
-            DEFUALT_POWER_TELEPORT_TEXTURE 	= CoreProxy.addCustomTexture(mod_zAdditionalPipes.DEFUALT_POWER_TELEPORT_TEXTURE_FILE);
-            DEFUALT_RedStone_TEXTURE 		= CoreProxy.addCustomTexture(mod_zAdditionalPipes.DEFUALT_RedStone_FILE);
-            DEFUALT_RedStone_TEXTURE_POWERED = CoreProxy.addCustomTexture(mod_zAdditionalPipes.DEFUALT_RedStone_FILE_POWERED);
-            DEFUALT_ADVANCEDWOOD_TEXTURE_CLOSED = CoreProxy.addCustomTexture(mod_zAdditionalPipes.DEFUALT_ADVANCEDWOOD_FILE_CLOSED);
-            DEFUALT_ADVANCEDWOOD_TEXTURE 	= CoreProxy.addCustomTexture(mod_zAdditionalPipes.DEFUALT_ADVANCEDWOOD_FILE);
-            DEFUALT_Insertion_TEXTURE 		= CoreProxy.addCustomTexture(mod_zAdditionalPipes.DEFUALT_Insertion_FILE);
-            DEFUALT_DISTRIBUTOR_TEXTURE_0 	= CoreProxy.addCustomTexture(mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "0.png");
-            DEFUALT_DISTRIBUTOR_TEXTURE_1 	= CoreProxy.addCustomTexture(mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "1.png");
-            DEFUALT_DISTRIBUTOR_TEXTURE_2 	= CoreProxy.addCustomTexture(mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "2.png");
-            DEFUALT_DISTRIBUTOR_TEXTURE_3 	= CoreProxy.addCustomTexture(mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "3.png");
-            DEFUALT_DISTRIBUTOR_TEXTURE_4 	= CoreProxy.addCustomTexture(mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "4.png");
-            DEFUALT_DISTRIBUTOR_TEXTURE_5 	= CoreProxy.addCustomTexture(mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "5.png");
-            DEFUALT_RedStoneLiquid_TEXTURE_POWERED = CoreProxy.addCustomTexture(mod_zAdditionalPipes.DEFUALT_RedStoneLiquid_FILE_POWERED);
+            DEFUALT_ITEM_TELEPORT_TEXTURE 	= CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_ITEM_TELEPORT_TEXTURE_FILE);
+            DEFUALT_RedStoneLiquid_TEXTURE 	= CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_RedStoneLiquid_FILE);
+            DEFUALT_LIQUID_TELEPORT_TEXTURE = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_LIQUID_TELEPORT_TEXTURE_FILE);
+            DEFUALT_POWER_TELEPORT_TEXTURE 	= CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_POWER_TELEPORT_TEXTURE_FILE);
+            DEFUALT_RedStone_TEXTURE 		= CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_RedStone_FILE);
+            DEFUALT_RedStone_TEXTURE_POWERED = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_RedStone_FILE_POWERED);
+            DEFUALT_ADVANCEDWOOD_TEXTURE_CLOSED = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_ADVANCEDWOOD_FILE_CLOSED);
+            DEFUALT_ADVANCEDWOOD_TEXTURE 	= CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_ADVANCEDWOOD_FILE);
+            DEFUALT_Insertion_TEXTURE 		= CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_Insertion_FILE);
+            DEFUALT_DISTRIBUTOR_TEXTURE_0 	= CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "0.png");
+            DEFUALT_DISTRIBUTOR_TEXTURE_1 	= CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "1.png");
+            DEFUALT_DISTRIBUTOR_TEXTURE_2 	= CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "2.png");
+            DEFUALT_DISTRIBUTOR_TEXTURE_3 	= CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "3.png");
+            DEFUALT_DISTRIBUTOR_TEXTURE_4 	= CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "4.png");
+            DEFUALT_DISTRIBUTOR_TEXTURE_5 	= CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "5.png");
+            DEFUALT_RedStoneLiquid_TEXTURE_POWERED = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_RedStoneLiquid_FILE_POWERED);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -594,12 +595,12 @@ public class mod_zAdditionalPipes extends NetworkMod {
         pipeIds.add(BuildCraftTransport.pipePowerStone.shiftedIndex);
         pipeIds.add(BuildCraftTransport.pipePowerWood.shiftedIndex);
 
-        pipeIds.add(mod_zAdditionalPipes.pipeAdvancedInsertion.shiftedIndex);
-        pipeIds.add(mod_zAdditionalPipes.pipeAdvancedWood.shiftedIndex);
-        pipeIds.add(mod_zAdditionalPipes.pipeDistributor.shiftedIndex);
-        pipeIds.add(mod_zAdditionalPipes.pipeItemTeleport.shiftedIndex);
-        pipeIds.add(mod_zAdditionalPipes.pipeLiquidTeleport.shiftedIndex);
-        pipeIds.add(mod_zAdditionalPipes.pipePowerTeleport.shiftedIndex);
+        pipeIds.add(mod_AdditionalPipes.pipeAdvancedInsertion.shiftedIndex);
+        pipeIds.add(mod_AdditionalPipes.pipeAdvancedWood.shiftedIndex);
+        pipeIds.add(mod_AdditionalPipes.pipeDistributor.shiftedIndex);
+        pipeIds.add(mod_AdditionalPipes.pipeItemTeleport.shiftedIndex);
+        pipeIds.add(mod_AdditionalPipes.pipeLiquidTeleport.shiftedIndex);
+        pipeIds.add(mod_AdditionalPipes.pipePowerTeleport.shiftedIndex);
     }
     public static boolean ItemIsPipe(int ItemID) {
         if (pipeIds.contains(ItemID)) {
@@ -611,21 +612,21 @@ public class mod_zAdditionalPipes extends NetworkMod {
 
     @Override
     public void load() {
-        MinecraftForgeClient.preloadTexture(mod_zAdditionalPipes.DEFUALT_ITEM_TELEPORT_TEXTURE_FILE);
-        MinecraftForgeClient.preloadTexture(mod_zAdditionalPipes.DEFUALT_RedStoneLiquid_FILE);
-        MinecraftForgeClient.preloadTexture(mod_zAdditionalPipes.DEFUALT_LIQUID_TELEPORT_TEXTURE_FILE);
-        MinecraftForgeClient.preloadTexture(mod_zAdditionalPipes.DEFUALT_POWER_TELEPORT_TEXTURE_FILE);
-        MinecraftForgeClient.preloadTexture(mod_zAdditionalPipes.DEFUALT_RedStone_FILE);
-        MinecraftForgeClient.preloadTexture(mod_zAdditionalPipes.DEFUALT_RedStone_FILE_POWERED);
-        MinecraftForgeClient.preloadTexture(mod_zAdditionalPipes.DEFUALT_ADVANCEDWOOD_FILE_CLOSED);
-        MinecraftForgeClient.preloadTexture(mod_zAdditionalPipes.DEFUALT_ADVANCEDWOOD_FILE);
-        MinecraftForgeClient.preloadTexture(mod_zAdditionalPipes.DEFUALT_Insertion_FILE);
-        MinecraftForgeClient.preloadTexture(mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "0.png");
-        MinecraftForgeClient.preloadTexture(mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "1.png");
-        MinecraftForgeClient.preloadTexture(mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "2.png");
-        MinecraftForgeClient.preloadTexture(mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "3.png");
-        MinecraftForgeClient.preloadTexture(mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "4.png");
-        MinecraftForgeClient.preloadTexture(mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "5.png");
-        MinecraftForgeClient.preloadTexture(mod_zAdditionalPipes.DEFUALT_RedStoneLiquid_FILE_POWERED);
+        MinecraftForgeClient.preloadTexture(mod_AdditionalPipes.DEFUALT_ITEM_TELEPORT_TEXTURE_FILE);
+        MinecraftForgeClient.preloadTexture(mod_AdditionalPipes.DEFUALT_RedStoneLiquid_FILE);
+        MinecraftForgeClient.preloadTexture(mod_AdditionalPipes.DEFUALT_LIQUID_TELEPORT_TEXTURE_FILE);
+        MinecraftForgeClient.preloadTexture(mod_AdditionalPipes.DEFUALT_POWER_TELEPORT_TEXTURE_FILE);
+        MinecraftForgeClient.preloadTexture(mod_AdditionalPipes.DEFUALT_RedStone_FILE);
+        MinecraftForgeClient.preloadTexture(mod_AdditionalPipes.DEFUALT_RedStone_FILE_POWERED);
+        MinecraftForgeClient.preloadTexture(mod_AdditionalPipes.DEFUALT_ADVANCEDWOOD_FILE_CLOSED);
+        MinecraftForgeClient.preloadTexture(mod_AdditionalPipes.DEFUALT_ADVANCEDWOOD_FILE);
+        MinecraftForgeClient.preloadTexture(mod_AdditionalPipes.DEFUALT_Insertion_FILE);
+        MinecraftForgeClient.preloadTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "0.png");
+        MinecraftForgeClient.preloadTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "1.png");
+        MinecraftForgeClient.preloadTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "2.png");
+        MinecraftForgeClient.preloadTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "3.png");
+        MinecraftForgeClient.preloadTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "4.png");
+        MinecraftForgeClient.preloadTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "5.png");
+        MinecraftForgeClient.preloadTexture(mod_AdditionalPipes.DEFUALT_RedStoneLiquid_FILE_POWERED);
     }
 }

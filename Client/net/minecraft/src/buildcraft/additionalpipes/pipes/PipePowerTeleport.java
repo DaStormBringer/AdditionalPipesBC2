@@ -14,7 +14,7 @@ import java.util.List;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
-import net.minecraft.src.mod_zAdditionalPipes;
+import net.minecraft.src.mod_AdditionalPipes;
 import net.minecraft.src.buildcraft.api.IPowerReceptor;
 import net.minecraft.src.buildcraft.api.Orientations;
 import net.minecraft.src.buildcraft.api.Position;
@@ -39,7 +39,7 @@ public class PipePowerTeleport extends Pipe implements IPipeTransportPowerHook {
     }
     //public @TileNetworkData static final double PowerLoss = .9995;
     // Changed the PowerLoss to a configurable Variable
-    public @TileNetworkData static final double PowerLoss = mod_zAdditionalPipes.PowerLossCfg;
+    public @TileNetworkData static final double PowerLoss = mod_AdditionalPipes.PowerLossCfg;
     public @TileNetworkData int myFreq = 0;
     public @TileNetworkData boolean canReceive = false;
     public @TileNetworkData String Owner = "";
@@ -57,7 +57,7 @@ public class PipePowerTeleport extends Pipe implements IPipeTransportPowerHook {
 
     @Override
     public int getBlockTexture() {
-        return mod_zAdditionalPipes.DEFUALT_POWER_TELEPORT_TEXTURE;
+        return mod_AdditionalPipes.DEFUALT_POWER_TELEPORT_TEXTURE;
     }
 
     public double calculateLoss(int distance, double power) {

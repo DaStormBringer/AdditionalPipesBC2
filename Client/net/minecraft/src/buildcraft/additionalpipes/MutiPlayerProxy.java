@@ -7,9 +7,6 @@ import net.minecraft.src.ModLoader;
 import net.minecraft.src.buildcraft.additionalpipes.gui.*;
 import net.minecraft.src.buildcraft.api.APIProxy;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
-import net.minecraft.src.mod_zAdditionalPipes;
-
-
 
 public class MutiPlayerProxy {
     public static boolean NeedsLoad = true;

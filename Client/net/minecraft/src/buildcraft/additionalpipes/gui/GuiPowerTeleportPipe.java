@@ -2,7 +2,7 @@ package net.minecraft.src.buildcraft.additionalpipes.gui;
 
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiContainer;
-import net.minecraft.src.mod_zAdditionalPipes;
+import net.minecraft.src.mod_AdditionalPipes;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
 import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
 import net.minecraft.src.buildcraft.additionalpipes.pipes.PipePowerTeleport;
@@ -39,7 +39,7 @@ public class GuiPowerTeleportPipe extends GuiContainer {
         fontRenderer.drawString("Frequency: " + actualPipe.myFreq, 8, 6, 0x404040);
 
         if (MutiPlayerProxy.isOnServer()) {
-            fontRenderer.drawString("Connected Pipes: " + mod_zAdditionalPipes.CurrentGUICount, 100, 6, 0x404040);
+            fontRenderer.drawString("Connected Pipes: " + mod_AdditionalPipes.CurrentGUICount, 100, 6, 0x404040);
         }
         else {
             fontRenderer.drawString("Connected Pipes: " + actualPipe.getConnectedPipes(true).size(), 100, 6, 0x404040);

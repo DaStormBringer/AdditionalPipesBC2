@@ -13,7 +13,7 @@ import java.util.Random;
 
 import net.minecraft.src.IInventory;
 import net.minecraft.src.TileEntity;
-import net.minecraft.src.mod_zAdditionalPipes;
+import net.minecraft.src.mod_AdditionalPipes;
 import net.minecraft.src.buildcraft.api.APIProxy;
 import net.minecraft.src.buildcraft.api.EntityPassiveItem;
 import net.minecraft.src.buildcraft.api.Orientations;
@@ -35,7 +35,7 @@ public class PipeItemsAdvancedInsertion extends Pipe implements IPipeTransportIt
 
     @Override
     public int getBlockTexture() {
-        return mod_zAdditionalPipes.DEFUALT_Insertion_TEXTURE;
+        return mod_AdditionalPipes.DEFUALT_Insertion_TEXTURE;
     }
 
     @Override

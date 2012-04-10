@@ -14,7 +14,7 @@ import java.util.List;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.Packet230ModLoader;
 import net.minecraft.src.TileEntity;
-import net.minecraft.src.mod_zAdditionalPipes;
+import net.minecraft.src.mod_AdditionalPipes;
 import net.minecraft.src.buildcraft.api.IPowerReceptor;
 import net.minecraft.src.buildcraft.api.Orientations;
 import net.minecraft.src.buildcraft.api.Position;
@@ -58,7 +58,7 @@ public class PipePowerTeleport extends Pipe implements IPipeTransportPowerHook {
     @Override
     public int getBlockTexture() {
         MutiPlayerProxy.bindTex();
-        return mod_zAdditionalPipes.DEFUALT_POWER_TELEPORT_TEXTURE;
+        return mod_AdditionalPipes.DEFUALT_POWER_TELEPORT_TEXTURE;
     }
 
     public double calculateLoss(int distance, double power) {
@@ -325,8 +325,8 @@ public class PipePowerTeleport extends Pipe implements IPipeTransportPowerHook {
     public Packet230ModLoader getDescPipe() {
         Packet230ModLoader packet = new Packet230ModLoader();
 
-        packet.modId = mod_zAdditionalPipes.instance.getId();
-        packet.packetType = mod_zAdditionalPipes.PACKET_SET_POWER;
+        packet.modId = mod_AdditionalPipes.instance.getId();
+        packet.packetType = mod_AdditionalPipes.PACKET_SET_POWER;
         packet.isChunkDataPacket = true;
 
         packet.dataInt = new int [5];
@@ -335,7 +335,7 @@ public class PipePowerTeleport extends Pipe implements IPipeTransportPowerHook {
         packet.dataInt [1] = yCoord;
         packet.dataInt [2] = zCoord;
         packet.dataInt [3] = myFreq;
-        packet.dataInt [4] = mod_zAdditionalPipes.boolToInt(canReceive);
+        packet.dataInt [4] = mod_AdditionalPipes.boolToInt(canReceive);
 
         packet.dataString = new String[1];
         packet.dataString[0] = Owner;

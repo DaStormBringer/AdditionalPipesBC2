@@ -13,7 +13,7 @@ import java.util.LinkedList;
 import net.minecraft.src.IInventory;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
-import net.minecraft.src.mod_zAdditionalPipes;
+import net.minecraft.src.mod_AdditionalPipes;
 import net.minecraft.src.buildcraft.api.EntityPassiveItem;
 import net.minecraft.src.buildcraft.api.IPipeEntry;
 import net.minecraft.src.buildcraft.api.Orientations;
@@ -31,7 +31,7 @@ import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicDistributor;
 
 public class PipeItemsDistributor extends Pipe implements IPipeTransportItemsHook {
 
-    private @TileNetworkData int nextTexture = mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0;
+    private @TileNetworkData int nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0;
     public @TileNetworkData int distData[] = {1, 1, 1, 1, 1, 1};
     public @TileNetworkData int curTick = 0;
 
@@ -42,32 +42,32 @@ public class PipeItemsDistributor extends Pipe implements IPipeTransportItemsHoo
     @Override
     public void prepareTextureFor(Orientations connection) {
         if (connection == Orientations.Unknown) {
-            nextTexture = mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0;
+            nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0;
         }
         else {
             switch(connection) {
                 case YNeg:
-                    nextTexture = mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0;
+                    nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0;
                     break;
 
                 case YPos:
-                    nextTexture = mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_1;
+                    nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_1;
                     break;
 
                 case ZNeg:
-                    nextTexture = mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_2;
+                    nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_2;
                     break;
 
                 case ZPos:
-                    nextTexture = mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_3;
+                    nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_3;
                     break;
 
                 case XNeg:
-                    nextTexture = mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_4;
+                    nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_4;
                     break;
 
                 case XPos:
-                    nextTexture = mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_5;
+                    nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_5;
                     break;
 
             }

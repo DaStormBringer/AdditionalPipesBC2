@@ -14,7 +14,7 @@ import net.minecraft.src.IInventory;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.Packet230ModLoader;
 import net.minecraft.src.TileEntity;
-import net.minecraft.src.mod_zAdditionalPipes;
+import net.minecraft.src.mod_AdditionalPipes;
 import net.minecraft.src.buildcraft.api.EntityPassiveItem;
 import net.minecraft.src.buildcraft.api.IPipeEntry;
 import net.minecraft.src.buildcraft.api.Orientations;
@@ -32,7 +32,7 @@ import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicDistributor;
 
 public class PipeItemsDistributor extends Pipe implements IPipeTransportItemsHook {
 
-    private @TileNetworkData int nextTexture = mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0;
+    private @TileNetworkData int nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0;
     public @TileNetworkData int distData[] = {1, 1, 1, 1, 1, 1};
     public @TileNetworkData int curTick = 0;
 
@@ -43,10 +43,10 @@ public class PipeItemsDistributor extends Pipe implements IPipeTransportItemsHoo
     @Override
     public void prepareTextureFor(Orientations connection) {
         if (connection == Orientations.Unknown) {
-            nextTexture = mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0;
+            nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0;
         }
         else {
-            nextTexture = mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0 + connection.ordinal();
+            nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0 + connection.ordinal();
         }
 
     }
@@ -162,8 +162,8 @@ public class PipeItemsDistributor extends Pipe implements IPipeTransportItemsHoo
     public Packet230ModLoader getDescPipe() {
         Packet230ModLoader packet = new Packet230ModLoader();
 
-        packet.modId = mod_zAdditionalPipes.instance.getId();
-        packet.packetType = mod_zAdditionalPipes.PACKET_SET_DIST;
+        packet.modId = mod_AdditionalPipes.instance.getId();
+        packet.packetType = mod_AdditionalPipes.PACKET_SET_DIST;
         packet.isChunkDataPacket = true;
 
         packet.dataInt = new int [9];

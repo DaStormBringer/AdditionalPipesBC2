@@ -13,7 +13,7 @@ import java.util.List;
 
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
-import net.minecraft.src.mod_zAdditionalPipes;
+import net.minecraft.src.mod_AdditionalPipes;
 import net.minecraft.src.buildcraft.api.ILiquidContainer;
 import net.minecraft.src.buildcraft.api.IPipeEntry;
 import net.minecraft.src.buildcraft.api.Orientations;
@@ -55,7 +55,7 @@ public class PipeLiquidsTeleport extends Pipe implements IPipeTransportLiquidsHo
     }
     @Override
     public int getBlockTexture() {
-        return mod_zAdditionalPipes.DEFUALT_LIQUID_TELEPORT_TEXTURE;
+        return mod_AdditionalPipes.DEFUALT_LIQUID_TELEPORT_TEXTURE;
     }
 
     public void removeOldPipes() {

@@ -13,7 +13,7 @@ import java.util.LinkedList;
 import net.minecraft.src.BuildCraftTransport;
 import net.minecraft.src.IBlockAccess;
 import net.minecraft.src.World;
-import net.minecraft.src.mod_zAdditionalPipes;
+import net.minecraft.src.mod_AdditionalPipes;
 import net.minecraft.src.buildcraft.api.EntityPassiveItem;
 import net.minecraft.src.buildcraft.api.Orientations;
 import net.minecraft.src.buildcraft.api.Position;
@@ -27,7 +27,7 @@ import net.minecraft.src.buildcraft.transport.PipeTransportItems;
 
 public class PipeItemsRedstone extends Pipe implements IPipeTransportItemsHook, IPipeProvideRedstonePowerHook {
 
-    private @TileNetworkData int nextTexture = mod_zAdditionalPipes.DEFUALT_RedStone_TEXTURE;
+    private @TileNetworkData int nextTexture = mod_AdditionalPipes.DEFUALT_RedStone_TEXTURE;
     public @TileNetworkData boolean isPowering = false;
     public PipeItemsRedstone(int itemID) {
         super(new PipeTransportItems(), new PipeLogicStone (), itemID);
@@ -36,10 +36,10 @@ public class PipeItemsRedstone extends Pipe implements IPipeTransportItemsHook, 
     @Override
     public void prepareTextureFor(Orientations connection) {
         if (!isPowering) {
-            nextTexture = mod_zAdditionalPipes.DEFUALT_RedStone_TEXTURE;
+            nextTexture = mod_AdditionalPipes.DEFUALT_RedStone_TEXTURE;
         }
         else {
-            nextTexture = mod_zAdditionalPipes.DEFUALT_RedStone_TEXTURE_POWERED;
+            nextTexture = mod_AdditionalPipes.DEFUALT_RedStone_TEXTURE_POWERED;
         }
     }
     @Override

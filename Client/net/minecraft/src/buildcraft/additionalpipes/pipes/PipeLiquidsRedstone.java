@@ -12,7 +12,7 @@ import net.minecraft.src.BuildCraftTransport;
 import net.minecraft.src.IBlockAccess;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
-import net.minecraft.src.mod_zAdditionalPipes;
+import net.minecraft.src.mod_AdditionalPipes;
 import net.minecraft.src.buildcraft.api.ILiquidContainer;
 import net.minecraft.src.buildcraft.api.IPipeEntry;
 import net.minecraft.src.buildcraft.api.Orientations;
@@ -25,7 +25,7 @@ import net.minecraft.src.buildcraft.transport.PipeLogicGold;
 import net.minecraft.src.buildcraft.transport.PipeTransportLiquids;
 
 public class PipeLiquidsRedstone extends Pipe implements IPipeProvideRedstonePowerHook {
-    private @TileNetworkData int nextTexture = mod_zAdditionalPipes.DEFUALT_RedStoneLiquid_TEXTURE;
+    private @TileNetworkData int nextTexture = mod_AdditionalPipes.DEFUALT_RedStoneLiquid_TEXTURE;
     public @TileNetworkData boolean isPowering = false;
     public PipeLiquidsRedstone(int itemID) {
         super(new PipeTransportLiquids(), new PipeLogicGold(), itemID);
@@ -37,10 +37,10 @@ public class PipeLiquidsRedstone extends Pipe implements IPipeProvideRedstonePow
     @Override
     public void prepareTextureFor(Orientations connection) {
         if (!isPowering) {
-            nextTexture = mod_zAdditionalPipes.DEFUALT_RedStoneLiquid_TEXTURE;
+            nextTexture = mod_AdditionalPipes.DEFUALT_RedStoneLiquid_TEXTURE;
         }
         else {
-            nextTexture = mod_zAdditionalPipes.DEFUALT_RedStoneLiquid_TEXTURE_POWERED;
+            nextTexture = mod_AdditionalPipes.DEFUALT_RedStoneLiquid_TEXTURE_POWERED;
         }
     }
     @Override
