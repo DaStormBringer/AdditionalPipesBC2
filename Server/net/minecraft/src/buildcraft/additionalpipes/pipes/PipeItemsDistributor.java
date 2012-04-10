@@ -12,7 +12,6 @@ import java.util.LinkedList;
 
 import net.minecraft.src.IInventory;
 import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.Packet230ModLoader;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.mod_AdditionalPipes;
 import net.minecraft.src.buildcraft.api.EntityPassiveItem;
@@ -46,15 +45,41 @@ public class PipeItemsDistributor extends Pipe implements IPipeTransportItemsHoo
             nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0;
         }
         else {
-            nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0 + connection.ordinal();
+            switch(connection) {
+                case YNeg:
+                    nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0;
+                    break;
+
+                case YPos:
+                    nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_1;
+                    break;
+
+                case ZNeg:
+                    nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_2;
+                    break;
+
+                case ZPos:
+                    nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_3;
+                    break;
+
+                case XNeg:
+                    nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_4;
+                    break;
+
+                case XPos:
+                    nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_5;
+                    break;
+
+            }
+
+            //nextTexture = mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0 + connection.ordinal();
         }
 
     }
 
     @Override
     public int getBlockTexture() {
-        MutiPlayerProxy.bindTex();
-        return nextTexture;
+          return nextTexture;
     }
 
     @Override
@@ -159,11 +184,12 @@ public class PipeItemsDistributor extends Pipe implements IPipeTransportItemsHoo
             }
 
     }
+    /*
     public Packet230ModLoader getDescPipe() {
         Packet230ModLoader packet = new Packet230ModLoader();
 
-        packet.modId = mod_AdditionalPipes.instance.getId();
-        packet.packetType = mod_AdditionalPipes.PACKET_SET_DIST;
+        packet.modId = mod_zAdditionalPipes.instance.getId();
+        packet.packetType = mod_zAdditionalPipes.PACKET_SET_DIST;
         packet.isChunkDataPacket = true;
 
         packet.dataInt = new int [9];
@@ -177,6 +203,6 @@ public class PipeItemsDistributor extends Pipe implements IPipeTransportItemsHoo
         }
 
         return packet;
-    }
+    } */
 
 }

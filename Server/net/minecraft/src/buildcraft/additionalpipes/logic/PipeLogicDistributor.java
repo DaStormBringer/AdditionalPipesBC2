@@ -8,11 +8,8 @@
 
 package net.minecraft.src.buildcraft.additionalpipes.logic;
 
-import net.minecraft.src.BuildCraftCore;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.IInventory;
-import net.minecraft.src.TileEntity;
-import net.minecraft.src.mod_AdditionalPipes;
+import net.minecraft.src.buildcraft.additionalpipes.GuiHandler;
+import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemsDistributor;
 import net.minecraft.src.buildcraft.api.ILiquidContainer;
 import net.minecraft.src.buildcraft.api.IPipeEntry;
 import net.minecraft.src.buildcraft.api.Orientations;
@@ -20,8 +17,7 @@ import net.minecraft.src.buildcraft.api.Position;
 import net.minecraft.src.buildcraft.transport.PipeLogic;
 import net.minecraft.src.buildcraft.transport.PipeLogicWood;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
-import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
-import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemsDistributor;
+import net.minecraft.src.*;
 
 public class PipeLogicDistributor extends PipeLogic {
 
@@ -99,22 +95,26 @@ public class PipeLogicDistributor extends PipeLogic {
 
     @Override
     public boolean blockActivated(EntityPlayer entityplayer) {
-        super.blockActivated(entityplayer);
 
-        if (entityplayer.getCurrentEquippedItem() != null
-                && entityplayer.getCurrentEquippedItem().getItem() == BuildCraftCore.wrenchItem) {
+        ItemStack equippedItem = entityplayer.getCurrentEquippedItem();
+        
+        if (equippedItem != null) {
+            
+            if (equippedItem.getItem() == BuildCraftCore.wrenchItem) {
 
-            switchPosition();
-            worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
+                switchPosition();
+                worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
 
-            return true;
+                return true;
+            }
+
+            if (mod_AdditionalPipes.isPipe(equippedItem.getItem())) {
+                return false;
+            }
         }
-
-        if (entityplayer.getCurrentEquippedItem() != null && mod_AdditionalPipes.ItemIsPipe(entityplayer.getCurrentEquippedItem().getItem().shiftedIndex))  {
-            return false;
-        }
-
-        MutiPlayerProxy.displayGUIDistribution(entityplayer, this.container);
+        
+        entityplayer.openGui(mod_AdditionalPipes.instance, GuiHandler.PIPE_DIST, 
+                container.worldObj, container.xCoord, container.yCoord, container.zCoord);
 
         return true;
     }

@@ -10,11 +10,10 @@ package net.minecraft.src.buildcraft.additionalpipes.pipes;
 
 import java.util.LinkedList;
 import java.util.List;
-
 import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.Packet230ModLoader;
 import net.minecraft.src.TileEntity;
-import net.minecraft.src.mod_AdditionalPipes;
+import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
+import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicPowerTeleport;
 import net.minecraft.src.buildcraft.api.IPowerReceptor;
 import net.minecraft.src.buildcraft.api.Orientations;
 import net.minecraft.src.buildcraft.api.Position;
@@ -24,8 +23,7 @@ import net.minecraft.src.buildcraft.transport.IPipeTransportPowerHook;
 import net.minecraft.src.buildcraft.transport.Pipe;
 import net.minecraft.src.buildcraft.transport.PipeTransportPower;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
-import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
-import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicPowerTeleport;
+import net.minecraft.src.mod_AdditionalPipes;
 
 public class PipePowerTeleport extends Pipe implements IPipeTransportPowerHook {
     public class PowerReturn {
@@ -37,9 +35,7 @@ public class PipePowerTeleport extends Pipe implements IPipeTransportPowerHook {
             ori = o;
         }
     }
-    public @TileNetworkData static final double PowerLoss = .0595;
-    // Changed the PowerLoss to a configurable Variable
-    //public @TileNetworkData static final double PowerLoss = mod_zAdditionalPipes.PowerLossCfg;
+    
     public @TileNetworkData int myFreq = 0;
     public @TileNetworkData boolean canReceive = false;
     public @TileNetworkData String Owner = "";
@@ -49,6 +45,7 @@ public class PipePowerTeleport extends Pipe implements IPipeTransportPowerHook {
 
     }
 
+    @Override
     public void updateEntity() {
         if (!PowerTeleportPipes.contains(this)) {
             PowerTeleportPipes.add(this);
@@ -57,12 +54,11 @@ public class PipePowerTeleport extends Pipe implements IPipeTransportPowerHook {
 
     @Override
     public int getBlockTexture() {
-        MutiPlayerProxy.bindTex();
         return mod_AdditionalPipes.DEFUALT_POWER_TELEPORT_TEXTURE;
     }
 
     public double calculateLoss(int distance, double power) {
-        power = power * Math.pow(PowerLoss, distance);
+        
         return power;
     }
 
@@ -72,7 +68,7 @@ public class PipePowerTeleport extends Pipe implements IPipeTransportPowerHook {
         List<PipePowerTeleport> pipeList = getConnectedPipes(false);
         List<PipePowerTeleport> sendingToList = new LinkedList<PipePowerTeleport>();
 
-        if (pipeList.size() == 0) {
+        if (pipeList.isEmpty()) {
             return;
         }
 
@@ -82,7 +78,7 @@ public class PipePowerTeleport extends Pipe implements IPipeTransportPowerHook {
             }
         }
 
-        if (sendingToList.size() == 0) {
+        if (sendingToList.isEmpty()) {
             return;
         }
 
@@ -92,7 +88,7 @@ public class PipePowerTeleport extends Pipe implements IPipeTransportPowerHook {
         for (int a = 0; a < sendingToList.size(); a++) {
             List<PowerReturn> needsPower = TeleportNeedsPower(sendingToList.get(a));
 
-            if (needsPower.size() == 0) {
+            if (needsPower.isEmpty()) {
                 return;
             }
 
@@ -322,11 +318,12 @@ public class PipePowerTeleport extends Pipe implements IPipeTransportPowerHook {
             }
         }
     }
+    /*
     public Packet230ModLoader getDescPipe() {
         Packet230ModLoader packet = new Packet230ModLoader();
 
-        packet.modId = mod_AdditionalPipes.instance.getId();
-        packet.packetType = mod_AdditionalPipes.PACKET_SET_POWER;
+        packet.modId = mod_zAdditionalPipes.instance.getId();
+        packet.packetType = mod_zAdditionalPipes.PACKET_SET_POWER;
         packet.isChunkDataPacket = true;
 
         packet.dataInt = new int [5];
@@ -335,14 +332,14 @@ public class PipePowerTeleport extends Pipe implements IPipeTransportPowerHook {
         packet.dataInt [1] = yCoord;
         packet.dataInt [2] = zCoord;
         packet.dataInt [3] = myFreq;
-        packet.dataInt [4] = mod_AdditionalPipes.boolToInt(canReceive);
+        packet.dataInt [4] = mod_zAdditionalPipes.boolToInt(canReceive);
 
         packet.dataString = new String[1];
         packet.dataString[0] = Owner;
 
 
         return packet;
-    }
+    } */
 
 
 }

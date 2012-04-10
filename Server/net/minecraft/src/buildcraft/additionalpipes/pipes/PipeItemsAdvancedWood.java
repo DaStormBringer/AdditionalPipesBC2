@@ -13,7 +13,6 @@ import net.minecraft.src.IInventory;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.Packet230ModLoader;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
 import net.minecraft.src.mod_AdditionalPipes;
@@ -50,8 +49,7 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
 
     @Override
     public int getBlockTexture() {
-        MutiPlayerProxy.bindTex();
-        return nextTexture;
+         return nextTexture;
     }
 
     @Override
@@ -205,12 +203,12 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
         super.readFromNBT(nbttagcompound);
 
     }
-
+/*
     public Packet230ModLoader getDescPacket() {
         Packet230ModLoader packet = new Packet230ModLoader();
 
-        packet.modId = mod_AdditionalPipes.instance.getId();
-        packet.packetType = mod_AdditionalPipes.PACKET_SET_AW;
+        packet.modId = mod_zAdditionalPipes.instance.getId();
+        packet.packetType = mod_zAdditionalPipes.PACKET_SET_AW;
         packet.isChunkDataPacket = true;
 
         packet.dataInt = new int [5];
@@ -218,9 +216,9 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
         packet.dataInt [0] = xCoord;
         packet.dataInt [1] = yCoord;
         packet.dataInt [2] = zCoord;
-        packet.dataInt [3] = mod_AdditionalPipes.boolToInt(((PipeLogicAdvancedWood)this.logic).exclude);
+        packet.dataInt [3] = mod_zAdditionalPipes.boolToInt(((PipeLogicAdvancedWood)this.logic).exclude);
 
         return packet;
-    }
+    } */
 
 }

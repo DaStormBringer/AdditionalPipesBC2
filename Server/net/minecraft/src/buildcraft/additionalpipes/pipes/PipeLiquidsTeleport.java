@@ -12,7 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.Packet230ModLoader;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.mod_AdditionalPipes;
 import net.minecraft.src.buildcraft.api.ILiquidContainer;
@@ -56,7 +55,6 @@ public class PipeLiquidsTeleport extends Pipe implements IPipeTransportLiquidsHo
     }
     @Override
     public int getBlockTexture() {
-        MutiPlayerProxy.bindTex();
         return mod_AdditionalPipes.DEFUALT_LIQUID_TELEPORT_TEXTURE;
     }
 
@@ -198,11 +196,12 @@ public class PipeLiquidsTeleport extends Pipe implements IPipeTransportLiquidsHo
     public Position getPosition() {
         return new Position (xCoord, yCoord, zCoord);
     }
+    /*
     public Packet230ModLoader getDescPipe() {
         Packet230ModLoader packet = new Packet230ModLoader();
 
-        packet.modId = mod_AdditionalPipes.instance.getId();
-        packet.packetType = mod_AdditionalPipes.PACKET_SET_LIQUID;
+        packet.modId = mod_zAdditionalPipes.instance.getId();
+        packet.packetType = mod_zAdditionalPipes.PACKET_SET_LIQUID;
         packet.isChunkDataPacket = true;
 
         packet.dataInt = new int [5];
@@ -211,13 +210,13 @@ public class PipeLiquidsTeleport extends Pipe implements IPipeTransportLiquidsHo
         packet.dataInt [1] = yCoord;
         packet.dataInt [2] = zCoord;
         packet.dataInt [3] = myFreq;
-        packet.dataInt [4] = mod_AdditionalPipes.boolToInt(canReceive);
+        packet.dataInt [4] = mod_zAdditionalPipes.boolToInt(canReceive);
 
         packet.dataString = new String[1];
         packet.dataString[0] = Owner;
 
 
         return packet;
-    }
+    } */
 
 }

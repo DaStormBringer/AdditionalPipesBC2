@@ -9,13 +9,17 @@ import net.minecraft.src.buildcraft.additionalpipes.ChunkLoader.TileChunkLoader;
 import net.minecraft.src.buildcraft.additionalpipes.ChunkLoadingHandler;
 import net.minecraft.src.buildcraft.additionalpipes.GuiHandler;
 import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
+import net.minecraft.src.buildcraft.additionalpipes.NetworkHandler;
 import net.minecraft.src.buildcraft.additionalpipes.pipes.*;
 import net.minecraft.src.buildcraft.api.LaserKind;
 import net.minecraft.src.buildcraft.core.Box;
 import net.minecraft.src.buildcraft.core.CoreProxy;
 import net.minecraft.src.buildcraft.transport.BlockGenericPipe;
 import net.minecraft.src.buildcraft.transport.Pipe;
-import net.minecraft.src.forge.*;
+import net.minecraft.src.forge.Configuration;
+import net.minecraft.src.forge.MinecraftForge;
+import net.minecraft.src.forge.MinecraftForgeClient;
+import net.minecraft.src.forge.NetworkMod;
 
 public class mod_AdditionalPipes extends NetworkMod {
     
@@ -211,6 +215,7 @@ public class mod_AdditionalPipes extends NetworkMod {
         
         MinecraftForge.setGuiHandler(this, new GuiHandler());
         MinecraftForge.registerChunkLoadHandler(new ChunkLoadingHandler());
+        MinecraftForge.registerConnectionHandler(new NetworkHandler());
         
     }
     
