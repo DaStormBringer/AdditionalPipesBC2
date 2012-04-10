@@ -1,5 +1,13 @@
 package net.minecraft.src;
 
+import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemsDistributor;
+import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemTeleport;
+import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemsRedstone;
+import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeLiquidsRedstone;
+import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
+import net.minecraft.src.buildcraft.additionalpipes.pipes.PipePowerTeleport;
+import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeLiquidsTeleport;
+import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemsAdvancedInsertion;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,11 +17,10 @@ import net.minecraft.src.buildcraft.core.CoreProxy;
 import net.minecraft.src.buildcraft.transport.BlockGenericPipe;
 import net.minecraft.src.buildcraft.transport.Pipe;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
-import net.minecraft.src.buildcraft.zeldo.ChunkLoader.BlockChunkLoader;
-import net.minecraft.src.buildcraft.zeldo.ChunkLoader.TileChunkLoader;
-import net.minecraft.src.buildcraft.zeldo.MutiPlayerProxy;
-import net.minecraft.src.buildcraft.zeldo.logic.PipeLogicAdvancedWood;
-import net.minecraft.src.buildcraft.zeldo.pipes.*;
+import net.minecraft.src.buildcraft.additionalpipes.ChunkLoader.BlockChunkLoader;
+import net.minecraft.src.buildcraft.additionalpipes.ChunkLoader.TileChunkLoader;
+import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
+import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicAdvancedWood;
 import net.minecraft.src.forge.Configuration;
 import net.minecraft.src.forge.IChunkLoadHandler;
 import net.minecraft.src.forge.MinecraftForge;
@@ -232,7 +239,7 @@ public class mod_zAdditionalPipes extends BaseModMp {
         pipeRedStoneLiquid 		= createPipe(mod_zAdditionalPipes.DEFUALT_RedStoneLiquid_ID, PipeLiquidsRedstone.class, "Waterproof Redstone Pipe", BuildCraftTransport.pipeWaterproof, pipeRedStone, null, null);
 
         //ChunkLoader
-        ModLoader.registerTileEntity(net.minecraft.src.buildcraft.zeldo.ChunkLoader.TileChunkLoader.class, "ChunkLoader");
+        ModLoader.registerTileEntity(net.minecraft.src.buildcraft.additionalpipes.ChunkLoader.TileChunkLoader.class, "ChunkLoader");
         int ChunkLoaderID = Integer.parseInt(config.getOrCreateIntProperty("ChunkLoader.id", Configuration.CATEGORY_BLOCK, DEFUALT_CHUNK_LOADER_ID).value);
         config.save();
         blockChunkLoader = new BlockChunkLoader(ChunkLoaderID);

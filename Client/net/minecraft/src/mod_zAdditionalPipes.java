@@ -3,8 +3,15 @@ package net.minecraft.src;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import net.minecraft.client.Minecraft;
+import net.minecraft.src.buildcraft.additionalpipes.ChunkLoader.BlockChunkLoader;
+import net.minecraft.src.buildcraft.additionalpipes.ChunkLoader.TileChunkLoader;
+import net.minecraft.src.buildcraft.additionalpipes.ChunkLoadingHandler;
+import net.minecraft.src.buildcraft.additionalpipes.GuiHandler;
+import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
+import net.minecraft.src.buildcraft.additionalpipes.gui.*;
+import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicAdvancedWood;
+import net.minecraft.src.buildcraft.additionalpipes.pipes.*;
 import net.minecraft.src.buildcraft.api.APIProxy;
 import net.minecraft.src.buildcraft.api.LaserKind;
 import net.minecraft.src.buildcraft.core.Box;
@@ -12,66 +19,20 @@ import net.minecraft.src.buildcraft.core.CoreProxy;
 import net.minecraft.src.buildcraft.transport.BlockGenericPipe;
 import net.minecraft.src.buildcraft.transport.Pipe;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
-import net.minecraft.src.buildcraft.zeldo.ChunkLoader.BlockChunkLoader;
-import net.minecraft.src.buildcraft.zeldo.ChunkLoader.TileChunkLoader;
-import net.minecraft.src.buildcraft.zeldo.MutiPlayerProxy;
-import net.minecraft.src.buildcraft.zeldo.gui.*;
-import net.minecraft.src.buildcraft.zeldo.logic.PipeLogicAdvancedWood;
-import net.minecraft.src.buildcraft.zeldo.pipes.*;
 import net.minecraft.src.forge.*;
 
-public class mod_zAdditionalPipes extends BaseModMp {
+public class mod_zAdditionalPipes extends NetworkMod {
     
     public static mod_zAdditionalPipes instance;
-    
-    /*
-    * ChuckLoader Handler
-    */
-    private class ChunkLoadingHandler implements IChunkLoadHandler {
 
-        @Override
-        public void addActiveChunks(World world, Set<ChunkCoordIntPair> chunkList) {
-            
-            if (mc.theWorld.isRemote)
-                return;
-            
-            for (TileChunkLoader tile : TileChunkLoader.chunkLoaderList) {
-                
-                List<ChunkCoordIntPair> loadArea = tile.getLoadArea();
-                for (ChunkCoordIntPair chunkCoords : loadArea) {
+    @Override
+    public boolean clientSideRequired() {
+        return true;
+    }
 
-                    if (!chunkList.contains(chunkCoords)) {
-                        chunkList.add(chunkCoords);
-                        log("Adding chunk: " + chunkCoords, LOG_INFO);
-                    }
-                    else {
-                        log(chunkCoords + " already there.", LOG_INFO);
-                    }
-                }
-            }
-        }
-
-        @Override
-        public boolean canUnloadChunk(Chunk chunk) {
-
-            if (mc.theWorld.isRemote)
-                return true;
-            
-            for (TileChunkLoader tile : TileChunkLoader.chunkLoaderList) {
-
-                List<ChunkCoordIntPair> loadArea = tile.getLoadArea();
-                for (ChunkCoordIntPair chunkCoords : loadArea) {
-                    
-                    if (chunk.worldObj.getChunkFromChunkCoords(chunkCoords.chunkXPos, chunkCoords.chunkZPos).equals(chunk)) {
-                        log("Keeping chunk: " + chunk.getChunkCoordIntPair(), LOG_INFO);
-                        return false;
-                    }
-                }
-            }
-            
-            log("Unloading chunk: " + chunk.getChunkCoordIntPair(), LOG_INFO);
-            return true;
-        }
+    @Override
+    public boolean serverSideRequired() {
+        return false;
     }
 
     @Override
@@ -227,7 +188,7 @@ public class mod_zAdditionalPipes extends BaseModMp {
                 for (ChunkCoordIntPair coords : chunkCoords) {
 
                     int chunkX = coords.chunkXPos * 16;
-                    int chunkZ = coords.chunkZPos * 16;
+                    int chunkZ = coords.chunkZPosition * 16;
 
                     Box outsideLaser = new Box();
                     outsideLaser.initialize(chunkX, playerY, chunkZ, chunkX + 16, playerY, chunkZ + 16);
@@ -249,6 +210,7 @@ public class mod_zAdditionalPipes extends BaseModMp {
         ModLoader.registerKey(this, laserKeyBinding, false);
         ModLoader.addLocalization("laserKeyBinding", "Turn on/off chunk loader boundries");
         
+        MinecraftForge.setGuiHandler(this, new GuiHandler());
         MinecraftForge.registerChunkLoadHandler(new ChunkLoadingHandler());
         
     }
@@ -310,10 +272,7 @@ public class mod_zAdditionalPipes extends BaseModMp {
     public void modsLoaded () {
         
         super.modsLoaded();
-        ModLoaderMp.registerGUI(this, GUI_ADVANCEDWOOD_REC);
-        ModLoaderMp.registerGUI(this, GUI_ENERGY_REC);
-        ModLoaderMp.registerGUI(this, GUI_ITEM_REC);
-        ModLoaderMp.registerGUI(this, GUI_LIQUID_REC);
+        
         instance = this;
 
         config = new Configuration(new File(CoreProxy.getBuildCraftBase(), "config/AdditionalPipes.cfg"));
@@ -350,7 +309,7 @@ public class mod_zAdditionalPipes extends BaseModMp {
 
 
         //ChunkLoader
-        ModLoader.registerTileEntity(net.minecraft.src.buildcraft.zeldo.ChunkLoader.TileChunkLoader.class, "ChunkLoader");
+        ModLoader.registerTileEntity(net.minecraft.src.buildcraft.additionalpipes.ChunkLoader.TileChunkLoader.class, "ChunkLoader");
         int ChunkLoaderID = Integer.parseInt(config.getOrCreateIntProperty("ChunkLoader.id", Configuration.CATEGORY_BLOCK, DEFUALT_CHUNK_LOADER_ID).value);
         config.save();
         blockChunkLoader = new BlockChunkLoader(ChunkLoaderID);
@@ -446,13 +405,7 @@ public class mod_zAdditionalPipes extends BaseModMp {
 
         return null;
     }
-
-    public byte [] ReDim(byte [] array, int newSize) {
-        byte [] abytNew = new byte[newSize];
-        System.arraycopy(array, 0, abytNew, 0, array.length);
-        return abytNew;
-    }
-
+    
     @Override
     public void handlePacket(Packet230ModLoader packet) {
         System.out.println("Packet: " + packet.packetType);
