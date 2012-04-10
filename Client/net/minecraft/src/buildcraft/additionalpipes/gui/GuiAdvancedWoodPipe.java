@@ -66,7 +66,7 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
         int i1 = mc.renderEngine
-                 .getTexture("/net/minecraft/src/buildcraft/zeldo/gui/advancedwoodgui.png");
+                 .getTexture("/net/minecraft/src/buildcraft/additionalpipes/gui/advancedwoodgui.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.renderEngine.bindTexture(i1);
         int j1 = (width - xSize) / 2;

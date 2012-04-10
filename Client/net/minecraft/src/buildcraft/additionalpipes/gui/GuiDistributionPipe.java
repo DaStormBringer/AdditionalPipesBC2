@@ -145,7 +145,7 @@ public class GuiDistributionPipe extends GuiContainer {
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        int i = mc.renderEngine.getTexture("/net/minecraft/src/buildcraft/zeldo/gui/DistGUI.png");
+        int i = mc.renderEngine.getTexture("/net/minecraft/src/buildcraft/additionalpipes/gui/DistGUI.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.renderEngine.bindTexture(i);
         int j = (width - xSize) / 2;

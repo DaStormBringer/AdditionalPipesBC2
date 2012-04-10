@@ -91,7 +91,7 @@ public class GuiPowerTeleportPipe extends GuiContainer {
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
         int i = mc.renderEngine
-                .getTexture("/net/minecraft/src/buildcraft/zeldo/gui/gui.png");
+                .getTexture("/net/minecraft/src/buildcraft/additionalpipes/gui/gui.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.renderEngine.bindTexture(i);
         int j = (width - xSize) / 2;

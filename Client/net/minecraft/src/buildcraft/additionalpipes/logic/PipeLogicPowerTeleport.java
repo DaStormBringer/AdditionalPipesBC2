@@ -8,7 +8,7 @@
 package net.minecraft.src.buildcraft.additionalpipes.logic;
 
 import net.minecraft.src.buildcraft.additionalpipes.GuiHandler;
-import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemTeleport;
+import net.minecraft.src.buildcraft.additionalpipes.pipes.PipePowerTeleport;
 import net.minecraft.src.buildcraft.api.IPipe;
 import net.minecraft.src.buildcraft.transport.Pipe;
 import net.minecraft.src.buildcraft.transport.PipeLogic;
@@ -20,7 +20,7 @@ public class PipeLogicPowerTeleport extends PipeLogic {
     @Override
     public boolean blockActivated(EntityPlayer entityplayer) {
         
-        PipeItemTeleport a = (PipeItemTeleport) this.container.pipe;
+        PipePowerTeleport a = (PipePowerTeleport) this.container.pipe;
         if (a.Owner == null || a.Owner.equalsIgnoreCase("")) {
             a.Owner = entityplayer.username;
         }
