@@ -287,25 +287,25 @@ public class mod_AdditionalPipes extends NetworkMod {
 		// Distributor Pipe
 		if (loadItemsDistributor){
         pipeDistributor = createPipe(DISTRIBUTOR_TELEPORT_ID, PipeItemsDistributor.class, "Distribution Transport Pipe");
-		craftingmanager.addRecipe(new ItemStack(pipeDistributor, 1), new Object[]{ " r ", "IgI", Character.valueOf('r'), Item.redstone, Character.valueOf('I'), Item.ingotIron, Character.valueOf('g'), Block.glass });
+		craftingmanager.addRecipe(new ItemStack(pipeDistributor, 8), new Object[]{ " r ", "IgI", Character.valueOf('r'), Item.redstone, Character.valueOf('I'), Item.ingotIron, Character.valueOf('g'), Block.glass });
 		}
 		
 		// Advanced Wooded Pipe
 		if (loadItemsAdvancedWood){
 	    pipeAdvancedWood = createPipe(ADVANCEDWOOD_ID, PipeItemsAdvancedWood.class, "Advanced Wooden Transport Pipe");
-		craftingmanager.addRecipe(new ItemStack(pipeAdvancedWood, 1), new Object[]{ " r ", "WgW", Character.valueOf('r'), Item.redstone, Character.valueOf('W'), Block.planks, Character.valueOf('g'), Block.glass });
+		craftingmanager.addRecipe(new ItemStack(pipeAdvancedWood, 8), new Object[]{ " r ", "WgW", Character.valueOf('r'), Item.redstone, Character.valueOf('W'), Block.planks, Character.valueOf('g'), Block.glass });
 		}
 		
 		// Advanced Insertion Pipe
 		if (loadItemsAdvancedInsertion){
 		pipeAdvancedInsertion = createPipe(Insertion_ID, PipeItemsAdvancedInsertion.class, "Advanced Insertion Pipe");
-		craftingmanager.addRecipe(new ItemStack(pipeAdvancedInsertion, 1), new Object[]{ " r ", "SgS", Character.valueOf('r'), Item.redstone, Character.valueOf('S'), Block.stone, Character.valueOf('g'), Block.glass });
+		craftingmanager.addRecipe(new ItemStack(pipeAdvancedInsertion, 8), new Object[]{ " r ", "SgS", Character.valueOf('r'), Item.redstone, Character.valueOf('S'), Block.stone, Character.valueOf('g'), Block.glass });
 		}
 		
 		// Redstone Pipe
 		if (loadItemsRedstone){
         pipeRedStone = createPipe(RedStone_ID, PipeItemsRedstone.class, "Redstone Transport Pipe");
-		craftingmanager.addRecipe(new ItemStack(pipeRedStone, 2), new Object[]{"RgR", Character.valueOf('R'), Item.redstone, Character.valueOf('g'), Block.glass });
+		craftingmanager.addRecipe(new ItemStack(pipeRedStone, 8), new Object[]{"RgR", Character.valueOf('R'), Item.redstone, Character.valueOf('g'), Block.glass });
 		}
 		
 		// Redstone Liquid Pipe

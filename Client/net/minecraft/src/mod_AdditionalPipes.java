@@ -342,7 +342,7 @@ public class mod_AdditionalPipes extends NetworkMod {
         DEFUALT_DISTRIBUTOR_TEXTURE_4 = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "4.png");
         DEFUALT_DISTRIBUTOR_TEXTURE_5 = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "5.png");
    		pipeDistributor = createPipe(DISTRIBUTOR_TELEPORT_ID, PipeItemsDistributor.class, "Distribution Transport Pipe");
-		craftingmanager.addRecipe(new ItemStack(pipeDistributor, 1), new Object[]{ " r ", "IgI", Character.valueOf('r'), Item.redstone, Character.valueOf('I'), Item.ingotIron, Character.valueOf('g'), Block.glass });
+		craftingmanager.addRecipe(new ItemStack(pipeDistributor, 8), new Object[]{ " r ", "IgI", Character.valueOf('r'), Item.redstone, Character.valueOf('I'), Item.ingotIron, Character.valueOf('g'), Block.glass });
 		}
 		
 		// Advanced Wooded Pipe
@@ -350,14 +350,14 @@ public class mod_AdditionalPipes extends NetworkMod {
 	    DEFUALT_ADVANCEDWOOD_TEXTURE_CLOSED = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_ADVANCEDWOOD_FILE_CLOSED);
 	    DEFUALT_ADVANCEDWOOD_TEXTURE = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_ADVANCEDWOOD_FILE);
  		pipeAdvancedWood = createPipe(ADVANCEDWOOD_ID, PipeItemsAdvancedWood.class, "Advanced Wooden Transport Pipe");
-		craftingmanager.addRecipe(new ItemStack(pipeAdvancedWood, 1), new Object[]{ " r ", "WgW", Character.valueOf('r'), Item.redstone, Character.valueOf('W'), Block.planks, Character.valueOf('g'), Block.glass });
+		craftingmanager.addRecipe(new ItemStack(pipeAdvancedWood, 8), new Object[]{ " r ", "WgW", Character.valueOf('r'), Item.redstone, Character.valueOf('W'), Block.planks, Character.valueOf('g'), Block.glass });
 		}
 		
 		// Advanced Insertion Pipe
 		if (loadItemsAdvancedInsertion){
 		DEFUALT_Insertion_TEXTURE = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_Insertion_FILE);
 		pipeAdvancedInsertion = createPipe(Insertion_ID, PipeItemsAdvancedInsertion.class, "Advanced Insertion Pipe");
-		craftingmanager.addRecipe(new ItemStack(pipeAdvancedInsertion, 1), new Object[]{ " r ", "SgS", Character.valueOf('r'), Item.redstone, Character.valueOf('S'), Block.stone, Character.valueOf('g'), Block.glass });
+		craftingmanager.addRecipe(new ItemStack(pipeAdvancedInsertion, 8), new Object[]{ " r ", "SgS", Character.valueOf('r'), Item.redstone, Character.valueOf('S'), Block.stone, Character.valueOf('g'), Block.glass });
 		}
 		
 		// Redstone Pipe
@@ -365,7 +365,7 @@ public class mod_AdditionalPipes extends NetworkMod {
         DEFUALT_RedStone_TEXTURE = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_RedStone_FILE);
         DEFUALT_RedStone_TEXTURE_POWERED = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_RedStone_FILE_POWERED);
 		pipeRedStone = createPipe(RedStone_ID, PipeItemsRedstone.class, "Redstone Transport Pipe");
-		craftingmanager.addRecipe(new ItemStack(pipeRedStone, 2), new Object[]{"RgR", Character.valueOf('R'), Item.redstone, Character.valueOf('g'), Block.glass });
+		craftingmanager.addRecipe(new ItemStack(pipeRedStone, 8), new Object[]{"RgR", Character.valueOf('R'), Item.redstone, Character.valueOf('g'), Block.glass });
 		}
 		
 		// Redstone Liquid Pipe
