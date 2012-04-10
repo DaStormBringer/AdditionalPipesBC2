@@ -7,36 +7,40 @@
  */
 package net.minecraft.src.buildcraft.additionalpipes.logic;
 
-import net.minecraft.src.BuildCraftCore;
-import net.minecraft.src.BuildCraftTransport;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.TileEntity;
-import net.minecraft.src.mod_AdditionalPipes;
+import net.minecraft.src.buildcraft.additionalpipes.GuiHandler;
+import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemTeleport;
+import net.minecraft.src.buildcraft.api.IPipe;
 import net.minecraft.src.buildcraft.transport.Pipe;
 import net.minecraft.src.buildcraft.transport.PipeLogic;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
-import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
-import net.minecraft.src.buildcraft.additionalpipes.pipes.PipePowerTeleport;
+import net.minecraft.src.*;
 
 public class PipeLogicPowerTeleport extends PipeLogic {
 
     @Override
     public boolean blockActivated(EntityPlayer entityplayer) {
-        if (entityplayer.getCurrentEquippedItem() != null && mod_AdditionalPipes.ItemIsPipe(entityplayer.getCurrentEquippedItem().getItem().shiftedIndex))  {
-            return false;
-        }
-
-        if (mod_AdditionalPipes.wrenchOpensGui && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().getItem() != BuildCraftCore.wrenchItem) {
-            return false;
-        }
-
-        PipePowerTeleport a = (PipePowerTeleport) this.container.pipe;
-
+        
+        PipeItemTeleport a = (PipeItemTeleport) this.container.pipe;
         if (a.Owner == null || a.Owner.equalsIgnoreCase("")) {
             a.Owner = entityplayer.username;
         }
+        
+        ItemStack equippedItem = entityplayer.getCurrentEquippedItem();
+        
+        if (equippedItem == null) {
+            return true;
+        }
+        
+        if (equippedItem.getItem() instanceof IPipe)  {
+            return false;
+        }
 
-        MutiPlayerProxy.displayGUIPowerTeleport(entityplayer, this.container);
+        if (equippedItem.getItem() == BuildCraftCore.wrenchItem && !mod_AdditionalPipes.wrenchOpensGui) {
+            return false;
+        }
+
+        entityplayer.openGui(mod_AdditionalPipes.instance, GuiHandler.PIPE_TP_POWER, 
+                container.worldObj, container.xCoord, container.yCoord, container.zCoord);
 
         return true;
     }

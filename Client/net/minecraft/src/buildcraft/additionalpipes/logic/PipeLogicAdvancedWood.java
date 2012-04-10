@@ -8,25 +8,14 @@
 
 package net.minecraft.src.buildcraft.additionalpipes.logic;
 
-import net.minecraft.src.BuildCraftCore;
-import net.minecraft.src.BuildCraftTransport;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.IInventory;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.NBTTagList;
-import net.minecraft.src.TileEntity;
-import net.minecraft.src.mod_AdditionalPipes;
-import net.minecraft.src.buildcraft.api.ILiquidContainer;
-import net.minecraft.src.buildcraft.api.Orientations;
-import net.minecraft.src.buildcraft.api.Position;
-import net.minecraft.src.buildcraft.api.TileNetworkData;
+import net.minecraft.src.buildcraft.additionalpipes.GuiHandler;
+import net.minecraft.src.buildcraft.api.*;
 import net.minecraft.src.buildcraft.core.Utils;
 import net.minecraft.src.buildcraft.transport.Pipe;
 import net.minecraft.src.buildcraft.transport.PipeLogic;
 import net.minecraft.src.buildcraft.transport.PipeLogicWood;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
-import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
+import net.minecraft.src.*;
 
 public class PipeLogicAdvancedWood extends PipeLogic {
 
@@ -69,16 +58,24 @@ public class PipeLogicAdvancedWood extends PipeLogic {
 
     @Override
     public boolean blockActivated(EntityPlayer entityplayer) {
-        if (entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().getItem() == BuildCraftCore.wrenchItem) {
+        
+        ItemStack equippedItem = entityplayer.getCurrentEquippedItem();
+        
+        if (equippedItem == null) {
+            return true;
+        }
+        
+        if (equippedItem.getItem() == BuildCraftCore.wrenchItem) {
             switchSource();
             return true;
         }
-
-        if (entityplayer.getCurrentEquippedItem() != null && mod_AdditionalPipes.ItemIsPipe(entityplayer.getCurrentEquippedItem().getItem().shiftedIndex))  {
+        
+        if (equippedItem.getItem() instanceof IPipe) {
             return false;
         }
 
-        MutiPlayerProxy.displayGUIAdvancedWood(entityplayer, this.container);
+        entityplayer.openGui(mod_AdditionalPipes.instance, GuiHandler.PIPE_WOODEN_ADV, 
+                container.worldObj, container.xCoord, container.yCoord, container.zCoord);
 
         return true;
     }

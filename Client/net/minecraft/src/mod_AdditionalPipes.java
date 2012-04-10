@@ -154,8 +154,6 @@ public class mod_AdditionalPipes extends NetworkMod {
 
     public static Minecraft mc = ModLoader.getMinecraftInstance();
 
-    public static List<Integer> pipeIds = new LinkedList<Integer>();
-
     public KeyBinding laserKeyBinding = new KeyBinding("laserKeyBinding", 67);
     public static List<Box> lasers = new LinkedList<Box>();
 
@@ -348,9 +346,6 @@ public class mod_AdditionalPipes extends NetworkMod {
             craftingmanager.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsStone, 1), new Object[] {"A", Character.valueOf('A'), BuildCraftTransport.pipePowerStone});
             craftingmanager.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsWood, 1), new Object[] {"A", Character.valueOf('A'), BuildCraftTransport.pipePowerWood});
         }
-
-        RegisterPipeIds();
-
     }
 
     public static void AddImageOverride() {
@@ -576,42 +571,10 @@ public class mod_AdditionalPipes extends NetworkMod {
 
         return res;
     }
-    public static void RegisterPipeIds() {
-        pipeIds.add(BuildCraftTransport.pipeItemsCobblestone.shiftedIndex);
-        pipeIds.add(BuildCraftTransport.pipeItemsDiamond.shiftedIndex);
-        pipeIds.add(BuildCraftTransport.pipeItemsGold.shiftedIndex);
-        pipeIds.add(BuildCraftTransport.pipeItemsIron.shiftedIndex);
-        pipeIds.add(BuildCraftTransport.pipeItemsObsidian.shiftedIndex);
-        pipeIds.add(BuildCraftTransport.pipeItemsStone.shiftedIndex);
-        pipeIds.add(BuildCraftTransport.pipeItemsWood.shiftedIndex);
-
-        pipeIds.add(BuildCraftTransport.pipeLiquidsCobblestone.shiftedIndex);
-        pipeIds.add(BuildCraftTransport.pipeLiquidsGold.shiftedIndex);
-        pipeIds.add(BuildCraftTransport.pipeLiquidsIron.shiftedIndex);
-        pipeIds.add(BuildCraftTransport.pipeLiquidsStone.shiftedIndex);
-        pipeIds.add(BuildCraftTransport.pipeLiquidsWood.shiftedIndex);
-
-        pipeIds.add(BuildCraftTransport.pipePowerGold.shiftedIndex);
-        pipeIds.add(BuildCraftTransport.pipePowerStone.shiftedIndex);
-        pipeIds.add(BuildCraftTransport.pipePowerWood.shiftedIndex);
-
-        pipeIds.add(mod_AdditionalPipes.pipeAdvancedInsertion.shiftedIndex);
-        pipeIds.add(mod_AdditionalPipes.pipeAdvancedWood.shiftedIndex);
-        pipeIds.add(mod_AdditionalPipes.pipeDistributor.shiftedIndex);
-        pipeIds.add(mod_AdditionalPipes.pipeItemTeleport.shiftedIndex);
-        pipeIds.add(mod_AdditionalPipes.pipeLiquidTeleport.shiftedIndex);
-        pipeIds.add(mod_AdditionalPipes.pipePowerTeleport.shiftedIndex);
-    }
-    public static boolean ItemIsPipe(int ItemID) {
-        if (pipeIds.contains(ItemID)) {
-            return true;
-        }
-
-        return false;
-    }
 
     @Override
     public void load() {
+        
         MinecraftForgeClient.preloadTexture(mod_AdditionalPipes.DEFUALT_ITEM_TELEPORT_TEXTURE_FILE);
         MinecraftForgeClient.preloadTexture(mod_AdditionalPipes.DEFUALT_RedStoneLiquid_FILE);
         MinecraftForgeClient.preloadTexture(mod_AdditionalPipes.DEFUALT_LIQUID_TELEPORT_TEXTURE_FILE);

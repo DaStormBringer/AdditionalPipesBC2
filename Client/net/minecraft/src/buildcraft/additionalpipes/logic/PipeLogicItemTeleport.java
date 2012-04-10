@@ -9,6 +9,7 @@ package net.minecraft.src.buildcraft.additionalpipes.logic;
 
 import net.minecraft.src.buildcraft.additionalpipes.GuiHandler;
 import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemTeleport;
+import net.minecraft.src.buildcraft.api.IPipe;
 import net.minecraft.src.buildcraft.transport.Pipe;
 import net.minecraft.src.buildcraft.transport.PipeLogic;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
@@ -18,18 +19,24 @@ public class PipeLogicItemTeleport extends PipeLogic {
 
     @Override
     public boolean blockActivated(EntityPlayer entityplayer) {
-        if (entityplayer.getCurrentEquippedItem() != null && mod_AdditionalPipes.ItemIsPipe(entityplayer.getCurrentEquippedItem().getItem().shiftedIndex))  {
-            return false;
-        }
-
-        if (mod_AdditionalPipes.wrenchOpensGui && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().getItem() != BuildCraftCore.wrenchItem) {
-            return false;
-        }
-
+        
         PipeItemTeleport a = (PipeItemTeleport) this.container.pipe;
-
         if (a.Owner == null || a.Owner.equalsIgnoreCase("")) {
             a.Owner = entityplayer.username;
+        }
+        
+        ItemStack equippedItem = entityplayer.getCurrentEquippedItem();
+        
+        if (equippedItem == null) {
+            return true;
+        }
+        
+        if (equippedItem.getItem() instanceof IPipe)  {
+            return false;
+        }
+
+        if (equippedItem.getItem() == BuildCraftCore.wrenchItem && !mod_AdditionalPipes.wrenchOpensGui) {
+            return false;
         }
 
         entityplayer.openGui(mod_AdditionalPipes.instance, GuiHandler.PIPE_TP_ITEM, 
@@ -37,6 +44,7 @@ public class PipeLogicItemTeleport extends PipeLogic {
 
         return true;
     }
+    
     @Override
     public boolean isPipeConnected(TileEntity tile) {
         Pipe pipe2 = null;
