@@ -2,7 +2,6 @@ package net.minecraft.src.buildcraft.additionalpipes.gui;
 
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiContainer;
-import net.minecraft.src.ModLoaderMp;
 import net.minecraft.src.mod_zAdditionalPipes;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
 import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemsDistributor;
@@ -142,7 +141,7 @@ public class GuiDistributionPipe extends GuiContainer {
                 actualPipe.distData[i] = 1;
             }
 
-        ModLoaderMp.sendPacket(mod_zAdditionalPipes.instance, actualPipe.getDescPipe());
+     //   ModLoaderMp.sendPacket(mod_zAdditionalPipes.instance, actualPipe.getDescPipe());
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {

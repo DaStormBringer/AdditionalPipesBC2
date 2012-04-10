@@ -41,25 +41,25 @@ public class mod_zAdditionalPipes extends NetworkMod {
     }
 
     public static int MASTER_TEXTURE_OFFSET = 0;// 8 * 16;
-    public static String MASTER_TEXTURE_FILE = "/net/minecraft/src/buildcraft/zeldo/gui/block_textures.png";
+    public static String MASTER_TEXTURE_FILE = "/net/minecraft/src/buildcraft/additionalpipes/gui/block_textures.png";
 
     //Item Teleport
     public static Item pipeItemTeleport;
     public static int DEFUALT_ITEM_TELEPORT_ID = 4047;
     public static int DEFUALT_ITEM_TELEPORT_TEXTURE = 0;//8 * 16 + 0;
-    public static String DEFUALT_ITEM_TELEPORT_TEXTURE_FILE = "/net/minecraft/src/buildcraft/zeldo/gui/BlueItem.png";
+    public static String DEFUALT_ITEM_TELEPORT_TEXTURE_FILE = "/net/minecraft/src/buildcraft/additionalpipes/gui/BlueItem.png";
 
     //Liquid Teleport
     public static Item pipeLiquidTeleport;
     public static int DEFUALT_LIQUID_TELEPORT_ID = 4048;
     public static int DEFUALT_LIQUID_TELEPORT_TEXTURE = 0;//8 * 16 + 2;
-    public static String DEFUALT_LIQUID_TELEPORT_TEXTURE_FILE = "/net/minecraft/src/buildcraft/zeldo/gui/BlueLiquid.png";
+    public static String DEFUALT_LIQUID_TELEPORT_TEXTURE_FILE = "/net/minecraft/src/buildcraft/additionalpipes/gui/BlueLiquid.png";
 
     //Power Teleport
     public static Item pipePowerTeleport;
     public static int DEFUALT_POWER_TELEPORT_ID = 4049;
     public static int DEFUALT_POWER_TELEPORT_TEXTURE = 0;//8 * 16 + 3;
-    public static String DEFUALT_POWER_TELEPORT_TEXTURE_FILE = "/net/minecraft/src/buildcraft/zeldo/gui/BluePower.png";
+    public static String DEFUALT_POWER_TELEPORT_TEXTURE_FILE = "/net/minecraft/src/buildcraft/additionalpipes/gui/BluePower.png";
 
     //Distributor
     public static Item pipeDistributor;
@@ -71,39 +71,39 @@ public class mod_zAdditionalPipes extends NetworkMod {
     public static int DEFUALT_DISTRIBUTOR_TEXTURE_4 = 0;
     public static int DEFUALT_DISTRIBUTOR_TEXTURE_5 = 0;
 
-    public static String DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE 	= "/net/minecraft/src/buildcraft/zeldo/gui/Dist";
-    public static String DEFUALT_DISTRIBUTOR_TEXTURE_FILE 		= "/net/minecraft/src/buildcraft/zeldo/gui/DistributionOpen.png";
-    public static String DEFUALT_DISTRIBUTOR_TEXTURE_FILE_CLOSED = "/net/minecraft/src/buildcraft/zeldo/gui/DistributionClosed.png";
+    public static String DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE 	= "/net/minecraft/src/buildcraft/additionalpipes/gui/Dist";
+    public static String DEFUALT_DISTRIBUTOR_TEXTURE_FILE 		= "/net/minecraft/src/buildcraft/additionalpipes/gui/DistributionOpen.png";
+    public static String DEFUALT_DISTRIBUTOR_TEXTURE_FILE_CLOSED = "/net/minecraft/src/buildcraft/additionalpipes/gui/DistributionClosed.png";
 
     //Advanced Wood
     public static Item pipeAdvancedWood;
     public static int DEFUALT_ADVANCEDWOOD_ID 		= 4045;
     public static int DEFUALT_ADVANCEDWOOD_TEXTURE 	= 0;//8*16+6;
     public static int DEFUALT_ADVANCEDWOOD_TEXTURE_CLOSED = 0;//8*16+7;
-    public static String DEFUALT_ADVANCEDWOOD_FILE 	= "/net/minecraft/src/buildcraft/zeldo/gui/AdvancedWood.png";
-    public static String DEFUALT_ADVANCEDWOOD_FILE_CLOSED = "/net/minecraft/src/buildcraft/zeldo/gui/AdvancedWoodClosed.png";
+    public static String DEFUALT_ADVANCEDWOOD_FILE 	= "/net/minecraft/src/buildcraft/additionalpipes/gui/AdvancedWood.png";
+    public static String DEFUALT_ADVANCEDWOOD_FILE_CLOSED = "/net/minecraft/src/buildcraft/additionalpipes/gui/AdvancedWoodClosed.png";
 
     //Advanced Insertion
     public static Item pipeAdvancedInsertion;
     public static int DEFUALT_Insertion_ID = 4044;
     public static int DEFUALT_Insertion_TEXTURE = 0;//8*16+8;
-    public static String DEFUALT_Insertion_FILE = "/net/minecraft/src/buildcraft/zeldo/gui/AdvInsert.png";
+    public static String DEFUALT_Insertion_FILE = "/net/minecraft/src/buildcraft/additionalpipes/gui/AdvInsert.png";
 
     //Redstone
     public static Item pipeRedStone;
     public static int DEFUALT_RedStone_ID = 4043;
     public static int DEFUALT_RedStone_TEXTURE = 0;//8*16+4;
     public static int DEFUALT_RedStone_TEXTURE_POWERED = 0;//8*16+5;
-    public static String DEFUALT_RedStone_FILE = "/net/minecraft/src/buildcraft/zeldo/gui/RS.png";
-    public static String DEFUALT_RedStone_FILE_POWERED = "/net/minecraft/src/buildcraft/zeldo/gui/RSP.png";
+    public static String DEFUALT_RedStone_FILE = "/net/minecraft/src/buildcraft/additionalpipes/gui/RS.png";
+    public static String DEFUALT_RedStone_FILE_POWERED = "/net/minecraft/src/buildcraft/additionalpipes/gui/RSP.png";
 
     //Redstone Liquid
     public static Item pipeRedStoneLiquid;
     public static int DEFUALT_RedStoneLiquid_ID = 4042;
     public static int DEFUALT_RedStoneLiquid_TEXTURE = 0;//8*16+1;
     public static int DEFUALT_RedStoneLiquid_TEXTURE_POWERED = 0;//8*16+15;
-    public static String DEFUALT_RedStoneLiquid_FILE = "/net/minecraft/src/buildcraft/zeldo/gui/RSL.png";
-    public static String DEFUALT_RedStoneLiquid_FILE_POWERED = "/net/minecraft/src/buildcraft/zeldo/gui/RSLP.png";
+    public static String DEFUALT_RedStoneLiquid_FILE = "/net/minecraft/src/buildcraft/additionalpipes/gui/RSL.png";
+    public static String DEFUALT_RedStoneLiquid_FILE_POWERED = "/net/minecraft/src/buildcraft/additionalpipes/gui/RSLP.png";
 
     public static Block blockChunkLoader;
     public static int DEFUALT_CHUNK_LOADER_ID 	= 179;
@@ -376,6 +376,7 @@ public class mod_zAdditionalPipes extends NetworkMod {
             e.printStackTrace();
         }
     }
+    /*
     @Override
     public GuiScreen handleGUI(int inventoryType) {
         try {
@@ -524,7 +525,7 @@ public class mod_zAdditionalPipes extends NetworkMod {
         }
 
         return 0;
-    }
+    } */
     private static Item createPipe (int defaultID, Class <? extends Pipe > clas, String descr, Object r1, Object r2, Object r3, Object r4) {
         String name = Character.toLowerCase(clas.getSimpleName().charAt(0))
                       + clas.getSimpleName().substring(1);

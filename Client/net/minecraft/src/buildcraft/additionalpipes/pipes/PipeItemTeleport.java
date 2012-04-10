@@ -14,7 +14,6 @@ import java.util.Random;
 
 import net.minecraft.src.IInventory;
 import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.Packet230ModLoader;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.mod_zAdditionalPipes;
 import net.minecraft.src.buildcraft.api.APIProxy;
@@ -48,7 +47,6 @@ public class PipeItemTeleport extends Pipe implements IPipeTransportItemsHook {
 
     @Override
     public int getBlockTexture() {
-        MutiPlayerProxy.bindTex();
         return mod_zAdditionalPipes.DEFUALT_ITEM_TELEPORT_TEXTURE;
     }
 
@@ -273,7 +271,7 @@ public class PipeItemTeleport extends Pipe implements IPipeTransportItemsHook {
         canReceive = nbttagcompound.getBoolean("Rec");
         Owner = nbttagcompound.getString("Owner");
     }
-
+/*
     public Packet230ModLoader getDescPipe() {
         Packet230ModLoader packet = new Packet230ModLoader();
 
@@ -294,6 +292,6 @@ public class PipeItemTeleport extends Pipe implements IPipeTransportItemsHook {
 
 
         return packet;
-    }
+    } */
 
 }

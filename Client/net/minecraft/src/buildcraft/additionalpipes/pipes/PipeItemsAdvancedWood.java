@@ -13,7 +13,6 @@ import net.minecraft.src.IInventory;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.Packet230ModLoader;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
 import net.minecraft.src.mod_zAdditionalPipes;
@@ -50,8 +49,7 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
 
     @Override
     public int getBlockTexture() {
-        MutiPlayerProxy.bindTex();
-        return nextTexture;
+         return nextTexture;
     }
 
     @Override
@@ -205,7 +203,7 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
         super.readFromNBT(nbttagcompound);
 
     }
-
+/*
     public Packet230ModLoader getDescPacket() {
         Packet230ModLoader packet = new Packet230ModLoader();
 
@@ -221,6 +219,6 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
         packet.dataInt [3] = mod_zAdditionalPipes.boolToInt(((PipeLogicAdvancedWood)this.logic).exclude);
 
         return packet;
-    }
+    } */
 
 }

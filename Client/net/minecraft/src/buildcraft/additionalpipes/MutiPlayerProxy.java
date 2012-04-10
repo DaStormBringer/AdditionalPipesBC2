@@ -49,10 +49,10 @@ public class MutiPlayerProxy {
     public static void requestItemTeleport(int x, int y, int z) {
         if (APIProxy.isClient(APIProxy.getWorld())) {
             //System.out.println("Send Request for pipe");
-            ModLoaderMp.sendPacket(mod_zAdditionalPipes.instance, requestUpdatePacket( x, y, z, mod_zAdditionalPipes.PACKET_REQ_ITEM));
+         //   ModLoaderMp.sendPacket(mod_zAdditionalPipes.instance, requestUpdatePacket( x, y, z, mod_zAdditionalPipes.PACKET_REQ_ITEM));
         }
     }
-    public static Packet230ModLoader requestUpdatePacket(int x, int y, int z, int PacketID) {
+ /*   public static Packet230ModLoader requestUpdatePacket(int x, int y, int z, int PacketID) {
         Packet230ModLoader packet = new Packet230ModLoader();
 
         packet.modId = mod_zAdditionalPipes.instance.getId();
@@ -66,49 +66,10 @@ public class MutiPlayerProxy {
         packet.dataInt [2] = z;
 
         return packet;
-    }
+    } */
 
     public static boolean isOnServer() {
         return mc.theWorld.isRemote;
-    }
-
-    public static void bindTex() {
-//		checkHdPatch();
-//		if (HDFound) {
-//			MinecraftForgeClient.unbindTexture();
-//			MinecraftForgeClient.bindTexture(mod_zAdditionalPipes.MASTER_TEXTURE_FILE);
-//		}
-    }
-    public static void checkHdPatch() {
-        if (HDSet) {
-            return;
-        }
-
-        Object o = ModLoader.getMinecraftInstance().renderEngine;
-
-        try {
-            o.getClass().getMethod("setTileSize", Minecraft.class);
-            HDFound = true;
-            System.out.println("[AdditionalPipes] HD Texture Patch found...");
-        }
-        catch (Exception e) {
-            //e.printStackTrace();
-            System.out.println("[AdditionalPipes] HD Texture Patch not found...");
-        }
-
-        try {
-            o.getClass().getMethod("checkHdTextures");
-            OFFound = true;
-            //		System.out.println("[AdditionalPipes] OptiFine found... Forced to override the base texture...");
-            //		BuildCraftCore.customBuildCraftTexture = mod_zAdditionalPipes.MASTER_OVERRIDE_FILE;
-            //		MinecraftForgeClient.preloadTexture(BuildCraftCore.customBuildCraftTexture);
-        }
-        catch (Exception e) {
-            //e.printStackTrace();
-            System.out.println("[AdditionalPipes] OptiFine not found...");
-        }
-
-        HDSet = true;
     }
 
 }

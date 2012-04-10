@@ -12,7 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.Packet230ModLoader;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.mod_zAdditionalPipes;
 import net.minecraft.src.buildcraft.api.ILiquidContainer;
@@ -56,7 +55,6 @@ public class PipeLiquidsTeleport extends Pipe implements IPipeTransportLiquidsHo
     }
     @Override
     public int getBlockTexture() {
-        MutiPlayerProxy.bindTex();
         return mod_zAdditionalPipes.DEFUALT_LIQUID_TELEPORT_TEXTURE;
     }
 
@@ -198,6 +196,7 @@ public class PipeLiquidsTeleport extends Pipe implements IPipeTransportLiquidsHo
     public Position getPosition() {
         return new Position (xCoord, yCoord, zCoord);
     }
+    /*
     public Packet230ModLoader getDescPipe() {
         Packet230ModLoader packet = new Packet230ModLoader();
 
@@ -218,6 +217,6 @@ public class PipeLiquidsTeleport extends Pipe implements IPipeTransportLiquidsHo
 
 
         return packet;
-    }
+    } */
 
 }

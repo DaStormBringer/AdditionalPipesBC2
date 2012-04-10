@@ -13,7 +13,6 @@ import java.util.List;
 
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.Packet230ModLoader;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.mod_zAdditionalPipes;
 import net.minecraft.src.buildcraft.api.IPowerReceptor;
@@ -58,7 +57,6 @@ public class PipePowerTeleport extends Pipe implements IPipeTransportPowerHook {
 
     @Override
     public int getBlockTexture() {
-        MutiPlayerProxy.bindTex();
         return mod_zAdditionalPipes.DEFUALT_POWER_TELEPORT_TEXTURE;
     }
 
@@ -325,6 +323,7 @@ public class PipePowerTeleport extends Pipe implements IPipeTransportPowerHook {
             }
         }
     }
+    /*
     public Packet230ModLoader getDescPipe() {
         Packet230ModLoader packet = new Packet230ModLoader();
 
@@ -345,7 +344,7 @@ public class PipePowerTeleport extends Pipe implements IPipeTransportPowerHook {
 
 
         return packet;
-    }
+    } */
 
 
 }

@@ -12,7 +12,6 @@ import java.util.LinkedList;
 
 import net.minecraft.src.IInventory;
 import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.Packet230ModLoader;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.mod_zAdditionalPipes;
 import net.minecraft.src.buildcraft.api.EntityPassiveItem;
@@ -80,8 +79,7 @@ public class PipeItemsDistributor extends Pipe implements IPipeTransportItemsHoo
 
     @Override
     public int getBlockTexture() {
-        MutiPlayerProxy.bindTex();
-        return nextTexture;
+          return nextTexture;
     }
 
     @Override
@@ -186,6 +184,7 @@ public class PipeItemsDistributor extends Pipe implements IPipeTransportItemsHoo
             }
 
     }
+    /*
     public Packet230ModLoader getDescPipe() {
         Packet230ModLoader packet = new Packet230ModLoader();
 
@@ -204,6 +203,6 @@ public class PipeItemsDistributor extends Pipe implements IPipeTransportItemsHoo
         }
 
         return packet;
-    }
+    } */
 
 }

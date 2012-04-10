@@ -2,7 +2,6 @@ package net.minecraft.src.buildcraft.additionalpipes.gui;
 
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiContainer;
-import net.minecraft.src.ModLoaderMp;
 import net.minecraft.src.mod_zAdditionalPipes;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
 import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
@@ -89,12 +88,12 @@ public class GuiItemTeleportPipe extends GuiContainer {
             actualPipe.myFreq = 0;
         }
 
-        ModLoaderMp.sendPacket(mod_zAdditionalPipes.instance, actualPipe.getDescPipe());
+   //     ModLoaderMp.sendPacket(mod_zAdditionalPipes.instance, actualPipe.getDescPipe());
     }
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
         int k = mc.renderEngine
-                .getTexture("/net/minecraft/src/buildcraft/zeldo/gui/gui.png");
+                .getTexture("/net/minecraft/src/buildcraft/additionalpipes/gui/gui.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.renderEngine.bindTexture(k);
         int l = (width - xSize) / 2;

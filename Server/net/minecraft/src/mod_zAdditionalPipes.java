@@ -21,12 +21,10 @@ import net.minecraft.src.buildcraft.additionalpipes.ChunkLoader.BlockChunkLoader
 import net.minecraft.src.buildcraft.additionalpipes.ChunkLoader.TileChunkLoader;
 import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
 import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicAdvancedWood;
-import net.minecraft.src.forge.Configuration;
-import net.minecraft.src.forge.IChunkLoadHandler;
-import net.minecraft.src.forge.MinecraftForge;
-import net.minecraft.src.forge.Property;
+import net.minecraft.src.forge.*;
 
-public class mod_zAdditionalPipes extends BaseModMp {
+
+public class mod_zAdditionalPipes extends NetworkMod {
     
     /*
     * ChuckLoader Handler
@@ -60,7 +58,7 @@ public class mod_zAdditionalPipes extends BaseModMp {
                 List<ChunkCoordIntPair> loadArea = tile.getLoadArea();
                 for (ChunkCoordIntPair chunkCoords : loadArea) {
                     
-                    if (chunk.worldObj.getChunkFromChunkCoords(chunkCoords.chunkXPos, chunkCoords.chunkZPos).equals(chunk)) {
+                    if (chunk.worldObj.getChunkFromChunkCoords(chunkCoords.chunkXPos, chunkCoords.chunkZPosition).equals(chunk)) {
                         log("Keeping chunk: " + chunk.getChunkCoordIntPair(), LOG_INFO);
                         return false;
                     }
@@ -70,6 +68,12 @@ public class mod_zAdditionalPipes extends BaseModMp {
             log("Unloading chunk: " + chunk.getChunkCoordIntPair(), LOG_INFO);
             return true;
         }
+
+		@Override
+		public boolean canUpdateEntity(Entity entity) {
+			// TODO Auto-generated method stub
+			return false;
+		}
     }
     
     public String Version() {
@@ -480,4 +484,16 @@ public class mod_zAdditionalPipes extends BaseModMp {
         // TODO Auto-generated method stub
 
     }
+
+	@Override
+	public boolean clientSideRequired() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean serverSideRequired() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

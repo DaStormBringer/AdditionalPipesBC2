@@ -35,7 +35,6 @@ public class PipeItemsAdvancedInsertion extends Pipe implements IPipeTransportIt
 
     @Override
     public int getBlockTexture() {
-        MutiPlayerProxy.bindTex();
         return mod_zAdditionalPipes.DEFUALT_Insertion_TEXTURE;
     }
 
