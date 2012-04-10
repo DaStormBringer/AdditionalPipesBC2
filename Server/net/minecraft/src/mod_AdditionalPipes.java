@@ -263,7 +263,7 @@ public class mod_AdditionalPipes extends NetworkMod {
 		pipeAdvancedWood = createPipe(mod_AdditionalPipes.DEFUALT_ADVANCEDWOOD_ID, PipeItemsAdvancedWood.class, "Advanced Wooden Transport Pipe");
 		craftingmanager.addRecipe(new ItemStack(pipeAdvancedWood, 1), new Object[]{ " r ", "WgW", Character.valueOf('r'), Item.redstone, Character.valueOf('W'), Block.planks, Character.valueOf('g'), Block.glass });
 				
-		// Advanced Intesertion Pipe
+		// Advanced Insertion Pipe
 		pipeAdvancedInsertion = createPipe(mod_AdditionalPipes.DEFUALT_Insertion_ID, PipeItemsAdvancedInsertion.class, "Advanced Insertion Pipe");
 		craftingmanager.addRecipe(new ItemStack(pipeAdvancedInsertion, 1), new Object[]{ " r ", "SgS", Character.valueOf('r'), Item.redstone, Character.valueOf('S'), Block.stone, Character.valueOf('g'), Block.glass });
 		
@@ -275,11 +275,13 @@ public class mod_AdditionalPipes extends NetworkMod {
 		pipeRedStoneLiquid = createPipe(mod_AdditionalPipes.DEFUALT_RedStoneLiquid_ID, PipeLiquidsRedstone.class, "Waterproof Redstone Pipe");
 		craftingmanager.addRecipe(new ItemStack(pipeRedStoneLiquid, 1), new Object[]{"w", "P", Character.valueOf('w'), BuildCraftTransport.pipeWaterproof, Character.valueOf('P'), pipeRedStone});
 
+		// Remove Redstone From Power TP Pipe
+		craftingmanager.addRecipe(new ItemStack(pipeItemTeleport, 1), new Object[] {"A", Character.valueOf('A'), pipePowerTeleport});
+		
         if (allowWPRemove) {
 
             //Mine
             craftingmanager.addRecipe(new ItemStack(pipeItemTeleport, 1), new Object[] {"A", Character.valueOf('A'), pipeLiquidTeleport});
-            craftingmanager.addRecipe(new ItemStack(pipeItemTeleport, 1), new Object[] {"A", Character.valueOf('A'), pipePowerTeleport});
             craftingmanager.addRecipe(new ItemStack(pipeRedStone, 1), new Object[] {"A", Character.valueOf('A'), pipeRedStoneLiquid});
 
             //BC Liquid
