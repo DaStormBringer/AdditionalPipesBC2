@@ -271,149 +271,147 @@ public class mod_AdditionalPipes extends NetworkMod {
     public void modsLoaded () {
         
         super.modsLoaded();
-        
+
         instance = this;
 
         config = new Configuration(new File(CoreProxy.getBuildCraftBase(), "config/AdditionalPipes.cfg"));
         config.load();
 
-        lagFix 			= Boolean.parseBoolean(config.getOrCreateBooleanProperty("saveLagFix", Configuration.CATEGORY_GENERAL, false).value);
-        wrenchOpensGui 	= Boolean.parseBoolean(config.getOrCreateBooleanProperty("wrenchOpensGui", Configuration.CATEGORY_GENERAL, false).value);
-        allowWPRemove 	= Boolean.parseBoolean(config.getOrCreateBooleanProperty("EnableWaterProofRemoval", Configuration.CATEGORY_GENERAL, false).value);
+        lagFix = Boolean.parseBoolean(config.getOrCreateBooleanProperty("saveLagFix", Configuration.CATEGORY_GENERAL, false).value);
+        wrenchOpensGui = Boolean.parseBoolean(config.getOrCreateBooleanProperty("wrenchOpensGui", Configuration.CATEGORY_GENERAL, false).value);
+        allowWPRemove = Boolean.parseBoolean(config.getOrCreateBooleanProperty("EnableWaterProofRemoval", Configuration.CATEGORY_GENERAL, false).value);
         //PowerLossCfg    = Double.parseDouble(config.getOrCreateProperty("powerloss", Configuration.CATEGORY_GENERAL, Double.toString(PowerLossCfg)).value);
         logLevel = Integer.parseInt(config.getOrCreateProperty("logLevel", Configuration.CATEGORY_GENERAL, "1").value);
 
         //System.out.println("Teleport Pipes Power Loss Configuration: " + PowerLossCfg);
- 
-		boolean loadItemTeleport = Boolean.parseBoolean(config.getOrCreateBooleanProperty("enableItemTeleport", Configuration.CATEGORY_ITEM, true).value);
-		int ITEM_TELEPORT_ID = Integer.parseInt(config.getOrCreateIntProperty("ItemTeleport.Id", Configuration.CATEGORY_ITEM, DEFUALT_ITEM_TELEPORT_ID).value);
-		
-		boolean loadItemsAdvancedInsertion = Boolean.parseBoolean(config.getOrCreateBooleanProperty("enableItemsAdvancedInsertion", Configuration.CATEGORY_ITEM, true).value);
-		int Insertion_ID = Integer.parseInt(config.getOrCreateIntProperty("ItemsAdvancedInsertion.Id", Configuration.CATEGORY_ITEM, DEFUALT_Insertion_ID).value);
 
-		boolean loadItemsAdvancedWood = Boolean.parseBoolean(config.getOrCreateBooleanProperty("enableItemsAdvancedWood", Configuration.CATEGORY_ITEM, true).value);
-		int ADVANCEDWOOD_ID = Integer.parseInt(config.getOrCreateIntProperty("ItemsAdvancedWood.Id", Configuration.CATEGORY_ITEM, DEFUALT_ADVANCEDWOOD_ID).value);
-	
-		boolean loadItemsDistributor = Boolean.parseBoolean(config.getOrCreateBooleanProperty("enableItemsDistributor", Configuration.CATEGORY_ITEM, true).value);
-		int DISTRIBUTOR_TELEPORT_ID = Integer.parseInt(config.getOrCreateIntProperty("ItemsDistributor.Id", Configuration.CATEGORY_ITEM, DEFUALT_DISTRIBUTOR_TELEPORT_ID).value);
-	
-		boolean loadItemsRedstone = Boolean.parseBoolean(config.getOrCreateBooleanProperty("enableItemsRedstone", Configuration.CATEGORY_ITEM, true).value);
-		int RedStone_ID = Integer.parseInt(config.getOrCreateIntProperty("ItemsRedstone.Id", Configuration.CATEGORY_ITEM, DEFUALT_RedStone_ID).value);
-	
-		boolean loadLiquidsRedstone = Boolean.parseBoolean(config.getOrCreateBooleanProperty("enableLiquidsRedstone", Configuration.CATEGORY_ITEM, true).value);
-		int RedStoneLiquid_ID = Integer.parseInt(config.getOrCreateIntProperty("LiquidsRedstone.Id", Configuration.CATEGORY_ITEM, DEFUALT_RedStoneLiquid_ID).value);
-	
-		boolean loadLiquidsTeleport = Boolean.parseBoolean(config.getOrCreateBooleanProperty("enableLiquidsTeleport", Configuration.CATEGORY_ITEM, true).value);
-		int LIQUID_TELEPORT_ID = Integer.parseInt(config.getOrCreateIntProperty("LiquidTeleport.Id", Configuration.CATEGORY_ITEM, DEFUALT_LIQUID_TELEPORT_ID).value);
-	
-		boolean loadPowerTeleport = Boolean.parseBoolean(config.getOrCreateBooleanProperty("enablePowerTeleport", Configuration.CATEGORY_ITEM, true).value);
-		int POWER_TELEPORT_ID = Integer.parseInt(config.getOrCreateIntProperty("PowerTeleport.Id", Configuration.CATEGORY_ITEM, DEFUALT_POWER_TELEPORT_ID).value);
+        boolean loadItemTeleport = Boolean.parseBoolean(config.getOrCreateBooleanProperty("enableItemTeleport", Configuration.CATEGORY_ITEM, true).value);
+        int ITEM_TELEPORT_ID = Integer.parseInt(config.getOrCreateIntProperty("ItemTeleport.Id", Configuration.CATEGORY_ITEM, DEFUALT_ITEM_TELEPORT_ID).value);
 
-		
+        boolean loadItemsAdvancedInsertion = Boolean.parseBoolean(config.getOrCreateBooleanProperty("enableItemsAdvancedInsertion", Configuration.CATEGORY_ITEM, true).value);
+        int Insertion_ID = Integer.parseInt(config.getOrCreateIntProperty("ItemsAdvancedInsertion.Id", Configuration.CATEGORY_ITEM, DEFUALT_Insertion_ID).value);
+
+        boolean loadItemsAdvancedWood = Boolean.parseBoolean(config.getOrCreateBooleanProperty("enableItemsAdvancedWood", Configuration.CATEGORY_ITEM, true).value);
+        int ADVANCEDWOOD_ID = Integer.parseInt(config.getOrCreateIntProperty("ItemsAdvancedWood.Id", Configuration.CATEGORY_ITEM, DEFUALT_ADVANCEDWOOD_ID).value);
+
+        boolean loadItemsDistributor = Boolean.parseBoolean(config.getOrCreateBooleanProperty("enableItemsDistributor", Configuration.CATEGORY_ITEM, true).value);
+        int DISTRIBUTOR_TELEPORT_ID = Integer.parseInt(config.getOrCreateIntProperty("ItemsDistributor.Id", Configuration.CATEGORY_ITEM, DEFUALT_DISTRIBUTOR_TELEPORT_ID).value);
+
+        boolean loadItemsRedstone = Boolean.parseBoolean(config.getOrCreateBooleanProperty("enableItemsRedstone", Configuration.CATEGORY_ITEM, true).value);
+        int RedStone_ID = Integer.parseInt(config.getOrCreateIntProperty("ItemsRedstone.Id", Configuration.CATEGORY_ITEM, DEFUALT_RedStone_ID).value);
+
+        boolean loadLiquidsRedstone = Boolean.parseBoolean(config.getOrCreateBooleanProperty("enableLiquidsRedstone", Configuration.CATEGORY_ITEM, true).value);
+        int RedStoneLiquid_ID = Integer.parseInt(config.getOrCreateIntProperty("LiquidsRedstone.Id", Configuration.CATEGORY_ITEM, DEFUALT_RedStoneLiquid_ID).value);
+
+        boolean loadLiquidsTeleport = Boolean.parseBoolean(config.getOrCreateBooleanProperty("enableLiquidsTeleport", Configuration.CATEGORY_ITEM, true).value);
+        int LIQUID_TELEPORT_ID = Integer.parseInt(config.getOrCreateIntProperty("LiquidTeleport.Id", Configuration.CATEGORY_ITEM, DEFUALT_LIQUID_TELEPORT_ID).value);
+
+        boolean loadPowerTeleport = Boolean.parseBoolean(config.getOrCreateBooleanProperty("enablePowerTeleport", Configuration.CATEGORY_ITEM, true).value);
+        int POWER_TELEPORT_ID = Integer.parseInt(config.getOrCreateIntProperty("PowerTeleport.Id", Configuration.CATEGORY_ITEM, DEFUALT_POWER_TELEPORT_ID).value);
+
+
         CraftingManager craftingmanager = CraftingManager.getInstance();
-        
+
         // Item Teleport Pipe
-        if (loadItemTeleport){
-        DEFUALT_ITEM_TELEPORT_TEXTURE = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_ITEM_TELEPORT_TEXTURE_FILE);
-		pipeItemTeleport = createPipe(ITEM_TELEPORT_ID, PipeItemTeleport.class, "Item Teleport Pipe");
-		craftingmanager.addRecipe(new ItemStack(pipeItemTeleport, 8), new Object[]{"dgd", Character.valueOf('d'), BuildCraftCore.diamondGearItem, Character.valueOf('g'), Block.glass});
+        if (loadItemTeleport) {
+            DEFUALT_ITEM_TELEPORT_TEXTURE = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_ITEM_TELEPORT_TEXTURE_FILE);
+            pipeItemTeleport = createPipe(ITEM_TELEPORT_ID, PipeItemTeleport.class, "Item Teleport Pipe");
+            craftingmanager.addRecipe(new ItemStack(pipeItemTeleport, 8), new Object[]{"dgd", Character.valueOf('d'), BuildCraftCore.diamondGearItem, Character.valueOf('g'), Block.glass});
         }
-        
-		// Liquid Teleport Pipe
-		if (loadLiquidsTeleport){
-	    DEFUALT_LIQUID_TELEPORT_TEXTURE = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_LIQUID_TELEPORT_TEXTURE_FILE);
-        pipeLiquidTeleport = createPipe(LIQUID_TELEPORT_ID, PipeLiquidsTeleport.class, "Waterproof Teleport Pipe");
-		craftingmanager.addRecipe(new ItemStack(pipeLiquidTeleport, 1), new Object[]{"w", "P", Character.valueOf('w'), BuildCraftTransport.pipeWaterproof, Character.valueOf('P'), pipeItemTeleport});
-		}
-		
-		// Power Teleport Pipe
-		if (loadPowerTeleport){
-        DEFUALT_POWER_TELEPORT_TEXTURE = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_POWER_TELEPORT_TEXTURE_FILE);
- 		pipePowerTeleport = createPipe(POWER_TELEPORT_ID, PipePowerTeleport.class, "Power Teleport Pipe");
-		craftingmanager.addRecipe(new ItemStack(pipePowerTeleport, 1), new Object[]{"r", "P", Character.valueOf('r'), Item.redstone, Character.valueOf('P'), pipeItemTeleport});
-		}
-		
-		// Distributor Pipe
-		if (loadItemsDistributor){
-        DEFUALT_DISTRIBUTOR_TEXTURE_0 = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "0.png");
-        DEFUALT_DISTRIBUTOR_TEXTURE_1 = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "1.png");
-        DEFUALT_DISTRIBUTOR_TEXTURE_2 = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "2.png");
-        DEFUALT_DISTRIBUTOR_TEXTURE_3 = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "3.png");
-        DEFUALT_DISTRIBUTOR_TEXTURE_4 = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "4.png");
-        DEFUALT_DISTRIBUTOR_TEXTURE_5 = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "5.png");
-   		pipeDistributor = createPipe(DISTRIBUTOR_TELEPORT_ID, PipeItemsDistributor.class, "Distribution Transport Pipe");
-		craftingmanager.addRecipe(new ItemStack(pipeDistributor, 8), new Object[]{ " r ", "IgI", Character.valueOf('r'), Item.redstone, Character.valueOf('I'), Item.ingotIron, Character.valueOf('g'), Block.glass });
-		}
-		
-		// Advanced Wooded Pipe
-		if (loadItemsAdvancedWood){
-	    DEFUALT_ADVANCEDWOOD_TEXTURE_CLOSED = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_ADVANCEDWOOD_FILE_CLOSED);
-	    DEFUALT_ADVANCEDWOOD_TEXTURE = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_ADVANCEDWOOD_FILE);
- 		pipeAdvancedWood = createPipe(ADVANCEDWOOD_ID, PipeItemsAdvancedWood.class, "Advanced Wooden Transport Pipe");
-		craftingmanager.addRecipe(new ItemStack(pipeAdvancedWood, 8), new Object[]{ " r ", "WgW", Character.valueOf('r'), Item.redstone, Character.valueOf('W'), Block.planks, Character.valueOf('g'), Block.glass });
-		}
-		
-		// Advanced Insertion Pipe
-		if (loadItemsAdvancedInsertion){
-		DEFUALT_Insertion_TEXTURE = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_Insertion_FILE);
-		pipeAdvancedInsertion = createPipe(Insertion_ID, PipeItemsAdvancedInsertion.class, "Advanced Insertion Pipe");
-		craftingmanager.addRecipe(new ItemStack(pipeAdvancedInsertion, 8), new Object[]{ " r ", "SgS", Character.valueOf('r'), Item.redstone, Character.valueOf('S'), Block.stone, Character.valueOf('g'), Block.glass });
-		}
-		
-		// Redstone Pipe
-		if (loadItemsRedstone){
-        DEFUALT_RedStone_TEXTURE = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_RedStone_FILE);
-        DEFUALT_RedStone_TEXTURE_POWERED = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_RedStone_FILE_POWERED);
-		pipeRedStone = createPipe(RedStone_ID, PipeItemsRedstone.class, "Redstone Transport Pipe");
-		craftingmanager.addRecipe(new ItemStack(pipeRedStone, 8), new Object[]{"RgR", Character.valueOf('R'), Item.redstone, Character.valueOf('g'), Block.glass });
-		}
-		
-		// Redstone Liquid Pipe
-		if (loadLiquidsRedstone){
-		DEFUALT_RedStoneLiquid_TEXTURE 	= CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_RedStoneLiquid_FILE);
-		DEFUALT_RedStoneLiquid_TEXTURE_POWERED = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_RedStoneLiquid_FILE_POWERED);
-		pipeRedStoneLiquid = createPipe(RedStoneLiquid_ID, PipeLiquidsRedstone.class, "Waterproof Redstone Pipe");
-		craftingmanager.addRecipe(new ItemStack(pipeRedStoneLiquid, 1), new Object[]{"w", "P", Character.valueOf('w'), BuildCraftTransport.pipeWaterproof, Character.valueOf('P'), pipeRedStone});
-		}
-		
-		// Remove Redstone From Power TP Pipe
-		craftingmanager.addRecipe(new ItemStack(pipeItemTeleport, 1), new Object[] {"A", Character.valueOf('A'), pipePowerTeleport});
-		
-      if (allowWPRemove) {
+
+        // Liquid Teleport Pipe
+        if (loadLiquidsTeleport) {
+            DEFUALT_LIQUID_TELEPORT_TEXTURE = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_LIQUID_TELEPORT_TEXTURE_FILE);
+            pipeLiquidTeleport = createPipe(LIQUID_TELEPORT_ID, PipeLiquidsTeleport.class, "Waterproof Teleport Pipe");
+            craftingmanager.addRecipe(new ItemStack(pipeLiquidTeleport, 1), new Object[]{"w", "P", Character.valueOf('w'), BuildCraftTransport.pipeWaterproof, Character.valueOf('P'), pipeItemTeleport});
+        }
+
+        // Power Teleport Pipe
+        if (loadPowerTeleport) {
+            DEFUALT_POWER_TELEPORT_TEXTURE = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_POWER_TELEPORT_TEXTURE_FILE);
+            pipePowerTeleport = createPipe(POWER_TELEPORT_ID, PipePowerTeleport.class, "Power Teleport Pipe");
+            craftingmanager.addRecipe(new ItemStack(pipePowerTeleport, 1), new Object[]{"r", "P", Character.valueOf('r'), Item.redstone, Character.valueOf('P'), pipeItemTeleport});
+        }
+
+        // Distributor Pipe
+        if (loadItemsDistributor) {
+            DEFUALT_DISTRIBUTOR_TEXTURE_0 = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "0.png");
+            DEFUALT_DISTRIBUTOR_TEXTURE_1 = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "1.png");
+            DEFUALT_DISTRIBUTOR_TEXTURE_2 = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "2.png");
+            DEFUALT_DISTRIBUTOR_TEXTURE_3 = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "3.png");
+            DEFUALT_DISTRIBUTOR_TEXTURE_4 = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "4.png");
+            DEFUALT_DISTRIBUTOR_TEXTURE_5 = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "5.png");
+            pipeDistributor = createPipe(DISTRIBUTOR_TELEPORT_ID, PipeItemsDistributor.class, "Distribution Transport Pipe");
+            craftingmanager.addRecipe(new ItemStack(pipeDistributor, 8), new Object[]{" r ", "IgI", Character.valueOf('r'), Item.redstone, Character.valueOf('I'), Item.ingotIron, Character.valueOf('g'), Block.glass});
+        }
+
+        // Advanced Wooded Pipe
+        if (loadItemsAdvancedWood) {
+            DEFUALT_ADVANCEDWOOD_TEXTURE_CLOSED = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_ADVANCEDWOOD_FILE_CLOSED);
+            DEFUALT_ADVANCEDWOOD_TEXTURE = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_ADVANCEDWOOD_FILE);
+            pipeAdvancedWood = createPipe(ADVANCEDWOOD_ID, PipeItemsAdvancedWood.class, "Advanced Wooden Transport Pipe");
+            craftingmanager.addRecipe(new ItemStack(pipeAdvancedWood, 8), new Object[]{" r ", "WgW", Character.valueOf('r'), Item.redstone, Character.valueOf('W'), Block.planks, Character.valueOf('g'), Block.glass});
+        }
+
+        // Advanced Insertion Pipe
+        if (loadItemsAdvancedInsertion) {
+            DEFUALT_Insertion_TEXTURE = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_Insertion_FILE);
+            pipeAdvancedInsertion = createPipe(Insertion_ID, PipeItemsAdvancedInsertion.class, "Advanced Insertion Pipe");
+            craftingmanager.addRecipe(new ItemStack(pipeAdvancedInsertion, 8), new Object[]{" r ", "SgS", Character.valueOf('r'), Item.redstone, Character.valueOf('S'), Block.stone, Character.valueOf('g'), Block.glass});
+        }
+
+        // Redstone Pipe
+        if (loadItemsRedstone) {
+            DEFUALT_RedStone_TEXTURE = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_RedStone_FILE);
+            DEFUALT_RedStone_TEXTURE_POWERED = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_RedStone_FILE_POWERED);
+            pipeRedStone = createPipe(RedStone_ID, PipeItemsRedstone.class, "Redstone Transport Pipe");
+            craftingmanager.addRecipe(new ItemStack(pipeRedStone, 8), new Object[]{"RgR", Character.valueOf('R'), Item.redstone, Character.valueOf('g'), Block.glass});
+        }
+
+        // Redstone Liquid Pipe
+        if (loadLiquidsRedstone) {
+            DEFUALT_RedStoneLiquid_TEXTURE = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_RedStoneLiquid_FILE);
+            DEFUALT_RedStoneLiquid_TEXTURE_POWERED = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_RedStoneLiquid_FILE_POWERED);
+            pipeRedStoneLiquid = createPipe(RedStoneLiquid_ID, PipeLiquidsRedstone.class, "Waterproof Redstone Pipe");
+            craftingmanager.addRecipe(new ItemStack(pipeRedStoneLiquid, 1), new Object[]{"w", "P", Character.valueOf('w'), BuildCraftTransport.pipeWaterproof, Character.valueOf('P'), pipeRedStone});
+        }
+
+        // Remove Redstone From Power TP Pipe
+        craftingmanager.addRecipe(new ItemStack(pipeItemTeleport, 1), new Object[]{"A", Character.valueOf('A'), pipePowerTeleport});
+
+        if (allowWPRemove) {
 
             //Mine
-            craftingmanager.addRecipe(new ItemStack(pipeItemTeleport, 1), new Object[] {"A", Character.valueOf('A'), pipeLiquidTeleport});
-            craftingmanager.addRecipe(new ItemStack(pipeRedStone, 1), new Object[] {"A", Character.valueOf('A'), pipeRedStoneLiquid});
+            craftingmanager.addRecipe(new ItemStack(pipeItemTeleport, 1), new Object[]{"A", Character.valueOf('A'), pipeLiquidTeleport});
+            craftingmanager.addRecipe(new ItemStack(pipeRedStone, 1), new Object[]{"A", Character.valueOf('A'), pipeRedStoneLiquid});
 
             //BC Liquid
-            craftingmanager.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsCobblestone, 1), new Object[] {"A", Character.valueOf('A'), BuildCraftTransport.pipeLiquidsCobblestone});
-            craftingmanager.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsGold, 1), new Object[] {"A", Character.valueOf('A'), BuildCraftTransport.pipeLiquidsGold});
-            craftingmanager.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsIron, 1), new Object[] {"A", Character.valueOf('A'), BuildCraftTransport.pipeLiquidsIron});
-            craftingmanager.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsStone, 1), new Object[] {"A", Character.valueOf('A'), BuildCraftTransport.pipeLiquidsStone});
-            craftingmanager.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsWood, 1), new Object[] {"A", Character.valueOf('A'), BuildCraftTransport.pipeLiquidsWood});
+            craftingmanager.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsCobblestone, 1), new Object[]{"A", Character.valueOf('A'), BuildCraftTransport.pipeLiquidsCobblestone});
+            craftingmanager.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsGold, 1), new Object[]{"A", Character.valueOf('A'), BuildCraftTransport.pipeLiquidsGold});
+            craftingmanager.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsIron, 1), new Object[]{"A", Character.valueOf('A'), BuildCraftTransport.pipeLiquidsIron});
+            craftingmanager.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsStone, 1), new Object[]{"A", Character.valueOf('A'), BuildCraftTransport.pipeLiquidsStone});
+            craftingmanager.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsWood, 1), new Object[]{"A", Character.valueOf('A'), BuildCraftTransport.pipeLiquidsWood});
 
             //BC Power
-            craftingmanager.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsGold, 1), new Object[] {"A", Character.valueOf('A'), BuildCraftTransport.pipePowerGold});
-            craftingmanager.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsStone, 1), new Object[] {"A", Character.valueOf('A'), BuildCraftTransport.pipePowerStone});
-            craftingmanager.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsWood, 1), new Object[] {"A", Character.valueOf('A'), BuildCraftTransport.pipePowerWood});
+            craftingmanager.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsGold, 1), new Object[]{"A", Character.valueOf('A'), BuildCraftTransport.pipePowerGold});
+            craftingmanager.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsStone, 1), new Object[]{"A", Character.valueOf('A'), BuildCraftTransport.pipePowerStone});
+            craftingmanager.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsWood, 1), new Object[]{"A", Character.valueOf('A'), BuildCraftTransport.pipePowerWood});
         }
-        
-      //ChunkLoader
-      ModLoader.registerTileEntity(net.minecraft.src.buildcraft.additionalpipes.ChunkLoader.TileChunkLoader.class, "ChunkLoader");
-      int ChunkLoaderID = Integer.parseInt(config.getOrCreateIntProperty("ChunkLoader.id", Configuration.CATEGORY_BLOCK, DEFUALT_CHUNK_LOADER_ID).value);
-      blockChunkLoader = new BlockChunkLoader(ChunkLoaderID);
-      ModLoader.registerBlock(blockChunkLoader);
-      blockChunkLoader.setBlockName("ChunkLoading Block");
-      ModLoader.addName(blockChunkLoader, "ChunkLoading Block");
-      boolean Craftable = Boolean.parseBoolean(config.getOrCreateBooleanProperty("ChunkLoader.Enabled", Configuration.CATEGORY_BLOCK, true).value);
-      
-      if (Craftable)
-          // Replaced shapeless with  IronBox with lapis in middle
-          CraftingManager.getInstance().addRecipe(new ItemStack(blockChunkLoader, 4), new Object[] { "iii", "iLi", "iii", Character.valueOf('i'), Item.ingotIron, Character.valueOf('L'), new ItemStack(Item.dyePowder, 1, 4) });
-      //Finish ChunkLoader
 
-      config.save();
-        
+        //ChunkLoader
+        ModLoader.registerTileEntity(net.minecraft.src.buildcraft.additionalpipes.ChunkLoader.TileChunkLoader.class, "ChunkLoader");
+        int ChunkLoaderID = Integer.parseInt(config.getOrCreateIntProperty("ChunkLoader.id", Configuration.CATEGORY_BLOCK, DEFUALT_CHUNK_LOADER_ID).value);
+        blockChunkLoader = new BlockChunkLoader(ChunkLoaderID);
+        ModLoader.registerBlock(blockChunkLoader);
+        blockChunkLoader.setBlockName("ChunkLoading Block");
+        ModLoader.addName(blockChunkLoader, "ChunkLoading Block");
+        boolean Craftable = Boolean.parseBoolean(config.getOrCreateBooleanProperty("ChunkLoader.Enabled", Configuration.CATEGORY_BLOCK, true).value);
+
+        if (Craftable) {
+            CraftingManager.getInstance().addRecipe(new ItemStack(blockChunkLoader, 4), new Object[]{"iii", "iLi", "iii", Character.valueOf('i'), Item.ingotIron, Character.valueOf('L'), new ItemStack(Item.dyePowder, 1, 4)});
+        }
+
+        config.save();
     }
 
     /*
