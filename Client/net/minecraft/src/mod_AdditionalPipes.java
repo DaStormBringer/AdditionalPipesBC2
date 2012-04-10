@@ -33,7 +33,7 @@ public class mod_AdditionalPipes extends NetworkMod {
     
     @Override
     public String getPriorities() {
-        return "after:mod_BuildcraftTransport";
+        return "after:mod_BuildCraftTransport";
     }
 
     @Override
