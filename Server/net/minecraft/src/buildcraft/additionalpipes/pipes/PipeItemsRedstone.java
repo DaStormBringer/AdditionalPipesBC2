@@ -19,7 +19,7 @@ import net.minecraft.src.buildcraft.api.Orientations;
 import net.minecraft.src.buildcraft.api.Position;
 import net.minecraft.src.buildcraft.api.TileNetworkData;
 import net.minecraft.src.buildcraft.core.Utils;
-import net.minecraft.src.buildcraft.transport.IPipeProvideRedstonePowerHook;
+import net.minecraft.src.buildcraft.additionalpipes.transport.IPipeProvideRedstonePowerHook;
 import net.minecraft.src.buildcraft.transport.IPipeTransportItemsHook;
 import net.minecraft.src.buildcraft.transport.Pipe;
 import net.minecraft.src.buildcraft.transport.PipeLogicStone;
