@@ -31,7 +31,7 @@ public class mod_AdditionalPipes extends NetworkMod {
     
     @Override
     public String getPriorities() {
-        return "after:mod_BuildcraftTransport";
+        return "after:mod_BuildCraftTransport";
     }
     
     /*
@@ -241,34 +241,41 @@ public class mod_AdditionalPipes extends NetworkMod {
 
         config.save();
 
-        pipeItemTeleport 		= createPipe(mod_AdditionalPipes.DEFUALT_ITEM_TELEPORT_ID, PipeItemTeleport.class, "Item Teleport Pipe", BuildCraftCore.diamondGearItem, Block.glass, BuildCraftCore.diamondGearItem, null);
-        pipeLiquidTeleport 		= createPipe(mod_AdditionalPipes.DEFUALT_LIQUID_TELEPORT_ID, PipeLiquidsTeleport.class, "Waterproof Teleport Pipe", BuildCraftTransport.pipeWaterproof, pipeItemTeleport, null, null);
-        pipePowerTeleport 		= createPipe(mod_AdditionalPipes.DEFUALT_POWER_TELEPORT_ID, PipePowerTeleport.class, "Power Teleport Pipe", Item.redstone, pipeItemTeleport, null, null);
-        pipeDistributor 		= createPipe(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TELEPORT_ID, PipeItemsDistributor.class, "Distribution Transport Pipe", Item.redstone, Item.ingotIron, Block.glass, Item.ingotIron);
-        pipeAdvancedWood 		= createPipe(mod_AdditionalPipes.DEFUALT_ADVANCEDWOOD_ID, PipeItemsAdvancedWood.class, "Advanced Wooden Transport Pipe", Item.redstone, Block.planks, Block.glass, Block.planks);
-        pipeAdvancedInsertion 	= createPipe(mod_AdditionalPipes.DEFUALT_Insertion_ID, PipeItemsAdvancedInsertion.class, "Advanced Insertion Transport Pipe", Item.redstone, Block.stone, Block.glass, Block.stone);
-        pipeRedStone 			= createPipe(mod_AdditionalPipes.DEFUALT_RedStone_ID, PipeItemsRedstone.class, "Redstone Transport Pipe", Item.redstone, Block.glass, Item.redstone, null);
-        pipeRedStoneLiquid 		= createPipe(mod_AdditionalPipes.DEFUALT_RedStoneLiquid_ID, PipeLiquidsRedstone.class, "Waterproof Redstone Pipe", BuildCraftTransport.pipeWaterproof, pipeRedStone, null, null);
+        CraftingManager craftingmanager = CraftingManager.getInstance();
+        
+        // Item Teleport Pipe
+		pipeItemTeleport = createPipe(mod_AdditionalPipes.DEFUALT_ITEM_TELEPORT_ID, PipeItemTeleport.class, "Item Teleport Pipe");
+		craftingmanager.addRecipe(new ItemStack(pipeItemTeleport, 8), new Object[]{"dgd", Character.valueOf('d'), BuildCraftCore.diamondGearItem, Character.valueOf('g'), Block.glass});
+		
+		// Liquid Teleport Pipe
+		pipeLiquidTeleport = createPipe(mod_AdditionalPipes.DEFUALT_LIQUID_TELEPORT_ID, PipeLiquidsTeleport.class, "Waterproof Teleport Pipe");
+		craftingmanager.addRecipe(new ItemStack(pipeLiquidTeleport, 1), new Object[]{"w", "P", Character.valueOf('w'), BuildCraftTransport.pipeWaterproof, Character.valueOf('P'), pipeItemTeleport});
+	
+		// Power Teleport Pipe
+		pipePowerTeleport = createPipe(mod_AdditionalPipes.DEFUALT_POWER_TELEPORT_ID, PipePowerTeleport.class, "Power Teleport Pipe");
+		craftingmanager.addRecipe(new ItemStack(pipePowerTeleport, 1), new Object[]{"r", "P", Character.valueOf('r'), Item.redstone, Character.valueOf('P'), pipeItemTeleport});
+	
+		// Distibutor Pipe
+		pipeDistributor = createPipe(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TELEPORT_ID, PipeItemsDistributor.class, "Distribution Transport Pipe");
+		craftingmanager.addRecipe(new ItemStack(pipeDistributor, 1), new Object[]{ " r ", "IgI", Character.valueOf('r'), Item.redstone, Character.valueOf('I'), Item.ingotIron, Character.valueOf('g'), Block.glass });
 
-        //ChunkLoader
-        ModLoader.registerTileEntity(net.minecraft.src.buildcraft.additionalpipes.ChunkLoader.TileChunkLoader.class, "ChunkLoader");
-        int ChunkLoaderID = Integer.parseInt(config.getOrCreateIntProperty("ChunkLoader.id", Configuration.CATEGORY_BLOCK, DEFUALT_CHUNK_LOADER_ID).value);
-        config.save();
-        blockChunkLoader = new BlockChunkLoader(ChunkLoaderID);
-        ModLoader.registerBlock(blockChunkLoader);
-        boolean Craftable = Boolean.parseBoolean(config.getOrCreateBooleanProperty("ChunkLoader.Enabled", Configuration.CATEGORY_BLOCK, true).value);
-        config.save();
+		// Advanced Wooded Pipe
+		pipeAdvancedWood = createPipe(mod_AdditionalPipes.DEFUALT_ADVANCEDWOOD_ID, PipeItemsAdvancedWood.class, "Advanced Wooden Transport Pipe");
+		craftingmanager.addRecipe(new ItemStack(pipeAdvancedWood, 1), new Object[]{ " r ", "WgW", Character.valueOf('r'), Item.redstone, Character.valueOf('W'), Block.planks, Character.valueOf('g'), Block.glass });
+				
+		// Advanced Intesertion Pipe
+		pipeAdvancedInsertion = createPipe(mod_AdditionalPipes.DEFUALT_Insertion_ID, PipeItemsAdvancedInsertion.class, "Advanced Insertion Pipe");
+		craftingmanager.addRecipe(new ItemStack(pipeAdvancedInsertion, 1), new Object[]{ " r ", "SgS", Character.valueOf('r'), Item.redstone, Character.valueOf('S'), Block.stone, Character.valueOf('g'), Block.glass });
+		
+		// Redstone Pipe
+		pipeRedStone = createPipe(mod_AdditionalPipes.DEFUALT_RedStone_ID, PipeItemsRedstone.class, "Redstone Transport Pipe");
+		craftingmanager.addRecipe(new ItemStack(pipeRedStone, 2), new Object[]{"RgR", Character.valueOf('R'), Item.redstone, Character.valueOf('g'), Block.glass });
 
-        if (Craftable)
-            //	CraftingManager.getInstance().addShapelessRecipe(new ItemStack(blockChunkLoader, 1), new Object[] {Item.ingotIron,Item.ingotIron,Item.ingotIron,Item.ingotIron});
-            // Replaced shapeless with 8 Iron in a box with lapis in middle
-            CraftingManager.getInstance().addRecipe(new ItemStack(blockChunkLoader, 4), new Object[] { "iii", "iLi", "iii", Character.valueOf('i'), Item.ingotIron, Character.valueOf('L'), new ItemStack(Item.dyePowder, 1, 4) });
-
-        //Finish ChunkLoader
-
+		// Redstone Liquid Pipe
+		pipeRedStoneLiquid = createPipe(mod_AdditionalPipes.DEFUALT_RedStoneLiquid_ID, PipeLiquidsRedstone.class, "Waterproof Redstone Pipe");
+		craftingmanager.addRecipe(new ItemStack(pipeRedStoneLiquid, 1), new Object[]{"w", "P", Character.valueOf('w'), BuildCraftTransport.pipeWaterproof, Character.valueOf('P'), pipeRedStone});
 
         if (allowWPRemove) {
-            CraftingManager craftingmanager = CraftingManager.getInstance();
 
             //Mine
             craftingmanager.addRecipe(new ItemStack(pipeItemTeleport, 1), new Object[] {"A", Character.valueOf('A'), pipeLiquidTeleport});
@@ -287,6 +294,22 @@ public class mod_AdditionalPipes extends NetworkMod {
             craftingmanager.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsStone, 1), new Object[] {"A", Character.valueOf('A'), BuildCraftTransport.pipePowerStone});
             craftingmanager.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsWood, 1), new Object[] {"A", Character.valueOf('A'), BuildCraftTransport.pipePowerWood});
         }
+        
+        //ChunkLoader
+        ModLoader.registerTileEntity(net.minecraft.src.buildcraft.additionalpipes.ChunkLoader.TileChunkLoader.class, "ChunkLoader");
+        int ChunkLoaderID = Integer.parseInt(config.getOrCreateIntProperty("ChunkLoader.id", Configuration.CATEGORY_BLOCK, DEFUALT_CHUNK_LOADER_ID).value);
+        config.save();
+        blockChunkLoader = new BlockChunkLoader(ChunkLoaderID);
+        ModLoader.registerBlock(blockChunkLoader);
+        boolean Craftable = Boolean.parseBoolean(config.getOrCreateBooleanProperty("ChunkLoader.Enabled", Configuration.CATEGORY_BLOCK, true).value);
+        config.save();
+
+        if (Craftable)
+            //	CraftingManager.getInstance().addShapelessRecipe(new ItemStack(blockChunkLoader, 1), new Object[] {Item.ingotIron,Item.ingotIron,Item.ingotIron,Item.ingotIron});
+            // Replaced shapeless with 8 Iron in a box with lapis in middle
+            CraftingManager.getInstance().addRecipe(new ItemStack(blockChunkLoader, 4), new Object[] { "iii", "iLi", "iii", Character.valueOf('i'), Item.ingotIron, Character.valueOf('L'), new ItemStack(Item.dyePowder, 1, 4) });
+
+        //Finish ChunkLoader
     }
 
     @Override
@@ -400,58 +423,13 @@ public class mod_AdditionalPipes extends NetworkMod {
         return (a == 1);
     }
 
-    private Item createPipe (int defaultID, Class <? extends Pipe > clas, String descr, Object r1, Object r2, Object r3, Object r4) {
-        String name = Character.toLowerCase(clas.getSimpleName().charAt(0))
-                      + clas.getSimpleName().substring(1);
-
-        Property prop = config
-                        .getOrCreateIntProperty(name + ".id",
-                                                Configuration.CATEGORY_ITEM, defaultID);
-        Property propLoad = config
-                            .getOrCreateBooleanProperty(name + ".Enabled",
-                                    Configuration.CATEGORY_ITEM, true);
-        config.save();
-        int id = Integer.parseInt(prop.value);
-        Item res =  BlockGenericPipe.registerPipe (id, clas);
-        res.setItemName(clas.getSimpleName());
-        CoreProxy.addName(res, descr);
-        ModLoader.registerTileEntity(TileGenericPipe.class, "teleportPipe");
-
-
-
-        if (!Boolean.parseBoolean(propLoad.value)) {
-            return res;
-        }
-
-        CraftingManager craftingmanager = CraftingManager.getInstance();
-
-        if (r1 != null && r2 != null && r3 != null && r4 != null) {
-            craftingmanager.addRecipe(new ItemStack(res, 8), new Object[] {
-                                          " D ", "ABC", "   ",
-                                          Character.valueOf('D'), r1,
-                                          Character.valueOf('A'), r2,
-                                          Character.valueOf('B'), r3,
-                                          Character.valueOf('C'), r4
-                                      });
-        }
-        else if (r1 != null && r2 != null && r3 != null) {
-            craftingmanager.addRecipe(new ItemStack(res, 8), new Object[] {
-                                          "   ", "ABC", "   ",
-                                          Character.valueOf('A'), r1,
-                                          Character.valueOf('B'), r2,
-                                          Character.valueOf('C'), r3
-                                      });
-        }
-        else if (r1 != null && r2 != null) {
-            craftingmanager.addRecipe(new ItemStack(res, 1), new Object[] {
-                                          "A ", "B ",
-                                          Character.valueOf('A'), r1,
-                                          Character.valueOf('B'), r2
-                                      });
-        }
-
-        return res;
-    }
+	private Item createPipe(int id, Class<? extends Pipe> clas, String description) {
+		Item res = BlockGenericPipe.registerPipe(id, clas);
+		res.setItemName(clas.getSimpleName());
+		CoreProxy.addName(res, description);
+		ModLoader.registerTileEntity(TileGenericPipe.class, "teleportPipe");
+		return res;
+	}
 
     public static void RegisterPipeIds() {
         pipeIds.add(BuildCraftTransport.pipeItemsCobblestone.shiftedIndex);
