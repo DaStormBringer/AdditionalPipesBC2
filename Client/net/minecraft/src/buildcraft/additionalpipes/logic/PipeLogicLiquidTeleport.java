@@ -9,7 +9,6 @@ package net.minecraft.src.buildcraft.additionalpipes.logic;
 
 import net.minecraft.src.buildcraft.additionalpipes.GuiHandler;
 import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeLiquidsTeleport;
-import net.minecraft.src.buildcraft.api.IPipe;
 import net.minecraft.src.buildcraft.transport.Pipe;
 import net.minecraft.src.buildcraft.transport.PipeLogic;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
@@ -29,7 +28,7 @@ public class PipeLogicLiquidTeleport extends PipeLogic {
         
         if (equippedItem != null) {
             
-            if (equippedItem.getItem() instanceof IPipe)  {
+            if (mod_AdditionalPipes.isPipe(equippedItem.getItem()))  {
                 return false;
             }
 

@@ -9,7 +9,10 @@
 package net.minecraft.src.buildcraft.additionalpipes.logic;
 
 import net.minecraft.src.buildcraft.additionalpipes.GuiHandler;
-import net.minecraft.src.buildcraft.api.*;
+import net.minecraft.src.buildcraft.api.ILiquidContainer;
+import net.minecraft.src.buildcraft.api.Orientations;
+import net.minecraft.src.buildcraft.api.Position;
+import net.minecraft.src.buildcraft.api.TileNetworkData;
 import net.minecraft.src.buildcraft.core.Utils;
 import net.minecraft.src.buildcraft.transport.Pipe;
 import net.minecraft.src.buildcraft.transport.PipeLogic;
@@ -68,7 +71,7 @@ public class PipeLogicAdvancedWood extends PipeLogic {
                 return true;
             }
 
-            if (equippedItem.getItem() instanceof IPipe) {
+            if (mod_AdditionalPipes.isPipe(equippedItem.getItem())) {
                 return false;
             }
         }

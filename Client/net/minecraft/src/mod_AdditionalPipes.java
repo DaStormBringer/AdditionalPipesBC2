@@ -571,6 +571,15 @@ public class mod_AdditionalPipes extends NetworkMod {
 
         return res;
     }
+    
+    public static boolean isPipe(Item item) {
+        
+        if (BlockGenericPipe.pipes.containsKey(item.shiftedIndex)){
+            return true;
+        }
+        
+        return false;
+    }
 
     @Override
     public void load() {
