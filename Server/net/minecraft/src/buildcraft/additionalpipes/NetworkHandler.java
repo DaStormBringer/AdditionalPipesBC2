@@ -1,5 +1,8 @@
 package net.minecraft.src.buildcraft.additionalpipes;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
 import net.minecraft.src.NetworkManager;
 import net.minecraft.src.Packet1Login;
 import net.minecraft.src.forge.IConnectionHandler;
@@ -8,7 +11,7 @@ import net.minecraft.src.forge.MessageManager;
 
 public class NetworkHandler implements IConnectionHandler, IPacketHandler {
 
-    private final String CHANNEL = "AdditionalPipes";
+    public static final String CHANNEL = "AdditionalPipes";
     
     @Override
     public void onConnect(NetworkManager network) {
@@ -31,8 +34,36 @@ public class NetworkHandler implements IConnectionHandler, IPacketHandler {
     }
 
     @Override
-    public void onPacketData(NetworkManager network, String channel, byte[] data) {
+    public void onPacketData(NetworkManager network, String channel, byte[] rawData) {
         
+        DataInputStream data = new DataInputStream(new ByteArrayInputStream(rawData));
+        AdditionalPipesPacket packet = null;
+        
+        try {
+            
+            int packetID = data.read();
+            switch(packetID) {
+                
+                case 1:
+                    packet = new AdditionalPipesPacket(1);
+                    packet.readData(data);
+                    onTelePipeDesc(packet);
+            }
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void onTelePipeDesc(AdditionalPipesPacket packet) {
+        
+        int x = 1 + 1;
+        
+        System.out.println("onTelePipeDesc");
+        
+        System.out.println(packet.posX);
+        System.out.println(packet.posY);
+        System.out.println(packet.posZ);
     }
 
 }

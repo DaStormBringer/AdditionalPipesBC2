@@ -11,40 +11,57 @@ package net.minecraft.src.buildcraft.additionalpipes.pipes;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-
 import net.minecraft.src.IInventory;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
-import net.minecraft.src.mod_AdditionalPipes;
-import net.minecraft.src.buildcraft.api.APIProxy;
-import net.minecraft.src.buildcraft.api.EntityPassiveItem;
-import net.minecraft.src.buildcraft.api.IPipeEntry;
-import net.minecraft.src.buildcraft.api.Orientations;
-import net.minecraft.src.buildcraft.api.Position;
-import net.minecraft.src.buildcraft.api.TileNetworkData;
+import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
+import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicItemTeleport;
+import net.minecraft.src.buildcraft.api.*;
 import net.minecraft.src.buildcraft.core.StackUtil;
 import net.minecraft.src.buildcraft.core.Utils;
+import net.minecraft.src.buildcraft.core.network.PacketPayload;
+import net.minecraft.src.buildcraft.core.network.TilePacketWrapper;
 import net.minecraft.src.buildcraft.transport.IPipeTransportItemsHook;
 import net.minecraft.src.buildcraft.transport.Pipe;
 import net.minecraft.src.buildcraft.transport.PipeTransportItems;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
-import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
-import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicItemTeleport;
+import net.minecraft.src.mod_AdditionalPipes;
 
 public class PipeItemTeleport extends Pipe implements IPipeTransportItemsHook {
 
-    public @TileNetworkData int myFreq = 0;
-    public @TileNetworkData boolean canReceive = false;
-    public @TileNetworkData String Owner = "";
+    public int myFreq = 0;
+    public boolean canReceive = false;
+    public String Owner = "";
     public static List<PipeItemTeleport> ItemTeleportPipes = new LinkedList<PipeItemTeleport>();
     LinkedList <Integer> idsToRemove = new LinkedList <Integer> ();
+    
+    private TilePacketWrapper packetWrapper;
 
-    public PipeItemTeleport(int itemID) {
-        super(new PipeTransportItems(), new PipeLogicItemTeleport(), itemID);
-        //ItemTeleportPipes.add(this);
-        ////System.out.println("Exists: " + (container != null));
+    private class PipeDescription {
+
+        int freq;
+        boolean canReceive;
+        String Owner;
+        
+        public PipeDescription(int freq, boolean canReceive, String Owner) {
+            this.freq = freq;
+            this.canReceive = canReceive;
+            this.Owner = Owner;
+        }
     }
-
+    
+    public PipeItemTeleport(int itemID) {
+        
+        super(new PipeTransportItems(), new PipeLogicItemTeleport(), itemID);
+        
+        packetWrapper = new TilePacketWrapper(PipeItemTeleport.class);
+    }
+    
+    @Override
+    public PacketPayload getNetworkPacket() {
+        return packetWrapper.toPayload(xCoord, yCoord, zCoord, new PipeDescription(myFreq, canReceive, Owner));
+    }
+        
     @Override
     public int getBlockTexture() {
         return mod_AdditionalPipes.DEFUALT_ITEM_TELEPORT_TEXTURE;

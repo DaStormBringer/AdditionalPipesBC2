@@ -38,7 +38,7 @@ public class GuiHandler implements IGuiHandler {
                 return new ContainerTeleportPipe(); 
                 
             case PIPE_DIST:
-                return new ContainerTeleportPipe();
+                return null;
                 
             case PIPE_WOODEN_ADV:
                 

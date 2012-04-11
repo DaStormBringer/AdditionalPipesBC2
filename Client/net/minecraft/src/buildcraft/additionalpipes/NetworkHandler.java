@@ -1,5 +1,8 @@
 package net.minecraft.src.buildcraft.additionalpipes;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
 import net.minecraft.src.NetworkManager;
 import net.minecraft.src.Packet1Login;
 import net.minecraft.src.forge.IConnectionHandler;
@@ -8,7 +11,7 @@ import net.minecraft.src.forge.MessageManager;
 
 public class NetworkHandler implements IConnectionHandler, IPacketHandler {
 
-    private final String CHANNEL = "AdditionalPipes";
+    public static final String CHANNEL = "AdditionalPipes";
     
     @Override
     public void onConnect(NetworkManager network) {
@@ -31,8 +34,21 @@ public class NetworkHandler implements IConnectionHandler, IPacketHandler {
     }
 
     @Override
-    public void onPacketData(NetworkManager network, String channel, byte[] data) {
+    public void onPacketData(NetworkManager network, String channel, byte[] rawData) {
         
+        DataInputStream data = new DataInputStream(new ByteArrayInputStream(rawData));
+        
+        
+        try {
+            
+            int packetID = data.read();
+            switch(packetID) {
+                
+            }
+            
+        } catch (IOException e) {
+            
+        }
     }
 
 }

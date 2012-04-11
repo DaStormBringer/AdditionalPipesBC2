@@ -17,7 +17,6 @@ import net.minecraft.src.forge.Configuration;
 import net.minecraft.src.forge.MinecraftForge;
 import net.minecraft.src.forge.NetworkMod;
 
-
 public class mod_AdditionalPipes extends NetworkMod {
 
     @Override
@@ -29,7 +28,7 @@ public class mod_AdditionalPipes extends NetworkMod {
     public boolean serverSideRequired() {
         return false;
     }
-    
+
     @Override
     public String getPriorities() {
         return "after:mod_BuildCraftTransport";
@@ -44,19 +43,16 @@ public class mod_AdditionalPipes extends NetworkMod {
     public static int DEFUALT_ITEM_TELEPORT_ID = 4047;
     public static int DEFUALT_ITEM_TELEPORT_TEXTURE = 0;//8 * 16 + 0;
     public static String DEFUALT_ITEM_TELEPORT_TEXTURE_FILE = "/net/minecraft/src/buildcraft/zeldo/gui/BlueItem.png";
-
     // Liquid Teleport
     public static Item pipeLiquidTeleport;
     public static int DEFUALT_LIQUID_TELEPORT_ID = 4048;
     public static int DEFUALT_LIQUID_TELEPORT_TEXTURE = 0;//8 * 16 + 2;
     public static String DEFUALT_LIQUID_TELEPORT_TEXTURE_FILE = "/net/minecraft/src/buildcraft/zeldo/gui/BlueLiquid.png";
-
     // Power Teleport
     public static Item pipePowerTeleport;
     public static int DEFUALT_POWER_TELEPORT_ID = 4049;
     public static int DEFUALT_POWER_TELEPORT_TEXTURE = 0;//8 * 16 + 3;
     public static String DEFUALT_POWER_TELEPORT_TEXTURE_FILE = "/net/minecraft/src/buildcraft/zeldo/gui/BluePower.png";
-
     // Distributor
     public static Item pipeDistributor;
     public static int DEFUALT_DISTRIBUTOR_TELEPORT_ID = 4046;
@@ -68,69 +64,58 @@ public class mod_AdditionalPipes extends NetworkMod {
     public static int DEFUALT_DISTRIBUTOR_TEXTURE_3 = 0;
     public static int DEFUALT_DISTRIBUTOR_TEXTURE_4 = 0;
     public static int DEFUALT_DISTRIBUTOR_TEXTURE_5 = 0;
-
     public static String DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE = "/net/minecraft/src/buildcraft/zeldo/gui/Dist";
     public static String DEFUALT_DISTRIBUTOR_TEXTURE_FILE = "/net/minecraft/src/buildcraft/zeldo/gui/DistributionOpen.png";
     public static String DEFUALT_DISTRIBUTOR_TEXTURE_FILE_CLOSED = "/net/minecraft/src/buildcraft/zeldo/gui/DistributionClosed.png";
-
     // Advanced Wood
-    public static Item 	pipeAdvancedWood;
-    public static int 	DEFUALT_ADVANCEDWOOD_ID = 4045;
-    public static int 	DEFUALT_ADVANCEDWOOD_TEXTURE = 0;//8*16+6;
-    public static int 	DEFUALT_ADVANCEDWOOD_TEXTURE_CLOSED = 0;//8*16+7;
+    public static Item pipeAdvancedWood;
+    public static int DEFUALT_ADVANCEDWOOD_ID = 4045;
+    public static int DEFUALT_ADVANCEDWOOD_TEXTURE = 0;//8*16+6;
+    public static int DEFUALT_ADVANCEDWOOD_TEXTURE_CLOSED = 0;//8*16+7;
     public static String DEFUALT_ADVANCEDWOOD_FILE = "/net/minecraft/src/buildcraft/zeldo/gui/AdvancedWood.png";
     public static String DEFUALT_ADVANCEDWOOD_FILE_CLOSED = "/net/minecraft/src/buildcraft/zeldo/gui/AdvancedWoodClosed.png";
-
     // Advanced Insertion
     public static Item pipeAdvancedInsertion;
     public static int DEFUALT_Insertion_ID = 4044;
     public static int DEFUALT_Insertion_TEXTURE = 0;
-
     // Redstone
-    public static Item 	pipeRedStone;
-    public static int 	DEFUALT_RedStone_ID = 4043;
-    public static int 	DEFUALT_RedStone_TEXTURE = 0;//8*16+4;
-    public static int 	DEFUALT_RedStone_TEXTURE_POWERED = 0;//8*16+5;
+    public static Item pipeRedStone;
+    public static int DEFUALT_RedStone_ID = 4043;
+    public static int DEFUALT_RedStone_TEXTURE = 0;//8*16+4;
+    public static int DEFUALT_RedStone_TEXTURE_POWERED = 0;//8*16+5;
     public static String DEFUALT_RedStone_FILE = "/net/minecraft/src/buildcraft/zeldo/gui/RS.png";
     public static String DEFUALT_RedStone_FILE_POWERED = "/net/minecraft/src/buildcraft/zeldo/gui/RSP.png";
-
     // Redstone Liquid
-    public static Item 	pipeRedStoneLiquid;
-    public static int 	DEFUALT_RedStoneLiquid_ID = 4042;
-    public static int 	DEFUALT_RedStoneLiquid_TEXTURE = 0;//8*16+1;
-    public static int 	DEFUALT_RedStoneLiquid_TEXTURE_POWERED = 0;//8*16+15;
+    public static Item pipeRedStoneLiquid;
+    public static int DEFUALT_RedStoneLiquid_ID = 4042;
+    public static int DEFUALT_RedStoneLiquid_TEXTURE = 0;//8*16+1;
+    public static int DEFUALT_RedStoneLiquid_TEXTURE_POWERED = 0;//8*16+15;
     public static String DEFUALT_RedStoneLiquid_FILE = "/net/minecraft/src/buildcraft/zeldo/gui/RSL.png";
     public static String DEFUALT_RedStoneLiquid_FILE_POWERED = "/net/minecraft/src/buildcraft/zeldo/gui/RSLP.png";
-
     // GUI Packet Ids  Registered at Flans Google Doc
     // https://docs.google.com/spreadsheet/ccc?key=0At3NBGfCbPHadElSaEFUT2N1LXpSMjAwWVR0dGF4bUE&hl=en#gid=0
-
-    public static byte GUI_ITEM_SEND 			= 103;
-    public static byte GUI_LIQUID_SEND			= 104;
-    public static byte GUI_ENERGY_SEND 			= 105;
-    public static byte GUI_ADVANCEDWOOD_SEND 	= 106;
-    public static byte GUI_ITEM_REC 			= 103;
-    public static byte GUI_LIQUID_REC 			= 104;
-    public static byte GUI_ENERGY_REC 			= 105;
-    public static byte GUI_ADVANCEDWOOD_REC 	= 106;
-
+    public static byte GUI_ITEM_SEND = 103;
+    public static byte GUI_LIQUID_SEND = 104;
+    public static byte GUI_ENERGY_SEND = 105;
+    public static byte GUI_ADVANCEDWOOD_SEND = 106;
+    public static byte GUI_ITEM_REC = 103;
+    public static byte GUI_LIQUID_REC = 104;
+    public static byte GUI_ENERGY_REC = 105;
+    public static byte GUI_ADVANCEDWOOD_REC = 106;
     // Main Packet ID's
-    public static int PACKET_SET_AW 	= 1;
-    public static int PACKET_SET_ITEM 	= 2;
+    public static int PACKET_SET_AW = 1;
+    public static int PACKET_SET_ITEM = 2;
     public static int PACKET_SET_LIQUID = 3;
-    public static int PACKET_SET_POWER 	= 4;
-    public static int PACKET_REQ_ITEM 	= 5;
+    public static int PACKET_SET_POWER = 4;
+    public static int PACKET_REQ_ITEM = 5;
     public static int PACKET_REQ_LIQUID = 6;
-    public static int PACKET_REQ_POWER 	= 7;
-    public static int PACKET_GUI_COUNT 	= 8;
-    public static int PACKET_OPEN_GUI 	= 9;
-    public static int PACKET_SET_DIST 	= 10;
-
+    public static int PACKET_REQ_POWER = 7;
+    public static int PACKET_GUI_COUNT = 8;
+    public static int PACKET_OPEN_GUI = 9;
+    public static int PACKET_SET_DIST = 10;
     public static int CurrentGUICount = 0;
-
     public static Block blockChunkLoader;
     public static int DEFUALT_CHUNK_LOADER_ID = 179;
-
     private static Configuration config;
     public int mpOilGuiId = -113;
     public int mpItemGuiId = -114;
@@ -139,21 +124,17 @@ public class mod_AdditionalPipes extends NetworkMod {
     public static boolean lagFix = false;
     public static boolean wrenchOpensGui = false;
     public static boolean allowWPRemove = false; //Remove waterproofing/redstone
-    
     //Log
     public static final int LOG_ERROR = 1;
     public static final int LOG_WARNING = 2;
     public static final int LOG_INFO = 3;
     public int logLevel;
-
     //public static double PowerLossCfg = .995;
-
     public static MinecraftServer mcs = ModLoader.getMinecraftServerInstance();
-
     public static List<Integer> pipeIds = new LinkedList<Integer>();
 
     public mod_AdditionalPipes() {
-        
+
         MinecraftForge.setGuiHandler(this, new GuiHandler());
         MinecraftForge.registerChunkLoadHandler(new ChunkLoadingHandler());
         MinecraftForge.registerConnectionHandler(new NetworkHandler());
@@ -162,7 +143,7 @@ public class mod_AdditionalPipes extends NetworkMod {
     public static File getSaveDirectory() {
         return new File((new PropertyManager(new File("server.properties"))).getStringProperty("level-name", "world"));
     }
-    
+
     @Override
     public void modsLoaded() {
 
@@ -215,7 +196,11 @@ public class mod_AdditionalPipes extends NetworkMod {
         // Liquid Teleport Pipe
         if (loadLiquidsTeleport) {
             pipeLiquidTeleport = createPipe(LIQUID_TELEPORT_ID, PipeLiquidsTeleport.class, "Waterproof Teleport Pipe");
-            craftingmanager.addRecipe(new ItemStack(pipeLiquidTeleport, 1), new Object[]{"w", "P", Character.valueOf('w'), BuildCraftTransport.pipeWaterproof, Character.valueOf('P'), pipeItemTeleport});
+            craftingmanager.addRecipe(
+                    new ItemStack(pipeLiquidTeleport, 1), new Object[]{
+                        "w", "P",
+                        Character.valueOf('w'), BuildCraftTransport.pipeWaterproof,
+                        Character.valueOf('P'), pipeItemTeleport});
         }
 
         // Power Teleport Pipe
@@ -293,106 +278,107 @@ public class mod_AdditionalPipes extends NetworkMod {
 
     }
 
-    /*@Override
-    public void handlePacket(Packet230ModLoader packet, EntityPlayerMP player) {
-        //System.out.println("Packet: " + packet.packetType);
-        if (packet.packetType == PACKET_SET_AW) {
-            int x = packet.dataInt [0];
-            int y = packet.dataInt [1];
-            int z = packet.dataInt [2];
-
-            if (player.worldObj.blockExists(x, y, z)) {
-                TileGenericPipe tile = (TileGenericPipe) player.worldObj.getBlockTileEntity(x, y, z);
-                boolean Exclude = intToBool(packet.dataInt[3]);
-                ((PipeLogicAdvancedWood)tile.pipe.logic).exclude = Exclude;
-            }
-        }
-
-        if (packet.packetType == PACKET_SET_ITEM) {
-            int x = packet.dataInt [0];
-            int y = packet.dataInt [1];
-            int z = packet.dataInt [2];
-
-            if (player.worldObj.blockExists(x, y, z)) {
-                TileGenericPipe tile = (TileGenericPipe) player.worldObj.getBlockTileEntity(x, y, z);
-                int freq = packet.dataInt[3];
-                boolean canRec = intToBool(packet.dataInt[4]);
-                String own = packet.dataString[0];
-                ((PipeItemTeleport)tile.pipe).canReceive = canRec;
-                ((PipeItemTeleport)tile.pipe).myFreq = freq;
-                ((PipeItemTeleport)tile.pipe).Owner = own;
-
-                MutiPlayerProxy.SendPacket(getCountPacket(((PipeItemTeleport)tile.pipe).getConnectedPipes(true).size()), player);
-
-            }
-        }
-
-        if (packet.packetType == PACKET_SET_LIQUID) {
-            int x = packet.dataInt [0];
-            int y = packet.dataInt [1];
-            int z = packet.dataInt [2];
-
-            if (player.worldObj.blockExists(x, y, z)) {
-                TileGenericPipe tile = (TileGenericPipe) player.worldObj.getBlockTileEntity(x, y, z);
-                int freq = packet.dataInt[3];
-                boolean canRec = intToBool(packet.dataInt[4]);
-                String own = packet.dataString[0];
-                ((PipeLiquidsTeleport)tile.pipe).canReceive = canRec;
-                ((PipeLiquidsTeleport)tile.pipe).myFreq = freq;
-                ((PipeLiquidsTeleport)tile.pipe).Owner = own;
-
-                MutiPlayerProxy.SendPacket(getCountPacket(((PipeLiquidsTeleport)tile.pipe).getConnectedPipes(true).size()), player);
-
-            }
-        }
-
-        if (packet.packetType == PACKET_SET_POWER) {
-            int x = packet.dataInt [0];
-            int y = packet.dataInt [1];
-            int z = packet.dataInt [2];
-
-            if (player.worldObj.blockExists(x, y, z)) {
-                TileGenericPipe tile = (TileGenericPipe) player.worldObj.getBlockTileEntity(x, y, z);
-                int freq = packet.dataInt[3];
-                boolean canRec = intToBool(packet.dataInt[4]);
-                String own = packet.dataString[0];
-                ((PipePowerTeleport)tile.pipe).canReceive = canRec;
-                ((PipePowerTeleport)tile.pipe).myFreq = freq;
-                ((PipePowerTeleport)tile.pipe).Owner = own;
-
-                MutiPlayerProxy.SendPacket(getCountPacket(((PipePowerTeleport)tile.pipe).getConnectedPipes(true).size()), player);
-
-            }
-        }
-
-        if (packet.packetType == PACKET_SET_DIST) {
-            int x = packet.dataInt [0];
-            int y = packet.dataInt [1];
-            int z = packet.dataInt [2];
-
-            if (player.worldObj.blockExists(x, y, z)) {
-                TileGenericPipe tile = (TileGenericPipe) player.worldObj.getBlockTileEntity(x, y, z);
-                PipeItemsDistributor a = (PipeItemsDistributor) tile.pipe;
-
-                for (int i = 0; i < a.distData.length; i++) {
-                    a.distData[i] = packet.dataInt[3 + i];
-                }
-            }
-        }
-    }
-
-    public static Packet230ModLoader getCountPacket(int Count) {
-        Packet230ModLoader packet = new Packet230ModLoader();
-
-        packet.modId = mod_AdditionalPipes.instance.getId();
-        packet.packetType = mod_AdditionalPipes.PACKET_GUI_COUNT;
-        packet.isChunkDataPacket = true;
-
-        packet.dataInt = new int[1];
-        packet.dataInt[0] = Count;
-        return packet;
-    }*/
-
+    /*
+     * @Override
+     * public void handlePacket(Packet230ModLoader packet, EntityPlayerMP player) {
+     * //System.out.println("Packet: " + packet.packetType);
+     * if (packet.packetType == PACKET_SET_AW) {
+     * int x = packet.dataInt [0];
+     * int y = packet.dataInt [1];
+     * int z = packet.dataInt [2];
+     *
+     * if (player.worldObj.blockExists(x, y, z)) {
+     * TileGenericPipe tile = (TileGenericPipe) player.worldObj.getBlockTileEntity(x, y, z);
+     * boolean Exclude = intToBool(packet.dataInt[3]);
+     * ((PipeLogicAdvancedWood)tile.pipe.logic).exclude = Exclude;
+     * }
+     * }
+     *
+     * if (packet.packetType == PACKET_SET_ITEM) {
+     * int x = packet.dataInt [0];
+     * int y = packet.dataInt [1];
+     * int z = packet.dataInt [2];
+     *
+     * if (player.worldObj.blockExists(x, y, z)) {
+     * TileGenericPipe tile = (TileGenericPipe) player.worldObj.getBlockTileEntity(x, y, z);
+     * int freq = packet.dataInt[3];
+     * boolean canRec = intToBool(packet.dataInt[4]);
+     * String own = packet.dataString[0];
+     * ((PipeItemTeleport)tile.pipe).canReceive = canRec;
+     * ((PipeItemTeleport)tile.pipe).myFreq = freq;
+     * ((PipeItemTeleport)tile.pipe).Owner = own;
+     *
+     * MutiPlayerProxy.SendPacket(getCountPacket(((PipeItemTeleport)tile.pipe).getConnectedPipes(true).size()), player);
+     *
+     * }
+     * }
+     *
+     * if (packet.packetType == PACKET_SET_LIQUID) {
+     * int x = packet.dataInt [0];
+     * int y = packet.dataInt [1];
+     * int z = packet.dataInt [2];
+     *
+     * if (player.worldObj.blockExists(x, y, z)) {
+     * TileGenericPipe tile = (TileGenericPipe) player.worldObj.getBlockTileEntity(x, y, z);
+     * int freq = packet.dataInt[3];
+     * boolean canRec = intToBool(packet.dataInt[4]);
+     * String own = packet.dataString[0];
+     * ((PipeLiquidsTeleport)tile.pipe).canReceive = canRec;
+     * ((PipeLiquidsTeleport)tile.pipe).myFreq = freq;
+     * ((PipeLiquidsTeleport)tile.pipe).Owner = own;
+     *
+     * MutiPlayerProxy.SendPacket(getCountPacket(((PipeLiquidsTeleport)tile.pipe).getConnectedPipes(true).size()), player);
+     *
+     * }
+     * }
+     *
+     * if (packet.packetType == PACKET_SET_POWER) {
+     * int x = packet.dataInt [0];
+     * int y = packet.dataInt [1];
+     * int z = packet.dataInt [2];
+     *
+     * if (player.worldObj.blockExists(x, y, z)) {
+     * TileGenericPipe tile = (TileGenericPipe) player.worldObj.getBlockTileEntity(x, y, z);
+     * int freq = packet.dataInt[3];
+     * boolean canRec = intToBool(packet.dataInt[4]);
+     * String own = packet.dataString[0];
+     * ((PipePowerTeleport)tile.pipe).canReceive = canRec;
+     * ((PipePowerTeleport)tile.pipe).myFreq = freq;
+     * ((PipePowerTeleport)tile.pipe).Owner = own;
+     *
+     * MutiPlayerProxy.SendPacket(getCountPacket(((PipePowerTeleport)tile.pipe).getConnectedPipes(true).size()), player);
+     *
+     * }
+     * }
+     *
+     * if (packet.packetType == PACKET_SET_DIST) {
+     * int x = packet.dataInt [0];
+     * int y = packet.dataInt [1];
+     * int z = packet.dataInt [2];
+     *
+     * if (player.worldObj.blockExists(x, y, z)) {
+     * TileGenericPipe tile = (TileGenericPipe) player.worldObj.getBlockTileEntity(x, y, z);
+     * PipeItemsDistributor a = (PipeItemsDistributor) tile.pipe;
+     *
+     * for (int i = 0; i < a.distData.length; i++) {
+     * a.distData[i] = packet.dataInt[3 + i];
+     * }
+     * }
+     * }
+     * }
+     *
+     * public static Packet230ModLoader getCountPacket(int Count) {
+     * Packet230ModLoader packet = new Packet230ModLoader();
+     *
+     * packet.modId = mod_AdditionalPipes.instance.getId();
+     * packet.packetType = mod_AdditionalPipes.PACKET_GUI_COUNT;
+     * packet.isChunkDataPacket = true;
+     *
+     * packet.dataInt = new int[1];
+     * packet.dataInt[0] = Count;
+     * return packet;
+     * }
+     */
     public static int boolToInt(boolean a) {
         if (a) {
             return 1;
@@ -400,7 +386,7 @@ public class mod_AdditionalPipes extends NetworkMod {
 
         return 0;
     }
-    
+
     public static boolean intToBool(int a) {
         return (a == 1);
     }
@@ -412,13 +398,13 @@ public class mod_AdditionalPipes extends NetworkMod {
         ModLoader.registerTileEntity(TileGenericPipe.class, "teleportPipe");
         return res;
     }
-    
+
     public static boolean isPipe(Item item) {
-        
-        if (BlockGenericPipe.pipes.containsKey(item.shiftedIndex)){
+
+        if (BlockGenericPipe.pipes.containsKey(item.shiftedIndex)) {
             return true;
         }
-        
+
         return false;
     }
 

@@ -1,11 +1,13 @@
 package net.minecraft.src.buildcraft.additionalpipes.gui;
 
-import net.minecraft.src.GuiButton;
-import net.minecraft.src.GuiContainer;
-import net.minecraft.src.mod_AdditionalPipes;
+import net.minecraft.src.*;
+import net.minecraft.src.buildcraft.additionalpipes.AdditionalPipesPacket;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
 import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
 import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemTeleport;
+import net.minecraft.src.buildcraft.core.CoreProxy;
+import net.minecraft.src.buildcraft.core.network.PacketPayload;
+import net.minecraft.src.buildcraft.core.network.PacketUpdate;
 
 import org.lwjgl.opengl.GL11;
 
@@ -15,11 +17,13 @@ public class GuiItemTeleportPipe extends GuiContainer {
     private GuiButton[] buttons = new GuiButton[7];
 
     public GuiItemTeleportPipe(TileGenericPipe thisPipe) {
+        
         super(new ContainerTeleportPipe());
         actualPipe = (PipeItemTeleport)thisPipe.pipe;
         xSize = 228;
         ySize = 117;
     }
+    
     @SuppressWarnings("unchecked")
     public void initGui() {
         super.initGui();
@@ -53,7 +57,12 @@ public class GuiItemTeleportPipe extends GuiContainer {
         //fontRenderer.drawString(filterInventory.getInvName(), 8, 6, 0x404040);
         //fontRenderer.drawString(playerInventory.getInvName(), 8, ySize - 97, 0x404040);
     }
+    
+    @Override
     protected void actionPerformed(GuiButton guibutton) {
+        
+        System.out.println("action");
+        
         switch(guibutton.id) {
             case 1:
                 actualPipe.myFreq -= 100;
@@ -87,9 +96,17 @@ public class GuiItemTeleportPipe extends GuiContainer {
         if (actualPipe.myFreq < 0) {
             actualPipe.myFreq = 0;
         }
-
+        
+        PacketPayload payload = actualPipe.getNetworkPacket();
+        AdditionalPipesPacket packet = new AdditionalPipesPacket(1, payload);
+        
+        System.out.println("Sending packet.");
+        
+        ModLoader.getMinecraftInstance().getSendQueue().addToSendQueue(packet.getPacket());
+        
    //     ModLoaderMp.sendPacket(mod_zAdditionalPipes.instance, actualPipe.getDescPipe());
     }
+    
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
         int k = mc.renderEngine
