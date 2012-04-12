@@ -100,7 +100,11 @@ public class GuiItemTeleportPipe extends GuiContainer {
         PacketPayload payload = actualPipe.getNetworkPacket();
         AdditionalPipesPacket packet = new AdditionalPipesPacket(1, payload);
         
-        System.out.println("Sending packet.");
+        packet.posX = actualPipe.xCoord;
+        packet.posY = actualPipe.yCoord;
+        packet.posZ = actualPipe.zCoord;
+        
+        System.out.println("Sending packet.");        
         
         ModLoader.getMinecraftInstance().getSendQueue().addToSendQueue(packet.getPacket());
         

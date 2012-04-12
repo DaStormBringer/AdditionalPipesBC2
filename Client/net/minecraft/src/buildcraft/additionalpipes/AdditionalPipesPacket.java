@@ -92,7 +92,7 @@ public class AdditionalPipesPacket extends ForgePacket {
             data.writeByte(getID());
             writeData(data);
         } catch (IOException e) {
-            
+            e.printStackTrace();
         }
         
         Packet250CustomPayload packet = new Packet250CustomPayload();
