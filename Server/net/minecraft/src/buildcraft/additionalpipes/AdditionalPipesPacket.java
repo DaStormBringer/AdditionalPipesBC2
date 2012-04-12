@@ -90,6 +90,7 @@ public class AdditionalPipesPacket extends ForgePacket {
         
         try {
             data.writeByte(getID());
+            writeData(data);
         } catch (IOException e) {
             
         }
