@@ -20,6 +20,7 @@ import net.minecraft.src.buildcraft.api.*;
 import net.minecraft.src.buildcraft.core.StackUtil;
 import net.minecraft.src.buildcraft.core.Utils;
 import net.minecraft.src.buildcraft.core.network.PacketPayload;
+import net.minecraft.src.buildcraft.core.network.PacketUpdate;
 import net.minecraft.src.buildcraft.core.network.TilePacketWrapper;
 import net.minecraft.src.buildcraft.transport.IPipeTransportItemsHook;
 import net.minecraft.src.buildcraft.transport.Pipe;
@@ -29,39 +30,49 @@ import net.minecraft.src.mod_AdditionalPipes;
 
 public class PipeItemTeleport extends Pipe implements IPipeTransportItemsHook {
 
-    public int myFreq = 0;
-    public boolean canReceive = false;
-    public String Owner = "";
+    public @TileNetworkData int myFreq = 0;
+    public @TileNetworkData boolean canReceive = false;
+    public @TileNetworkData String Owner = "";
     public static List<PipeItemTeleport> ItemTeleportPipes = new LinkedList<PipeItemTeleport>();
     LinkedList <Integer> idsToRemove = new LinkedList <Integer> ();
-    
+
     private TilePacketWrapper packetWrapper;
 
-    private class PipeDescription {
+    public class PipeDescription {
 
-        int freq;
-        boolean canReceive;
-        String Owner;
+        @TileNetworkData public int freq;
+        @TileNetworkData public boolean canReceive;
+        @TileNetworkData public String Owner;
         
         public PipeDescription(int freq, boolean canReceive, String Owner) {
             this.freq = freq;
             this.canReceive = canReceive;
             this.Owner = Owner;
         }
+        
+        public PipeDescription() {}
     }
     
     public PipeItemTeleport(int itemID) {
-        
         super(new PipeTransportItems(), new PipeLogicItemTeleport(), itemID);
         
-        packetWrapper = new TilePacketWrapper(PipeItemTeleport.class);
+        packetWrapper = new TilePacketWrapper(new Class[] { PipeDescription.class });
     }
     
     @Override
     public PacketPayload getNetworkPacket() {
         return packetWrapper.toPayload(xCoord, yCoord, zCoord, new PipeDescription(myFreq, canReceive, Owner));
     }
+    
+    @Override
+    public void handlePacket(PacketUpdate packet) {
         
+        PipeDescription pipeDesc = new PipeDescription();
+        packetWrapper.fromPayload(pipeDesc, packet.payload);
+        
+        System.out.println(pipeDesc.freq);
+    }
+
     @Override
     public int getBlockTexture() {
         return mod_AdditionalPipes.DEFUALT_ITEM_TELEPORT_TEXTURE;

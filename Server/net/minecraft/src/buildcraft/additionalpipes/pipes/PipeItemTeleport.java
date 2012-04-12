@@ -19,6 +19,8 @@ import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicItemTeleport;
 import net.minecraft.src.buildcraft.api.*;
 import net.minecraft.src.buildcraft.core.StackUtil;
 import net.minecraft.src.buildcraft.core.Utils;
+import net.minecraft.src.buildcraft.core.network.PacketUpdate;
+import net.minecraft.src.buildcraft.core.network.TilePacketWrapper;
 import net.minecraft.src.buildcraft.transport.IPipeTransportItemsHook;
 import net.minecraft.src.buildcraft.transport.Pipe;
 import net.minecraft.src.buildcraft.transport.PipeTransportItems;
@@ -30,13 +32,42 @@ public class PipeItemTeleport extends Pipe implements IPipeTransportItemsHook {
     public @TileNetworkData int myFreq = 0;
     public @TileNetworkData boolean canReceive = false;
     public @TileNetworkData String Owner = "";
+    
     public static List<PipeItemTeleport> ItemTeleportPipes = new LinkedList<PipeItemTeleport>();
     LinkedList <Integer> idsToRemove = new LinkedList <Integer> ();
 
+    private TilePacketWrapper packetWrapper;
+
+    public class PipeDescription {
+
+        @TileNetworkData public int freq;
+        @TileNetworkData public boolean canReceive;
+        @TileNetworkData public String Owner;
+        
+        public PipeDescription(int freq, boolean canReceive, String Owner) {
+            this.freq = freq;
+            this.canReceive = canReceive;
+            this.Owner = Owner;
+        }
+        
+        public PipeDescription() {}
+    }
+    
     public PipeItemTeleport(int itemID) {
         super(new PipeTransportItems(), new PipeLogicItemTeleport(), itemID);
-        //ItemTeleportPipes.add(this);
-        ////System.out.println("Exists: " + (container != null));
+        
+        packetWrapper = new TilePacketWrapper(new Class[] { PipeDescription.class });
+    }
+    
+    @Override
+    public void handlePacket(PacketUpdate packet) {
+        
+        PipeDescription pipeDesc = new PipeDescription();
+        packetWrapper.fromPayload(pipeDesc, packet.payload);
+        
+        System.out.println(pipeDesc.freq);
+        System.out.println(pipeDesc.canReceive);
+        System.out.println(pipeDesc.Owner);
     }
 
     @Override

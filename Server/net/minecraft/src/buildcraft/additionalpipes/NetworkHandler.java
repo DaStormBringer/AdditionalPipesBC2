@@ -3,8 +3,10 @@ package net.minecraft.src.buildcraft.additionalpipes;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
-import net.minecraft.src.NetworkManager;
-import net.minecraft.src.Packet1Login;
+import net.minecraft.src.*;
+import net.minecraft.src.buildcraft.core.CoreProxy;
+import net.minecraft.src.buildcraft.core.network.PacketUpdate;
+import net.minecraft.src.buildcraft.transport.TileGenericPipe;
 import net.minecraft.src.forge.IConnectionHandler;
 import net.minecraft.src.forge.IPacketHandler;
 import net.minecraft.src.forge.MessageManager;
@@ -41,13 +43,15 @@ public class NetworkHandler implements IConnectionHandler, IPacketHandler {
         
         try {
             
+            NetServerHandler net = (NetServerHandler)network.getNetHandler();
+            
             int packetID = data.read();
             switch(packetID) {
                 
                 case 1:
                     packet = new AdditionalPipesPacket(1);
                     packet.readData(data);
-                    onTelePipeDesc(packet);
+                    onTelePipeDesc(packet, net.getPlayerEntity());
             }
             
         } catch (IOException e) {
@@ -55,15 +59,17 @@ public class NetworkHandler implements IConnectionHandler, IPacketHandler {
         }
     }
 
-    private void onTelePipeDesc(AdditionalPipesPacket packet) {
-        
-        int x = 1 + 1;
-        
-        System.out.println("onTelePipeDesc");
+    private void onTelePipeDesc(AdditionalPipesPacket packet, EntityPlayer player) {
         
         System.out.println(packet.posX);
         System.out.println(packet.posY);
         System.out.println(packet.posZ);
+        
+        TileGenericPipe tile = (TileGenericPipe) ModLoader.getMinecraftServerInstance().getWorldManager(player.dimension)
+                .getBlockTileEntity(packet.posX, packet.posY, packet.posZ);
+        
+        PacketUpdate packetUpdate = new PacketUpdate(packet.getID(), packet.payload);
+        tile.pipe.handlePacket(packetUpdate);
     }
 
 }
