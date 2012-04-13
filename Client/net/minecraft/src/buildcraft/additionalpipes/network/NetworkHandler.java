@@ -8,6 +8,7 @@ import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.NetworkManager;
 import net.minecraft.src.Packet1Login;
+import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicItemTeleport;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
 import net.minecraft.src.forge.IConnectionHandler;
 import net.minecraft.src.forge.IPacketHandler;
@@ -69,6 +70,8 @@ public class NetworkHandler implements IConnectionHandler, IPacketHandler {
                 .getBlockTileEntity(packet.posX, packet.posY, packet.posZ);
         
         tile.pipe.handlePacket(packet);
+        
+        System.out.println(( (PipeLogicItemTeleport) tile.pipe.logic).myFreq);
     }
 
 }

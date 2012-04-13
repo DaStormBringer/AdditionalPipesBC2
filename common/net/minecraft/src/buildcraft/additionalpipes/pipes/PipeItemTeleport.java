@@ -29,10 +29,6 @@ import net.minecraft.src.buildcraft.transport.TileGenericPipe;
 import net.minecraft.src.mod_AdditionalPipes;
 
 public class PipeItemTeleport extends Pipe implements IPipeTransportItemsHook {
-
-	@TileNetworkData public int myFreq = 0;
-	@TileNetworkData public boolean canReceive = false;
-	@TileNetworkData public String Owner = "";
     
     public static List<PipeItemTeleport> ItemTeleportPipes = new LinkedList<PipeItemTeleport>();
     LinkedList <Integer> idsToRemove = new LinkedList <Integer> ();
@@ -81,27 +77,34 @@ public class PipeItemTeleport extends Pipe implements IPipeTransportItemsHook {
         //MutiPlayerProxy.AddChunkToList(xCoord, zCoord);
     }
     public List<PipeItemTeleport> getConnectedPipes(boolean ignoreReceive) {
-        List<PipeItemTeleport> Temp = new LinkedList<PipeItemTeleport>();
+    	
+        List<PipeItemTeleport> temp = new LinkedList<PipeItemTeleport>();
         removeOldPipes();
+        
+        PipeLogicItemTeleport logic = (PipeLogicItemTeleport) this.logic;
 
-        //System.out.println("Tele Count: " + ItemTeleportPipes.size());
-        for (int i = 0; i < ItemTeleportPipes.size(); i++) {
-            if (ItemTeleportPipes.get(i).Owner.equalsIgnoreCase(Owner) || MutiPlayerProxy.isOnServer() == false) {
-                if (ItemTeleportPipes.get(i).canReceive || ignoreReceive) {
-                    //System.out.println("MyFreq: " + myFreq);
-                    if (ItemTeleportPipes.get(i).myFreq == myFreq) {
-                        if (xCoord != ItemTeleportPipes.get(i).xCoord || yCoord != ItemTeleportPipes.get(i).yCoord || zCoord != ItemTeleportPipes.get(i).zCoord ) {
-                            //System.out.print("MyPos: " + getPosition().toString() + " ++ Pos: " + ItemTeleportPipes.get(i).getPosition().toString() + "\n");
-                            //System.out.println("aExists: " + (worldObj.getBlockTileEntity(ItemTeleportPipes.get(i).xCoord, ItemTeleportPipes.get(i).yCoord, ItemTeleportPipes.get(i).zCoord) instanceof TileGenericPipe));
-                            Temp.add(ItemTeleportPipes.get(i));
+        for (PipeItemTeleport pipe : ItemTeleportPipes) {
+        	
+        	PipeLogicItemTeleport pipeLogic = (PipeLogicItemTeleport) pipe.logic;
+        	
+    		if (pipeLogic.owner.equalsIgnoreCase(logic.owner) || MutiPlayerProxy.isOnServer() == false) {
+            	
+                if (pipeLogic.canReceive || ignoreReceive) {
+                	
+                    if (pipeLogic.myFreq == logic.myFreq) {
+                    	
+                        if (xCoord != pipe.xCoord || yCoord != pipe.yCoord || zCoord != pipe.zCoord ) {
+                        	
+                             temp.add(pipe);
                         }
                     }
                 }
             }
         }
 
-        return Temp;
+        return temp;
     }
+    
     public Position getPosition() {
         return new Position (xCoord, yCoord, zCoord);
     }
@@ -249,45 +252,5 @@ public class PipeItemTeleport extends Pipe implements IPipeTransportItemsHook {
 
     @Override
     public void entityEntered(EntityPassiveItem item, Orientations orientation) {}
-
-    @Override
-    public void writeToNBT(NBTTagCompound nbttagcompound) {
-        super.writeToNBT(nbttagcompound);
-        //MutiPlayerProxy.AddChunkToList(xCoord, zCoord);
-        nbttagcompound.setInteger("Freq", myFreq);
-        nbttagcompound.setBoolean("Rec", canReceive);
-        nbttagcompound.setString("Owner", Owner);
-    }
-
-    @Override
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
-        super.readFromNBT(nbttagcompound);
-        //MutiPlayerProxy.AddChunkToList(xCoord, zCoord);
-        myFreq = nbttagcompound.getInteger("Freq");
-        canReceive = nbttagcompound.getBoolean("Rec");
-        Owner = nbttagcompound.getString("Owner");
-    }
-/*
-    public Packet230ModLoader getDescPipe() {
-        Packet230ModLoader packet = new Packet230ModLoader();
-
-        packet.modId = mod_zAdditionalPipes.instance.getId();
-        packet.packetType = mod_zAdditionalPipes.PACKET_SET_ITEM;
-        packet.isChunkDataPacket = true;
-
-        packet.dataInt = new int [5];
-
-        packet.dataInt [0] = xCoord;
-        packet.dataInt [1] = yCoord;
-        packet.dataInt [2] = zCoord;
-        packet.dataInt [3] = myFreq;
-        packet.dataInt [4] = mod_zAdditionalPipes.boolToInt(canReceive);
-
-        packet.dataString = new String[1];
-        packet.dataString[0] = Owner;
-
-
-        return packet;
-    } */
 
 }

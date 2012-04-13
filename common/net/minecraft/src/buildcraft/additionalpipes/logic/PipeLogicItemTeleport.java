@@ -9,19 +9,23 @@ package net.minecraft.src.buildcraft.additionalpipes.logic;
 
 import net.minecraft.src.buildcraft.additionalpipes.gui.GuiHandler;
 import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemTeleport;
+import net.minecraft.src.buildcraft.api.TileNetworkData;
 import net.minecraft.src.buildcraft.transport.Pipe;
 import net.minecraft.src.buildcraft.transport.PipeLogic;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
 import net.minecraft.src.*;
 
 public class PipeLogicItemTeleport extends PipeLogic {
+	
+	@TileNetworkData public int myFreq = 0;
+	@TileNetworkData public boolean canReceive = false;
+	@TileNetworkData public String owner = "";
 
     @Override
     public boolean blockActivated(EntityPlayer entityplayer) {
         
-        PipeItemTeleport a = (PipeItemTeleport) this.container.pipe;
-        if (a.Owner == null || a.Owner.equalsIgnoreCase("")) {
-            a.Owner = entityplayer.username;
+        if (owner == null || owner.equalsIgnoreCase("")) {
+            owner = entityplayer.username;
         }
         
         ItemStack equippedItem = entityplayer.getCurrentEquippedItem();
