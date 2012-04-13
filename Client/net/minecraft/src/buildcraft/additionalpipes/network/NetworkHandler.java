@@ -3,8 +3,12 @@ package net.minecraft.src.buildcraft.additionalpipes.network;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+
+import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.ModLoader;
 import net.minecraft.src.NetworkManager;
 import net.minecraft.src.Packet1Login;
+import net.minecraft.src.buildcraft.transport.TileGenericPipe;
 import net.minecraft.src.forge.IConnectionHandler;
 import net.minecraft.src.forge.IPacketHandler;
 import net.minecraft.src.forge.MessageManager;
@@ -36,19 +40,35 @@ public class NetworkHandler implements IConnectionHandler, IPacketHandler {
     @Override
     public void onPacketData(NetworkManager network, String channel, byte[] rawData) {
         
+    	System.out.println("onPacketData");
+    	
         DataInputStream data = new DataInputStream(new ByteArrayInputStream(rawData));
-        
+        PacketAdditionalPipes packet = null;
         
         try {
             
             int packetID = data.read();
             switch(packetID) {
                 
+                case 1:
+                    packet = new PacketAdditionalPipes(1);
+                    packet.readData(data);
+                    onTelePipeDesc(packet);
             }
             
         } catch (IOException e) {
-            
+            e.printStackTrace();
         }
+    }
+
+    private void onTelePipeDesc(PacketAdditionalPipes packet) {
+        
+    	System.out.print("Handling pipe packet");
+    	
+        TileGenericPipe tile = (TileGenericPipe) ModLoader.getMinecraftInstance().theWorld
+                .getBlockTileEntity(packet.posX, packet.posY, packet.posZ);
+        
+        tile.pipe.handlePacket(packet);
     }
 
 }

@@ -11,14 +11,14 @@ import net.minecraft.src.buildcraft.core.network.PacketUpdate;
 import net.minecraft.src.forge.packets.ForgePacket;
 
 public class PacketAdditionalPipes extends PacketUpdate {
-
-    protected String channel = "AdditionalPipes";
     
     public PacketAdditionalPipes(int PacketId) {
     	super(PacketId);
+    	this.channel = NetworkHandler.CHANNEL;
 	}
     
     public PacketAdditionalPipes(int packetId, PacketPayload payload) {
     	super(packetId, payload);
+    	this.channel = NetworkHandler.CHANNEL;
     }
 }
