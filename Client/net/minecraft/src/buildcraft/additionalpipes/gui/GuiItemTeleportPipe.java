@@ -1,7 +1,7 @@
 package net.minecraft.src.buildcraft.additionalpipes.gui;
 
 import net.minecraft.src.*;
-import net.minecraft.src.buildcraft.additionalpipes.network.AdditionalPipesPacket;
+import net.minecraft.src.buildcraft.additionalpipes.network.PacketAdditionalPipes;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
 import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
 import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemTeleport;
@@ -98,7 +98,7 @@ public class GuiItemTeleportPipe extends GuiContainer {
         }
         
         PacketPayload payload = actualPipe.getNetworkPacket();
-        AdditionalPipesPacket packet = new AdditionalPipesPacket(1, payload);
+        PacketAdditionalPipes packet = new PacketAdditionalPipes(1, payload);
         
         packet.posX = actualPipe.xCoord;
         packet.posY = actualPipe.yCoord;
