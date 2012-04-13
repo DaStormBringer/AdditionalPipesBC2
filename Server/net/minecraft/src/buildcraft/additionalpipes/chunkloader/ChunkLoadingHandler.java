@@ -2,21 +2,16 @@ package net.minecraft.src.buildcraft.additionalpipes.chunkloader;
 
 import java.util.List;
 import java.util.Set;
-import net.minecraft.client.Minecraft;
+
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import net.minecraft.src.buildcraft.additionalpipes.chunkloader.TileChunkLoader;
 import net.minecraft.src.forge.IChunkLoadHandler;
 
 public class ChunkLoadingHandler implements IChunkLoadHandler {
 
-    private Minecraft mc = ModLoader.getMinecraftInstance();
-    
     @Override
     public void addActiveChunks(World world, Set<ChunkCoordIntPair> chunkList) {
-
-        if (mc.theWorld.isRemote) {
-            return;
-        }
 
         for (TileChunkLoader tile : TileChunkLoader.chunkLoaderList) {
 
@@ -37,10 +32,6 @@ public class ChunkLoadingHandler implements IChunkLoadHandler {
 
     @Override
     public boolean canUnloadChunk(Chunk chunk) {
-
-        if (mc.theWorld.isRemote) {
-            return true;
-        }
 
         for (TileChunkLoader tile : TileChunkLoader.chunkLoaderList) {
 
