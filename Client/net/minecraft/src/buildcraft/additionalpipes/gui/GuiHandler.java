@@ -1,4 +1,4 @@
-package net.minecraft.src.buildcraft.additionalpipes;
+package net.minecraft.src.buildcraft.additionalpipes.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.buildcraft.additionalpipes.gui.*;

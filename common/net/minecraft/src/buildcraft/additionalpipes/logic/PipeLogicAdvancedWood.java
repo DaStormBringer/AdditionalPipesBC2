@@ -8,7 +8,7 @@
 
 package net.minecraft.src.buildcraft.additionalpipes.logic;
 
-import net.minecraft.src.buildcraft.additionalpipes.GuiHandler;
+import net.minecraft.src.buildcraft.additionalpipes.gui.GuiHandler;
 import net.minecraft.src.buildcraft.api.ILiquidContainer;
 import net.minecraft.src.buildcraft.api.Orientations;
 import net.minecraft.src.buildcraft.api.Position;

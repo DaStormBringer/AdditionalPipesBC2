@@ -4,12 +4,12 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.buildcraft.additionalpipes.ChunkLoader.BlockChunkLoader;
-import net.minecraft.src.buildcraft.additionalpipes.ChunkLoader.TileChunkLoader;
-import net.minecraft.src.buildcraft.additionalpipes.ChunkLoadingHandler;
-import net.minecraft.src.buildcraft.additionalpipes.GuiHandler;
+import net.minecraft.src.buildcraft.additionalpipes.chunkloader.BlockChunkLoader;
+import net.minecraft.src.buildcraft.additionalpipes.chunkloader.TileChunkLoader;
+import net.minecraft.src.buildcraft.additionalpipes.chunkloader.ChunkLoadingHandler;
+import net.minecraft.src.buildcraft.additionalpipes.gui.GuiHandler;
 import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
-import net.minecraft.src.buildcraft.additionalpipes.NetworkHandler;
+import net.minecraft.src.buildcraft.additionalpipes.network.NetworkHandler;
 import net.minecraft.src.buildcraft.additionalpipes.pipes.*;
 import net.minecraft.src.buildcraft.api.LaserKind;
 import net.minecraft.src.buildcraft.core.Box;
@@ -383,7 +383,7 @@ public class mod_AdditionalPipes extends NetworkMod {
         }
 
         //ChunkLoader
-        ModLoader.registerTileEntity(net.minecraft.src.buildcraft.additionalpipes.ChunkLoader.TileChunkLoader.class, "ChunkLoader");
+        ModLoader.registerTileEntity(net.minecraft.src.buildcraft.additionalpipes.chunkloader.TileChunkLoader.class, "ChunkLoader");
         int ChunkLoaderID = Integer.parseInt(config.getOrCreateIntProperty("ChunkLoader.id", Configuration.CATEGORY_BLOCK, DEFUALT_CHUNK_LOADER_ID).value);
         blockChunkLoader = new BlockChunkLoader(ChunkLoaderID);
         ModLoader.registerBlock(blockChunkLoader);

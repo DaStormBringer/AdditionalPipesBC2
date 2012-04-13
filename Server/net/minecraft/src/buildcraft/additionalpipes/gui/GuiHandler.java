@@ -1,4 +1,4 @@
-package net.minecraft.src.buildcraft.additionalpipes;
+package net.minecraft.src.buildcraft.additionalpipes.gui;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;

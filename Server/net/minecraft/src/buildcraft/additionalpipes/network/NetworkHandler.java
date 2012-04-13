@@ -1,4 +1,4 @@
-package net.minecraft.src.buildcraft.additionalpipes;
+package net.minecraft.src.buildcraft.additionalpipes.network;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;

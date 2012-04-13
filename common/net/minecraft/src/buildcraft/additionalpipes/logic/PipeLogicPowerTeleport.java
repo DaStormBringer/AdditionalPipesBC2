@@ -7,7 +7,7 @@
  */
 package net.minecraft.src.buildcraft.additionalpipes.logic;
 
-import net.minecraft.src.buildcraft.additionalpipes.GuiHandler;
+import net.minecraft.src.buildcraft.additionalpipes.gui.GuiHandler;
 import net.minecraft.src.buildcraft.additionalpipes.pipes.PipePowerTeleport;
 import net.minecraft.src.buildcraft.transport.Pipe;
 import net.minecraft.src.buildcraft.transport.PipeLogic;

@@ -1,7 +1,7 @@
 package net.minecraft.src.buildcraft.additionalpipes.gui;
 
 import net.minecraft.src.*;
-import net.minecraft.src.buildcraft.additionalpipes.AdditionalPipesPacket;
+import net.minecraft.src.buildcraft.additionalpipes.network.AdditionalPipesPacket;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
 import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
 import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemTeleport;

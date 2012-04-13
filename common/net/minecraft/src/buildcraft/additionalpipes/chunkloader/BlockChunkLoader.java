@@ -1,4 +1,4 @@
-package net.minecraft.src.buildcraft.additionalpipes.ChunkLoader;
+package net.minecraft.src.buildcraft.additionalpipes.chunkloader;
 
 import net.minecraft.src.BlockContainer;
 import net.minecraft.src.Material;

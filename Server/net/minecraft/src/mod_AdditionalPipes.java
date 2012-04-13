@@ -4,10 +4,9 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.src.buildcraft.additionalpipes.ChunkLoader.BlockChunkLoader;
-import net.minecraft.src.buildcraft.additionalpipes.ChunkLoadingHandler;
-import net.minecraft.src.buildcraft.additionalpipes.GuiHandler;
-import net.minecraft.src.buildcraft.additionalpipes.NetworkHandler;
+import net.minecraft.src.buildcraft.additionalpipes.chunkloader.*;
+import net.minecraft.src.buildcraft.additionalpipes.gui.GuiHandler;
+import net.minecraft.src.buildcraft.additionalpipes.network.NetworkHandler;
 import net.minecraft.src.buildcraft.additionalpipes.pipes.*;
 import net.minecraft.src.buildcraft.core.CoreProxy;
 import net.minecraft.src.buildcraft.transport.BlockGenericPipe;
@@ -129,7 +128,7 @@ public class mod_AdditionalPipes extends NetworkMod {
     public static final int LOG_WARNING = 2;
     public static final int LOG_INFO = 3;
     public int logLevel;
-    //public static double PowerLossCfg = .995;
+    public static double PowerLossCfg = .995;
     public static MinecraftServer mcs = ModLoader.getMinecraftServerInstance();
     public static List<Integer> pipeIds = new LinkedList<Integer>();
 
@@ -156,7 +155,7 @@ public class mod_AdditionalPipes extends NetworkMod {
         wrenchOpensGui = Boolean.parseBoolean(config.getOrCreateBooleanProperty("wrenchOpensGui", Configuration.CATEGORY_GENERAL, false).value);
         allowWPRemove = Boolean.parseBoolean(config.getOrCreateBooleanProperty("EnableWaterProofRemoval", Configuration.CATEGORY_GENERAL, false).value);
         logLevel = Integer.parseInt(config.getOrCreateProperty("logLevel", Configuration.CATEGORY_GENERAL, "1").value);
-        //PowerLossCfg    = Double.parseDouble(config.getOrCreateProperty("powerloss",Configuration.GENERAL_PROPERTY, Double.toString(PowerLossCfg)).value);
+        PowerLossCfg    = Double.parseDouble(config.getOrCreateProperty("powerloss",Configuration.CATEGORY_GENERAL, Double.toString(PowerLossCfg)).value);
 
         //System.out.println("Teleport Pipes Power Loss Configuration: " + PowerLossCfg);
 
@@ -262,7 +261,7 @@ public class mod_AdditionalPipes extends NetworkMod {
         }
 
         //ChunkLoader
-        ModLoader.registerTileEntity(net.minecraft.src.buildcraft.additionalpipes.ChunkLoader.TileChunkLoader.class, "ChunkLoader");
+        ModLoader.registerTileEntity(net.minecraft.src.buildcraft.additionalpipes.chunkloader.TileChunkLoader.class, "ChunkLoader");
         int ChunkLoaderID = Integer.parseInt(config.getOrCreateIntProperty("ChunkLoader.id", Configuration.CATEGORY_BLOCK, DEFUALT_CHUNK_LOADER_ID).value);
         config.save();
         blockChunkLoader = new BlockChunkLoader(ChunkLoaderID);

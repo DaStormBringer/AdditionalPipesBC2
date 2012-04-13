@@ -1,10 +1,10 @@
-package net.minecraft.src.buildcraft.additionalpipes;
+package net.minecraft.src.buildcraft.additionalpipes.chunkloader;
 
 import java.util.List;
 import java.util.Set;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
-import net.minecraft.src.buildcraft.additionalpipes.ChunkLoader.TileChunkLoader;
+import net.minecraft.src.buildcraft.additionalpipes.chunkloader.TileChunkLoader;
 import net.minecraft.src.forge.IChunkLoadHandler;
 
 public class ChunkLoadingHandler implements IChunkLoadHandler {
