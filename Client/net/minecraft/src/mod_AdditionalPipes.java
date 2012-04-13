@@ -385,7 +385,7 @@ public class mod_AdditionalPipes extends NetworkMod {
         //ChunkLoader
         ModLoader.registerTileEntity(net.minecraft.src.buildcraft.additionalpipes.chunkloader.TileChunkLoader.class, "ChunkLoader");
         int ChunkLoaderID = Integer.parseInt(config.getOrCreateIntProperty("ChunkLoader.id", Configuration.CATEGORY_BLOCK, DEFUALT_CHUNK_LOADER_ID).value);
-        blockChunkLoader = new BlockChunkLoader(ChunkLoaderID);
+        blockChunkLoader = new BlockChunkLoader(ChunkLoaderID, 0);
         ModLoader.registerBlock(blockChunkLoader);
         blockChunkLoader.setBlockName("ChunkLoading Block");
         ModLoader.addName(blockChunkLoader, "ChunkLoading Block");
@@ -585,5 +585,7 @@ public class mod_AdditionalPipes extends NetworkMod {
         MinecraftForgeClient.preloadTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "4.png");
         MinecraftForgeClient.preloadTexture(mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_FILE_BASE + "5.png");
         MinecraftForgeClient.preloadTexture(mod_AdditionalPipes.DEFUALT_RedStoneLiquid_FILE_POWERED);
+        
+        MinecraftForgeClient.preloadTexture("/net/minecraft/src/buildcraft/additionalpipes/gui/chunkloader.png");
     }
 }

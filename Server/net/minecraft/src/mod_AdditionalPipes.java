@@ -264,7 +264,7 @@ public class mod_AdditionalPipes extends NetworkMod {
         ModLoader.registerTileEntity(net.minecraft.src.buildcraft.additionalpipes.chunkloader.TileChunkLoader.class, "ChunkLoader");
         int ChunkLoaderID = Integer.parseInt(config.getOrCreateIntProperty("ChunkLoader.id", Configuration.CATEGORY_BLOCK, DEFUALT_CHUNK_LOADER_ID).value);
         config.save();
-        blockChunkLoader = new BlockChunkLoader(ChunkLoaderID);
+        blockChunkLoader = new BlockChunkLoader(ChunkLoaderID, 0);
         ModLoader.registerBlock(blockChunkLoader);
         boolean Craftable = Boolean.parseBoolean(config.getOrCreateBooleanProperty("ChunkLoader.Enabled", Configuration.CATEGORY_BLOCK, true).value);
         config.save();
