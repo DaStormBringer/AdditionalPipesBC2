@@ -39,7 +39,7 @@ public class NetworkHandler implements IConnectionHandler, IPacketHandler {
     public void onPacketData(NetworkManager network, String channel, byte[] rawData) {
         
         DataInputStream data = new DataInputStream(new ByteArrayInputStream(rawData));
-        AdditionalPipesPacket packet = null;
+        PacketAdditionalPipes packet = null;
         
         try {
             
@@ -49,7 +49,7 @@ public class NetworkHandler implements IConnectionHandler, IPacketHandler {
             switch(packetID) {
                 
                 case 1:
-                    packet = new AdditionalPipesPacket(1);
+                    packet = new PacketAdditionalPipes(1);
                     packet.readData(data);
                     onTelePipeDesc(packet, net.getPlayerEntity());
             }
@@ -59,7 +59,7 @@ public class NetworkHandler implements IConnectionHandler, IPacketHandler {
         }
     }
 
-    private void onTelePipeDesc(AdditionalPipesPacket packet, EntityPlayer player) {
+    private void onTelePipeDesc(PacketAdditionalPipes packet, EntityPlayer player) {
         
         System.out.println(packet.posX);
         System.out.println(packet.posY);
@@ -68,8 +68,7 @@ public class NetworkHandler implements IConnectionHandler, IPacketHandler {
         TileGenericPipe tile = (TileGenericPipe) ModLoader.getMinecraftServerInstance().getWorldManager(player.dimension)
                 .getBlockTileEntity(packet.posX, packet.posY, packet.posZ);
         
-        PacketUpdate packetUpdate = new PacketUpdate(packet.getID(), packet.payload);
-        tile.pipe.handlePacket(packetUpdate);
+        tile.pipe.handlePacket(packet);
     }
 
 }

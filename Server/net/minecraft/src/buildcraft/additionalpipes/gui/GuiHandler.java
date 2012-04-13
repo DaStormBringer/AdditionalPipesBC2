@@ -1,12 +1,15 @@
 package net.minecraft.src.buildcraft.additionalpipes.gui;
 
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.src.buildcraft.additionalpipes.network.PacketAdditionalPipes;
 import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
 import net.minecraft.src.forge.IGuiHandler;
 import net.minecraft.src.*;
 import net.minecraft.src.buildcraft.additionalpipes.gui.ContainerTeleportPipe;
 import net.minecraft.src.buildcraft.additionalpipes.gui.CraftingAdvancedWoodPipe;
+import net.minecraft.src.buildcraft.core.CoreProxy;
+import net.minecraft.src.buildcraft.core.network.PacketPayload;
 
 public class GuiHandler implements IGuiHandler {
 
@@ -29,6 +32,7 @@ public class GuiHandler implements IGuiHandler {
         
         switch(ID) {
             case PIPE_TP_ITEM:
+            	sendTeleDesc( (TileGenericPipe) tile, (EntityPlayerMP) player);
                 return new ContainerTeleportPipe();
                 
             case PIPE_TP_LIQUID:
@@ -48,5 +52,19 @@ public class GuiHandler implements IGuiHandler {
         }
         
         return null;
+    }
+    
+    private void sendTeleDesc(TileGenericPipe tile, EntityPlayerMP player) {
+    	
+    	System.out.println("Sending pipe desc from server.");
+    	
+    	PacketPayload payload = tile.pipe.getNetworkPacket();
+        PacketAdditionalPipes packet = new PacketAdditionalPipes(1, payload);
+        
+        packet.posX = tile.pipe.xCoord;
+        packet.posY = tile.pipe.yCoord;
+        packet.posZ = tile.pipe.zCoord;      
+        
+        player.playerNetServerHandler.sendPacket(packet.getPacket());
     }
 }

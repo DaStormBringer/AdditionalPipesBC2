@@ -61,8 +61,6 @@ public class GuiItemTeleportPipe extends GuiContainer {
     @Override
     protected void actionPerformed(GuiButton guibutton) {
         
-        System.out.println("action");
-        
         switch(guibutton.id) {
             case 1:
                 actualPipe.myFreq -= 100;
@@ -102,9 +100,7 @@ public class GuiItemTeleportPipe extends GuiContainer {
         
         packet.posX = actualPipe.xCoord;
         packet.posY = actualPipe.yCoord;
-        packet.posZ = actualPipe.zCoord;
-        
-        System.out.println("Sending packet.");        
+        packet.posZ = actualPipe.zCoord;      
         
         ModLoader.getMinecraftInstance().getSendQueue().addToSendQueue(packet.getPacket());
         
