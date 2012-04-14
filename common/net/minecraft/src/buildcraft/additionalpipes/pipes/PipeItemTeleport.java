@@ -15,7 +15,9 @@ import net.minecraft.src.IInventory;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
-import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicItemTeleport;
+import net.minecraft.src.buildcraft.additionalpipes.gui.GuiHandler;
+import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicTeleport;
+import net.minecraft.src.buildcraft.additionalpipes.network.NetworkID;
 import net.minecraft.src.buildcraft.api.*;
 import net.minecraft.src.buildcraft.core.StackUtil;
 import net.minecraft.src.buildcraft.core.Utils;
@@ -34,7 +36,7 @@ public class PipeItemTeleport extends Pipe implements IPipeTransportItemsHook {
     LinkedList <Integer> idsToRemove = new LinkedList <Integer> ();
     
     public PipeItemTeleport(int itemID) {
-        super(new PipeTransportItems(), new PipeLogicItemTeleport(), itemID);
+        super(new PipeTransportItems(), new PipeLogicTeleport(NetworkID.GUI_PIPE_TP_ITEM), itemID);
     }
 
     @Override
@@ -60,13 +62,15 @@ public class PipeItemTeleport extends Pipe implements IPipeTransportItemsHook {
     public void readjustSpeed(EntityPassiveItem item) {
         ((PipeTransportItems) transport).defaultReajustSpeed(item);
     }
+    
     @Override
     public void setPosition (int xCoord, int yCoord, int zCoord) {
         LinkedList <PipeItemTeleport> toRemove = new LinkedList <PipeItemTeleport> ();
 
         for (int i = 0; i < ItemTeleportPipes.size(); i++) {
+        	
             if (ItemTeleportPipes.get(i).xCoord == xCoord &&  ItemTeleportPipes.get(i).yCoord == yCoord && ItemTeleportPipes.get(i).zCoord == zCoord) {
-                ////System.out.println("Removed OldLoc: " + i);
+
                 toRemove.add(ItemTeleportPipes.get(i));
             }
         }
@@ -74,24 +78,24 @@ public class PipeItemTeleport extends Pipe implements IPipeTransportItemsHook {
         ItemTeleportPipes.removeAll(toRemove);
         ItemTeleportPipes.add(this);
         super.setPosition(xCoord, yCoord, zCoord);
-        //MutiPlayerProxy.AddChunkToList(xCoord, zCoord);
     }
+    
     public List<PipeItemTeleport> getConnectedPipes(boolean ignoreReceive) {
     	
         List<PipeItemTeleport> temp = new LinkedList<PipeItemTeleport>();
         removeOldPipes();
         
-        PipeLogicItemTeleport logic = (PipeLogicItemTeleport) this.logic;
+        PipeLogicTeleport logic = (PipeLogicTeleport) this.logic;
 
         for (PipeItemTeleport pipe : ItemTeleportPipes) {
         	
-        	PipeLogicItemTeleport pipeLogic = (PipeLogicItemTeleport) pipe.logic;
+        	PipeLogicTeleport pipeLogic = (PipeLogicTeleport) pipe.logic;
         	
     		if (pipeLogic.owner.equalsIgnoreCase(logic.owner) || MutiPlayerProxy.isOnServer() == false) {
             	
                 if (pipeLogic.canReceive || ignoreReceive) {
                 	
-                    if (pipeLogic.myFreq == logic.myFreq) {
+                    if (pipeLogic.freq == logic.freq) {
                     	
                         if (xCoord != pipe.xCoord || yCoord != pipe.yCoord || zCoord != pipe.zCoord ) {
                         	
@@ -192,6 +196,7 @@ public class PipeItemTeleport extends Pipe implements IPipeTransportItemsHook {
 
         return result;
     }
+    
     public LinkedList<Orientations> getRealPossibleMovements(Position pos, EntityPassiveItem item) {
         LinkedList<Orientations> result = new LinkedList<Orientations>();
 
@@ -210,6 +215,7 @@ public class PipeItemTeleport extends Pipe implements IPipeTransportItemsHook {
 
         return result;
     }
+    
     public Position getNewItemPos(Position Old, Orientations newPos, float f) {
         //Utils.getPipeFloorOf(data.item.item)
         double x = Old.x;

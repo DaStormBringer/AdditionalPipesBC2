@@ -1,27 +1,32 @@
-/**
- * BuildCraft is open-source. It is distributed under the terms of the
- * BuildCraft Open Source License. It grants rights to read, modify, compile
- * or run the code. It does *NOT* grant the right to redistribute this software
- * or its modifications in any form, binary or source, except if expressively
- * granted by the copyright holder.
- */
 package net.minecraft.src.buildcraft.additionalpipes.logic;
 
+import net.minecraft.src.BuildCraftCore;
+import net.minecraft.src.BuildCraftTransport;
+import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.NBTTagCompound;
+import net.minecraft.src.TileEntity;
+import net.minecraft.src.mod_AdditionalPipes;
 import net.minecraft.src.buildcraft.additionalpipes.gui.GuiHandler;
-import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemTeleport;
 import net.minecraft.src.buildcraft.api.TileNetworkData;
 import net.minecraft.src.buildcraft.transport.Pipe;
 import net.minecraft.src.buildcraft.transport.PipeLogic;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
-import net.minecraft.src.*;
 
-public class PipeLogicItemTeleport extends PipeLogic {
-	
-	@TileNetworkData public int myFreq = 0;
+public class PipeLogicTeleport extends PipeLogic {
+
+	@TileNetworkData public int freq = 0;
 	@TileNetworkData public boolean canReceive = false;
 	@TileNetworkData public String owner = "";
-
-    @Override
+	
+	protected int guiId;
+	
+	public PipeLogicTeleport(int guiId) {
+		super();
+		this.guiId = guiId;
+	}
+	
+	@Override
     public boolean blockActivated(EntityPlayer entityplayer) {
         
         if (owner == null || owner.equalsIgnoreCase("")) {
@@ -41,27 +46,53 @@ public class PipeLogicItemTeleport extends PipeLogic {
             }
         }
 
-        entityplayer.openGui(mod_AdditionalPipes.instance, GuiHandler.PIPE_TP_ITEM, 
+        entityplayer.openGui(mod_AdditionalPipes.instance, guiId, 
                 container.worldObj, container.xCoord, container.yCoord, container.zCoord);
 
         return true;
     }
-    
-    @Override
+	
+	@Override
     public boolean isPipeConnected(TileEntity tile) {
-        Pipe pipe2 = null;
+		
+        Pipe pipe = null;
 
         if (tile instanceof TileGenericPipe) {
-            pipe2 = ((TileGenericPipe) tile).pipe;
+            pipe = ((TileGenericPipe) tile).pipe;
         }
 
         if (BuildCraftTransport.alwaysConnectPipes) {
             return super.isPipeConnected(tile);
         }
         else {
-            return (pipe2 == null || !(pipe2.logic instanceof PipeLogicItemTeleport))
-                   && super.isPipeConnected(tile);
+        	
+        	if (pipe == null) {
+        		return false;
+        	}
+        	
+        	if (this.container.pipe.getClass().equals(pipe.getClass()) && super.isPipeConnected(tile)) {
+        		return true;
+        	}
+        	
+        	
+        	return false;
         }
     }
+	
+	public void writeToNBT(NBTTagCompound nbttagcompound) {
+		super.writeToNBT(nbttagcompound);
+		
+		nbttagcompound.setInteger("freq", freq);
+		nbttagcompound.setBoolean("canReceive", canReceive);
+		nbttagcompound.setString("owner", owner);
+	}
+
+	public void readFromNBT(NBTTagCompound nbttagcompound) {
+		super.readFromNBT(nbttagcompound);
+		
+		freq = nbttagcompound.getInteger("freq");
+		canReceive = nbttagcompound.getBoolean("canReceive");
+		owner = nbttagcompound.getString("owner");
+	}
 
 }

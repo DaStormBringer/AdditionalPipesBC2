@@ -9,6 +9,7 @@
 package net.minecraft.src.buildcraft.additionalpipes.logic;
 
 import net.minecraft.src.buildcraft.additionalpipes.gui.GuiHandler;
+import net.minecraft.src.buildcraft.additionalpipes.network.NetworkID;
 import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemsDistributor;
 import net.minecraft.src.buildcraft.api.ILiquidContainer;
 import net.minecraft.src.buildcraft.api.IPipeEntry;
@@ -113,7 +114,7 @@ public class PipeLogicDistributor extends PipeLogic {
             }
         }
         
-        entityplayer.openGui(mod_AdditionalPipes.instance, GuiHandler.PIPE_DIST, 
+        entityplayer.openGui(mod_AdditionalPipes.instance, NetworkID.GUI_PIPE_DIST, 
                 container.worldObj, container.xCoord, container.yCoord, container.zCoord);
 
         return true;

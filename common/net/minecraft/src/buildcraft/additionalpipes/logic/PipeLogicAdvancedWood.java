@@ -9,6 +9,7 @@
 package net.minecraft.src.buildcraft.additionalpipes.logic;
 
 import net.minecraft.src.buildcraft.additionalpipes.gui.GuiHandler;
+import net.minecraft.src.buildcraft.additionalpipes.network.NetworkID;
 import net.minecraft.src.buildcraft.api.ILiquidContainer;
 import net.minecraft.src.buildcraft.api.Orientations;
 import net.minecraft.src.buildcraft.api.Position;
@@ -76,7 +77,7 @@ public class PipeLogicAdvancedWood extends PipeLogic {
             }
         }
 
-        entityplayer.openGui(mod_AdditionalPipes.instance, GuiHandler.PIPE_WOODEN_ADV, 
+        entityplayer.openGui(mod_AdditionalPipes.instance, NetworkID.GUI_PIPE_WOODEN_ADV, 
                 container.worldObj, container.xCoord, container.yCoord, container.zCoord);
 
         return true;

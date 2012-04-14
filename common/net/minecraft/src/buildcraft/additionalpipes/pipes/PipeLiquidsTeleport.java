@@ -25,7 +25,8 @@ import net.minecraft.src.buildcraft.transport.Pipe;
 import net.minecraft.src.buildcraft.transport.PipeTransportLiquids;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
 import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
-import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicLiquidTeleport;
+import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicTeleport;
+import net.minecraft.src.buildcraft.additionalpipes.network.NetworkID;
 
 public class PipeLiquidsTeleport extends Pipe implements IPipeTransportLiquidsHook {
 
@@ -38,14 +39,11 @@ public class PipeLiquidsTeleport extends Pipe implements IPipeTransportLiquidsHo
         }
     }
 
-    public @TileNetworkData int myFreq = 0;
-    public @TileNetworkData boolean canReceive = false;
-    public @TileNetworkData String Owner = "";
     public @TileNetworkData static List<PipeLiquidsTeleport> LiquidTeleportPipes = new LinkedList<PipeLiquidsTeleport>();
     LinkedList <Integer> idsToRemove = new LinkedList <Integer> ();
 
     public PipeLiquidsTeleport(int itemID) {
-        super(new PipeTransportLiquids(), new PipeLogicLiquidTeleport(), itemID);
+        super(new PipeTransportLiquids(), new PipeLogicTeleport(NetworkID.GUI_PIPE_TP_LIQUID), itemID);
     }
 
     public void updateEntity() {
@@ -53,6 +51,7 @@ public class PipeLiquidsTeleport extends Pipe implements IPipeTransportLiquidsHo
             LiquidTeleportPipes.add(this);
         }
     }
+    
     @Override
     public int getBlockTexture() {
         return mod_AdditionalPipes.DEFUALT_LIQUID_TELEPORT_TEXTURE;
@@ -91,41 +90,36 @@ public class PipeLiquidsTeleport extends Pipe implements IPipeTransportLiquidsHo
     }
 
     public List<PipeLiquidsTeleport> getConnectedPipes(boolean ignoreReceive) {
-        List<PipeLiquidsTeleport> Temp = new LinkedList<PipeLiquidsTeleport>();
+    	
+        List<PipeLiquidsTeleport> temp = new LinkedList<PipeLiquidsTeleport>();
         removeOldPipes();
+        
+        PipeLogicTeleport logic = (PipeLogicTeleport) this.logic;
 
-        for (int i = 0; i < LiquidTeleportPipes.size(); i++) {
-            if (LiquidTeleportPipes.get(i).Owner.equalsIgnoreCase(Owner) || MutiPlayerProxy.isOnServer() == false) {
-                if (LiquidTeleportPipes.get(i).canReceive || ignoreReceive) {
-                    if (LiquidTeleportPipes.get(i).myFreq == myFreq) {
-                        if (xCoord != LiquidTeleportPipes.get(i).xCoord || yCoord != LiquidTeleportPipes.get(i).yCoord || zCoord != LiquidTeleportPipes.get(i).zCoord ) {
-                            ////System.out.print("MyPos: " + getPosition().toString() + " ++ Pos: " + teleportPipes.get(i).getPosition().toString() + "\n");
-                            //System.out.println("aExists: " + (worldObj.getBlockTileEntity(ItemTeleportPipes.get(i).xCoord, ItemTeleportPipes.get(i).yCoord, ItemTeleportPipes.get(i).zCoord) instanceof TileGenericPipe));
-                            Temp.add(LiquidTeleportPipes.get(i));
+        for (PipeLiquidsTeleport pipe : LiquidTeleportPipes) {
+        	
+        	PipeLogicTeleport pipeLogic = (PipeLogicTeleport) pipe.logic;
+        	
+        	if (pipeLogic.owner.equalsIgnoreCase(logic.owner) || MutiPlayerProxy.isOnServer() == false) {
+        		
+                if (pipeLogic.canReceive || ignoreReceive) {
+                	
+                    if (pipeLogic.freq == logic.freq) {
+                    	
+                        if (xCoord != pipe.xCoord || yCoord != pipe.yCoord || zCoord != pipe.zCoord ) {
+                            temp.add(pipe);
                         }
                     }
                 }
             }
+        	
         }
 
-        return Temp;
-    }
-    @Override
-    public void writeToNBT(NBTTagCompound nbttagcompound) {
-        super.writeToNBT(nbttagcompound);
-        //MutiPlayerProxy.AddChunkToList(xCoord, zCoord);
-        nbttagcompound.setInteger("Freq", myFreq);
-        nbttagcompound.setBoolean("Rec", canReceive);
-        nbttagcompound.setString("Owner", Owner);
-    }
+        for (int i = 0; i < LiquidTeleportPipes.size(); i++) {
+            
+        }
 
-    @Override
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
-        super.readFromNBT(nbttagcompound);
-        //MutiPlayerProxy.AddChunkToList(xCoord, zCoord);
-        myFreq = nbttagcompound.getInteger("Freq");
-        canReceive = nbttagcompound.getBoolean("Rec");
-        Owner = nbttagcompound.getString("Owner");
+        return temp;
     }
 
     @Override
@@ -178,6 +172,7 @@ public class PipeLiquidsTeleport extends Pipe implements IPipeTransportLiquidsHo
 
         return result;
     }
+    
     public boolean canReceiveLiquid2(Position p) {
         TileEntity entity = worldObj.getBlockTileEntity((int) p.x, (int) p.y,
                             (int) p.z);
@@ -193,30 +188,9 @@ public class PipeLiquidsTeleport extends Pipe implements IPipeTransportLiquidsHo
 
         return false;
     }
+    
     public Position getPosition() {
         return new Position (xCoord, yCoord, zCoord);
     }
-    /*
-    public Packet230ModLoader getDescPipe() {
-        Packet230ModLoader packet = new Packet230ModLoader();
-
-        packet.modId = mod_zAdditionalPipes.instance.getId();
-        packet.packetType = mod_zAdditionalPipes.PACKET_SET_LIQUID;
-        packet.isChunkDataPacket = true;
-
-        packet.dataInt = new int [5];
-
-        packet.dataInt [0] = xCoord;
-        packet.dataInt [1] = yCoord;
-        packet.dataInt [2] = zCoord;
-        packet.dataInt [3] = myFreq;
-        packet.dataInt [4] = mod_zAdditionalPipes.boolToInt(canReceive);
-
-        packet.dataString = new String[1];
-        packet.dataString[0] = Owner;
-
-
-        return packet;
-    } */
 
 }

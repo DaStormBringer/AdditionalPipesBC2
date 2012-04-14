@@ -61,10 +61,6 @@ public class NetworkHandler implements IConnectionHandler, IPacketHandler {
 
     private void onTelePipeDesc(PacketAdditionalPipes packet, EntityPlayer player) {
         
-        System.out.println(packet.posX);
-        System.out.println(packet.posY);
-        System.out.println(packet.posZ);
-        
         TileGenericPipe tile = (TileGenericPipe) ModLoader.getMinecraftServerInstance().getWorldManager(player.dimension)
                 .getBlockTileEntity(packet.posX, packet.posY, packet.posZ);
         

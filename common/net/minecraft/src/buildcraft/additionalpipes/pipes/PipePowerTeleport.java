@@ -25,10 +25,12 @@ import net.minecraft.src.buildcraft.transport.Pipe;
 import net.minecraft.src.buildcraft.transport.PipeTransportPower;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
 import net.minecraft.src.buildcraft.additionalpipes.*;
-import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
 import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicPowerTeleport;
+import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicTeleport;
+import net.minecraft.src.buildcraft.additionalpipes.network.NetworkID;
 
 public class PipePowerTeleport extends Pipe implements IPipeTransportPowerHook {
+	
     public class PowerReturn {
         public TileEntity tile;
         public Orientations ori;
@@ -38,15 +40,12 @@ public class PipePowerTeleport extends Pipe implements IPipeTransportPowerHook {
             ori = o;
         }
     }
-    //public @TileNetworkData static final double PowerLoss = .9995;
-    // Changed the PowerLoss to a configurable Variable
+
     public @TileNetworkData static final double PowerLoss = mod_AdditionalPipes.PowerLossCfg;
-    public @TileNetworkData int myFreq = 0;
-    public @TileNetworkData boolean canReceive = false;
-    public @TileNetworkData String Owner = "";
+    
     public @TileNetworkData static List<PipePowerTeleport> PowerTeleportPipes = new LinkedList<PipePowerTeleport>();
     public PipePowerTeleport(int itemID) {
-        super(new PipeTransportPower(), new PipeLogicPowerTeleport(), itemID);
+        super(new PipeTransportPower(), new PipeLogicTeleport(NetworkID.GUI_PIPE_TP_POWER), itemID);
 
     }
 
@@ -262,23 +261,6 @@ public class PipePowerTeleport extends Pipe implements IPipeTransportPowerHook {
         PowerTeleportPipes.add(this);
         super.setPosition(xCoord, yCoord, zCoord);
         //MutiPlayerProxy.AddChunkToList(xCoord, zCoord);
-    }
-    @Override
-    public void writeToNBT(NBTTagCompound nbttagcompound) {
-        super.writeToNBT(nbttagcompound);
-        //MutiPlayerProxy.AddChunkToList(xCoord, zCoord);
-        nbttagcompound.setInteger("Freq", myFreq);
-        nbttagcompound.setBoolean("Rec", canReceive);
-        nbttagcompound.setString("Owner", Owner);
-    }
-
-    @Override
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
-        super.readFromNBT(nbttagcompound);
-        //MutiPlayerProxy.AddChunkToList(xCoord, zCoord);
-        myFreq = nbttagcompound.getInteger("Freq");
-        canReceive = nbttagcompound.getBoolean("Rec");
-        Owner = nbttagcompound.getString("Owner");
     }
 
     public int getDistance(int x, int y, int z) {
