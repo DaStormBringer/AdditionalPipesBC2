@@ -43,6 +43,10 @@ public abstract class PipeTeleport extends Pipe {
 
         for (PipeTeleport pipe : teleportPipes) {
         	
+        	if (!this.getClass().equals(pipe.getClass())) {
+        		continue;
+        	}
+        	
         	PipeLogicTeleport pipeLogic = (PipeLogicTeleport) pipe.logic;
         	
     		if (pipeLogic.owner.equalsIgnoreCase(logic.owner) || MutiPlayerProxy.isOnServer() == false) {
