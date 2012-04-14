@@ -39,8 +39,6 @@ public class NetworkHandler implements IConnectionHandler, IPacketHandler {
 
     @Override
     public void onPacketData(NetworkManager network, String channel, byte[] rawData) {
-        
-    	System.out.println("onPacketData");
     	
         DataInputStream data = new DataInputStream(new ByteArrayInputStream(rawData));
         PacketAdditionalPipes packet = null;
@@ -62,8 +60,6 @@ public class NetworkHandler implements IConnectionHandler, IPacketHandler {
     }
 
     private void onTelePipeDesc(PacketAdditionalPipes packet) {
-        
-    	System.out.print("Handling pipe packet");
     	
         TileGenericPipe tile = (TileGenericPipe) ModLoader.getMinecraftInstance().theWorld
                 .getBlockTileEntity(packet.posX, packet.posY, packet.posZ);

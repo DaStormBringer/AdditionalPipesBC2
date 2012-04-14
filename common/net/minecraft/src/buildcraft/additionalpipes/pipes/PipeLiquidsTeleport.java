@@ -41,6 +41,9 @@ public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportL
 
     public PipeLiquidsTeleport(int itemID) {
         super(new PipeTransportLiquids(), new PipeLogicTeleport(NetworkID.GUI_PIPE_TP), itemID);
+        
+        ((PipeTransportLiquids) transport).flowRate = 80;
+		((PipeTransportLiquids) transport).travelDelay = 2;
     }
     
     @Override
