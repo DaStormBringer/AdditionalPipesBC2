@@ -46,12 +46,7 @@ public class GuiTeleportPipe extends GuiContainer {
 
         fontRenderer.drawString("Frequency: " + pipe.logic.freq, 8, 6, 0x404040);
 
-        if (MutiPlayerProxy.isOnServer()) {
-            fontRenderer.drawString("Connected Pipes: " + mod_AdditionalPipes.CurrentGUICount, 100, 6, 0x404040);
-        }
-        else {
-            fontRenderer.drawString("Connected Pipes: " + pipe.getConnectedPipes(true).size(), 100, 6, 0x404040);
-        }
+        fontRenderer.drawString("Connected Pipes: " + pipe.getConnectedPipes(true).size(), 100, 6, 0x404040);
 
         fontRenderer.drawString("Can Receive: " + pipe.logic.canReceive, 8, 42, 0x404040);
         fontRenderer.drawString("Owner: " + pipe.logic.owner, 8, 75, 0x404040);

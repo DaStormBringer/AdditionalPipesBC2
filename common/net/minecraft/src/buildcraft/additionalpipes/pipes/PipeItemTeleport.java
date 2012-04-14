@@ -32,7 +32,6 @@ import net.minecraft.src.mod_AdditionalPipes;
 
 public class PipeItemTeleport extends PipeTeleport implements IPipeTransportItemsHook {
     
-    public static List<PipeItemTeleport> ItemTeleportPipes = new LinkedList<PipeItemTeleport>();
     LinkedList <Integer> idsToRemove = new LinkedList <Integer> ();
     
     public PipeItemTeleport(int itemID) {
@@ -49,6 +48,7 @@ public class PipeItemTeleport extends PipeTeleport implements IPipeTransportItem
         ((PipeTransportItems) transport).defaultReajustSpeed(item);
     }
     
+    /*
     @Override
     public void setPosition (int xCoord, int yCoord, int zCoord) {
     	
@@ -64,21 +64,20 @@ public class PipeItemTeleport extends PipeTeleport implements IPipeTransportItem
 
         ItemTeleportPipes.removeAll(toRemove);
         ItemTeleportPipes.add(this);
+        
         super.setPosition(xCoord, yCoord, zCoord);
-    }
+    }*/
 
     @Override
     public void updateEntity() {
-        if (!ItemTeleportPipes.contains(this)) {
-            ItemTeleportPipes.add(this);
-        }
 
+    	super.updateEntity();
+    	
         for (int theID : idsToRemove) {
             ((PipeTransportItems)transport).travelingEntities.remove(theID);
         }
 
         idsToRemove.clear();
-        super.updateEntity();
     }
 
 

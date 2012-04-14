@@ -40,17 +40,9 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
         }
     }
     
-    public @TileNetworkData static List<PipePowerTeleport> PowerTeleportPipes = new LinkedList<PipePowerTeleport>();
-    
     public PipePowerTeleport(int itemID) {
         super(new PipeTransportPower(), new PipeLogicTeleport(NetworkID.GUI_PIPE_TP_POWER), itemID);
 
-    }
-
-    public void updateEntity() {
-        if (!PowerTeleportPipes.contains(this)) {
-            PowerTeleportPipes.add(this);
-        }
     }
 
     @Override
@@ -182,9 +174,10 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 
         return false;
     }
-    
+    /*
     @Override
     public void setPosition (int xCoord, int yCoord, int zCoord) {
+    	
         LinkedList <PipePowerTeleport> toRemove = new LinkedList <PipePowerTeleport> ();
 
         for (int i = 0; i < PowerTeleportPipes.size(); i++) {
@@ -197,8 +190,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
         PowerTeleportPipes.removeAll(toRemove);
         PowerTeleportPipes.add(this);
         super.setPosition(xCoord, yCoord, zCoord);
-        //MutiPlayerProxy.AddChunkToList(xCoord, zCoord);
-    }
+    }*/
 
     public int getDistance(int x, int y, int z) {
         return (int) Math.sqrt(((xCoord - x) * (xCoord - x)) + ((yCoord - y) * (yCoord - y)) + ((zCoord - z) * (zCoord - z)));

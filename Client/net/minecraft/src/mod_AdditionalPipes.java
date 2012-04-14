@@ -226,9 +226,10 @@ public class mod_AdditionalPipes extends NetworkMod {
             if (isInGame) {
                 if (!wasMutiPlayer) {
                     System.out.print("Cleared TeleportPipes...\n");
-                    PipeItemTeleport.ItemTeleportPipes.clear();
-                    PipeLiquidsTeleport.LiquidTeleportPipes.clear();
-                    PipePowerTeleport.PowerTeleportPipes.clear();
+                    PipeTeleport.teleportPipes.clear();
+                    //PipeItemTeleport.ItemTeleportPipes.clear();
+                    //PipeLiquidsTeleport.LiquidTeleportPipes.clear();
+                    //PipePowerTeleport.PowerTeleportPipes.clear();
                     MutiPlayerProxy.NeedsLoad = true;
                     isInGame = true;
                 }

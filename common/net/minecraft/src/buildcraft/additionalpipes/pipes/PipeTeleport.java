@@ -25,6 +25,15 @@ public abstract class PipeTeleport extends Pipe {
 		this.logic = logic;
 	}
 	
+	@Override
+	public void updateEntity() {
+		super.updateEntity();
+		
+		if (!teleportPipes.contains(this)) {
+			teleportPipes.add(this);
+		}
+	}
+	
 	public List<PipeTeleport> getConnectedPipes(boolean ignoreReceive) {
 		
 		List<PipeTeleport> temp = new LinkedList<PipeTeleport>();

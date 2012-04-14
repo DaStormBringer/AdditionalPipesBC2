@@ -39,16 +39,8 @@ public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportL
         }
     }
 
-    public @TileNetworkData static List<PipeLiquidsTeleport> LiquidTeleportPipes = new LinkedList<PipeLiquidsTeleport>();
-
     public PipeLiquidsTeleport(int itemID) {
         super(new PipeTransportLiquids(), new PipeLogicTeleport(NetworkID.GUI_PIPE_TP_LIQUID), itemID);
-    }
-
-    public void updateEntity() {
-        if (!LiquidTeleportPipes.contains(this)) {
-            LiquidTeleportPipes.add(this);
-        }
     }
     
     @Override
@@ -56,23 +48,10 @@ public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportL
         return mod_AdditionalPipes.DEFUALT_LIQUID_TELEPORT_TEXTURE;
     }
 
-    public void removeOldPipes() {
-        LinkedList <PipeLiquidsTeleport> toRemove = new LinkedList <PipeLiquidsTeleport> ();
-
-        for (int i = 0; i < LiquidTeleportPipes.size(); i++) {
-            if (!(worldObj.getBlockTileEntity(LiquidTeleportPipes.get(i).xCoord, LiquidTeleportPipes.get(i).yCoord, LiquidTeleportPipes.get(i).zCoord) instanceof TileGenericPipe)) {
-                //System.out.println("Removed: " + i);
-                toRemove.add(LiquidTeleportPipes.get(i));
-                //MutiPlayerProxy.DeleteChunkFromList(LiquidTeleportPipes.get(i).xCoord, LiquidTeleportPipes.get(i).zCoord);
-            }
-        }
-
-        LiquidTeleportPipes.removeAll(toRemove);
-
-    }
-
+    /*
     @Override
     public void setPosition (int xCoord, int yCoord, int zCoord) {
+    	
         LinkedList <PipeLiquidsTeleport> toRemove = new LinkedList <PipeLiquidsTeleport> ();
 
         for (int i = 0; i < LiquidTeleportPipes.size(); i++) {
@@ -84,9 +63,10 @@ public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportL
 
         LiquidTeleportPipes.removeAll(toRemove);
         LiquidTeleportPipes.add(this);
+        
         super.setPosition(xCoord, yCoord, zCoord);
         //MutiPlayerProxy.AddChunkToList(xCoord, zCoord);
-    }
+    }*/
 
     @Override
     public int fill(Orientations from, int quantity, int id, boolean doFill) {
