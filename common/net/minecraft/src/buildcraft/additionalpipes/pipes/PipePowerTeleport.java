@@ -39,10 +39,9 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
             ori = o;
         }
     }
-
-    public @TileNetworkData static final double PowerLoss = mod_AdditionalPipes.PowerLossCfg;
     
     public @TileNetworkData static List<PipePowerTeleport> PowerTeleportPipes = new LinkedList<PipePowerTeleport>();
+    
     public PipePowerTeleport(int itemID) {
         super(new PipeTransportPower(), new PipeLogicTeleport(NetworkID.GUI_PIPE_TP_POWER), itemID);
 
@@ -60,9 +59,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
     }
 
     public double calculateLoss(int distance, double power) {
-        //System.out.println("PowerLossPre: " + PowerLoss);
-        power = power * Math.pow(PowerLoss, distance);
-        //System.out.println("PowerLossPost: " + power);
+    	
         return power;
     }
 
@@ -139,6 +136,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 
         return needsPower;
     }
+    
     public boolean TileNeedsPower(TileEntity tile) {
 
         if (tile instanceof TileGenericPipe) {
@@ -205,6 +203,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
     public int getDistance(int x, int y, int z) {
         return (int) Math.sqrt(((xCoord - x) * (xCoord - x)) + ((yCoord - y) * (yCoord - y)) + ((zCoord - z) * (zCoord - z)));
     }
+    
     public Position getPosition() {
         return new Position (xCoord, yCoord, zCoord);
     }

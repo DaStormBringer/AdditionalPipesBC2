@@ -16,12 +16,13 @@ import net.minecraft.src.buildcraft.transport.TileGenericPipe;
 
 public abstract class PipeTeleport extends Pipe {
 
-	public PipeLogicTeleport logic;
+	public final PipeLogicTeleport logic;
 	
 	public static List<PipeTeleport> teleportPipes = new LinkedList<PipeTeleport>();
 	
-	public PipeTeleport(PipeTransport transport, PipeLogic logic, int itemID) {
+	public PipeTeleport(PipeTransport transport, PipeLogicTeleport logic, int itemID) {
 		super(transport, logic, itemID);
+		this.logic = logic;
 	}
 	
 	public List<PipeTeleport> getConnectedPipes(boolean ignoreReceive) {

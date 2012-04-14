@@ -75,7 +75,7 @@ public class PipeLogicTeleport extends PipeLogic {
         	}
         	
         	
-        	return false;
+        	return true;
         }
     }
 	
