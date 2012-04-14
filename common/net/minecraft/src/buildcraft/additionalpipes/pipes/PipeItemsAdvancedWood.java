@@ -37,34 +37,37 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
 
     private int baseTexture = mod_AdditionalPipes.DEFUALT_ADVANCEDWOOD_TEXTURE;
     private int plainTexture = mod_AdditionalPipes.DEFUALT_ADVANCEDWOOD_TEXTURE_CLOSED;
-    private @TileNetworkData int nextTexture = baseTexture;
 
     public PipeItemsAdvancedWood(int itemID) {
+    	
         super(new PipeTransportItems(), new PipeLogicAdvancedWood(), itemID);
 
         powerProvider = PowerFramework.currentFramework.createPowerProvider();
         powerProvider.configure(50, 1, 64, 1, 64);
         powerProvider.configurePowerPerdition(64, 1);
+        
+        ((PipeLogicAdvancedWood) logic).nextTexture = baseTexture;
     }
 
     @Override
     public int getBlockTexture() {
-         return nextTexture;
+         return ((PipeLogicAdvancedWood) logic).nextTexture;
     }
 
     @Override
     public void prepareTextureFor(Orientations connection) {
+    	
         if (connection == Orientations.Unknown) {
-            nextTexture = baseTexture;
+        	((PipeLogicAdvancedWood) logic).nextTexture = baseTexture;
         }
         else {
             int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 
             if (metadata == connection.ordinal()) {
-                nextTexture = plainTexture;
+            	((PipeLogicAdvancedWood) logic).nextTexture = plainTexture;
             }
             else {
-                nextTexture = baseTexture;
+            	((PipeLogicAdvancedWood) logic).nextTexture = baseTexture;
             }
         }
 
@@ -203,22 +206,4 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
         super.readFromNBT(nbttagcompound);
 
     }
-/*
-    public Packet230ModLoader getDescPacket() {
-        Packet230ModLoader packet = new Packet230ModLoader();
-
-        packet.modId = mod_zAdditionalPipes.instance.getId();
-        packet.packetType = mod_zAdditionalPipes.PACKET_SET_AW;
-        packet.isChunkDataPacket = true;
-
-        packet.dataInt = new int [5];
-
-        packet.dataInt [0] = xCoord;
-        packet.dataInt [1] = yCoord;
-        packet.dataInt [2] = zCoord;
-        packet.dataInt [3] = mod_zAdditionalPipes.boolToInt(((PipeLogicAdvancedWood)this.logic).exclude);
-
-        return packet;
-    } */
-
 }

@@ -25,6 +25,7 @@ public class PipeLogicAdvancedWood extends PipeLogic {
 
     @TileNetworkData ItemStack [] items = new ItemStack [9];
     public @TileNetworkData boolean exclude = false;
+    public @TileNetworkData int nextTexture;
 
     public void switchSource () {
         int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
