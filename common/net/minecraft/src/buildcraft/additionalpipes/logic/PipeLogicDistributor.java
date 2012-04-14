@@ -23,9 +23,14 @@ import net.minecraft.src.*;
 
 public class PipeLogicDistributor extends PipeLogic {
 	
-	public @TileNetworkData int nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0;
-    public @TileNetworkData int distData[] = {1, 1, 1, 1, 1, 1};
-    public @TileNetworkData int curTick = 0;
+	@TileNetworkData
+	public int nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0;
+	
+    @TileNetworkData (staticSize = 6)
+    public int distData[] = {1, 1, 1, 1, 1, 1};
+    
+    @TileNetworkData
+    public int curTick = 0;
 
     public void switchPosition() {
     	

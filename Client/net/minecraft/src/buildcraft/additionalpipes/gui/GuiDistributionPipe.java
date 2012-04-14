@@ -5,6 +5,7 @@ import net.minecraft.src.GuiContainer;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.mod_AdditionalPipes;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
+import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicDistributor;
 import net.minecraft.src.buildcraft.additionalpipes.network.NetworkID;
 import net.minecraft.src.buildcraft.additionalpipes.network.PacketAdditionalPipes;
 import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemsDistributor;
@@ -68,12 +69,14 @@ public class GuiDistributionPipe extends GuiContainer {
     @Override
     protected void drawGuiContainerForegroundLayer() {
     	
-        this.buttons[1].displayString = "" + pipe.logic.distData[0];
-        this.buttons[4].displayString = "" + pipe.logic.distData[1];
-        this.buttons[7].displayString = "" + pipe.logic.distData[2];
-        this.buttons[10].displayString = "" + pipe.logic.distData[3];
-        this.buttons[13].displayString = "" + pipe.logic.distData[4];
-        this.buttons[16].displayString = "" + pipe.logic.distData[5];
+    	PipeLogicDistributor pipeLogic = (PipeLogicDistributor) pipe.logic;
+    	
+        this.buttons[1].displayString = "" + pipeLogic.distData[0];
+        this.buttons[4].displayString = "" + pipeLogic.distData[1];
+        this.buttons[7].displayString = "" + pipeLogic.distData[2];
+        this.buttons[10].displayString = "" + pipeLogic.distData[3];
+        this.buttons[13].displayString = "" + pipeLogic.distData[4];
+        this.buttons[16].displayString = "" + pipeLogic.distData[5];
 
         //super.drawGuiContainerForegroundLayer();
         //fontRenderer.drawString(filterInventory.getInvName(), 8, 6, 0x404040);
@@ -81,71 +84,74 @@ public class GuiDistributionPipe extends GuiContainer {
     }
     @Override
     protected void actionPerformed(GuiButton guibutton) {
+    	
+    	PipeLogicDistributor pipeLogic = (PipeLogicDistributor) pipe.logic;
+    	
         switch (guibutton.id) {
             case 1:
-                pipe.logic.distData[0] -= 1;
+                pipeLogic.distData[0] -= 1;
                 break;
 
             case 3:
-                pipe.logic.distData[0] += 1;
+                pipeLogic.distData[0] += 1;
                 break;
 
             case 4:
-                pipe.logic.distData[1] -= 1;
+                pipeLogic.distData[1] -= 1;
                 break;
 
             case 6:
-                pipe.logic.distData[1] += 1;
+                pipeLogic.distData[1] += 1;
                 break;
 
             case 7:
-                pipe.logic.distData[2] -= 1;
+                pipeLogic.distData[2] -= 1;
                 break;
 
             case 9:
-                pipe.logic.distData[2] += 1;
+                pipeLogic.distData[2] += 1;
                 break;
 
             case 10:
-                pipe.logic.distData[3] -= 1;
+                pipeLogic.distData[3] -= 1;
                 break;
 
             case 12:
-                pipe.logic.distData[3] += 1;
+                pipeLogic.distData[3] += 1;
                 break;
 
             case 13:
-                pipe.logic.distData[4] -= 1;
+                pipeLogic.distData[4] -= 1;
                 break;
 
             case 15:
-                pipe.logic.distData[4] += 1;
+                pipeLogic.distData[4] += 1;
                 break;
 
             case 16:
-                pipe.logic.distData[5] -= 1;
+                pipeLogic.distData[5] -= 1;
                 break;
 
             case 18:
-                pipe.logic.distData[5] += 1;
+                pipeLogic.distData[5] += 1;
                 break;
         }
 
         boolean found = false;
 
-        for (int i = 0; i < pipe.logic.distData.length; i++) {
-            if (pipe.logic.distData[i] < 0) {
-                pipe.logic.distData[i] = 0;
+        for (int i = 0; i < pipeLogic.distData.length; i++) {
+            if (pipeLogic.distData[i] < 0) {
+                pipeLogic.distData[i] = 0;
             }
 
-            if (pipe.logic.distData[i] > 0) {
+            if (pipeLogic.distData[i] > 0) {
                 found = true;
             }
         }
 
         if (!found)
-            for (int i = 0; i < pipe.logic.distData.length; i++) {
-                pipe.logic.distData[i] = 1;
+            for (int i = 0; i < pipeLogic.distData.length; i++) {
+                pipeLogic.distData[i] = 1;
             }
         
         if (mc.theWorld.isRemote) {

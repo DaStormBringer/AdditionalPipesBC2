@@ -225,7 +225,7 @@ public class mod_AdditionalPipes extends NetworkMod {
 
             if (isInGame) {
                 if (!wasMutiPlayer) {
-                    System.out.print("Cleared TeleportPipes...\n");
+                    //System.out.print("Cleared TeleportPipes...\n");
                     PipeTeleport.teleportPipes.clear();
                     //PipeItemTeleport.ItemTeleportPipes.clear();
                     //PipeLiquidsTeleport.LiquidTeleportPipes.clear();
@@ -234,7 +234,7 @@ public class mod_AdditionalPipes extends NetworkMod {
                     isInGame = true;
                 }
                 else {
-                    System.out.println("MutiPlayer, Not Clearing");
+                    //System.out.println("MutiPlayer, Not Clearing");
                 }
 
                 isInGame = false;

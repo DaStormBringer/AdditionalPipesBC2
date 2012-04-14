@@ -23,15 +23,22 @@ import net.minecraft.src.*;
 
 public class PipeLogicAdvancedWood extends PipeLogic {
 
-    @TileNetworkData ItemStack [] items = new ItemStack [9];
-    public @TileNetworkData boolean exclude = false;
-    public @TileNetworkData int nextTexture;
+    @TileNetworkData (staticSize = 9)
+    public ItemStack [] items = new ItemStack [9];
+    
+    @TileNetworkData
+    public boolean exclude = false;
+    
+    @TileNetworkData
+    public int nextTexture;
 
     public void switchSource () {
+    	
         int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
         int newMeta = 6;
 
         for (int i = meta + 1; i <= meta + 6; ++i) {
+        	
             Orientations o = Orientations.values() [i % 6];
 
             Position pos = new Position (xCoord, yCoord, zCoord, o);
