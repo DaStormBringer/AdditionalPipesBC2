@@ -30,7 +30,7 @@ import net.minecraft.src.buildcraft.transport.PipeTransportItems;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
 import net.minecraft.src.mod_AdditionalPipes;
 
-public class PipeItemTeleport extends Pipe implements IPipeTransportItemsHook {
+public class PipeItemTeleport extends PipeTeleport implements IPipeTransportItemsHook {
     
     public static List<PipeItemTeleport> ItemTeleportPipes = new LinkedList<PipeItemTeleport>();
     LinkedList <Integer> idsToRemove = new LinkedList <Integer> ();
@@ -44,20 +44,6 @@ public class PipeItemTeleport extends Pipe implements IPipeTransportItemsHook {
         return mod_AdditionalPipes.DEFUALT_ITEM_TELEPORT_TEXTURE;
     }
 
-    public void removeOldPipes() {
-        LinkedList <PipeItemTeleport> toRemove = new LinkedList <PipeItemTeleport> ();
-
-        for (int i = 0; i < ItemTeleportPipes.size(); i++) {
-            if (!(worldObj.getBlockTileEntity(ItemTeleportPipes.get(i).xCoord, ItemTeleportPipes.get(i).yCoord, ItemTeleportPipes.get(i).zCoord) instanceof TileGenericPipe)) {
-                //System.out.println("Removed: " + i + " - Class: " + worldObj.getBlockTileEntity(ItemTeleportPipes.get(i).xCoord, ItemTeleportPipes.get(i).yCoord, ItemTeleportPipes.get(i).zCoord).getClass().getName());
-                toRemove.add(ItemTeleportPipes.get(i));
-                //MutiPlayerProxy.DeleteChunkFromList(ItemTeleportPipes.get(i).xCoord, ItemTeleportPipes.get(i).zCoord);
-            }
-        }
-
-        ItemTeleportPipes.removeAll(toRemove);
-    }
-
     @Override
     public void readjustSpeed(EntityPassiveItem item) {
         ((PipeTransportItems) transport).defaultReajustSpeed(item);
@@ -65,6 +51,7 @@ public class PipeItemTeleport extends Pipe implements IPipeTransportItemsHook {
     
     @Override
     public void setPosition (int xCoord, int yCoord, int zCoord) {
+    	
         LinkedList <PipeItemTeleport> toRemove = new LinkedList <PipeItemTeleport> ();
 
         for (int i = 0; i < ItemTeleportPipes.size(); i++) {
@@ -78,39 +65,6 @@ public class PipeItemTeleport extends Pipe implements IPipeTransportItemsHook {
         ItemTeleportPipes.removeAll(toRemove);
         ItemTeleportPipes.add(this);
         super.setPosition(xCoord, yCoord, zCoord);
-    }
-    
-    public List<PipeItemTeleport> getConnectedPipes(boolean ignoreReceive) {
-    	
-        List<PipeItemTeleport> temp = new LinkedList<PipeItemTeleport>();
-        removeOldPipes();
-        
-        PipeLogicTeleport logic = (PipeLogicTeleport) this.logic;
-
-        for (PipeItemTeleport pipe : ItemTeleportPipes) {
-        	
-        	PipeLogicTeleport pipeLogic = (PipeLogicTeleport) pipe.logic;
-        	
-    		if (pipeLogic.owner.equalsIgnoreCase(logic.owner) || MutiPlayerProxy.isOnServer() == false) {
-            	
-                if (pipeLogic.canReceive || ignoreReceive) {
-                	
-                    if (pipeLogic.freq == logic.freq) {
-                    	
-                        if (xCoord != pipe.xCoord || yCoord != pipe.yCoord || zCoord != pipe.zCoord ) {
-                        	
-                             temp.add(pipe);
-                        }
-                    }
-                }
-            }
-        }
-
-        return temp;
-    }
-    
-    public Position getPosition() {
-        return new Position (xCoord, yCoord, zCoord);
     }
 
     @Override
@@ -130,7 +84,8 @@ public class PipeItemTeleport extends Pipe implements IPipeTransportItemsHook {
 
     @Override
     public LinkedList<Orientations> filterPossibleMovements(LinkedList<Orientations> possibleOrientations, Position pos, EntityPassiveItem item) {
-        List<PipeItemTeleport> TempTeleport = getConnectedPipes(false);
+        
+    	List<PipeTeleport> TempTeleport = getConnectedPipes(false);
         LinkedList<Orientations> result = new LinkedList<Orientations>();
 
         ////System.out.print("Pos: " + pos.toString() + "\n");
@@ -142,15 +97,30 @@ public class PipeItemTeleport extends Pipe implements IPipeTransportItemsHook {
         Random pipeRand = new Random();
         int i = pipeRand.nextInt(TempTeleport.size());
 
-        LinkedList<Orientations> Temp = TempTeleport.get(i).getRealPossibleMovements(TempTeleport.get(i).getPosition(), item);
+        LinkedList<Orientations> temp = new LinkedList<Orientations>();
+        
+        Position pos1 = TempTeleport.get(i).getPosition();
+        
+        for (int o = 0; o < 6; ++o) {
+            if (Orientations.values()[o] != pos1.orientation.reverse()
+                    && container.pipe.outputOpen(Orientations.values()[o])) {
+                Position newPos = new Position(pos1);
+                newPos.orientation = Orientations.values()[o];
+                newPos.moveForwards(1.0);
+
+                if (((PipeTransportItems)transport).canReceivePipeObjects(newPos, item)) {
+                    temp.add(newPos.orientation);
+                }
+            }
+        }
 
         ////System.out.println("Temp: " + Temp.size());
-        if (Temp.size() <= 0) {
+        if (temp.size() <= 0) {
             result.add(pos.orientation.reverse());
             return result;
         }
 
-        Orientations newPos = Temp.get(worldObj.rand.nextInt(Temp.size()));
+        Orientations newPos = temp.get(worldObj.rand.nextInt(temp.size()));
         ////System.out.println(newPos.toString());
         Position destPos = new Position(TempTeleport.get(i).xCoord, TempTeleport.get(i).yCoord, TempTeleport.get(i).zCoord, newPos);
         destPos.moveForwards(1.0);
@@ -193,25 +163,6 @@ public class PipeItemTeleport extends Pipe implements IPipeTransportItemsHook {
         }
 
         result.add(newPos);
-
-        return result;
-    }
-    
-    public LinkedList<Orientations> getRealPossibleMovements(Position pos, EntityPassiveItem item) {
-        LinkedList<Orientations> result = new LinkedList<Orientations>();
-
-        for (int o = 0; o < 6; ++o) {
-            if (Orientations.values()[o] != pos.orientation.reverse()
-                    && container.pipe.outputOpen(Orientations.values()[o])) {
-                Position newPos = new Position(pos);
-                newPos.orientation = Orientations.values()[o];
-                newPos.moveForwards(1.0);
-
-                if (((PipeTransportItems)transport).canReceivePipeObjects(newPos, item)) {
-                    result.add(newPos.orientation);
-                }
-            }
-        }
 
         return result;
     }

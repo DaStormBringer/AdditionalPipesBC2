@@ -28,7 +28,7 @@ import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
 import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicTeleport;
 import net.minecraft.src.buildcraft.additionalpipes.network.NetworkID;
 
-public class PipeLiquidsTeleport extends Pipe implements IPipeTransportLiquidsHook {
+public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportLiquidsHook {
 
     class OilReturn {
         public Orientations theOrientation;
@@ -40,7 +40,6 @@ public class PipeLiquidsTeleport extends Pipe implements IPipeTransportLiquidsHo
     }
 
     public @TileNetworkData static List<PipeLiquidsTeleport> LiquidTeleportPipes = new LinkedList<PipeLiquidsTeleport>();
-    LinkedList <Integer> idsToRemove = new LinkedList <Integer> ();
 
     public PipeLiquidsTeleport(int itemID) {
         super(new PipeTransportLiquids(), new PipeLogicTeleport(NetworkID.GUI_PIPE_TP_LIQUID), itemID);
@@ -89,42 +88,10 @@ public class PipeLiquidsTeleport extends Pipe implements IPipeTransportLiquidsHo
         //MutiPlayerProxy.AddChunkToList(xCoord, zCoord);
     }
 
-    public List<PipeLiquidsTeleport> getConnectedPipes(boolean ignoreReceive) {
-    	
-        List<PipeLiquidsTeleport> temp = new LinkedList<PipeLiquidsTeleport>();
-        removeOldPipes();
-        
-        PipeLogicTeleport logic = (PipeLogicTeleport) this.logic;
-
-        for (PipeLiquidsTeleport pipe : LiquidTeleportPipes) {
-        	
-        	PipeLogicTeleport pipeLogic = (PipeLogicTeleport) pipe.logic;
-        	
-        	if (pipeLogic.owner.equalsIgnoreCase(logic.owner) || MutiPlayerProxy.isOnServer() == false) {
-        		
-                if (pipeLogic.canReceive || ignoreReceive) {
-                	
-                    if (pipeLogic.freq == logic.freq) {
-                    	
-                        if (xCoord != pipe.xCoord || yCoord != pipe.yCoord || zCoord != pipe.zCoord ) {
-                            temp.add(pipe);
-                        }
-                    }
-                }
-            }
-        	
-        }
-
-        for (int i = 0; i < LiquidTeleportPipes.size(); i++) {
-            
-        }
-
-        return temp;
-    }
-
     @Override
     public int fill(Orientations from, int quantity, int id, boolean doFill) {
-        List<PipeLiquidsTeleport> pipeList = getConnectedPipes(false);
+    	
+        List<PipeTeleport> pipeList = getConnectedPipes(false);
 
         if (pipeList.size() == 0) {
             return 0;

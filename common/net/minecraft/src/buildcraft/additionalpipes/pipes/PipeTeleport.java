@@ -66,5 +66,9 @@ public abstract class PipeTeleport extends Pipe {
 
         teleportPipes.removeAll(toRemove);
     }
+	
+	public Position getPosition() {
+        return new Position (xCoord, yCoord, zCoord);
+	}
 
 }

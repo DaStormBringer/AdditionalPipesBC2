@@ -5,10 +5,13 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.src.Container;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiContainer;
+import net.minecraft.src.ModLoader;
 import net.minecraft.src.mod_AdditionalPipes;
 import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
 import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicTeleport;
+import net.minecraft.src.buildcraft.additionalpipes.network.PacketAdditionalPipes;
 import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeTeleport;
+import net.minecraft.src.buildcraft.core.network.PacketPayload;
 import net.minecraft.src.buildcraft.transport.Pipe;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
 
@@ -26,7 +29,6 @@ public class GuiTeleportPipe extends GuiContainer {
         ySize = 117;
     }
     
-    @SuppressWarnings("unchecked")
     public void initGui() {
     	
         super.initGui();
@@ -58,6 +60,7 @@ public class GuiTeleportPipe extends GuiContainer {
         //fontRenderer.drawString(playerInventory.getInvName(), 8, ySize - 97, 0x404040);
     }
     protected void actionPerformed(GuiButton guibutton) {
+    	
         switch(guibutton.id) {
             case 1:
                 pipe.logic.freq -= 100;
@@ -91,8 +94,18 @@ public class GuiTeleportPipe extends GuiContainer {
         if (pipe.logic.freq < 0) {
         	pipe.logic.freq = 0;
         }
+        
+        if (mc.theWorld.isRemote) {
+        	
+        	PacketPayload payload = pipe.getNetworkPacket();
 
-    //    ModLoaderMp.sendPacket(mod_zAdditionalPipes.instance, actualPipe.getDescPipe());
+    		PacketAdditionalPipes packet = new PacketAdditionalPipes(1, payload);
+    		packet.posX = pipe.xCoord;
+    		packet.posY = pipe.yCoord;
+    		packet.posZ = pipe.zCoord;      
+      
+            ModLoader.getMinecraftInstance().getSendQueue().addToSendQueue(packet.getPacket());
+        }
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
