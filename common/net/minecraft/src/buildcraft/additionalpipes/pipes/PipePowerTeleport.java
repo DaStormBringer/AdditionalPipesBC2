@@ -41,7 +41,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
     }
     
     public PipePowerTeleport(int itemID) {
-        super(new PipeTransportPower(), new PipeLogicTeleport(NetworkID.GUI_PIPE_TP_POWER), itemID);
+        super(new PipeTransportPower(), new PipeLogicTeleport(NetworkID.GUI_PIPE_TP), itemID);
 
     }
 

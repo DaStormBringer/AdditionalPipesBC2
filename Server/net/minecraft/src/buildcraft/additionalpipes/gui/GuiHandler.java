@@ -26,29 +26,23 @@ public class GuiHandler implements IGuiHandler {
         }
         
         switch(ID) {
-            case NetworkID.GUI_PIPE_TP_ITEM:
-            	sendTeleDesc( (TileGenericPipe) tile, (EntityPlayerMP) player);
+            case NetworkID.GUI_PIPE_TP:
+            	sendPipeDesc( (TileGenericPipe) tile, (EntityPlayerMP) player);
                 return new ContainerTeleportPipe();
-                
-            case NetworkID.GUI_PIPE_TP_LIQUID:
-            	sendTeleDesc( (TileGenericPipe) tile, (EntityPlayerMP) player);
-                return new ContainerTeleportPipe();
-                
-            case NetworkID.GUI_PIPE_TP_POWER:
-            	sendTeleDesc( (TileGenericPipe) tile, (EntityPlayerMP) player);
-                return new ContainerTeleportPipe(); 
                 
             case NetworkID.GUI_PIPE_DIST:
+            	sendPipeDesc( (TileGenericPipe) tile, (EntityPlayerMP) player);
                 return null;
                 
             case NetworkID.GUI_PIPE_WOODEN_ADV:
+            	sendPipeDesc( (TileGenericPipe) tile, (EntityPlayerMP) player);
                 return new CraftingAdvancedWoodPipe(player.inventory, (TileGenericPipe) tile);
         }
         
         return null;
     }
     
-    private void sendTeleDesc(TileGenericPipe tile, EntityPlayerMP player) {
+    private void sendPipeDesc(TileGenericPipe tile, EntityPlayerMP player) {
     	
     	PacketPayload payload = tile.pipe.getNetworkPacket();
         PacketAdditionalPipes packet = new PacketAdditionalPipes(1, payload);

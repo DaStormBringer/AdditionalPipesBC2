@@ -50,7 +50,7 @@ public class NetworkHandler implements IConnectionHandler, IPacketHandler {
             int packetID = data.read();
             switch(packetID) {
                 
-                case NetworkID.PACKET_PIPE_TELE:
+                case NetworkID.PACKET_PIPE_DESC:
                     packet = new PacketAdditionalPipes(1);
                     packet.readData(data);
                     onTelePipeDesc(packet);

@@ -15,14 +15,20 @@ import net.minecraft.src.buildcraft.api.ILiquidContainer;
 import net.minecraft.src.buildcraft.api.IPipeEntry;
 import net.minecraft.src.buildcraft.api.Orientations;
 import net.minecraft.src.buildcraft.api.Position;
+import net.minecraft.src.buildcraft.api.TileNetworkData;
 import net.minecraft.src.buildcraft.transport.PipeLogic;
 import net.minecraft.src.buildcraft.transport.PipeLogicWood;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
 import net.minecraft.src.*;
 
 public class PipeLogicDistributor extends PipeLogic {
+	
+	public @TileNetworkData int nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0;
+    public @TileNetworkData int distData[] = {1, 1, 1, 1, 1, 1};
+    public @TileNetworkData int curTick = 0;
 
     public void switchPosition() {
+    	
         int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 
         int nextMetadata = metadata;
@@ -46,7 +52,7 @@ public class PipeLogicDistributor extends PipeLogic {
             }
 
             if (tile instanceof IPipeEntry || tile instanceof IInventory || tile instanceof ILiquidContainer || tile instanceof TileGenericPipe) {
-                if (((PipeItemsDistributor)this.container.pipe).distData[nextMetadata] > 0) {
+                if (distData[nextMetadata] > 0) {
                     worldObj.setBlockMetadata(xCoord, yCoord, zCoord, nextMetadata);
                     return;
                 }
@@ -75,7 +81,7 @@ public class PipeLogicDistributor extends PipeLogic {
             }
 
             if (tile instanceof IPipeEntry || tile instanceof IInventory || tile instanceof ILiquidContainer || tile instanceof TileGenericPipe) {
-                if (((PipeItemsDistributor)this.container.pipe).distData[nextMetadata] > 0) {
+                if (distData[nextMetadata] > 0) {
                     worldObj.setBlockMetadata(xCoord, yCoord, zCoord, nextMetadata);
                     return;
                 }

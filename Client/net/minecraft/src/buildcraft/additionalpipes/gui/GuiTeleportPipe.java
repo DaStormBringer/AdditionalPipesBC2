@@ -9,6 +9,7 @@ import net.minecraft.src.ModLoader;
 import net.minecraft.src.mod_AdditionalPipes;
 import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
 import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicTeleport;
+import net.minecraft.src.buildcraft.additionalpipes.network.NetworkID;
 import net.minecraft.src.buildcraft.additionalpipes.network.PacketAdditionalPipes;
 import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeTeleport;
 import net.minecraft.src.buildcraft.core.network.PacketPayload;
@@ -94,7 +95,7 @@ public class GuiTeleportPipe extends GuiContainer {
         	
         	PacketPayload payload = pipe.getNetworkPacket();
 
-    		PacketAdditionalPipes packet = new PacketAdditionalPipes(1, payload);
+    		PacketAdditionalPipes packet = new PacketAdditionalPipes(NetworkID.PACKET_PIPE_DESC, payload);
     		packet.posX = pipe.xCoord;
     		packet.posY = pipe.yCoord;
     		packet.posZ = pipe.zCoord;      

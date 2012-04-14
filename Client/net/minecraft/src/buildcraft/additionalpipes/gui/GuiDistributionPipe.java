@@ -2,9 +2,13 @@ package net.minecraft.src.buildcraft.additionalpipes.gui;
 
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiContainer;
+import net.minecraft.src.ModLoader;
 import net.minecraft.src.mod_AdditionalPipes;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
+import net.minecraft.src.buildcraft.additionalpipes.network.NetworkID;
+import net.minecraft.src.buildcraft.additionalpipes.network.PacketAdditionalPipes;
 import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemsDistributor;
+import net.minecraft.src.buildcraft.core.network.PacketPayload;
 
 import org.lwjgl.opengl.GL11;
 
@@ -16,18 +20,20 @@ public class GuiDistributionPipe extends GuiContainer {
     public int guiX = 0;
     public int guiY = 0;
     TileGenericPipe a;
-    PipeItemsDistributor actualPipe;
+    PipeItemsDistributor pipe;
 
     public GuiDistributionPipe(TileGenericPipe container) {
+    	
         super(new ContainerTeleportPipe());
+        
         a = container;
-        actualPipe = (PipeItemsDistributor) container.pipe;
+        pipe = (PipeItemsDistributor) container.pipe;
         xSize = 175;
         ySize = 130;
 
     }
+    
     @Override
-    @SuppressWarnings("unchecked")
     public void initGui() {
         super.initGui();
         //int bw = this.xSize - 20;
@@ -61,12 +67,13 @@ public class GuiDistributionPipe extends GuiContainer {
     }
     @Override
     protected void drawGuiContainerForegroundLayer() {
-        this.buttons[1].displayString = "" + actualPipe.distData[0];
-        this.buttons[4].displayString = "" + actualPipe.distData[1];
-        this.buttons[7].displayString = "" + actualPipe.distData[2];
-        this.buttons[10].displayString = "" + actualPipe.distData[3];
-        this.buttons[13].displayString = "" + actualPipe.distData[4];
-        this.buttons[16].displayString = "" + actualPipe.distData[5];
+    	
+        this.buttons[1].displayString = "" + pipe.logic.distData[0];
+        this.buttons[4].displayString = "" + pipe.logic.distData[1];
+        this.buttons[7].displayString = "" + pipe.logic.distData[2];
+        this.buttons[10].displayString = "" + pipe.logic.distData[3];
+        this.buttons[13].displayString = "" + pipe.logic.distData[4];
+        this.buttons[16].displayString = "" + pipe.logic.distData[5];
 
         //super.drawGuiContainerForegroundLayer();
         //fontRenderer.drawString(filterInventory.getInvName(), 8, 6, 0x404040);
@@ -76,72 +83,83 @@ public class GuiDistributionPipe extends GuiContainer {
     protected void actionPerformed(GuiButton guibutton) {
         switch (guibutton.id) {
             case 1:
-                actualPipe.distData[0] -= 1;
+                pipe.logic.distData[0] -= 1;
                 break;
 
             case 3:
-                actualPipe.distData[0] += 1;
+                pipe.logic.distData[0] += 1;
                 break;
 
             case 4:
-                actualPipe.distData[1] -= 1;
+                pipe.logic.distData[1] -= 1;
                 break;
 
             case 6:
-                actualPipe.distData[1] += 1;
+                pipe.logic.distData[1] += 1;
                 break;
 
             case 7:
-                actualPipe.distData[2] -= 1;
+                pipe.logic.distData[2] -= 1;
                 break;
 
             case 9:
-                actualPipe.distData[2] += 1;
+                pipe.logic.distData[2] += 1;
                 break;
 
             case 10:
-                actualPipe.distData[3] -= 1;
+                pipe.logic.distData[3] -= 1;
                 break;
 
             case 12:
-                actualPipe.distData[3] += 1;
+                pipe.logic.distData[3] += 1;
                 break;
 
             case 13:
-                actualPipe.distData[4] -= 1;
+                pipe.logic.distData[4] -= 1;
                 break;
 
             case 15:
-                actualPipe.distData[4] += 1;
+                pipe.logic.distData[4] += 1;
                 break;
 
             case 16:
-                actualPipe.distData[5] -= 1;
+                pipe.logic.distData[5] -= 1;
                 break;
 
             case 18:
-                actualPipe.distData[5] += 1;
+                pipe.logic.distData[5] += 1;
                 break;
         }
 
         boolean found = false;
 
-        for (int i = 0; i < actualPipe.distData.length; i++) {
-            if (actualPipe.distData[i] < 0) {
-                actualPipe.distData[i] = 0;
+        for (int i = 0; i < pipe.logic.distData.length; i++) {
+            if (pipe.logic.distData[i] < 0) {
+                pipe.logic.distData[i] = 0;
             }
 
-            if (actualPipe.distData[i] > 0) {
+            if (pipe.logic.distData[i] > 0) {
                 found = true;
             }
         }
 
         if (!found)
-            for (int i = 0; i < actualPipe.distData.length; i++) {
-                actualPipe.distData[i] = 1;
+            for (int i = 0; i < pipe.logic.distData.length; i++) {
+                pipe.logic.distData[i] = 1;
             }
+        
+        if (mc.theWorld.isRemote) {
+        	
+        	PacketPayload payload = pipe.getNetworkPacket();
 
-     //   ModLoaderMp.sendPacket(mod_zAdditionalPipes.instance, actualPipe.getDescPipe());
+    		PacketAdditionalPipes packet = new PacketAdditionalPipes(NetworkID.PACKET_PIPE_DESC, payload);
+    		packet.posX = pipe.xCoord;
+    		packet.posY = pipe.yCoord;
+    		packet.posZ = pipe.zCoord;      
+      
+            ModLoader.getMinecraftInstance().getSendQueue().addToSendQueue(packet.getPacket());
+        }
+
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {

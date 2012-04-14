@@ -40,7 +40,7 @@ public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportL
     }
 
     public PipeLiquidsTeleport(int itemID) {
-        super(new PipeTransportLiquids(), new PipeLogicTeleport(NetworkID.GUI_PIPE_TP_LIQUID), itemID);
+        super(new PipeTransportLiquids(), new PipeLogicTeleport(NetworkID.GUI_PIPE_TP), itemID);
     }
     
     @Override

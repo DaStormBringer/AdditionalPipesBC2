@@ -35,7 +35,7 @@ public class PipeItemTeleport extends PipeTeleport implements IPipeTransportItem
     LinkedList <Integer> idsToRemove = new LinkedList <Integer> ();
     
     public PipeItemTeleport(int itemID) {
-        super(new PipeTransportItems(), new PipeLogicTeleport(NetworkID.GUI_PIPE_TP_ITEM), itemID);
+        super(new PipeTransportItems(), new PipeLogicTeleport(NetworkID.GUI_PIPE_TP), itemID);
     }
 
     @Override

@@ -11,10 +11,14 @@ package net.minecraft.src.buildcraft.additionalpipes.gui;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiContainer;
 import net.minecraft.src.IInventory;
+import net.minecraft.src.ModLoader;
 import net.minecraft.src.mod_AdditionalPipes;
 import net.minecraft.src.buildcraft.transport.TileGenericPipe;
 import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicAdvancedWood;
+import net.minecraft.src.buildcraft.additionalpipes.network.NetworkID;
+import net.minecraft.src.buildcraft.additionalpipes.network.PacketAdditionalPipes;
 import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
+import net.minecraft.src.buildcraft.core.network.PacketPayload;
 
 import org.lwjgl.opengl.GL11;
 
@@ -57,11 +61,22 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
         fontRenderer.drawString(playerInventory.getInvName(), 8, 66, 0x404040);
     }
     protected void actionPerformed(GuiButton guibutton) {
+    	
         if (guibutton.id == 1) {
             ((PipeLogicAdvancedWood)container.pipe.logic).exclude = !((PipeLogicAdvancedWood)container.pipe.logic).exclude;
         }
+        
+        if (mc.theWorld.isRemote) {
+        	
+        	PacketPayload payload = container.pipe.getNetworkPacket();
 
-      //  ModLoaderMp.sendPacket(mod_zAdditionalPipes.instance, ((PipeItemsAdvancedWood)container.pipe).getDescPacket());
+    		PacketAdditionalPipes packet = new PacketAdditionalPipes(NetworkID.PACKET_PIPE_DESC, payload);
+    		packet.posX = container.pipe.xCoord;
+    		packet.posY = container.pipe.yCoord;
+    		packet.posZ = container.pipe.zCoord;      
+      
+            ModLoader.getMinecraftInstance().getSendQueue().addToSendQueue(packet.getPacket());
+        }
     }
 
     @Override

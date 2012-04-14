@@ -31,43 +31,43 @@ import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicDistributor;
 
 public class PipeItemsDistributor extends Pipe implements IPipeTransportItemsHook {
 
-    private @TileNetworkData int nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0;
-    public @TileNetworkData int distData[] = {1, 1, 1, 1, 1, 1};
-    public @TileNetworkData int curTick = 0;
-
+	public final PipeLogicDistributor logic;
+	
     public PipeItemsDistributor(int itemID) {
         super(new PipeTransportItems(), new PipeLogicDistributor(), itemID);
+        logic = (PipeLogicDistributor) super.logic;
     }
 
     @Override
     public void prepareTextureFor(Orientations connection) {
+    	
         if (connection == Orientations.Unknown) {
-            nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0;
+            logic.nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0;
         }
         else {
             switch(connection) {
                 case YNeg:
-                    nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0;
+                	logic.nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0;
                     break;
 
                 case YPos:
-                    nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_1;
+                	logic.nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_1;
                     break;
 
                 case ZNeg:
-                    nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_2;
+                	logic.nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_2;
                     break;
 
                 case ZPos:
-                    nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_3;
+                	logic.nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_3;
                     break;
 
                 case XNeg:
-                    nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_4;
+                	logic.nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_4;
                     break;
 
                 case XPos:
-                    nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_5;
+                	logic.nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_5;
                     break;
 
             }
@@ -79,7 +79,7 @@ public class PipeItemsDistributor extends Pipe implements IPipeTransportItemsHoo
 
     @Override
     public int getBlockTexture() {
-          return nextTexture;
+          return logic.nextTexture;
     }
 
     @Override
@@ -101,11 +101,11 @@ public class PipeItemsDistributor extends Pipe implements IPipeTransportItemsHoo
             }
         }
 
-        curTick++;
+        logic.curTick++;
 
-        if (curTick >= distData[worldObj.getBlockMetadata(xCoord, yCoord, zCoord)]) {
+        if (logic.curTick >= logic.distData[worldObj.getBlockMetadata(xCoord, yCoord, zCoord)]) {
             ((PipeLogicDistributor)this.logic).switchPosition();
-            curTick = 0;
+            logic.curTick = 0;
         }
 
 
@@ -154,10 +154,10 @@ public class PipeItemsDistributor extends Pipe implements IPipeTransportItemsHoo
     @Override
     public void writeToNBT(NBTTagCompound nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setInteger("curTick", curTick);
+        nbttagcompound.setInteger("curTick", logic.curTick);
 
-        for (int i = 0; i < distData.length; i++) {
-            nbttagcompound.setInteger("Dist" + i, distData[i]);
+        for (int i = 0; i < logic.distData.length; i++) {
+            nbttagcompound.setInteger("Dist" + i, logic.distData[i]);
         }
 
     }
@@ -165,44 +165,23 @@ public class PipeItemsDistributor extends Pipe implements IPipeTransportItemsHoo
     @Override
     public void readFromNBT(NBTTagCompound nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        curTick = nbttagcompound.getInteger("curTick");
+        logic.curTick = nbttagcompound.getInteger("curTick");
 
-        for (int i = 0; i < distData.length; i++) {
-            distData[i] = nbttagcompound.getInteger("Dist" + i);
+        for (int i = 0; i < logic.distData.length; i++) {
+        	logic.distData[i] = nbttagcompound.getInteger("Dist" + i);
         }
 
         boolean found = false;
 
-        for (int i = 0; i < distData.length; i++)
-            if (distData[i] > 0) {
+        for (int i = 0; i < logic.distData.length; i++)
+            if (logic.distData[i] > 0) {
                 found = true;
             }
 
         if (!found)
-            for (int i = 0; i < distData.length; i++) {
-                distData[i] = 1;
+            for (int i = 0; i < logic.distData.length; i++) {
+            	logic.distData[i] = 1;
             }
 
     }
-    /*
-    public Packet230ModLoader getDescPipe() {
-        Packet230ModLoader packet = new Packet230ModLoader();
-
-        packet.modId = mod_zAdditionalPipes.instance.getId();
-        packet.packetType = mod_zAdditionalPipes.PACKET_SET_DIST;
-        packet.isChunkDataPacket = true;
-
-        packet.dataInt = new int [9];
-
-        packet.dataInt [0] = xCoord;
-        packet.dataInt [1] = yCoord;
-        packet.dataInt [2] = zCoord;
-
-        for (int i = 0; i < distData.length; i++) {
-            packet.dataInt [3 + i] = distData[i];
-        }
-
-        return packet;
-    } */
-
 }
