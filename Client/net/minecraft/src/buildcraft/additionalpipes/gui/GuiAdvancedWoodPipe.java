@@ -27,6 +27,7 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
     private GuiButton[] buttons = new GuiButton[1];
 
     public GuiAdvancedWoodPipe(IInventory playerInventorys, IInventory filterInventorys, TileGenericPipe container) {
+    	
         super(new CraftingAdvancedWoodPipe(playerInventorys, filterInventorys));
         this.playerInventory = playerInventorys;
         this.filterInventory = filterInventorys;
