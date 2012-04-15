@@ -13,7 +13,7 @@ import net.minecraft.src.forge.ITextureProvider;
 public class BlockChunkLoader extends BlockContainer implements ITextureProvider {
 
     public BlockChunkLoader(int BlockID, int i) {
-        super(BlockID, i, Material.iron);
+        super(BlockID, i, Material.cloth);
     }
 
     @Override

@@ -42,7 +42,7 @@ public class mod_AdditionalPipes extends NetworkMod {
 
     @Override
     public String getVersion() {
-        return "2.1.0 (Minecraft 1.2.5, Buildcraft 2.2.15, Forge 3.0.0.72)";
+        return "2.1.1 (Minecraft 1.2.5, Buildcraft 2.2.14, Forge 3.0.1.75)";
     }
     public static int MASTER_TEXTURE_OFFSET = 0;// 8 * 16;
     public static String MASTER_TEXTURE_FILE = "/net/minecraft/src/buildcraft/additionalpipes/gui/block_textures.png";
@@ -384,13 +384,13 @@ public class mod_AdditionalPipes extends NetworkMod {
         }
 
         //ChunkLoader
-        ModLoader.registerTileEntity(net.minecraft.src.buildcraft.additionalpipes.chunkloader.TileChunkLoader.class, "ChunkLoader");
-        int ChunkLoaderID = Integer.parseInt(config.getOrCreateIntProperty("ChunkLoader.id", Configuration.CATEGORY_BLOCK, DEFUALT_CHUNK_LOADER_ID).value);
+        ModLoader.registerTileEntity(net.minecraft.src.buildcraft.additionalpipes.chunkloader.TileChunkLoader.class, "Teleport Tether");
+        int ChunkLoaderID = Integer.parseInt(config.getOrCreateIntProperty("TeleportTether.id", Configuration.CATEGORY_BLOCK, DEFUALT_CHUNK_LOADER_ID).value);
         blockChunkLoader = new BlockChunkLoader(ChunkLoaderID, 0);
         ModLoader.registerBlock(blockChunkLoader);
-        blockChunkLoader.setBlockName("ChunkLoading Block");
-        ModLoader.addName(blockChunkLoader, "ChunkLoading Block");
-        boolean Craftable = Boolean.parseBoolean(config.getOrCreateBooleanProperty("ChunkLoader.Enabled", Configuration.CATEGORY_BLOCK, true).value);
+        blockChunkLoader.setBlockName("Teleport Tether");
+        ModLoader.addName(blockChunkLoader, "Teleport Tether");
+        boolean Craftable = Boolean.parseBoolean(config.getOrCreateBooleanProperty("TeleportTether.Enabled", Configuration.CATEGORY_BLOCK, true).value);
 
         if (Craftable) {
             CraftingManager.getInstance().addRecipe(new ItemStack(blockChunkLoader, 4), new Object[]{"iii", "iLi", "iii", Character.valueOf('i'), Item.ingotIron, Character.valueOf('L'), new ItemStack(Item.dyePowder, 1, 4)});
@@ -399,157 +399,7 @@ public class mod_AdditionalPipes extends NetworkMod {
         config.save();
     }
 
-    /*
-     * @Override
-     * public GuiScreen handleGUI(int inventoryType) {
-     * try {
-     *
-     * //	System.out.println("InvType: " + inventoryType);
-     * if(inventoryType == GUI_LIQUID_REC) {
-     * return new GuiLiquidTeleportPipe((TileGenericPipe)mc.theWorld.getBlockTileEntity(mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ));
-     * }
-     * else if (inventoryType == GUI_ITEM_REC) {
-     * return new GuiItemTeleportPipe((TileGenericPipe)mc.theWorld.getBlockTileEntity(mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ));
-     * }
-     * else if (inventoryType == GUI_ENERGY_REC) {
-     * return new GuiPowerTeleportPipe((TileGenericPipe)mc.theWorld.getBlockTileEntity(mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ));
-     * }
-     * else if (inventoryType == GUI_ADVANCEDWOOD_REC) {
-     * TileGenericPipe tmp = new TileGenericPipe();
-     * tmp.pipe = new PipeItemsAdvancedWood(pipeAdvancedWood.shiftedIndex);
-     *
-     * return new GuiAdvancedWoodPipe(mc.thePlayer.inventory, tmp, (TileGenericPipe)mc.theWorld.getBlockTileEntity(mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ));
-     * }
-     * }
-     * catch (Exception e) {
-     * System.out.println("Handled Error in HandleGUI...");
-     * e.printStackTrace();
-     * }
-     *
-     *
-     * return null;
-     * }
-     *
-     * @Override
-     * public void handlePacket(Packet230ModLoader packet) {
-     * System.out.println("Packet: " + packet.packetType);
-     *
-     * if (packet.packetType == PACKET_SET_AW) {
-     * int x = packet.dataInt [0];
-     * int y = packet.dataInt [1];
-     * int z = packet.dataInt [2];
-     *
-     * if (APIProxy.getWorld().blockExists(x, y, z)) {
-     * TileGenericPipe tile = (TileGenericPipe) APIProxy.getWorld().getBlockTileEntity(x, y, z);
-     * boolean Exclude = intToBool(packet.dataInt[3]);
-     * ((PipeLogicAdvancedWood)tile.pipe.logic).exclude = Exclude;
-     * }
-     * }
-     *
-     * if (packet.packetType == PACKET_SET_ITEM) {
-     * int x = packet.dataInt [0];
-     * int y = packet.dataInt [1];
-     * int z = packet.dataInt [2];
-     *
-     * if (APIProxy.getWorld().blockExists(x, y, z)) {
-     * TileGenericPipe tile = (TileGenericPipe) APIProxy.getWorld().getBlockTileEntity(x, y, z);
-     * int freq = packet.dataInt[3];
-     * boolean canRec = intToBool(packet.dataInt[4]);
-     * String own = packet.dataString[0];
-     * ((PipeItemTeleport)tile.pipe).canReceive = canRec;
-     * ((PipeItemTeleport)tile.pipe).myFreq = freq;
-     * ((PipeItemTeleport)tile.pipe).Owner = own;
-     * }
-     * }
-     *
-     * if (packet.packetType == PACKET_SET_LIQUID) {
-     * int x = packet.dataInt [0];
-     * int y = packet.dataInt [1];
-     * int z = packet.dataInt [2];
-     *
-     * if (APIProxy.getWorld().blockExists(x, y, z)) {
-     * TileGenericPipe tile = (TileGenericPipe) APIProxy.getWorld().getBlockTileEntity(x, y, z);
-     * int freq = packet.dataInt[3];
-     * boolean canRec = intToBool(packet.dataInt[4]);
-     * String own = packet.dataString[0];
-     * ((PipeLiquidsTeleport)tile.pipe).canReceive = canRec;
-     * ((PipeLiquidsTeleport)tile.pipe).myFreq = freq;
-     * ((PipeLiquidsTeleport)tile.pipe).Owner = own;
-     * }
-     * }
-     *
-     * if (packet.packetType == PACKET_SET_POWER) {
-     * int x = packet.dataInt [0];
-     * int y = packet.dataInt [1];
-     * int z = packet.dataInt [2];
-     *
-     * if (APIProxy.getWorld().blockExists(x, y, z)) {
-     * TileGenericPipe tile = (TileGenericPipe) APIProxy.getWorld().getBlockTileEntity(x, y, z);
-     * int freq = packet.dataInt[3];
-     * boolean canRec = intToBool(packet.dataInt[4]);
-     * String own = packet.dataString[0];
-     * ((PipePowerTeleport)tile.pipe).canReceive = canRec;
-     * ((PipePowerTeleport)tile.pipe).myFreq = freq;
-     * ((PipePowerTeleport)tile.pipe).Owner = own;
-     * }
-     * }
-     *
-     * if (packet.packetType == PACKET_GUI_COUNT) {
-     * CurrentGUICount = packet.dataInt[0];
-     * }
-     *
-     * if (packet.packetType == PACKET_OPEN_GUI) {
-     * int x = packet.dataInt [0];
-     * int y = packet.dataInt [1];
-     * int z = packet.dataInt [2];
-     * TileGenericPipe tilePipe = (TileGenericPipe) APIProxy.getWorld().getBlockTileEntity(x, y, z);
-     *
-     * switch (packet.dataInt[3]) {
-     * case 0:
-     * mc.displayGuiScreen(new GuiItemTeleportPipe(tilePipe));
-     * break;
-     *
-     * case 1:
-     * mc.displayGuiScreen(new GuiLiquidTeleportPipe(tilePipe));
-     * break;
-     *
-     * case 2:
-     * mc.displayGuiScreen(new GuiPowerTeleportPipe(tilePipe));
-     * break;
-     *
-     * case 3:
-     * mc.displayGuiScreen(new GuiDistributionPipe(tilePipe));
-     * break;
-     * }
-     * }
-     *
-     * if (packet.packetType == PACKET_SET_DIST) {
-     * int x = packet.dataInt [0];
-     * int y = packet.dataInt [1];
-     * int z = packet.dataInt [2];
-     *
-     * if (APIProxy.getWorld().blockExists(x, y, z)) {
-     * TileGenericPipe tile = (TileGenericPipe) APIProxy.getWorld().getBlockTileEntity(x, y, z);
-     * PipeItemsDistributor a = (PipeItemsDistributor) tile.pipe;
-     *
-     * for (int i = 0; i < a.distData.length; i++) {
-     * a.distData[i] = packet.dataInt[3 + i];
-     * }
-     * }
-     * }
-     * }
-     * public static boolean intToBool(int a) {
-     * return (a == 1);
-     * }
-     *
-     * public static int boolToInt(boolean a) {
-     * if (a) {
-     * return 1;
-     * }
-     *
-     * return 0;
-     * }
-     */
+   
     private Item createPipe(int id, Class<? extends Pipe> clas, String description) {
         Item res = BlockGenericPipe.registerPipe(id, clas);
         res.setItemName(clas.getSimpleName());
