@@ -262,123 +262,21 @@ public class mod_AdditionalPipes extends NetworkMod {
 
         //ChunkLoader
         ModLoader.registerTileEntity(net.minecraft.src.buildcraft.additionalpipes.chunkloader.TileChunkLoader.class, "Teleport Tether");
-        int ChunkLoaderID = Integer.parseInt(config.getOrCreateIntProperty("ChunkLoader.id", Configuration.CATEGORY_BLOCK, DEFUALT_CHUNK_LOADER_ID).value);
+        int ChunkLoaderID = Integer.parseInt(config.getOrCreateIntProperty("TeleportTether.id", Configuration.CATEGORY_BLOCK, DEFUALT_CHUNK_LOADER_ID).value);
         config.save();
         blockChunkLoader = new BlockChunkLoader(ChunkLoaderID, 0);
         ModLoader.registerBlock(blockChunkLoader);
-        boolean Craftable = Boolean.parseBoolean(config.getOrCreateBooleanProperty("ChunkLoader.Enabled", Configuration.CATEGORY_BLOCK, true).value);
+        blockChunkLoader.setBlockName("Teleport Tether");
+        boolean Craftable = Boolean.parseBoolean(config.getOrCreateBooleanProperty("TeleportTether.Enabled", Configuration.CATEGORY_BLOCK, true).value);
         config.save();
 
-        if (Craftable) //	CraftingManager.getInstance().addShapelessRecipe(new ItemStack(blockChunkLoader, 1), new Object[] {Item.ingotIron,Item.ingotIron,Item.ingotIron,Item.ingotIron});
-        // Replaced shapeless with 8 Iron in a box with lapis in middle
-        {
+        if (Craftable){
             CraftingManager.getInstance().addRecipe(new ItemStack(blockChunkLoader, 4), new Object[]{"iii", "iLi", "iii", Character.valueOf('i'), Item.ingotIron, Character.valueOf('L'), new ItemStack(Item.dyePowder, 1, 4)});
         }
 
     }
 
-    /*
-     * @Override
-     * public void handlePacket(Packet230ModLoader packet, EntityPlayerMP player) {
-     * //System.out.println("Packet: " + packet.packetType);
-     * if (packet.packetType == PACKET_SET_AW) {
-     * int x = packet.dataInt [0];
-     * int y = packet.dataInt [1];
-     * int z = packet.dataInt [2];
-     *
-     * if (player.worldObj.blockExists(x, y, z)) {
-     * TileGenericPipe tile = (TileGenericPipe) player.worldObj.getBlockTileEntity(x, y, z);
-     * boolean Exclude = intToBool(packet.dataInt[3]);
-     * ((PipeLogicAdvancedWood)tile.pipe.logic).exclude = Exclude;
-     * }
-     * }
-     *
-     * if (packet.packetType == PACKET_SET_ITEM) {
-     * int x = packet.dataInt [0];
-     * int y = packet.dataInt [1];
-     * int z = packet.dataInt [2];
-     *
-     * if (player.worldObj.blockExists(x, y, z)) {
-     * TileGenericPipe tile = (TileGenericPipe) player.worldObj.getBlockTileEntity(x, y, z);
-     * int freq = packet.dataInt[3];
-     * boolean canRec = intToBool(packet.dataInt[4]);
-     * String own = packet.dataString[0];
-     * ((PipeItemTeleport)tile.pipe).canReceive = canRec;
-     * ((PipeItemTeleport)tile.pipe).myFreq = freq;
-     * ((PipeItemTeleport)tile.pipe).Owner = own;
-     *
-     * MutiPlayerProxy.SendPacket(getCountPacket(((PipeItemTeleport)tile.pipe).getConnectedPipes(true).size()), player);
-     *
-     * }
-     * }
-     *
-     * if (packet.packetType == PACKET_SET_LIQUID) {
-     * int x = packet.dataInt [0];
-     * int y = packet.dataInt [1];
-     * int z = packet.dataInt [2];
-     *
-     * if (player.worldObj.blockExists(x, y, z)) {
-     * TileGenericPipe tile = (TileGenericPipe) player.worldObj.getBlockTileEntity(x, y, z);
-     * int freq = packet.dataInt[3];
-     * boolean canRec = intToBool(packet.dataInt[4]);
-     * String own = packet.dataString[0];
-     * ((PipeLiquidsTeleport)tile.pipe).canReceive = canRec;
-     * ((PipeLiquidsTeleport)tile.pipe).myFreq = freq;
-     * ((PipeLiquidsTeleport)tile.pipe).Owner = own;
-     *
-     * MutiPlayerProxy.SendPacket(getCountPacket(((PipeLiquidsTeleport)tile.pipe).getConnectedPipes(true).size()), player);
-     *
-     * }
-     * }
-     *
-     * if (packet.packetType == PACKET_SET_POWER) {
-     * int x = packet.dataInt [0];
-     * int y = packet.dataInt [1];
-     * int z = packet.dataInt [2];
-     *
-     * if (player.worldObj.blockExists(x, y, z)) {
-     * TileGenericPipe tile = (TileGenericPipe) player.worldObj.getBlockTileEntity(x, y, z);
-     * int freq = packet.dataInt[3];
-     * boolean canRec = intToBool(packet.dataInt[4]);
-     * String own = packet.dataString[0];
-     * ((PipePowerTeleport)tile.pipe).canReceive = canRec;
-     * ((PipePowerTeleport)tile.pipe).myFreq = freq;
-     * ((PipePowerTeleport)tile.pipe).Owner = own;
-     *
-     * MutiPlayerProxy.SendPacket(getCountPacket(((PipePowerTeleport)tile.pipe).getConnectedPipes(true).size()), player);
-     *
-     * }
-     * }
-     *
-     * if (packet.packetType == PACKET_SET_DIST) {
-     * int x = packet.dataInt [0];
-     * int y = packet.dataInt [1];
-     * int z = packet.dataInt [2];
-     *
-     * if (player.worldObj.blockExists(x, y, z)) {
-     * TileGenericPipe tile = (TileGenericPipe) player.worldObj.getBlockTileEntity(x, y, z);
-     * PipeItemsDistributor a = (PipeItemsDistributor) tile.pipe;
-     *
-     * for (int i = 0; i < a.distData.length; i++) {
-     * a.distData[i] = packet.dataInt[3 + i];
-     * }
-     * }
-     * }
-     * }
-     *
-     * public static Packet230ModLoader getCountPacket(int Count) {
-     * Packet230ModLoader packet = new Packet230ModLoader();
-     *
-     * packet.modId = mod_AdditionalPipes.instance.getId();
-     * packet.packetType = mod_AdditionalPipes.PACKET_GUI_COUNT;
-     * packet.isChunkDataPacket = true;
-     *
-     * packet.dataInt = new int[1];
-     * packet.dataInt[0] = Count;
-     * return packet;
-     * }
-     */
-    public static int boolToInt(boolean a) {
+  public static int boolToInt(boolean a) {
         if (a) {
             return 1;
         }
