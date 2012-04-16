@@ -35,7 +35,7 @@ public class mod_AdditionalPipes extends NetworkMod {
 
     @Override
     public String getVersion() {
-    	return "2.1.1 (Minecraft 1.2.5, Buildcraft 2.2.14, Forge 3.0.1.75)";
+    	return "2.1.2 (Minecraft 1.2.5, Buildcraft 2.2.14, Forge 3.0.1.75)";
     }
     // Item Teleport
     public static Item pipeItemTeleport;
@@ -91,33 +91,13 @@ public class mod_AdditionalPipes extends NetworkMod {
     public static int DEFUALT_RedStoneLiquid_TEXTURE_POWERED = 0;//8*16+15;
     public static String DEFUALT_RedStoneLiquid_FILE = "/net/minecraft/src/buildcraft/additionalpipes/gui/RSL.png";
     public static String DEFUALT_RedStoneLiquid_FILE_POWERED = "/net/minecraft/src/buildcraft/additionalpipes/gui/RSLP.png";
-    // GUI Packet Ids  Registered at Flans Google Doc
-    // https://docs.google.com/spreadsheet/ccc?key=0At3NBGfCbPHadElSaEFUT2N1LXpSMjAwWVR0dGF4bUE&hl=en#gid=0
-    public static byte GUI_ITEM_SEND = 103;
-    public static byte GUI_LIQUID_SEND = 104;
-    public static byte GUI_ENERGY_SEND = 105;
-    public static byte GUI_ADVANCEDWOOD_SEND = 106;
-    public static byte GUI_ITEM_REC = 103;
-    public static byte GUI_LIQUID_REC = 104;
-    public static byte GUI_ENERGY_REC = 105;
-    public static byte GUI_ADVANCEDWOOD_REC = 106;
+
     // Main Packet ID's
-    public static int PACKET_SET_AW = 1;
-    public static int PACKET_SET_ITEM = 2;
-    public static int PACKET_SET_LIQUID = 3;
-    public static int PACKET_SET_POWER = 4;
-    public static int PACKET_REQ_ITEM = 5;
-    public static int PACKET_REQ_LIQUID = 6;
-    public static int PACKET_REQ_POWER = 7;
-    public static int PACKET_GUI_COUNT = 8;
-    public static int PACKET_OPEN_GUI = 9;
-    public static int PACKET_SET_DIST = 10;
+
     public static int CurrentGUICount = 0;
     public static Block blockChunkLoader;
-    public static int DEFUALT_CHUNK_LOADER_ID = 179;
+    public static int DEFUALT_CHUNK_LOADER_ID = 189;
     private static Configuration config;
-    public int mpOilGuiId = -113;
-    public int mpItemGuiId = -114;
     public static mod_AdditionalPipes instance;
     public static boolean isInGame = false;
     public static boolean lagFix = false;
@@ -156,7 +136,8 @@ public class mod_AdditionalPipes extends NetworkMod {
         allowWPRemove = Boolean.parseBoolean(config.getOrCreateBooleanProperty("EnableWaterProofRemoval", Configuration.CATEGORY_GENERAL, false).value);
         logLevel = Integer.parseInt(config.getOrCreateProperty("logLevel", Configuration.CATEGORY_GENERAL, "1").value);
         PowerLossCfg    = Double.parseDouble(config.getOrCreateProperty("powerloss",Configuration.CATEGORY_GENERAL, Double.toString(PowerLossCfg)).value);
-
+        config.save();
+        
         //System.out.println("Teleport Pipes Power Loss Configuration: " + PowerLossCfg);
 
         boolean loadItemTeleport = Boolean.parseBoolean(config.getOrCreateBooleanProperty("enableItemTeleport", Configuration.CATEGORY_ITEM, true).value);
@@ -261,19 +242,19 @@ public class mod_AdditionalPipes extends NetworkMod {
         }
 
         //ChunkLoader
-        ModLoader.registerTileEntity(net.minecraft.src.buildcraft.additionalpipes.chunkloader.TileChunkLoader.class, "Teleport Tether");
         int ChunkLoaderID = Integer.parseInt(config.getOrCreateIntProperty("TeleportTether.id", Configuration.CATEGORY_BLOCK, DEFUALT_CHUNK_LOADER_ID).value);
+        boolean Craftable = Boolean.parseBoolean(config.getOrCreateBooleanProperty("TeleportTether.Enabled", Configuration.CATEGORY_BLOCK, true).value);
         config.save();
+        
+        ModLoader.registerTileEntity(net.minecraft.src.buildcraft.additionalpipes.chunkloader.TileChunkLoader.class, "Teleport Tether");
         blockChunkLoader = new BlockChunkLoader(ChunkLoaderID, 0);
         ModLoader.registerBlock(blockChunkLoader);
         blockChunkLoader.setBlockName("Teleport Tether");
-        boolean Craftable = Boolean.parseBoolean(config.getOrCreateBooleanProperty("TeleportTether.Enabled", Configuration.CATEGORY_BLOCK, true).value);
-        config.save();
-
+ 
         if (Craftable){
             CraftingManager.getInstance().addRecipe(new ItemStack(blockChunkLoader, 4), new Object[]{"iii", "iLi", "iii", Character.valueOf('i'), Item.ingotIron, Character.valueOf('L'), new ItemStack(Item.dyePowder, 1, 4)});
         }
-
+        config.save();
     }
 
   public static int boolToInt(boolean a) {
