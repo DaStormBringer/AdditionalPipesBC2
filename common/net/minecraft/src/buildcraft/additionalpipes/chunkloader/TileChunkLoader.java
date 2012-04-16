@@ -1,5 +1,7 @@
 package net.minecraft.src.buildcraft.additionalpipes.chunkloader;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import net.minecraft.src.Chunk;
@@ -8,12 +10,21 @@ import net.minecraft.src.TileEntity;
 
 public class TileChunkLoader extends TileEntity {
 
-    public static List<TileChunkLoader> chunkLoaderList = new LinkedList<TileChunkLoader>();
+    public static List<TileChunkLoader> chunkLoaderList = Collections.synchronizedList(new LinkedList<TileChunkLoader>());
     
     public TileChunkLoader() {
-       if (!chunkLoaderList.contains(this)) {
-           chunkLoaderList.add(this);
-       }
+    }
+    
+    private synchronized void addToList() {
+    	if (!chunkLoaderList.contains(this)) {
+            chunkLoaderList.add(this);
+        }
+    }
+    
+    private synchronized void removeFromList() {
+    	if (chunkLoaderList.contains(this)) {
+            chunkLoaderList.remove(this);
+        }
     }
     
     /*
@@ -38,16 +49,14 @@ public class TileChunkLoader extends TileEntity {
     
     @Override
     public void updateEntity() {
+    	super.updateEntity();
+    	addToList();
     }
     
     @Override
     public void invalidate() {
-        
         super.invalidate();
-        
-        if (chunkLoaderList.contains(this)) {
-            chunkLoaderList.remove(this);
-        }
+        removeFromList();
     }
 }
 
