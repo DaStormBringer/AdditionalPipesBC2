@@ -135,5 +135,36 @@ public class PipeLogicDistributor extends PipeLogic {
     public boolean outputOpen(Orientations to) {
         return to.ordinal() == worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
     }
+    
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+    	
+    	super.writeToNBT(nbt);
+    	
+    	nbt.setInteger("curTick", curTick);
+    	for (int i = 0; i < distData.length; i++) {
+    		nbt.setInteger("distData" + i, distData[i]);
+    	}
+    }
+    
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+    	
+    	super.readFromNBT(nbt);
+    	curTick = nbt.getInteger("curTick");
+    	
+    	boolean found = false;
+    	for (int i = 0; i < distData.length; i++) {
+    		int d = nbt.getInteger("distData" + i);
+    		if (d > 0) found = true;
+    		distData[i] = d;
+    	}
+    	
+    	if (!found) {
+    		for (int i = 0; i < distData.length; i++) {
+    			distData[i] = 1;
+    		}
+    	}
+    }
 
 }
