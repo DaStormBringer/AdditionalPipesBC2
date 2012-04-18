@@ -42,7 +42,7 @@ public class mod_AdditionalPipes extends NetworkMod {
 
     @Override
     public String getVersion() {
-        return "2.1.2 (Minecraft 1.2.5, Buildcraft 2.2.14, Forge 3.0.1.75)";
+        return "2.1.3 (Minecraft 1.2.5, Buildcraft 2.2.14, Forge 3.0.1.75)";
     }
     public static int MASTER_TEXTURE_OFFSET = 0;// 8 * 16;
     public static String MASTER_TEXTURE_FILE = "/net/minecraft/src/buildcraft/additionalpipes/gui/block_textures.png";

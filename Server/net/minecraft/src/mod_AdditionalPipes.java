@@ -35,7 +35,7 @@ public class mod_AdditionalPipes extends NetworkMod {
 
     @Override
     public String getVersion() {
-    	return "2.1.2 (Minecraft 1.2.5, Buildcraft 2.2.14, Forge 3.0.1.75)";
+    	return "2.1.3 (Minecraft 1.2.5, Buildcraft 2.2.14, Forge 3.0.1.75)";
     }
     // Item Teleport
     public static Item pipeItemTeleport;
