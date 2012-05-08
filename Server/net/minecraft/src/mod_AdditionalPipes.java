@@ -261,6 +261,7 @@ public class mod_AdditionalPipes extends NetworkMod {
             CraftingManager.getInstance().addRecipe(new ItemStack(blockChunkLoader, 4), new Object[]{"iii", "iLi", "iii", Character.valueOf('i'), Item.ingotIron, Character.valueOf('L'), new ItemStack(Item.dyePowder, 1, 4)});
         }
         config.save();
+        }
     }
 
   public static int boolToInt(boolean a) {

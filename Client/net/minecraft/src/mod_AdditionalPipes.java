@@ -287,17 +287,30 @@ public class mod_AdditionalPipes extends NetworkMod {
 
         // Liquid Teleport Pipe
         if (loadLiquidsTeleport) {
-            DEFUALT_LIQUID_TELEPORT_TEXTURE = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_LIQUID_TELEPORT_TEXTURE_FILE);
-            pipeLiquidTeleport = createPipe(LIQUID_TELEPORT_ID, PipeLiquidsTeleport.class, "Waterproof Teleport Pipe");
-            craftingmanager.addRecipe(new ItemStack(pipeLiquidTeleport, 1), new Object[]{"w", "P", Character.valueOf('w'), BuildCraftTransport.pipeWaterproof, Character.valueOf('P'), pipeItemTeleport});
+            if (loadItemTeleport) {
+            	DEFUALT_LIQUID_TELEPORT_TEXTURE = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_LIQUID_TELEPORT_TEXTURE_FILE);
+                pipeLiquidTeleport = createPipe(LIQUID_TELEPORT_ID, PipeLiquidsTeleport.class, "Waterproof Teleport Pipe");
+                craftingmanager.addRecipe(
+                        new ItemStack(pipeLiquidTeleport, 1), new Object[]{
+                            "w", "P",
+                            Character.valueOf('w'), BuildCraftTransport.pipeWaterproof,
+                            Character.valueOf('P'), pipeItemTeleport});
+            } else {
+                ModLoader.getLogger().warning("Liquid Teleport Pipe cannot be enabled when Item Teleport Pipe is disabled.");
+            }
         }
 
         // Power Teleport Pipe
         if (loadPowerTeleport) {
-            DEFUALT_POWER_TELEPORT_TEXTURE = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_POWER_TELEPORT_TEXTURE_FILE);
-            pipePowerTeleport = createPipe(POWER_TELEPORT_ID, PipePowerTeleport.class, "Power Teleport Pipe");
-            craftingmanager.addRecipe(new ItemStack(pipePowerTeleport, 1), new Object[]{"r", "P", Character.valueOf('r'), Item.redstone, Character.valueOf('P'), pipeItemTeleport});
-        }
+            if (loadItemTeleport) {
+            	DEFUALT_POWER_TELEPORT_TEXTURE = CoreProxy.addCustomTexture(mod_AdditionalPipes.DEFUALT_POWER_TELEPORT_TEXTURE_FILE);
+                pipePowerTeleport = createPipe(POWER_TELEPORT_ID, PipePowerTeleport.class, "Power Teleport Pipe");
+                craftingmanager.addRecipe(new ItemStack(pipePowerTeleport, 1), new Object[]{"r", "P", Character.valueOf('r'), Item.redstone, Character.valueOf('P'), pipeItemTeleport});
+                // Remove Redstone From Power TP Pipe
+                craftingmanager.addRecipe(new ItemStack(pipeItemTeleport, 1), new Object[]{"A", Character.valueOf('A'), pipePowerTeleport});
+            } else {
+                ModLoader.getLogger().warning("Power Teleport Pipe cannot be enabled when Item Teleport Pipe is disabled.");
+            }
 
         // Distributor Pipe
         if (loadItemsDistributor) {
@@ -342,9 +355,6 @@ public class mod_AdditionalPipes extends NetworkMod {
             craftingmanager.addRecipe(new ItemStack(pipeRedStoneLiquid, 1), new Object[]{"w", "P", Character.valueOf('w'), BuildCraftTransport.pipeWaterproof, Character.valueOf('P'), pipeRedStone});
         }
 
-        // Remove Redstone From Power TP Pipe
-        craftingmanager.addRecipe(new ItemStack(pipeItemTeleport, 1), new Object[]{"A", Character.valueOf('A'), pipePowerTeleport});
-
         if (allowWPRemove) {
 
             //Mine
@@ -380,6 +390,7 @@ public class mod_AdditionalPipes extends NetworkMod {
         }
 
         config.save();
+        }
     }
 
    
