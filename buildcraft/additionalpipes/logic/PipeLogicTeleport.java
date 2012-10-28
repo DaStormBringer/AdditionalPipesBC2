@@ -1,95 +1,96 @@
-package net.minecraft.src.buildcraft.additionalpipes.logic;
+package buildcraft.additionalpipes.logic;
 
-import net.minecraft.src.BuildCraftCore;
-import net.minecraft.src.BuildCraftTransport;
+import buildcraft.BuildCraftTransport;
+import buildcraft.additionalpipes.mod_AdditionalPipes;
+import buildcraft.core.network.TileNetworkData;
+import buildcraft.transport.Pipe;
+import buildcraft.transport.TileGenericPipe;
+import buildcraft.transport.pipes.PipeLogic;
+import buildcraft.api.tools.*;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
-import net.minecraft.src.mod_AdditionalPipes;
-import net.minecraft.src.buildcraft.additionalpipes.gui.GuiHandler;
-import net.minecraft.src.buildcraft.api.TileNetworkData;
-import net.minecraft.src.buildcraft.transport.Pipe;
-import net.minecraft.src.buildcraft.transport.PipeLogic;
-import net.minecraft.src.buildcraft.transport.TileGenericPipe;
 
 public class PipeLogicTeleport extends PipeLogic {
 
 	@TileNetworkData public int freq = 0;
 	@TileNetworkData public boolean canReceive = false;
 	@TileNetworkData public String owner = "";
-	
+
 	protected int guiId;
-	
+
 	public PipeLogicTeleport(int guiId) {
 		super();
 		this.guiId = guiId;
 	}
-	
+
 	@Override
-    public boolean blockActivated(EntityPlayer entityplayer) {
-        
-        if (owner == null || owner.equalsIgnoreCase("")) {
-            owner = entityplayer.username;
-        }
-        
-        ItemStack equippedItem = entityplayer.getCurrentEquippedItem();
-        
-        if (equippedItem != null) {
-            
-            if (mod_AdditionalPipes.isPipe(equippedItem.getItem()))  {
-                return false;
-            }
+	public boolean blockActivated(EntityPlayer entityplayer) {
 
-            if (equippedItem.getItem() == BuildCraftCore.wrenchItem && !mod_AdditionalPipes.wrenchOpensGui) {
-                return false;
-            }
-        }
+		if (owner == null || owner.equalsIgnoreCase("")) {
+			owner = entityplayer.username;
+		}
 
-        entityplayer.openGui(mod_AdditionalPipes.instance, guiId, 
-                container.worldObj, container.xCoord, container.yCoord, container.zCoord);
+		ItemStack equippedItem = entityplayer.getCurrentEquippedItem();
 
-        return true;
-    }
-	
+		if (equippedItem != null) {
+
+			if (mod_AdditionalPipes.isPipe(equippedItem.getItem()))  {
+				return false;
+			}
+
+			if (equippedItem.getItem() instanceof IToolWrench && !mod_AdditionalPipes.wrenchOpensGui) {
+				return false;
+			}
+		}
+
+		entityplayer.openGui(mod_AdditionalPipes.instance, guiId, 
+				container.worldObj, container.xCoord, container.yCoord, container.zCoord);
+
+		return true;
+	}
+
 	@Override
-    public boolean isPipeConnected(TileEntity tile) {
-		
-        Pipe pipe = null;
+	public boolean isPipeConnected(TileEntity tile) {
 
-        if (tile instanceof TileGenericPipe) {
-            pipe = ((TileGenericPipe) tile).pipe;
-        }
+		Pipe pipe = null;
 
-        if (BuildCraftTransport.alwaysConnectPipes) {
-            return super.isPipeConnected(tile);
-        }
-        else {
-        	
-        	if (pipe == null) {
-        		return false;
-        	}
-        	
-        	if (this.container.pipe.getClass().equals(pipe.getClass()) && super.isPipeConnected(tile)) {
-        		return true;
-        	}
-        	
-        	
-        	return true;
-        }
-    }
-	
+		if (tile instanceof TileGenericPipe) {
+			pipe = ((TileGenericPipe) tile).pipe;
+		}
+
+		if (BuildCraftTransport.alwaysConnectPipes) {
+			return super.isPipeConnected(tile);
+		}
+		else {
+
+			if (pipe == null) {
+				return false;
+			}
+
+			if (this.container.pipe.getClass().equals(pipe.getClass()) && super.isPipeConnected(tile)) {
+				return true;
+			}
+
+
+			return true;
+		}
+	}
+
+	@Override
 	public void writeToNBT(NBTTagCompound nbttagcompound) {
 		super.writeToNBT(nbttagcompound);
-		
+
 		nbttagcompound.setInteger("freq", freq);
 		nbttagcompound.setBoolean("canReceive", canReceive);
 		nbttagcompound.setString("owner", owner);
 	}
 
+	@Override
 	public void readFromNBT(NBTTagCompound nbttagcompound) {
 		super.readFromNBT(nbttagcompound);
-		
+
 		freq = nbttagcompound.getInteger("freq");
 		canReceive = nbttagcompound.getBoolean("canReceive");
 		owner = nbttagcompound.getString("owner");

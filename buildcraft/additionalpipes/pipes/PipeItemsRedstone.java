@@ -6,40 +6,40 @@
  * granted by the copyright holder.
  */
 
-package net.minecraft.src.buildcraft.additionalpipes.pipes;
+package buildcraft.additionalpipes.pipes;
 
 import java.util.LinkedList;
 
-import net.minecraft.src.BuildCraftTransport;
+import buildcraft.BuildCraftTransport;
+import buildcraft.additionalpipes.mod_AdditionalPipes;
+import buildcraft.additionalpipes.transport.IPipeProvideRedstonePowerHook;
+import buildcraft.api.core.Orientations;
+import buildcraft.core.EntityPassiveItem;
+import buildcraft.core.network.TileNetworkData;
+import buildcraft.core.utils.Utils;
+import buildcraft.transport.IPipeTransportItemsHook;
+import buildcraft.transport.Pipe;
+import buildcraft.transport.PipeTransportItems;
+import buildcraft.transport.pipes.PipeLogicStone;
+
 import net.minecraft.src.IBlockAccess;
 import net.minecraft.src.World;
-import net.minecraft.src.mod_AdditionalPipes;
-import net.minecraft.src.buildcraft.api.EntityPassiveItem;
-import net.minecraft.src.buildcraft.api.Orientations;
-import net.minecraft.src.buildcraft.api.Position;
-import net.minecraft.src.buildcraft.api.TileNetworkData;
-import net.minecraft.src.buildcraft.core.Utils;
-import net.minecraft.src.buildcraft.additionalpipes.transport.IPipeProvideRedstonePowerHook;
-import net.minecraft.src.buildcraft.transport.IPipeTransportItemsHook;
-import net.minecraft.src.buildcraft.transport.Pipe;
-import net.minecraft.src.buildcraft.transport.PipeLogicStone;
-import net.minecraft.src.buildcraft.transport.PipeTransportItems;
 
 public class PipeItemsRedstone extends Pipe implements IPipeTransportItemsHook, IPipeProvideRedstonePowerHook {
 
-    private @TileNetworkData int nextTexture = mod_AdditionalPipes.DEFUALT_RedStone_TEXTURE;
+    private @TileNetworkData int nextTexture = mod_AdditionalPipes.DEFAULT_RedStone_TEXTURE;
     public @TileNetworkData boolean isPowering = false;
     public PipeItemsRedstone(int itemID) {
-        super(new PipeTransportItems(), new PipeLogicStone (), itemID);
+        super(new PipeTransportItems(), new PipeLogicStone(), itemID);
     }
 
     @Override
     public void prepareTextureFor(Orientations connection) {
         if (!isPowering) {
-            nextTexture = mod_AdditionalPipes.DEFUALT_RedStone_TEXTURE;
+            nextTexture = mod_AdditionalPipes.DEFAULT_RedStone_TEXTURE;
         }
         else {
-            nextTexture = mod_AdditionalPipes.DEFUALT_RedStone_TEXTURE_POWERED;
+            nextTexture = mod_AdditionalPipes.DEFAULT_RedStone_TEXTURE_POWERED;
         }
     }
     @Override
@@ -49,12 +49,12 @@ public class PipeItemsRedstone extends Pipe implements IPipeTransportItemsHook, 
 
     @Override
     public void readjustSpeed (EntityPassiveItem item) {
-        if (item.speed > Utils.pipeNormalSpeed) {
-            item.speed = item.speed - Utils.pipeNormalSpeed / 2.0F;
+        if (item.getSpeed() > Utils.pipeNormalSpeed) {
+            item.setSpeed(item.getSpeed() - Utils.pipeNormalSpeed / 2.0F);
         }
 
-        if (item.speed < Utils.pipeNormalSpeed) {
-            item.speed = Utils.pipeNormalSpeed;
+        if (item.getSpeed() < Utils.pipeNormalSpeed) {
+            item.setSpeed(Utils.pipeNormalSpeed);
         }
     }
 

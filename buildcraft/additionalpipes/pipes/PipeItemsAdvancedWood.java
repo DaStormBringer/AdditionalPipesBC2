@@ -6,8 +6,20 @@
  * granted by the copyright holder.
  */
 
-package net.minecraft.src.buildcraft.additionalpipes.pipes;
+package buildcraft.additionalpipes.pipes;
 
+import buildcraft.additionalpipes.mod_AdditionalPipes;
+import buildcraft.additionalpipes.logic.PipeLogicAdvancedWood;
+import buildcraft.api.core.Orientations;
+import buildcraft.api.core.Position;
+import buildcraft.api.power.IPowerReceptor;
+import buildcraft.api.power.PowerFramework;
+import buildcraft.api.power.PowerProvider;
+import buildcraft.core.EntityPassiveItem;
+import buildcraft.core.utils.Utils;
+import buildcraft.transport.Pipe;
+import buildcraft.transport.PipeTransportItems;
+import buildcraft.transport.pipes.PipeLogicWood;
 import net.minecraft.src.Block;
 import net.minecraft.src.IInventory;
 import net.minecraft.src.Item;
@@ -15,21 +27,6 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
-import net.minecraft.src.mod_AdditionalPipes;
-import net.minecraft.src.buildcraft.api.EntityPassiveItem;
-import net.minecraft.src.buildcraft.api.ILiquidContainer;
-import net.minecraft.src.buildcraft.api.IPowerReceptor;
-import net.minecraft.src.buildcraft.api.Orientations;
-import net.minecraft.src.buildcraft.api.Position;
-import net.minecraft.src.buildcraft.api.PowerFramework;
-import net.minecraft.src.buildcraft.api.PowerProvider;
-import net.minecraft.src.buildcraft.api.TileNetworkData;
-import net.minecraft.src.buildcraft.core.Utils;
-import net.minecraft.src.buildcraft.transport.Pipe;
-import net.minecraft.src.buildcraft.transport.PipeLogicWood;
-import net.minecraft.src.buildcraft.transport.PipeTransportItems;
-import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
-import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicAdvancedWood;
 
 public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
 
@@ -105,7 +102,7 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
                                                (int) pos.z);
 
         if (tile == null
-                || !(tile instanceof IInventory || tile instanceof ILiquidContainer)
+                || !(tile instanceof IInventory || tile instanceof ITankContainer)
                 || PipeLogicWood
                 .isExcludedFromExtraction(Block.blocksList[blockId])) {
             return;
@@ -162,7 +159,7 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
 
                 if (slot != null && slot.stackSize > 0 && CanExtract(slot)) {
                     if (doRemove) {
-                        return inventory.decrStackSize(k, powerProvider.useEnergy(1, slot.stackSize, true));
+                        return inventory.decrStackSize(k, (int) powerProvider.useEnergy(1, slot.stackSize, true));
                     }
                     else {
                         return slot;
@@ -192,7 +189,7 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
 
     @Override
     public int powerRequest() {
-        return getPowerProvider().maxEnergyReceived;
+        return getPowerProvider().getMaxEnergyReceived();
     }
 
     @Override

@@ -1,6 +1,5 @@
-package net.minecraft.src.buildcraft.additionalpipes.chunkloader;
+package buildcraft.additionalpipes.chunkloader;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;

@@ -1,70 +1,65 @@
-package net.minecraft.src.buildcraft.additionalpipes.network;
+package buildcraft.additionalpipes.network;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+import buildcraft.additionalpipes.mod_AdditionalPipes;
+import buildcraft.transport.TileGenericPipe;
+
+import cpw.mods.fml.common.network.IConnectionHandler;
+import cpw.mods.fml.common.network.IPacketHandler;
+import cpw.mods.fml.common.network.Player;
+
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.src.ChunkCoordIntPair;
 import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.INetworkManager;
 import net.minecraft.src.ModLoader;
-import net.minecraft.src.NetworkManager;
+import net.minecraft.src.NetHandler;
+import net.minecraft.src.NetLoginHandler;
 import net.minecraft.src.Packet1Login;
-import net.minecraft.src.buildcraft.transport.TileGenericPipe;
-import net.minecraft.src.forge.IConnectionHandler;
-import net.minecraft.src.forge.IPacketHandler;
-import net.minecraft.src.forge.MessageManager;
+import net.minecraft.src.Packet250CustomPayload;
 
-public class NetworkHandler implements IConnectionHandler, IPacketHandler {
+public class NetworkHandler implements IPacketHandler {
+	//server to client
+	public static final byte PIPE_DESC = 1;
+	public static final byte CHUNKLOAD_DATA = 15;
+	//client to server
+	public static final byte CHUNKLOAD_REQUEST = 65;
 
-    public static final String CHANNEL = "AdditionalPipes";
-    
-    @Override
-    public void onConnect(NetworkManager network) {
-    }
+	@Override
+	public void onPacketData(INetworkManager manager,
+			Packet250CustomPayload packet, Player player) {
+		DataInputStream data = new DataInputStream(new ByteArrayInputStream(packet.data));
+		byte packetID;
+		try {
+			packetID = data.readByte();
+			switch(packetID) {
+			case PIPE_DESC:
+				break;
+			case CHUNKLOAD_DATA:
+				handleChunkLoadData(data);
+				break;
+			case CHUNKLOAD_REQUEST:
+				break;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-    @Override
-    public void onLogin(NetworkManager network, Packet1Login login) {
-        
-        MessageManager messageManager = MessageManager.getInstance();
-        messageManager.registerChannel(network, this, CHANNEL);
-        messageManager.addActiveChannel(network, CHANNEL);
-    }
-
-    @Override
-    public void onDisconnect(NetworkManager network, String message, Object[] args) {
-        
-        MessageManager messageManager = MessageManager.getInstance();
-        messageManager.unregisterChannel(network, this, CHANNEL);
-        messageManager.removeActiveChannel(network, CHANNEL);
-    }
-
-    @Override
-    public void onPacketData(NetworkManager network, String channel, byte[] rawData) {
-    	
-        DataInputStream data = new DataInputStream(new ByteArrayInputStream(rawData));
-        PacketAdditionalPipes packet = null;
-        
-        try {
-            
-            int packetID = data.read();
-            switch(packetID) {
-                
-                case NetworkID.PACKET_PIPE_DESC:
-                    packet = new PacketAdditionalPipes(1);
-                    packet.readData(data);
-                    onTelePipeDesc(packet);
-            }
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void onTelePipeDesc(PacketAdditionalPipes packet) {
-    	
-        TileGenericPipe tile = (TileGenericPipe) ModLoader.getMinecraftInstance().theWorld
-                .getBlockTileEntity(packet.posX, packet.posY, packet.posZ);
-        
-        tile.pipe.handlePacket(packet);
-    }
+	private void handleChunkLoadData(DataInputStream data) {
+		try {
+			int size = data.readInt();
+			ChunkCoordIntPair[] chunks = new ChunkCoordIntPair[size];
+			for(int i = 0; i < size; i++) {
+				chunks[i] = new ChunkCoordIntPair(data.readInt(), data.readInt());
+			}
+			mod_AdditionalPipes.instance.chunkLoadViewer.recievePersistentChunks(chunks);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 }

@@ -6,14 +6,14 @@
  * granted by the copyright holder.
  */
 
-package net.minecraft.src.buildcraft.additionalpipes.logic;
+package buildcraft.additionalpipes.logic;
 
-import net.minecraft.src.BuildCraftTransport;
+import buildcraft.BuildCraftTransport;
+import buildcraft.transport.Pipe;
+import buildcraft.transport.TileGenericPipe;
+import buildcraft.transport.pipes.PipeLogic;
+import buildcraft.transport.pipes.PipeLogicCobblestone;
 import net.minecraft.src.TileEntity;
-import net.minecraft.src.buildcraft.transport.Pipe;
-import net.minecraft.src.buildcraft.transport.PipeLogic;
-import net.minecraft.src.buildcraft.transport.PipeLogicCobblestone;
-import net.minecraft.src.buildcraft.transport.TileGenericPipe;
 
 public class PipeLogicAdvancedInsertion extends PipeLogic {
 

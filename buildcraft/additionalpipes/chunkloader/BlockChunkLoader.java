@@ -1,37 +1,30 @@
-package net.minecraft.src.buildcraft.additionalpipes.chunkloader;
+package buildcraft.additionalpipes.chunkloader;
 
 import net.minecraft.src.BlockContainer;
 import net.minecraft.src.Material;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
-import net.minecraft.src.forge.ITextureProvider;
 
-
-// Referenced classes of package net.minecraft.src:
-//            Block, Material
-
-public class BlockChunkLoader extends BlockContainer implements ITextureProvider {
+public class BlockChunkLoader extends BlockContainer {
 
     public BlockChunkLoader(int BlockID, int i) {
         super(BlockID, i, Material.cloth);
+        setTextureFile("/buildcraft/additionalpipes/gui/chunkloader.png");
     }
 
     @Override
     public void onBlockAdded(World world, int i, int j, int k) {
+    	//TODO implement?
     }
 
     @Override
-    public void onBlockRemoval(World world, int i, int j, int k) {
-    }
-
-    @Override
-    public TileEntity getBlockEntity() {
-        return new TileChunkLoader();
+    public void breakBlock(World world, int i, int j, int k, int p1, int p2) {
+    	//TODO implement?
     }
 
 	@Override
-	public String getTextureFile() {
-		return "/net/minecraft/src/buildcraft/additionalpipes/gui/chunkloader.png";
+	public TileEntity createNewTileEntity(World var1) {
+        return new TileChunkLoader();
 	}
 
 }

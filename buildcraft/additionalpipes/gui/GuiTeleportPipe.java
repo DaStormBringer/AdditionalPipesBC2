@@ -1,36 +1,34 @@
-package net.minecraft.src.buildcraft.additionalpipes.gui;
+package buildcraft.additionalpipes.gui;
 
 import org.lwjgl.opengl.GL11;
+
+import buildcraft.additionalpipes.network.NetworkID;
+import buildcraft.additionalpipes.network.PacketAdditionalPipes;
+import buildcraft.additionalpipes.pipes.PipeTeleport;
+import buildcraft.core.network.PacketPayload;
+import buildcraft.transport.TileGenericPipe;
 
 import net.minecraft.src.Container;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiContainer;
 import net.minecraft.src.ModLoader;
-import net.minecraft.src.mod_AdditionalPipes;
-import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
-import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicTeleport;
-import net.minecraft.src.buildcraft.additionalpipes.network.NetworkID;
-import net.minecraft.src.buildcraft.additionalpipes.network.PacketAdditionalPipes;
-import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeTeleport;
-import net.minecraft.src.buildcraft.core.network.PacketPayload;
-import net.minecraft.src.buildcraft.transport.Pipe;
-import net.minecraft.src.buildcraft.transport.TileGenericPipe;
 
 public class GuiTeleportPipe extends GuiContainer {
 
 	private PipeTeleport pipe;
     private GuiButton[] buttons = new GuiButton[7];
 
-    public GuiTeleportPipe(TileGenericPipe thisPipe) {
+    public GuiTeleportPipe(PipeTeleport thisPipe) {
         super(new ContainerTeleportPipe());
         
-        pipe = (PipeTeleport) thisPipe.pipe;
+        pipe = thisPipe;
         
         xSize = 228;
         ySize = 117;
     }
     
-    public void initGui() {
+    @Override
+	public void initGui() {
     	
         super.initGui();
         int bw = this.xSize - 20;
@@ -55,7 +53,8 @@ public class GuiTeleportPipe extends GuiContainer {
         //fontRenderer.drawString(filterInventory.getInvName(), 8, 6, 0x404040);
         //fontRenderer.drawString(playerInventory.getInvName(), 8, ySize - 97, 0x404040);
     }
-    protected void actionPerformed(GuiButton guibutton) {
+    @Override
+	protected void actionPerformed(GuiButton guibutton) {
     	
         switch(guibutton.id) {
             case 1:
@@ -91,20 +90,16 @@ public class GuiTeleportPipe extends GuiContainer {
         	pipe.logic.freq = 0;
         }
         
-        if (mc.theWorld.isRemote) {
-        	
         	PacketPayload payload = pipe.getNetworkPacket();
-
     		PacketAdditionalPipes packet = new PacketAdditionalPipes(NetworkID.PACKET_PIPE_DESC, payload);
     		packet.posX = pipe.xCoord;
     		packet.posY = pipe.yCoord;
     		packet.posZ = pipe.zCoord;      
-      
             ModLoader.getMinecraftInstance().getSendQueue().addToSendQueue(packet.getPacket());
-        }
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
+    @Override
+	protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
         int i = mc.renderEngine.getTexture("/net/minecraft/src/buildcraft/additionalpipes/gui/gui.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.renderEngine.bindTexture(i);

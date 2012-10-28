@@ -6,20 +6,21 @@
  * granted by the copyright holder.
  */
 
-package net.minecraft.src.buildcraft.additionalpipes.logic;
+package buildcraft.additionalpipes.logic;
 
-import net.minecraft.src.buildcraft.additionalpipes.gui.GuiHandler;
-import net.minecraft.src.buildcraft.additionalpipes.network.NetworkID;
-import net.minecraft.src.buildcraft.api.ILiquidContainer;
-import net.minecraft.src.buildcraft.api.Orientations;
-import net.minecraft.src.buildcraft.api.Position;
-import net.minecraft.src.buildcraft.api.TileNetworkData;
-import net.minecraft.src.buildcraft.core.Utils;
-import net.minecraft.src.buildcraft.transport.Pipe;
-import net.minecraft.src.buildcraft.transport.PipeLogic;
-import net.minecraft.src.buildcraft.transport.PipeLogicWood;
-import net.minecraft.src.buildcraft.transport.TileGenericPipe;
+import buildcraft.BuildCraftTransport;
+import buildcraft.additionalpipes.mod_AdditionalPipes;
+import buildcraft.additionalpipes.network.NetworkID;
+import buildcraft.api.core.Orientations;
+import buildcraft.api.core.Position;
+import buildcraft.core.network.TileNetworkData;
+import buildcraft.core.utils.Utils;
+import buildcraft.transport.*;
+import buildcraft.transport.pipes.PipeLogic;
+import buildcraft.transport.pipes.PipeLogicWood;
 import net.minecraft.src.*;
+import buildcraft.api.liquids.*;
+import buildcraft.api.tools.*;
 
 public class PipeLogicAdvancedWood extends PipeLogic {
 
@@ -62,8 +63,8 @@ public class PipeLogicAdvancedWood extends PipeLogic {
 
     public boolean isInput(TileEntity tile) {
         return !(tile instanceof TileGenericPipe)
-               && (tile instanceof IInventory || tile instanceof ILiquidContainer)
-               &&  Utils.checkPipesConnections(worldObj, xCoord, yCoord,
+               && (tile instanceof IInventory || tile instanceof ITankContainer)
+               &&  Utils.checkLegacyPipesConnections(worldObj, xCoord, yCoord,
                                                zCoord, tile.xCoord, tile.yCoord, tile.zCoord);
     }
 
@@ -75,7 +76,7 @@ public class PipeLogicAdvancedWood extends PipeLogic {
         
         if (equippedItem != null) {
 
-            if (equippedItem.getItem() == BuildCraftCore.wrenchItem) {
+            if (equippedItem.getItem() instanceof IToolWrench) {
                 switchSource();
                 return true;
             }
@@ -132,54 +133,6 @@ public class PipeLogicAdvancedWood extends PipeLogic {
                 switchSource();
             }
         }
-    }
-
-
-    @Override
-    public void onNeighborBlockChange () {
-        super.onNeighborBlockChange();
-
-        switchSourceIfNeeded();
-    }
-
-    @Override
-    public int getSizeInventory() {
-        return items.length;
-    }
-
-    @Override
-    public ItemStack getStackInSlot(int i) {
-        return items [i];
-    }
-
-    @Override
-    public ItemStack decrStackSize(int i, int j) {
-        ItemStack stack = items [i].copy();
-        stack.stackSize = j;
-
-        items [i].stackSize -= j;
-
-        if (items [i].stackSize == 0) {
-            items [i] = null;
-        }
-
-        return stack;
-    }
-
-    @Override
-    public void setInventorySlotContents(int i, ItemStack itemstack) {
-        items [i] = itemstack;
-
-    }
-
-    @Override
-    public String getInvName() {
-        return "Filters";
-    }
-
-    @Override
-    public int getInventoryStackLimit() {
-        return 1;
     }
 
     @Override

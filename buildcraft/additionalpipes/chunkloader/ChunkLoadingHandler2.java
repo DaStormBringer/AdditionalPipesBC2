@@ -1,16 +1,13 @@
-package net.minecraft.src.buildcraft.additionalpipes.chunkloader;
+package buildcraft.additionalpipes.chunkloader;
 
 import java.util.List;
 import java.util.Set;
 
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
-import net.minecraft.src.buildcraft.additionalpipes.chunkloader.TileChunkLoader;
-import net.minecraft.src.forge.IChunkLoadHandler;
+import buildcraft.additionalpipes.chunkloader.TileChunkLoader;
 
-public class ChunkLoadingHandler implements IChunkLoadHandler {
+public class ChunkLoadingHandler2 {
 
-    @Override
     public void addActiveChunks(World world, Set<ChunkCoordIntPair> chunkList) {
 
         for (TileChunkLoader tile : TileChunkLoader.chunkLoaderList) {
@@ -30,7 +27,6 @@ public class ChunkLoadingHandler implements IChunkLoadHandler {
 
     }
 
-    @Override
     public boolean canUnloadChunk(Chunk chunk) {
 
         for (TileChunkLoader tile : TileChunkLoader.chunkLoaderList) {
@@ -38,7 +34,7 @@ public class ChunkLoadingHandler implements IChunkLoadHandler {
             List<ChunkCoordIntPair> loadArea = tile.getLoadArea();
             for (ChunkCoordIntPair chunkCoords : loadArea) {
 
-                if (chunk.worldObj.getChunkFromChunkCoords(chunkCoords.chunkXPos, chunkCoords.chunkZPosition).equals(chunk)) {
+                if (chunk.worldObj.getChunkFromChunkCoords(chunkCoords.chunkXPos, chunkCoords.chunkZPos).equals(chunk)) {
                     //log("Keeping chunk: " + chunk.getChunkCoordIntPair(), LOG_INFO);
                     return false;
                 }
@@ -49,7 +45,6 @@ public class ChunkLoadingHandler implements IChunkLoadHandler {
         return true;
     }
 
-    @Override
     public boolean canUpdateEntity(Entity entity) {
         return true;
     }

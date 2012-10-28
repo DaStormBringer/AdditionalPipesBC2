@@ -6,19 +6,17 @@
  * granted by the copyright holder.
  */
 
-package net.minecraft.src.buildcraft.additionalpipes.logic;
+package buildcraft.additionalpipes.logic;
 
-import net.minecraft.src.buildcraft.additionalpipes.gui.GuiHandler;
-import net.minecraft.src.buildcraft.additionalpipes.network.NetworkID;
-import net.minecraft.src.buildcraft.additionalpipes.pipes.PipeItemsDistributor;
-import net.minecraft.src.buildcraft.api.ILiquidContainer;
-import net.minecraft.src.buildcraft.api.IPipeEntry;
-import net.minecraft.src.buildcraft.api.Orientations;
-import net.minecraft.src.buildcraft.api.Position;
-import net.minecraft.src.buildcraft.api.TileNetworkData;
-import net.minecraft.src.buildcraft.transport.PipeLogic;
-import net.minecraft.src.buildcraft.transport.PipeLogicWood;
-import net.minecraft.src.buildcraft.transport.TileGenericPipe;
+import buildcraft.additionalpipes.mod_AdditionalPipes;
+import buildcraft.api.core.Position;
+import buildcraft.api.liquids.ITankContainer;
+import buildcraft.api.liquids.ITankContainer;
+import buildcraft.api.transport.IPipeEntry;
+import buildcraft.core.network.TileNetworkData;
+import buildcraft.transport.TileGenericPipe;
+import buildcraft.transport.pipes.PipeLogic;
+import buildcraft.transport.pipes.PipeLogicWood;
 import net.minecraft.src.*;
 
 public class PipeLogicDistributor extends PipeLogic {
@@ -56,7 +54,7 @@ public class PipeLogicDistributor extends PipeLogic {
                 }
             }
 
-            if (tile instanceof IPipeEntry || tile instanceof IInventory || tile instanceof ILiquidContainer || tile instanceof TileGenericPipe) {
+            if (tile instanceof IPipeEntry || tile instanceof IInventory || tile instanceof ITankContainer || tile instanceof TileGenericPipe) {
                 if (distData[nextMetadata] > 0) {
                     worldObj.setBlockMetadata(xCoord, yCoord, zCoord, nextMetadata);
                     return;
@@ -85,7 +83,7 @@ public class PipeLogicDistributor extends PipeLogic {
                 }
             }
 
-            if (tile instanceof IPipeEntry || tile instanceof IInventory || tile instanceof ILiquidContainer || tile instanceof TileGenericPipe) {
+            if (tile instanceof IPipeEntry || tile instanceof IInventory || tile instanceof ITankContainer || tile instanceof TileGenericPipe) {
                 if (distData[nextMetadata] > 0) {
                     worldObj.setBlockMetadata(xCoord, yCoord, zCoord, nextMetadata);
                     return;

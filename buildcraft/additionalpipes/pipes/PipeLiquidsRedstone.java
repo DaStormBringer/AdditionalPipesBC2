@@ -6,23 +6,23 @@
  * granted by the copyright holder.
  */
 
-package net.minecraft.src.buildcraft.additionalpipes.pipes;
+package buildcraft.additionalpipes.pipes;
 
-import net.minecraft.src.BuildCraftTransport;
+import buildcraft.BuildCraftTransport;
+import buildcraft.additionalpipes.mod_AdditionalPipes;
+import buildcraft.additionalpipes.transport.IPipeProvideRedstonePowerHook;
+import buildcraft.api.core.Orientations;
+import buildcraft.api.core.Position;
+import buildcraft.api.liquids.ITankContainer;
+import buildcraft.api.transport.IPipeEntry;
+import buildcraft.core.network.TileNetworkData;
+import buildcraft.core.utils.Utils;
+import buildcraft.transport.Pipe;
+import buildcraft.transport.PipeTransportLiquids;
+import buildcraft.transport.pipes.PipeLogicGold;
 import net.minecraft.src.IBlockAccess;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
-import net.minecraft.src.mod_AdditionalPipes;
-import net.minecraft.src.buildcraft.api.ILiquidContainer;
-import net.minecraft.src.buildcraft.api.IPipeEntry;
-import net.minecraft.src.buildcraft.api.Orientations;
-import net.minecraft.src.buildcraft.api.Position;
-import net.minecraft.src.buildcraft.api.TileNetworkData;
-import net.minecraft.src.buildcraft.core.Utils;
-import net.minecraft.src.buildcraft.additionalpipes.transport.IPipeProvideRedstonePowerHook;
-import net.minecraft.src.buildcraft.transport.Pipe;
-import net.minecraft.src.buildcraft.transport.PipeLogicGold;
-import net.minecraft.src.buildcraft.transport.PipeTransportLiquids;
 
 public class PipeLiquidsRedstone extends Pipe implements IPipeProvideRedstonePowerHook {
     private @TileNetworkData int nextTexture = mod_AdditionalPipes.DEFUALT_RedStoneLiquid_TEXTURE;
@@ -128,12 +128,12 @@ public class PipeLiquidsRedstone extends Pipe implements IPipeProvideRedstonePow
         TileEntity entity = worldObj.getBlockTileEntity((int) p.x, (int) p.y,
                             (int) p.z);
 
-        if (!Utils.checkPipesConnections(worldObj, (int) p.x, (int) p.y,
+        if (!Utils.checkLegacyPipesConnections(worldObj, (int) p.x, (int) p.y,
                                          (int) p.z, xCoord, yCoord, zCoord)) {
             return false;
         }
 
-        if (entity instanceof IPipeEntry || entity instanceof ILiquidContainer) {
+        if (entity instanceof IPipeEntry || entity instanceof ITankContainer) {
             return true;
         }
 

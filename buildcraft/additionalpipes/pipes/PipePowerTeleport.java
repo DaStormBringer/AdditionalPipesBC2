@@ -6,27 +6,22 @@
  * granted by the copyright holder.
  */
 
-package net.minecraft.src.buildcraft.additionalpipes.pipes;
+package buildcraft.additionalpipes.pipes;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import buildcraft.additionalpipes.mod_AdditionalPipes;
+import buildcraft.api.core.Orientations;
+import buildcraft.api.core.Position;
+import buildcraft.transport.IPipeTransportPowerHook;
+import buildcraft.transport.PipeTransportPower;
+import buildcraft.transport.TileGenericPipe;
+import buildcraft.api.power.IPowerReceptor;
+import buildcraft.core.utils.Utils;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
-import net.minecraft.src.mod_AdditionalPipes;
-import net.minecraft.src.buildcraft.api.IPowerReceptor;
-import net.minecraft.src.buildcraft.api.Orientations;
-import net.minecraft.src.buildcraft.api.Position;
-import net.minecraft.src.buildcraft.api.TileNetworkData;
-import net.minecraft.src.buildcraft.core.Utils;
-import net.minecraft.src.buildcraft.transport.IPipeTransportPowerHook;
-import net.minecraft.src.buildcraft.transport.Pipe;
-import net.minecraft.src.buildcraft.transport.PipeTransportPower;
-import net.minecraft.src.buildcraft.transport.TileGenericPipe;
-import net.minecraft.src.buildcraft.additionalpipes.*;
-import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicTeleport;
-import net.minecraft.src.buildcraft.additionalpipes.network.NetworkID;
 
 public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPowerHook {
 	
@@ -167,7 +162,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
         TileEntity entity = worldObj.getBlockTileEntity((int) p.x, (int) p.y, (int) p.z);
 
         if (entity instanceof TileGenericPipe || entity instanceof IPowerReceptor) {
-            if (Utils.checkPipesConnections(worldObj, (int) p.x, (int) p.y, (int) p.z, xCoord, yCoord, zCoord)) {
+            if (Utils.checkLegacyPipesConnections(worldObj, (int) p.x, (int) p.y, (int) p.z, xCoord, yCoord, zCoord)) {
                 return true;
             }
         }
@@ -196,7 +191,8 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
         return (int) Math.sqrt(((xCoord - x) * (xCoord - x)) + ((yCoord - y) * (yCoord - y)) + ((zCoord - z) * (zCoord - z)));
     }
     
-    public Position getPosition() {
+    @Override
+	public Position getPosition() {
         return new Position (xCoord, yCoord, zCoord);
     }
 

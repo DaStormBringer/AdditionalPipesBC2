@@ -6,29 +6,22 @@
  * granted by the copyright holder.
  */
 
-package net.minecraft.src.buildcraft.additionalpipes.pipes;
+package buildcraft.additionalpipes.pipes;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+
+import buildcraft.api.core.Orientations;
+import buildcraft.api.core.Position;
+import buildcraft.api.transport.IPipeEntry;
+import buildcraft.core.EntityPassiveItem;
+import buildcraft.transport.IPipeTransportItemsHook;
+import buildcraft.transport.PipeTransportItems;
+import buildcraft.transport.TileGenericPipe;
 import net.minecraft.src.IInventory;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
-import net.minecraft.src.buildcraft.additionalpipes.MutiPlayerProxy;
-import net.minecraft.src.buildcraft.additionalpipes.gui.GuiHandler;
-import net.minecraft.src.buildcraft.additionalpipes.logic.PipeLogicTeleport;
-import net.minecraft.src.buildcraft.additionalpipes.network.NetworkID;
-import net.minecraft.src.buildcraft.api.*;
-import net.minecraft.src.buildcraft.core.StackUtil;
-import net.minecraft.src.buildcraft.core.Utils;
-import net.minecraft.src.buildcraft.core.network.PacketPayload;
-import net.minecraft.src.buildcraft.core.network.PacketUpdate;
-import net.minecraft.src.buildcraft.core.network.TilePacketWrapper;
-import net.minecraft.src.buildcraft.transport.IPipeTransportItemsHook;
-import net.minecraft.src.buildcraft.transport.Pipe;
-import net.minecraft.src.buildcraft.transport.PipeTransportItems;
-import net.minecraft.src.buildcraft.transport.TileGenericPipe;
-import net.minecraft.src.mod_AdditionalPipes;
 
 public class PipeItemTeleport extends PipeTeleport implements IPipeTransportItemsHook {
     
@@ -131,7 +124,7 @@ public class PipeItemTeleport extends PipeTeleport implements IPipeTransportItem
 
             if (pipe.pipe.transport instanceof PipeTransportItems) {
                 //This pipe can actually receive items
-                idsToRemove.add(item.entityId);
+                idsToRemove.add(item.getEntityId());
                 ((PipeTransportItems) this.transport).scheduleRemoval(item);
                 Position newItemPos = getNewItemPos(destPos, newPos, Utils.getPipeFloorOf(item.item));
                 item.setPosition(newItemPos.x, newItemPos.y, newItemPos.z);
@@ -139,7 +132,7 @@ public class PipeItemTeleport extends PipeTeleport implements IPipeTransportItem
             }
         }
         else if (tile instanceof IPipeEntry) {
-            idsToRemove.add(item.entityId);
+            idsToRemove.add(item.getEntityId());
             ((PipeTransportItems) this.transport).scheduleRemoval(item);
             Position newItemPos = getNewItemPos(destPos, newPos, Utils.getPipeFloorOf(item.item));
             item.setPosition(newItemPos.x, newItemPos.y, newItemPos.z);
@@ -150,7 +143,7 @@ public class PipeItemTeleport extends PipeTeleport implements IPipeTransportItem
 
             if (!APIProxy.isClient(worldObj)) {
                 if (utils.checkAvailableSlot((IInventory) tile, true, destPos.orientation.reverse()) && utils.items.stackSize == 0) {
-                    idsToRemove.add(item.entityId);
+                    idsToRemove.add(item.getEntityId());
                     ((PipeTransportItems) this.transport).scheduleRemoval(item);
                     // Do nothing, we're adding the object to the world
                 }
