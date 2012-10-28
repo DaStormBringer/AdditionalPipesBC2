@@ -11,14 +11,11 @@ package buildcraft.additionalpipes.gui;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiContainer;
 import net.minecraft.src.IInventory;
-import net.minecraft.src.ModLoader;
+
 import org.lwjgl.opengl.GL11;
 
-import buildcraft.additionalpipes.mod_AdditionalPipes;
+import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.logic.PipeLogicAdvancedWood;
-import buildcraft.additionalpipes.network.NetworkID;
-import buildcraft.additionalpipes.network.PacketAdditionalPipes;
-import buildcraft.core.network.PacketPayload;
 import buildcraft.transport.TileGenericPipe;
 
 public class GuiAdvancedWoodPipe extends GuiContainer {
@@ -32,8 +29,8 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 	public GuiAdvancedWoodPipe(IInventory playerInventorys, IInventory filterInventorys, TileGenericPipe container) {
 
 		super(new CraftingAdvancedWoodPipe(playerInventorys, filterInventorys));
-		this.playerInventory = playerInventorys;
-		this.filterInventory = filterInventorys;
+		playerInventory = playerInventorys;
+		filterInventory = filterInventorys;
 		this.container = container;
 		//container = theContainer;
 		xSize = 175;
@@ -44,18 +41,18 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 	@Override
 	public void initGui() {
 		super.initGui();
-		int guiX = (width - this.xSize) / 2;
-		int guiY = (height - this.ySize) / 2;
+		int guiX = (width - xSize) / 2;
+		int guiY = (height - ySize) / 2;
 		buttons[0] =  new GuiButton(1, guiX + 8, guiY + 40, 140, 20, "These items are required");
 		controlList.add(buttons[0]);
 	}
 
 	protected void drawGuiContainerForegroundLayer() {
 		if (((PipeLogicAdvancedWood)container.pipe.logic).exclude) {
-			this.buttons[0].displayString = "These items are excluded";
+			buttons[0].displayString = "These items are excluded";
 		}
 		else {
-			this.buttons[0].displayString = "These items are required";
+			buttons[0].displayString = "These items are required";
 		}
 
 		fontRenderer.drawString(filterInventory.getInvName(), 8, 6, 0x404040);
@@ -74,7 +71,7 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 		PacketAdditionalPipes packet = new PacketAdditionalPipes(NetworkID.PACKET_PIPE_DESC, payload);
 		packet.posX = container.pipe.xCoord;
 		packet.posY = container.pipe.yCoord;
-		packet.posZ = container.pipe.zCoord;      
+		packet.posZ = container.pipe.zCoord;
 
 		ModLoader.getMinecraftInstance().getSendQueue().addToSendQueue(packet.getPacket());
 		 */
@@ -83,7 +80,7 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 		int i1 = mc.renderEngine
-				.getTexture(mod_AdditionalPipes.PATH + "gui/advancedwoodgui.png");
+				.getTexture(AdditionalPipes.PATH + "gui/advancedwoodgui.png");
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		mc.renderEngine.bindTexture(i1);
 		int j1 = (width - xSize) / 2;

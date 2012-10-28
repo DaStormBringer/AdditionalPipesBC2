@@ -6,5 +6,5 @@ import net.minecraft.src.World;
 
 public interface IPipeRandomDisplay {
 
-    public abstract void randomDisplayTick(World world, int i, int j, int k, Random random);
+	public abstract void randomDisplayTick(World world, int i, int j, int k, Random random);
 }

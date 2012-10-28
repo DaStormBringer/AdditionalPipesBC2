@@ -3,13 +3,12 @@ package buildcraft.additionalpipes.pipes;
 import java.util.LinkedList;
 import java.util.List;
 
-import buildcraft.additionalpipes.MutiPlayerProxy;
-import buildcraft.additionalpipes.mod_AdditionalPipes;
+import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.logic.PipeLogicTeleport;
 import buildcraft.api.core.Position;
 import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransport;
-import buildcraft.transport.TileGenericPipe;;
+import buildcraft.transport.TileGenericPipe;
 
 public abstract class PipeTeleport extends Pipe {
 
@@ -46,7 +45,7 @@ public abstract class PipeTeleport extends Pipe {
 
 			PipeLogicTeleport pipeLogic = pipe.logic;
 
-			if (pipeLogic.owner.equalsIgnoreCase(logic.owner) || !mod_AdditionalPipes.proxy.isOnServer(worldObj)) {
+			if (pipeLogic.owner.equalsIgnoreCase(logic.owner) || !AdditionalPipes.proxy.isOnServer(worldObj)) {
 
 				if (pipeLogic.canReceive || ignoreReceive) {
 

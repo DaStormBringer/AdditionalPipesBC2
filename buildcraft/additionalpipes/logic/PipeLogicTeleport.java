@@ -1,22 +1,21 @@
 package buildcraft.additionalpipes.logic;
 
-import buildcraft.BuildCraftTransport;
-import buildcraft.additionalpipes.mod_AdditionalPipes;
-import buildcraft.core.network.TileNetworkData;
-import buildcraft.transport.Pipe;
-import buildcraft.transport.TileGenericPipe;
-import buildcraft.transport.pipes.PipeLogic;
-import buildcraft.api.tools.*;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
+import buildcraft.BuildCraftTransport;
+import buildcraft.additionalpipes.AdditionalPipes;
+import buildcraft.api.tools.IToolWrench;
+import buildcraft.transport.Pipe;
+import buildcraft.transport.TileGenericPipe;
+import buildcraft.transport.pipes.PipeLogic;
 
 public class PipeLogicTeleport extends PipeLogic {
 
-	@TileNetworkData public int freq = 0;
-	@TileNetworkData public boolean canReceive = false;
-	@TileNetworkData public String owner = "";
+	public int freq = 0;
+	public boolean canReceive = false;
+	public String owner = "";
 
 	protected int guiId;
 
@@ -26,54 +25,41 @@ public class PipeLogicTeleport extends PipeLogic {
 	}
 
 	@Override
-	public boolean blockActivated(EntityPlayer entityplayer) {
-
+	public boolean blockActivated(EntityPlayer player) {
+		if(!AdditionalPipes.proxy.isOnServer(player.worldObj)) return true;
 		if (owner == null || owner.equalsIgnoreCase("")) {
-			owner = entityplayer.username;
+			owner = player.username;
 		}
-
-		ItemStack equippedItem = entityplayer.getCurrentEquippedItem();
-
+		ItemStack equippedItem = player.getCurrentEquippedItem();
 		if (equippedItem != null) {
-
-			if (mod_AdditionalPipes.isPipe(equippedItem.getItem()))  {
+			if (AdditionalPipes.isPipe(equippedItem.getItem()))  {
 				return false;
 			}
-
-			if (equippedItem.getItem() instanceof IToolWrench && !mod_AdditionalPipes.wrenchOpensGui) {
+			if (equippedItem.getItem() instanceof IToolWrench && !AdditionalPipes.wrenchOpensGui) {
 				return false;
 			}
 		}
-
-		entityplayer.openGui(mod_AdditionalPipes.instance, guiId, 
+		player.openGui(AdditionalPipes.instance, guiId,
 				container.worldObj, container.xCoord, container.yCoord, container.zCoord);
-
 		return true;
 	}
 
 	@Override
 	public boolean isPipeConnected(TileEntity tile) {
-
 		Pipe pipe = null;
-
 		if (tile instanceof TileGenericPipe) {
 			pipe = ((TileGenericPipe) tile).pipe;
 		}
-
 		if (BuildCraftTransport.alwaysConnectPipes) {
 			return super.isPipeConnected(tile);
 		}
 		else {
-
 			if (pipe == null) {
 				return false;
 			}
-
-			if (this.container.pipe.getClass().equals(pipe.getClass()) && super.isPipeConnected(tile)) {
+			if (container.pipe.getClass().equals(pipe.getClass()) && super.isPipeConnected(tile)) {
 				return true;
 			}
-
-
 			return true;
 		}
 	}

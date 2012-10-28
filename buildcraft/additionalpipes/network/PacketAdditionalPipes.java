@@ -1,15 +1,9 @@
 package buildcraft.additionalpipes.network;
 
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 
-import buildcraft.additionalpipes.mod_AdditionalPipes;
-import buildcraft.core.network.PacketPayload;
-import buildcraft.core.network.PacketUpdate;
-import net.minecraft.src.Packet;
 import net.minecraft.src.Packet250CustomPayload;
+import buildcraft.additionalpipes.AdditionalPipes;
 
 public class PacketAdditionalPipes {
 
@@ -18,12 +12,12 @@ public class PacketAdditionalPipes {
 
 	public PacketAdditionalPipes(byte PacketId, boolean chunkPacket) {
 		packet = new Packet250CustomPayload();
-		packet.channel = mod_AdditionalPipes.CHANNEL;
+		packet.channel = AdditionalPipes.CHANNEL;
 		packet.isChunkDataPacket = chunkPacket;
 		data = new ByteArrayOutputStream();
 		data.write(PacketId);
 	}
-	
+
 	public void write(byte b) {
 		data.write(b);
 	}

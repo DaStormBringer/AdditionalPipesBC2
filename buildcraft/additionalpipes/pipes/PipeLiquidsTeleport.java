@@ -11,7 +11,10 @@ package buildcraft.additionalpipes.pipes;
 import java.util.LinkedList;
 import java.util.List;
 
-import buildcraft.additionalpipes.mod_AdditionalPipes;
+import net.minecraft.src.TileEntity;
+import buildcraft.additionalpipes.AdditionalPipes;
+import buildcraft.additionalpipes.GuiHandler;
+import buildcraft.additionalpipes.logic.PipeLogicTeleport;
 import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
 import buildcraft.api.liquids.ITankContainer;
@@ -21,36 +24,28 @@ import buildcraft.core.utils.Utils;
 import buildcraft.transport.IPipeTransportLiquidsHook;
 import buildcraft.transport.PipeTransportLiquids;
 
-import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.TileEntity;
-
 public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportLiquidsHook {
 
-    class OilReturn {
-        public Orientations theOrientation;
-        public ITankContainer iliquid;
-        public OilReturn(Orientations a, ITankContainer b) {
-            theOrientation = a;
-            iliquid = b;
-        }
-    }
+	class OilReturn {
+		public Orientations theOrientation;
+		public ITankContainer iliquid;
+		public OilReturn(Orientations a, ITankContainer b) {
+			theOrientation = a;
+			iliquid = b;
+		}
+	}
 
-    public PipeLiquidsTeleport(int itemID) {
-        super(new PipeTransportLiquids(), new PipeLogicTeleport(NetworkID.GUI_PIPE_TP), itemID);
-        
-        ((PipeTransportLiquids) transport).flowRate = 80;
+	public PipeLiquidsTeleport(int itemID) {
+		super(new PipeTransportLiquids(), new PipeLogicTeleport(GuiHandler.PIPE_TP), itemID);
+
+		((PipeTransportLiquids) transport).flowRate = 80;
 		((PipeTransportLiquids) transport).travelDelay = 2;
-    }
-    
-    @Override
-    public int getBlockTexture() {
-        return mod_AdditionalPipes.DEFUALT_LIQUID_TELEPORT_TEXTURE;
-    }
+	}
 
-    /*
+	/*
     @Override
     public void setPosition (int xCoord, int yCoord, int zCoord) {
-    	
+
         LinkedList <PipeLiquidsTeleport> toRemove = new LinkedList <PipeLiquidsTeleport> ();
 
         for (int i = 0; i < LiquidTeleportPipes.size(); i++) {
@@ -62,91 +57,89 @@ public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportL
 
         LiquidTeleportPipes.removeAll(toRemove);
         LiquidTeleportPipes.add(this);
-        
+
         super.setPosition(xCoord, yCoord, zCoord);
         //MutiPlayerProxy.AddChunkToList(xCoord, zCoord);
     }*/
 
-    public LinkedList<OilReturn> getPossibleLiquidMovements(Position pos) {
-        LinkedList<OilReturn> result = new LinkedList<OilReturn>();
+	public LinkedList<OilReturn> getPossibleLiquidMovements(Position pos) {
+		LinkedList<OilReturn> result = new LinkedList<OilReturn>();
 
-        for (int o = 0; o <= 5; ++o) {
-            Position newPos = new Position(pos);
-            newPos.orientation = Orientations.values()[o];
-            newPos.moveForwards(1.0);
+		for (int o = 0; o <= 5; ++o) {
+			Position newPos = new Position(pos);
+			newPos.orientation = Orientations.values()[o];
+			newPos.moveForwards(1.0);
 
-            if (canReceiveLiquid2(newPos)) {
+			if (canReceiveLiquid2(newPos)) {
 
-                //For better handling in future
-                //int space = BuildCraftCore.OIL_BUCKET_QUANTITY / 4 - sideToCenter[((Orientations.values()[o]).reverse()).ordinal()] - centerToSide[((Orientations.values()[o]).reverse()).ordinal()] + flowRate;
-                result.add(new OilReturn(Orientations.values()[o], (ITankContainer) Utils.getTile(worldObj, newPos, Orientations.Unknown)));
-            }
-        }
+				//For better handling in future
+				//int space = BuildCraftCore.OIL_BUCKET_QUANTITY / 4 - sideToCenter[((Orientations.values()[o]).reverse()).ordinal()] - centerToSide[((Orientations.values()[o]).reverse()).ordinal()] + flowRate;
+				result.add(new OilReturn(Orientations.values()[o], (ITankContainer) Utils.getTile(worldObj, newPos, Orientations.Unknown)));
+			}
+		}
 
-        return result;
-    }
-    
-    public boolean canReceiveLiquid2(Position p) {
-        TileEntity entity = worldObj.getBlockTileEntity((int) p.x, (int) p.y,
-                            (int) p.z);
+		return result;
+	}
 
-        if (!Utils.checkLegacyPipesConnections(worldObj, (int) p.x, (int) p.y,
-                                         (int) p.z, xCoord, yCoord, zCoord)) {
-            return false;
-        }
+	public boolean canReceiveLiquid2(Position p) {
+		TileEntity entity = worldObj.getBlockTileEntity((int) p.x, (int) p.y,
+				(int) p.z);
 
-        if (entity instanceof IPipeEntry || entity instanceof ITankContainer) {
-            return true;
-        }
+		if (!Utils.checkLegacyPipesConnections(worldObj, (int) p.x, (int) p.y,
+				(int) p.z, xCoord, yCoord, zCoord)) {
+			return false;
+		}
 
-        return false;
-    }
-    
-    @Override
+		if (entity instanceof IPipeEntry || entity instanceof ITankContainer) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
 	public Position getPosition() {
-        return new Position (xCoord, yCoord, zCoord);
-    }
+		return new Position (xCoord, yCoord, zCoord);
+	}
 
 	@Override
 	public int fill(Orientations from, LiquidStack resource, boolean doFill) {
-        List<PipeTeleport> pipeList = getConnectedPipes(false);
+		List<PipeTeleport> pipeList = getConnectedPipes(false);
 
-        if (pipeList.size() == 0) {
-            return 0;
-        }
+		if (pipeList.size() == 0) {
+			return 0;
+		}
 
-        //System.out.println("PipeList Size: " + pipeList.size());
-        int i = worldObj.rand.nextInt(pipeList.size());
-        LinkedList<OilReturn> theList = getPossibleLiquidMovements(pipeList.get(i).getPosition());
+		//System.out.println("PipeList Size: " + pipeList.size());
+		int i = worldObj.rand.nextInt(pipeList.size());
+		LinkedList<OilReturn> theList = getPossibleLiquidMovements(pipeList.get(i).getPosition());
 
-        if (theList.size() <= 0) {
-            return 0;
-        }
+		if (theList.size() <= 0) {
+			return 0;
+		}
 
-        //System.out.println("theList Size: " + theList.size());
-        int used = 0;
-        int a = 0;
+		//System.out.println("theList Size: " + theList.size());
+		int used = 0;
+		int a = 0;
 
-        while (theList.size() > 0 && used <= 0) {
-            a = worldObj.rand.nextInt(theList.size());
-            //System.out.println("A: " + a);
-            used = theList.get(a).iliquid.fill(resource, doFill);
-            theList.remove(a);
-        }
+		while (theList.size() > 0 && used <= 0) {
+			a = worldObj.rand.nextInt(theList.size());
+			//System.out.println("A: " + a);
+			used = theList.get(a).iliquid.fill(resource, doFill);
+			theList.remove(a);
+		}
 
-        //System.out.println("Fill " + used);
-        return used;
+		//System.out.println("Fill " + used);
+		return used;
 	}
 
 	@Override
 	public String getTextureFile() {
-		// TODO Auto-generated method stub
-		return null;
+		return AdditionalPipes.TEXTURE_LIQUID_TELEPORT;
 	}
 
 	@Override
 	public int getTextureIndex(Orientations direction) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

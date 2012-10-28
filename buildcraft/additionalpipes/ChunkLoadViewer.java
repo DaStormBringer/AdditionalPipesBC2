@@ -3,22 +3,19 @@ package buildcraft.additionalpipes;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.google.common.collect.SetMultimap;
-
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.network.PacketDispatcher;
-
 import net.minecraft.src.ChunkCoordIntPair;
 import net.minecraft.src.EntityClientPlayerMP;
-import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.EntityPlayerMP;
-import net.minecraft.src.Packet250CustomPayload;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import buildcraft.additionalpipes.network.NetworkHandler;
 import buildcraft.additionalpipes.network.PacketAdditionalPipes;
 import buildcraft.api.core.LaserKind;
 import buildcraft.core.Box;
+
+import com.google.common.collect.SetMultimap;
+
+import cpw.mods.fml.client.FMLClientHandler;
 
 public class ChunkLoadViewer {
 	public static final int MAX_SIGHT_RANGE = 63;
@@ -65,7 +62,7 @@ public class ChunkLoadViewer {
 	public boolean lasersActive(){
 		return !lasers.isEmpty();
 	}
-	
+
 	public void recievePersistentChunks(ChunkCoordIntPair[] chunks) {
 		persistentChunks = chunks;
 		activateLasers();
@@ -80,7 +77,7 @@ public class ChunkLoadViewer {
 		List<ChunkCoordIntPair> chunksInRange = new LinkedList<ChunkCoordIntPair>();
 		int playerX = (((int) player.posX) >> 4) - sightRange / 2,
 				playerZ = (((int) player.posZ) >> 4) - sightRange / 2;
-		
+
 		for(int i = 0; i  < sightRange; i++) {
 			for(int j = 0; j < sightRange; j++) {
 				ChunkCoordIntPair coords = new ChunkCoordIntPair(playerX + i, playerZ + j);

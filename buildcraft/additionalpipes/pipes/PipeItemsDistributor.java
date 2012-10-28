@@ -10,145 +10,106 @@ package buildcraft.additionalpipes.pipes;
 
 import java.util.LinkedList;
 
-import buildcraft.additionalpipes.mod_AdditionalPipes;
+import net.minecraft.src.IInventory;
+import net.minecraft.src.TileEntity;
+import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.logic.PipeLogicDistributor;
 import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
 import buildcraft.api.transport.IPipeEntry;
-import buildcraft.core.EntityPassiveItem;
+import buildcraft.api.transport.IPipedItem;
+import buildcraft.core.utils.Utils;
 import buildcraft.energy.TileEngine;
 import buildcraft.transport.IPipeTransportItemsHook;
 import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.TileGenericPipe;
 
-import net.minecraft.src.IInventory;
-import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.TileEntity;
-
 public class PipeItemsDistributor extends Pipe implements IPipeTransportItemsHook {
-	
-    public PipeItemsDistributor(int itemID) {
-        super(new PipeTransportItems(), new PipeLogicDistributor(), itemID);
-    }
 
-    @Override
-    public void prepareTextureFor(Orientations connection) {
-    	
-    	PipeLogicDistributor pipeLogic = (PipeLogicDistributor) logic;
-    	
-        if (connection == Orientations.Unknown) {
-        	pipeLogic.nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0;
-        }
-        else {
-            switch(connection) {
-                case YNeg:
-                	pipeLogic.nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0;
-                    break;
+	public PipeItemsDistributor(int itemID) {
+		super(new PipeTransportItems(), new PipeLogicDistributor(), itemID);
+	}
 
-                case YPos:
-                	pipeLogic.nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_1;
-                    break;
+	@Override
+	public int getTextureIndex(Orientations connection) {
+		return 0;
+	}
 
-                case ZNeg:
-                	pipeLogic.nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_2;
-                    break;
+	@Override
+	public LinkedList<Orientations> filterPossibleMovements(LinkedList<Orientations> possibleOrientations, Position pos, IPipedItem item) {
 
-                case ZPos:
-                	pipeLogic.nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_3;
-                    break;
+		PipeLogicDistributor pipeLogic = (PipeLogicDistributor) logic;
 
-                case XNeg:
-                	pipeLogic.nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_4;
-                    break;
+		((PipeLogicDistributor)logic).switchIfNeeded();
 
-                case XPos:
-                	pipeLogic.nextTexture = mod_AdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_5;
-                    break;
-			default:
-				break;
+		LinkedList<Orientations> result = new LinkedList<Orientations>();
 
-            }
+		for (int o = 0; o < 6; ++o) {
+			if (container.pipe.outputOpen(Orientations.values()[o])) {
+				Position newPos = new Position(pos);
+				newPos.orientation = Orientations.values()[o];
+				newPos.moveForwards(1.0);
 
-            //nextTexture = mod_zAdditionalPipes.DEFUALT_DISTRIBUTOR_TEXTURE_0 + connection.ordinal();
-        }
+				if (canReceivePipeObjects(newPos, item)) {
+					result.add(newPos.orientation);
+				}
+			}
+		}
 
-    }
+		pipeLogic.curTick++;
 
-    @Override
-    public int getBlockTexture() {
-    	PipeLogicDistributor pipeLogic = (PipeLogicDistributor) logic;
-        return pipeLogic.nextTexture;
-    }
-
-    @Override
-    public LinkedList<Orientations> filterPossibleMovements(LinkedList<Orientations> possibleOrientations, Position pos, EntityPassiveItem item) {
-
-    	PipeLogicDistributor pipeLogic = (PipeLogicDistributor) logic;
-    	
-        ((PipeLogicDistributor)this.logic).switchIfNeeded();
-
-        LinkedList<Orientations> result = new LinkedList<Orientations>();
-
-        for (int o = 0; o < 6; ++o) {
-            if (container.pipe.outputOpen(Orientations.values()[o])) {
-                Position newPos = new Position(pos);
-                newPos.orientation = Orientations.values()[o];
-                newPos.moveForwards(1.0);
-
-                if (canReceivePipeObjects(newPos, item)) {
-                    result.add(newPos.orientation);
-                }
-            }
-        }
-
-        pipeLogic.curTick++;
-
-        if (pipeLogic.curTick >= pipeLogic.distData[worldObj.getBlockMetadata(xCoord, yCoord, zCoord)]) {
-            ((PipeLogicDistributor)this.logic).switchPosition();
-            pipeLogic.curTick = 0;
-        }
+		if (pipeLogic.curTick >= pipeLogic.distData[worldObj.getBlockMetadata(xCoord, yCoord, zCoord)]) {
+			((PipeLogicDistributor)logic).switchPosition();
+			pipeLogic.curTick = 0;
+		}
 
 
-        worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
-        return result;
-    }
+		worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
+		return result;
+	}
 
-    public boolean canReceivePipeObjects(Position p,
-                                         EntityPassiveItem item) {
-        TileEntity entity = worldObj.getBlockTileEntity((int) p.x, (int) p.y,
-                            (int) p.z);
+	public boolean canReceivePipeObjects(Position p,
+			IPipedItem item) {
+		TileEntity entity = worldObj.getBlockTileEntity((int) p.x, (int) p.y,
+				(int) p.z);
 
-        if (!Utils.checkPipesConnections(worldObj, (int) p.x, (int) p.y,
-                                         (int) p.z, xCoord, yCoord, zCoord)) {
-            return false;
-        }
+		if (!Utils.checkLegacyPipesConnections(worldObj, (int) p.x, (int) p.y,
+				(int) p.z, xCoord, yCoord, zCoord)) {
+			return false;
+		}
 
-        if (entity instanceof IPipeEntry) {
-            return true;
-        }
-        else if (entity instanceof TileEngine) {
-            return false;
-        }
-        else if (entity instanceof TileGenericPipe) {
-            TileGenericPipe pipe = (TileGenericPipe) entity;
-            return pipe.pipe.transport instanceof PipeTransportItems;
-        }
-        else if (entity instanceof IInventory) {
-            if (new StackUtil(item.item).checkAvailableSlot((IInventory) entity,
-                    false, p.orientation.reverse())) {
-                return true;
-            }
-        }
+		if (entity instanceof IPipeEntry) {
+			return true;
+		}
+		else if (entity instanceof TileEngine) {
+			return false;
+		}
+		else if (entity instanceof TileGenericPipe) {
+			TileGenericPipe pipe = (TileGenericPipe) entity;
+			return pipe.pipe.transport instanceof PipeTransportItems;
+		}
+		else if (entity instanceof IInventory) {
+			if (new StackUtil(item.item).checkAvailableSlot((IInventory) entity,
+					false, p.orientation.reverse())) {
+				return true;
+			}
+		}
 
-        return false;
-    }
-    @Override
-    public void entityEntered(EntityPassiveItem item, Orientations orientation) {
+		return false;
+	}
 
-    }
+	@Override
+	public void entityEntered(IPipedItem item, Orientations orientation) {
+	}
 
-    @Override
-    public void readjustSpeed(EntityPassiveItem item) {
-    }
+	@Override
+	public void readjustSpeed(IPipedItem item) {
+	}
+
+	@Override
+	public String getTextureFile() {
+		return AdditionalPipes.TEXTURE_DISTRIBUTOR;
+	}
+
 }

@@ -1,11 +1,8 @@
 package buildcraft.additionalpipes.chunkloader;
 
 import java.util.List;
-import java.util.Set;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.src.*;
-import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraft.src.World;
 import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 

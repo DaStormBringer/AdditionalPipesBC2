@@ -11,19 +11,17 @@ package buildcraft.additionalpipes.pipes;
 import java.util.LinkedList;
 import java.util.Random;
 
-import buildcraft.additionalpipes.mod_AdditionalPipes;
+import net.minecraft.src.IInventory;
+import net.minecraft.src.TileEntity;
+import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
 import buildcraft.api.transport.IPipedItem;
-import buildcraft.core.EntityPassiveItem;
 import buildcraft.core.utils.Utils;
 import buildcraft.transport.IPipeTransportItemsHook;
 import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.pipes.PipeLogicStone;
-
-import net.minecraft.src.IInventory;
-import net.minecraft.src.TileEntity;
 
 public class PipeItemsAdvancedInsertion extends Pipe implements IPipeTransportItemsHook {
 
@@ -70,7 +68,7 @@ public class PipeItemsAdvancedInsertion extends Pipe implements IPipeTransportIt
 			if (!APIProxy.isClient(worldObj)) {
 				if (utils.checkAvailableSlot((IInventory) tile, true, destPos.orientation.reverse()) && utils.items.stackSize == 0) {
 					item.remove();
-					((PipeTransportItems) this.transport).scheduleRemoval(item);
+					((PipeTransportItems) transport).scheduleRemoval(item);
 				}
 				else {
 					item.setItemStack(utils.items);
@@ -87,7 +85,7 @@ public class PipeItemsAdvancedInsertion extends Pipe implements IPipeTransportIt
 			return possibleOrientations;
 		}
 
-		return ((PipeTransportItems)this.transport).getPossibleMovements(pos, item);
+		return ((PipeTransportItems)transport).getPossibleMovements(pos, item);
 	}
 
 	@Override
@@ -102,7 +100,7 @@ public class PipeItemsAdvancedInsertion extends Pipe implements IPipeTransportIt
 
 	@Override
 	public String getTextureFile() {
-		return mod_AdditionalPipes.DEFUALT_Insertion_FILE;
+		return AdditionalPipes.TEXTURE_INSERTION;
 	}
 
 	@Override
@@ -111,7 +109,7 @@ public class PipeItemsAdvancedInsertion extends Pipe implements IPipeTransportIt
 	}
 
 	@Override
-	public void entityEntered(IPipedItem item, Orientations orientation) {		
+	public void entityEntered(IPipedItem item, Orientations orientation) {
 	}
 
 }

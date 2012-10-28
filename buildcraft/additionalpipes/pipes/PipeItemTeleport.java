@@ -12,43 +12,41 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.src.IInventory;
+import net.minecraft.src.TileEntity;
+import buildcraft.additionalpipes.AdditionalPipes;
+import buildcraft.additionalpipes.GuiHandler;
+import buildcraft.additionalpipes.logic.PipeLogicTeleport;
 import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
 import buildcraft.api.transport.IPipeEntry;
-import buildcraft.core.EntityPassiveItem;
+import buildcraft.api.transport.IPipedItem;
+import buildcraft.core.utils.Utils;
 import buildcraft.transport.IPipeTransportItemsHook;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.TileGenericPipe;
-import net.minecraft.src.IInventory;
-import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.TileEntity;
 
 public class PipeItemTeleport extends PipeTeleport implements IPipeTransportItemsHook {
-    
-    LinkedList <Integer> idsToRemove = new LinkedList <Integer> ();
-    
-    public PipeItemTeleport(int itemID) {
-        super(new PipeTransportItems(), new PipeLogicTeleport(NetworkID.GUI_PIPE_TP), itemID);
-    }
 
-    @Override
-    public int getBlockTexture() {
-        return mod_AdditionalPipes.DEFUALT_ITEM_TELEPORT_TEXTURE;
-    }
+	LinkedList <Integer> idsToRemove = new LinkedList <Integer>();
 
-    @Override
-    public void readjustSpeed(EntityPassiveItem item) {
-        ((PipeTransportItems) transport).defaultReajustSpeed(item);
-    }
-    
-    /*
+	public PipeItemTeleport(int itemID) {
+		super(new PipeTransportItems(), new PipeLogicTeleport(GuiHandler.PIPE_TP), itemID);
+	}
+
+	@Override
+	public void readjustSpeed(IPipedItem item) {
+		((PipeTransportItems) transport).defaultReajustSpeed(item);
+	}
+
+	/*
     @Override
     public void setPosition (int xCoord, int yCoord, int zCoord) {
-    	
+
         LinkedList <PipeItemTeleport> toRemove = new LinkedList <PipeItemTeleport> ();
 
         for (int i = 0; i < ItemTeleportPipes.size(); i++) {
-        	
+
             if (ItemTeleportPipes.get(i).xCoord == xCoord &&  ItemTeleportPipes.get(i).yCoord == yCoord && ItemTeleportPipes.get(i).zCoord == zCoord) {
 
                 toRemove.add(ItemTeleportPipes.get(i));
@@ -57,149 +55,162 @@ public class PipeItemTeleport extends PipeTeleport implements IPipeTransportItem
 
         ItemTeleportPipes.removeAll(toRemove);
         ItemTeleportPipes.add(this);
-        
+
         super.setPosition(xCoord, yCoord, zCoord);
     }*/
 
-    @Override
-    public void updateEntity() {
+	@Override
+	public void updateEntity() {
 
-    	super.updateEntity();
-    	
-        for (int theID : idsToRemove) {
-            ((PipeTransportItems)transport).travelingEntities.remove(theID);
-        }
+		super.updateEntity();
 
-        idsToRemove.clear();
-    }
+		for (int theID : idsToRemove) {
+			((PipeTransportItems)transport).travelingEntities.remove(theID);
+		}
+
+		idsToRemove.clear();
+	}
 
 
-    @Override
-    public LinkedList<Orientations> filterPossibleMovements(LinkedList<Orientations> possibleOrientations, Position pos, EntityPassiveItem item) {
-        
-    	List<PipeTeleport> TempTeleport = getConnectedPipes(false);
-        LinkedList<Orientations> result = new LinkedList<Orientations>();
+	@Override
+	public LinkedList<Orientations> filterPossibleMovements(LinkedList<Orientations> possibleOrientations, Position pos, IPipedItem item) {
 
-        ////System.out.print("Pos: " + pos.toString() + "\n");
-        if (TempTeleport.size() <= 0) {
-            result.add(pos.orientation.reverse());
-            return result;
-        }
+		List<PipeTeleport> TempTeleport = getConnectedPipes(false);
+		LinkedList<Orientations> result = new LinkedList<Orientations>();
 
-        Random pipeRand = new Random();
-        int i = pipeRand.nextInt(TempTeleport.size());
+		////System.out.print("Pos: " + pos.toString() + "\n");
+		if (TempTeleport.size() <= 0) {
+			result.add(pos.orientation.reverse());
+			return result;
+		}
 
-        LinkedList<Orientations> temp = new LinkedList<Orientations>();
-        
-        Position pos1 = TempTeleport.get(i).getPosition();
-        
-        for (int o = 0; o < 6; ++o) {
-            if (Orientations.values()[o] != pos1.orientation.reverse()
-                    && container.pipe.outputOpen(Orientations.values()[o])) {
-                Position newPos = new Position(pos1);
-                newPos.orientation = Orientations.values()[o];
-                newPos.moveForwards(1.0);
+		Random pipeRand = new Random();
+		int i = pipeRand.nextInt(TempTeleport.size());
 
-                if (((PipeTransportItems)transport).canReceivePipeObjects(newPos, item)) {
-                    temp.add(newPos.orientation);
-                }
-            }
-        }
+		LinkedList<Orientations> temp = new LinkedList<Orientations>();
 
-        ////System.out.println("Temp: " + Temp.size());
-        if (temp.size() <= 0) {
-            result.add(pos.orientation.reverse());
-            return result;
-        }
+		Position pos1 = TempTeleport.get(i).getPosition();
 
-        Orientations newPos = temp.get(worldObj.rand.nextInt(temp.size()));
-        ////System.out.println(newPos.toString());
-        Position destPos = new Position(TempTeleport.get(i).xCoord, TempTeleport.get(i).yCoord, TempTeleport.get(i).zCoord, newPos);
-        destPos.moveForwards(1.0);
+		for (int o = 0; o < 6; ++o) {
+			if (Orientations.values()[o] != pos1.orientation.reverse()
+					&& container.pipe.outputOpen(Orientations.values()[o])) {
+				Position newPos = new Position(pos1);
+				newPos.orientation = Orientations.values()[o];
+				newPos.moveForwards(1.0);
 
-        TileEntity tile = worldObj.getBlockTileEntity((int)destPos.x, (int)destPos.y, (int)destPos.z);
+				if (((PipeTransportItems)transport).canReceivePipeObjects(newPos, item)) {
+					temp.add(newPos.orientation);
+				}
+			}
+		}
 
-        if (tile instanceof TileGenericPipe) {
-            TileGenericPipe pipe = (TileGenericPipe)tile;
+		////System.out.println("Temp: " + Temp.size());
+		if (temp.size() <= 0) {
+			result.add(pos.orientation.reverse());
+			return result;
+		}
 
-            if (pipe.pipe.transport instanceof PipeTransportItems) {
-                //This pipe can actually receive items
-                idsToRemove.add(item.getEntityId());
-                ((PipeTransportItems) this.transport).scheduleRemoval(item);
-                Position newItemPos = getNewItemPos(destPos, newPos, Utils.getPipeFloorOf(item.item));
-                item.setPosition(newItemPos.x, newItemPos.y, newItemPos.z);
-                ((PipeTransportItems)pipe.pipe.transport).entityEntering(item, newPos);
-            }
-        }
-        else if (tile instanceof IPipeEntry) {
-            idsToRemove.add(item.getEntityId());
-            ((PipeTransportItems) this.transport).scheduleRemoval(item);
-            Position newItemPos = getNewItemPos(destPos, newPos, Utils.getPipeFloorOf(item.item));
-            item.setPosition(newItemPos.x, newItemPos.y, newItemPos.z);
-            ((IPipeEntry) tile).entityEntering(item, newPos);
-        }
-        else if (tile instanceof IInventory) {
-            StackUtil utils = new StackUtil(item.item);
+		Orientations newPos = temp.get(worldObj.rand.nextInt(temp.size()));
+		////System.out.println(newPos.toString());
+		Position destPos = new Position(TempTeleport.get(i).xCoord, TempTeleport.get(i).yCoord, TempTeleport.get(i).zCoord, newPos);
+		destPos.moveForwards(1.0);
 
-            if (!APIProxy.isClient(worldObj)) {
-                if (utils.checkAvailableSlot((IInventory) tile, true, destPos.orientation.reverse()) && utils.items.stackSize == 0) {
-                    idsToRemove.add(item.getEntityId());
-                    ((PipeTransportItems) this.transport).scheduleRemoval(item);
-                    // Do nothing, we're adding the object to the world
-                }
-                else {
-                    //Wont accept it return...
-                    newPos = pos.orientation.reverse();
-                }
-            }
-        }
+		TileEntity tile = worldObj.getBlockTileEntity((int)destPos.x, (int)destPos.y, (int)destPos.z);
 
-        result.add(newPos);
+		if (tile instanceof TileGenericPipe) {
+			TileGenericPipe pipe = (TileGenericPipe)tile;
 
-        return result;
-    }
-    
-    public Position getNewItemPos(Position Old, Orientations newPos, float f) {
-        //Utils.getPipeFloorOf(data.item.item)
-        double x = Old.x;
-        double y = Old.y;
-        double z = Old.z;
+			if (pipe.pipe.transport instanceof PipeTransportItems) {
+				//This pipe can actually receive items
+				idsToRemove.add(item.getEntityId());
+				((PipeTransportItems) transport).scheduleRemoval(item);
+				Position newItemPos = getNewItemPos(destPos, newPos, Utils.getPipeFloorOf(item.item));
+				item.setPosition(newItemPos.x, newItemPos.y, newItemPos.z);
+				((PipeTransportItems)pipe.pipe.transport).entityEntering(item, newPos);
+			}
+		}
+		else if (tile instanceof IPipeEntry) {
+			idsToRemove.add(item.getEntityId());
+			((PipeTransportItems) transport).scheduleRemoval(item);
+			Position newItemPos = getNewItemPos(destPos, newPos, Utils.getPipeFloorOf(item.item));
+			item.setPosition(newItemPos.x, newItemPos.y, newItemPos.z);
+			((IPipeEntry) tile).entityEntering(item, newPos);
+		}
+		else if (tile instanceof IInventory) {
+			StackUtil utils = new StackUtil(item.item);
 
-        if (newPos == Orientations.XNeg) {
-            x += 1;
-            y += .5;
-            z += .5;
-        }
-        else if (newPos == Orientations.XPos) {
-            //x += .6;
-            y += f;
-            z += .5;
-        }
-        else if (newPos == Orientations.YNeg) {
-            x += .5;
-            y += 1;
-            z += .5;
-        }
-        else if (newPos == Orientations.YPos) {
-            x += .5;
-            //y += .6;
-            z += .5;
-        }
-        else if (newPos == Orientations.ZNeg) {
-            x += .5;
-            y += f;
-            z += 1;
-        }
-        else if (newPos == Orientations.ZPos) {
-            x += .5;
-            y += f;
-            //z += .6;
-        }
+			if (!APIProxy.isClient(worldObj)) {
+				if (utils.checkAvailableSlot((IInventory) tile, true, destPos.orientation.reverse()) && utils.items.stackSize == 0) {
+					idsToRemove.add(item.getEntityId());
+					((PipeTransportItems) transport).scheduleRemoval(item);
+					// Do nothing, we're adding the object to the world
+				}
+				else {
+					//Wont accept it return...
+							newPos = pos.orientation.reverse();
+				}
+			}
+		}
 
-        return new Position(x, y, z);
-    }
+		result.add(newPos);
 
-    @Override
-    public void entityEntered(EntityPassiveItem item, Orientations orientation) {}
+		return result;
+	}
+
+	public Position getNewItemPos(Position Old, Orientations newPos, float f) {
+		//Utils.getPipeFloorOf(data.item.item)
+		double x = Old.x;
+		double y = Old.y;
+		double z = Old.z;
+
+		if (newPos == Orientations.XNeg) {
+			x += 1;
+			y += .5;
+			z += .5;
+		}
+		else if (newPos == Orientations.XPos) {
+			//x += .6;
+			y += f;
+			z += .5;
+		}
+		else if (newPos == Orientations.YNeg) {
+			x += .5;
+			y += 1;
+			z += .5;
+		}
+		else if (newPos == Orientations.YPos) {
+			x += .5;
+			//y += .6;
+			z += .5;
+		}
+		else if (newPos == Orientations.ZNeg) {
+			x += .5;
+			y += f;
+			z += 1;
+		}
+		else if (newPos == Orientations.ZPos) {
+			x += .5;
+			y += f;
+			//z += .6;
+		}
+
+		return new Position(x, y, z);
+	}
+
+
+	@Override
+	public void entityEntered(IPipedItem item, Orientations orientation) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public String getTextureFile() {
+		return AdditionalPipes.TEXTURE_ITEM_TELEPORT;
+	}
+
+	@Override
+	public int getTextureIndex(Orientations direction) {
+		return 0;
+	}
 
 }

@@ -8,8 +8,11 @@
 
 package buildcraft.additionalpipes.pipes;
 
+import net.minecraft.src.IBlockAccess;
+import net.minecraft.src.TileEntity;
+import net.minecraft.src.World;
 import buildcraft.BuildCraftTransport;
-import buildcraft.additionalpipes.mod_AdditionalPipes;
+import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.transport.IPipeProvideRedstonePowerHook;
 import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
@@ -20,134 +23,132 @@ import buildcraft.core.utils.Utils;
 import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransportLiquids;
 import buildcraft.transport.pipes.PipeLogicGold;
-import net.minecraft.src.IBlockAccess;
-import net.minecraft.src.TileEntity;
-import net.minecraft.src.World;
 
 public class PipeLiquidsRedstone extends Pipe implements IPipeProvideRedstonePowerHook {
-    private @TileNetworkData int nextTexture = mod_AdditionalPipes.DEFUALT_RedStoneLiquid_TEXTURE;
-    public @TileNetworkData boolean isPowering = false;
-    public PipeLiquidsRedstone(int itemID) {
-        super(new PipeTransportLiquids(), new PipeLogicGold(), itemID);
+	public @TileNetworkData boolean isPowering = false;
 
-        ((PipeTransportLiquids) transport).flowRate = 80;
-        ((PipeTransportLiquids) transport).travelDelay = 2;
-    }
+	public PipeLiquidsRedstone(int itemID) {
+		super(new PipeTransportLiquids(), new PipeLogicGold(), itemID);
 
-    @Override
-    public void prepareTextureFor(Orientations connection) {
-        if (!isPowering) {
-            nextTexture = mod_AdditionalPipes.DEFUALT_RedStoneLiquid_TEXTURE;
-        }
-        else {
-            nextTexture = mod_AdditionalPipes.DEFUALT_RedStoneLiquid_TEXTURE_POWERED;
-        }
-    }
-    @Override
-    public int getBlockTexture() {
-        return nextTexture;
-    }
+		((PipeTransportLiquids) transport).flowRate = 80;
+		((PipeTransportLiquids) transport).travelDelay = 2;
+	}
 
-    private void UpdateTiles(int i, int j, int k) {
-        worldObj.notifyBlocksOfNeighborChange(i, j, k, BuildCraftTransport.genericPipeBlock.blockID);
-    }
+	private void UpdateTiles(int i, int j, int k) {
+		worldObj.notifyBlocksOfNeighborChange(i, j, k, BuildCraftTransport.genericPipeBlock.blockID);
+	}
 
-    @Override
-    public boolean isPoweringTo(int l) {
-        //System.out.println("RedStoneIsPoweringTo");
-        if (((PipeTransportLiquids)this.transport).getCenter() < 250) {
-            isPowering = false;
-            return false;
-        }
+	@Override
+	public boolean isPoweringTo(int l) {
+		//System.out.println("RedStoneIsPoweringTo");
+		if (((PipeTransportLiquids)transport).getCenter() < 250) {
+			isPowering = false;
+			return false;
+		}
 
-        isPowering = true;
-        int i1 = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+		isPowering = true;
+		int i1 = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 
-        if(i1 == 5 && l == 1) {
-            return false;
-        }
+		if(i1 == 5 && l == 1) {
+			return false;
+		}
 
-        if(i1 == 3 && l == 3) {
-            return false;
-        }
+		if(i1 == 3 && l == 3) {
+			return false;
+		}
 
-        if(i1 == 4 && l == 2) {
-            return false;
-        }
+		if(i1 == 4 && l == 2) {
+			return false;
+		}
 
-        if(i1 == 1 && l == 5) {
-            return false;
-        }
+		if(i1 == 1 && l == 5) {
+			return false;
+		}
 
-        return i1 != 2 || l != 4;
-    }
+		return i1 != 2 || l != 4;
+	}
 
-    @Override
-    public boolean isIndirectlyPoweringTo(int l) {
-        return isPoweringTo(l);
-    }
+	@Override
+	public boolean isIndirectlyPoweringTo(int l) {
+		return isPoweringTo(l);
+	}
 
-    @Override
-    public void updateEntity() {
-        super.updateEntity();
+	@Override
+	public void updateEntity() {
+		super.updateEntity();
 
-        //System.out.println("Quantity: " + (((PipeTransportLiquids)this.transport).getLiquidQuantity()) + " - Wanted: " + computeMaxLiquid() + " - Qua2: " + computeEnds()[1]);
-        //System.out.println("Quantity: " + ((PipeTransportLiquids)this.transport).getCenter());
-        if ( ((PipeTransportLiquids)this.transport).getCenter() < 250 && isPowering) {
-            isPowering = false;
-            UpdateTiles(this.container.xCoord, this.container.yCoord, this.container.zCoord);
-        }
-        else if (!isPowering) {
-            isPowering = true;
-            UpdateTiles(this.container.xCoord, this.container.yCoord, this.container.zCoord);
-        }
-    }
+		//System.out.println("Quantity: " + (((PipeTransportLiquids)this.transport).getLiquidQuantity()) + " - Wanted: " + computeMaxLiquid() + " - Qua2: " + computeEnds()[1]);
+		//System.out.println("Quantity: " + ((PipeTransportLiquids)this.transport).getCenter());
+		if ( ((PipeTransportLiquids)transport).getCenter() < 250 && isPowering) {
+			isPowering = false;
+			UpdateTiles(container.xCoord, container.yCoord, container.zCoord);
+		}
+		else if (!isPowering) {
+			isPowering = true;
+			UpdateTiles(container.xCoord, container.yCoord, container.zCoord);
+		}
+	}
 
-    private int[] computeEnds() {
-        int outputNumber = 0;
-        int total = 0;
-        int ret[] = new int[2];
+	private int[] computeEnds() {
+		int outputNumber = 0;
+		int total = 0;
+		int ret[] = new int[2];
 
-        for (int i = 0; i < 6; ++i) {
-            Position p = new Position(xCoord, yCoord, zCoord, Orientations.values()[i]);
-            p.moveForwards(1);
+		for (int i = 0; i < 6; ++i) {
+			Position p = new Position(xCoord, yCoord, zCoord, Orientations.values()[i]);
+			p.moveForwards(1);
 
-            if (canRec(p)) {
-                ret[0]++;
-                ret[1] += ((PipeTransportLiquids)this.transport).side[i].average;
-            }
-        }
+			if (canRec(p)) {
+				ret[0]++;
+				ret[1] += ((PipeTransportLiquids)transport).side[i].average;
+			}
+		}
 
-        return ret;
-    }
-    public int computeMaxLiquid() {
-        return ((computeEnds()[0] + 1) * PipeTransportLiquids.LIQUID_IN_PIPE);
-    }
+		return ret;
+	}
 
-    public boolean canRec(Position p) {
-        TileEntity entity = worldObj.getBlockTileEntity((int) p.x, (int) p.y,
-                            (int) p.z);
+	public int computeMaxLiquid() {
+		return ((computeEnds()[0] + 1) * PipeTransportLiquids.LIQUID_IN_PIPE);
+	}
 
-        if (!Utils.checkLegacyPipesConnections(worldObj, (int) p.x, (int) p.y,
-                                         (int) p.z, xCoord, yCoord, zCoord)) {
-            return false;
-        }
+	public boolean canRec(Position p) {
+		TileEntity entity = worldObj.getBlockTileEntity((int) p.x, (int) p.y,
+				(int) p.z);
 
-        if (entity instanceof IPipeEntry || entity instanceof ITankContainer) {
-            return true;
-        }
+		if (!Utils.checkLegacyPipesConnections(worldObj, (int) p.x, (int) p.y,
+				(int) p.z, xCoord, yCoord, zCoord)) {
+			return false;
+		}
 
-        return false;
-    }
+		if (entity instanceof IPipeEntry || entity instanceof ITankContainer) {
+			return true;
+		}
 
-    @Override
-    public boolean isPoweringTo(IBlockAccess iblockaccess, int i, int j, int k,
-                                int l) {
-        return isPoweringTo(l);
-    }
+		return false;
+	}
 
-    @Override
-    public boolean isIndirectlyPoweringTo(World world, int i, int j, int k, int l) {
-        return isIndirectlyPoweringTo(l);
-    }
+	@Override
+	public boolean isPoweringTo(IBlockAccess iblockaccess, int i, int j, int k,
+			int l) {
+		return isPoweringTo(l);
+	}
+
+	@Override
+	public boolean isIndirectlyPoweringTo(World world, int i, int j, int k, int l) {
+		return isIndirectlyPoweringTo(l);
+	}
+
+	@Override
+	public String getTextureFile() {
+		if (!isPowering) {
+			return AdditionalPipes.TEXTURE_REDSTONE;
+		} else {
+			return AdditionalPipes.TEXTURE_REDSTONE_POWERED;
+		}
+	}
+
+	@Override
+	public int getTextureIndex(Orientations direction) {
+		return 0;
+	}
 }
