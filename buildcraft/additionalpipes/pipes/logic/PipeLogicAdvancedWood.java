@@ -19,7 +19,6 @@ import buildcraft.BuildCraftTransport;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.GuiHandler;
 import buildcraft.api.core.Orientations;
-import buildcraft.api.core.Position;
 import buildcraft.api.liquids.ITankContainer;
 import buildcraft.api.tools.IToolWrench;
 import buildcraft.api.transport.PipeManager;
