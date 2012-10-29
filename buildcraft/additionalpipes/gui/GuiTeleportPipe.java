@@ -88,7 +88,7 @@ public class GuiTeleportPipe extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-		int i = mc.renderEngine.getTexture(AdditionalPipes.PATH + "gui.png");
+		int i = mc.renderEngine.getTexture(AdditionalPipes.TEXTURE_GUI_TELEPORT);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		mc.renderEngine.bindTexture(i);
 		int j = (width - xSize) / 2;

@@ -78,7 +78,7 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 		int i1 = mc.renderEngine
-				.getTexture(AdditionalPipes.PATH + "advancedwoodgui.png");
+				.getTexture(AdditionalPipes.TEXTURE_GUI_ADVANCEDWOOD);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		mc.renderEngine.bindTexture(i1);
 		int j1 = (width - xSize) / 2;

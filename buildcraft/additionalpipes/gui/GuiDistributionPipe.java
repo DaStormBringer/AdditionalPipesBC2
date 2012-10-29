@@ -144,7 +144,7 @@ public class GuiDistributionPipe extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-		int i = mc.renderEngine.getTexture(AdditionalPipes.PATH + "DistGUI.png");
+		int i = mc.renderEngine.getTexture(AdditionalPipes.TEXTURE_GUI_DISTRIBUTION);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		mc.renderEngine.bindTexture(i);
 		int j = (width - xSize) / 2;

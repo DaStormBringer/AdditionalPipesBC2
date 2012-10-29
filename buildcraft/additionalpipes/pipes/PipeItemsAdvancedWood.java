@@ -161,13 +161,13 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
 	@Override
 	public int getTextureIndex(Orientations direction) {
 		if (direction == Orientations.Unknown)
-			return 7;
+			return 6;
 		else {
 			int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 			if (metadata == direction.ordinal())
-				return 6;
-			else
 				return 7;
+			else
+				return 6;
 		}
 	}
 }

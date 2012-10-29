@@ -22,6 +22,7 @@ import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
 import buildcraft.api.liquids.ITankContainer;
 import buildcraft.api.tools.IToolWrench;
+import buildcraft.api.transport.PipeManager;
 import buildcraft.core.network.TileNetworkData;
 import buildcraft.core.utils.Utils;
 import buildcraft.transport.Pipe;
@@ -41,18 +42,13 @@ public class PipeLogicAdvancedWood extends PipeLogic implements IInventory {
 		int newMeta = 6;
 
 		for (int i = meta + 1; i <= meta + 6; ++i) {
-
-			Orientations o = Orientations.values() [i % 6];
-			Position pos = new Position (xCoord, yCoord, zCoord, o);
-			pos.moveForwards(1);
-
-			TileEntity tile = worldObj.getBlockTileEntity((int) pos.x, (int) pos.y,
-					(int) pos.z);
-
-			if (isInput (tile)) {
-				newMeta = o.ordinal();
-				break;
-			}
+			Orientations o = Orientations.values()[i % 6];
+			TileEntity tile = container.getTile(o);
+			if (isInput(tile))
+				if (PipeManager.canExtractItems(container.getPipe(), tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord)) {
+					newMeta = o.ordinal();
+					break;
+				}
 		}
 
 		if (newMeta != meta) {

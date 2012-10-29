@@ -16,16 +16,9 @@ public class MutiPlayerProxyClient extends MutiPlayerProxy {
 
 	@Override
 	public void registerRendering() {
+		MinecraftForgeClient.preloadTexture(AdditionalPipes.TEXTURE_MASTER);
 		MinecraftForgeClient.preloadTexture(AdditionalPipes.TEXTURE_PIPES);
-		MinecraftForgeClient.preloadTexture(AdditionalPipes.TEXTURE_ADVANCEDWOOD_CLOSED);
-		MinecraftForgeClient.preloadTexture(AdditionalPipes.TEXTURE_ADVANCEDWOOD);
-		MinecraftForgeClient.preloadTexture(AdditionalPipes.TEXTURE_DISTRIBUTOR_BASE + "0.png");
-		MinecraftForgeClient.preloadTexture(AdditionalPipes.TEXTURE_DISTRIBUTOR_BASE + "1.png");
-		MinecraftForgeClient.preloadTexture(AdditionalPipes.TEXTURE_DISTRIBUTOR_BASE + "2.png");
-		MinecraftForgeClient.preloadTexture(AdditionalPipes.TEXTURE_DISTRIBUTOR_BASE + "3.png");
-		MinecraftForgeClient.preloadTexture(AdditionalPipes.TEXTURE_DISTRIBUTOR_BASE + "4.png");
-		MinecraftForgeClient.preloadTexture(AdditionalPipes.TEXTURE_DISTRIBUTOR_BASE + "5.png");
-		MinecraftForgeClient.preloadTexture(AdditionalPipes.TEXTURE_CHUNKLOADER);
+		MinecraftForgeClient.preloadTexture(AdditionalPipes.TEXTURE_BLOCKS);
 	}
 
 	@Override

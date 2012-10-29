@@ -71,8 +71,14 @@ public class AdditionalPipes {
 	public static @ConfigBool boolean chunkSight = true;
 	public static int chunkSightRange = 5;
 
-	public static final String PATH = "/buildcraft/additionalpipes/gui/";
-	public static String TEXTURE_PIPES = PATH + "MasterFile.png";
+	public static final String TEXTURE_PATH = "/buildcraft/additionalpipes/sprites/";
+	public static final String TEXTURE_MASTER = TEXTURE_PATH + "textures.png";
+	public static final String TEXTURE_PIPES = TEXTURE_PATH + "pipes.png";
+	public static final String TEXTURE_BLOCKS = TEXTURE_PATH + "blocks.png";
+
+	public static final String TEXTURE_GUI_TELEPORT = TEXTURE_PATH + "blankSmallGui.png";
+	public static final String TEXTURE_GUI_ADVANCEDWOOD = TEXTURE_PATH + "advancedWoodGui.png";
+	public static final String TEXTURE_GUI_DISTRIBUTION = TEXTURE_PATH + "distributionGui.png";
 
 	public static @ConfigBool boolean loadItemsAdvancedInsertion = true,
 			loadItemsAdvancedWood = true,
@@ -94,15 +100,10 @@ public class AdditionalPipes {
 	public static @ConfigId int powerTeleportId = 4049;
 	//Distributor
 	public Item pipeDistributor;
-	public static @ConfigId int distributorTeleportId = 4046;
-	public static String TEXTURE_DISTRIBUTOR_BASE = PATH + "Dist";
-	public static String TEXTURE_DISTRIBUTOR = PATH + "DistributionOpen.png";
-	public static String TEXTURE_DISTRIBUTOR_CLOSED = PATH + "DistributionClosed.png";
+	public static @ConfigId int distributorTransportId = 4046;
 	//Advanced Wood
 	public Item pipeAdvancedWood;
 	public static @ConfigId int advancedWoodId = 4045;
-	public static String TEXTURE_ADVANCEDWOOD = PATH + "AdvancedWood.png";
-	public static String TEXTURE_ADVANCEDWOOD_CLOSED = PATH + "AdvancedWoodClosed.png";
 	//Advanced Insertion
 	public Item pipeAdvancedInsertion;
 	public static @ConfigId int insertionId = 4044;
@@ -115,15 +116,14 @@ public class AdditionalPipes {
 	//chunk loader
 	public Block blockChunkLoader;
 	public static @ConfigId(block=true) int chunkLoaderId = 189;
-	public static String TEXTURE_CHUNKLOADER = PATH + "chunkloader.png";
 
-	// Config Setup
+	//configs
 	private Configuration config;
-	public static int laserKeyCode = 64;
+	public static int laserKeyCode = 64; //config option (& in options menu)
 	public static KeyBinding laserKey;
 	public static @ConfigBool boolean wrenchOpensGui = true;
-	public static @ConfigBool boolean allowWRRemove = false; //Remove waterproofing/redstone
-	public static double powerLossCfg = .95;
+	public static @ConfigBool boolean allowWRRemove = false;
+	public static double powerLossCfg = .95; //config option
 
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event) {
@@ -191,7 +191,6 @@ public class AdditionalPipes {
 
 	@PostInit
 	public void modsLoaded(FMLPostInitializationEvent event) {
-
 		// Item Teleport Pipe
 		pipeItemTeleport = createPipe(itemTeleportId, PipeItemTeleport.class, "Item Teleport Pipe");
 		if (loadItemTeleport) {
@@ -211,19 +210,19 @@ public class AdditionalPipes {
 		}
 
 		// Distributor Pipe
-		pipeDistributor = createPipe(distributorTeleportId, PipeItemsDistributor.class, "Distribution Transport Pipe");
+		pipeDistributor = createPipe(distributorTransportId, PipeItemsDistributor.class, "Distribution Transport Pipe");
 		if (loadItemsDistributor) {
 			GameRegistry.addRecipe(new ItemStack(pipeDistributor, 8), new Object[]{" r ", "IgI", 'r', Item.redstone, 'I', Item.ingotIron, 'g', Block.glass});
 		}
 
 		// Advanced Wooded Pipe
-		pipeAdvancedWood = createPipe(advancedWoodId, PipeItemsAdvancedWood.class, "Advanced Wooden Transport Pipe");
+		pipeAdvancedWood = createPipe(advancedWoodId, PipeItemsAdvancedWood.class, "Extraction Transport Pipe");
 		if (loadItemsAdvancedWood) {
 			GameRegistry.addRecipe(new ItemStack(pipeAdvancedWood, 8), new Object[]{" r ", "WgW", 'r', Item.redstone, 'W', Block.planks, 'g', Block.glass});
 		}
 
 		// Advanced Insertion Pipe
-		pipeAdvancedInsertion = createPipe(insertionId, PipeItemsAdvancedInsertion.class, "Advanced Insertion Pipe");
+		pipeAdvancedInsertion = createPipe(insertionId, PipeItemsAdvancedInsertion.class, "Insertion Transport Pipe");
 		if (loadItemsAdvancedInsertion) {
 			GameRegistry.addRecipe(new ItemStack(pipeAdvancedInsertion, 8), new Object[]{" r ", "OgO", 'r', Item.redstone, 'O', Block.obsidian, 'g', Block.glass});
 		}
@@ -235,7 +234,7 @@ public class AdditionalPipes {
 		}
 
 		// Redstone Liquid Pipe
-		pipeRedStoneLiquid = createPipe(redstoneLiquidId, PipeLiquidsRedstone.class, "Waterproof Redstone Pipe");
+		pipeRedStoneLiquid = createPipe(redstoneLiquidId, PipeLiquidsRedstone.class, "Redstone Waterproof Pipe");
 		if (loadLiquidsRedstone) {
 			GameRegistry.addRecipe(new ItemStack(pipeRedStoneLiquid), new Object[]{"w", "P", 'w', BuildCraftTransport.pipeWaterproof, 'P', pipeRedStone});
 		}
