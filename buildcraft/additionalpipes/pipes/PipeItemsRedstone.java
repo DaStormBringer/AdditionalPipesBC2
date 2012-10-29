@@ -10,10 +10,7 @@ package buildcraft.additionalpipes.pipes;
 
 import java.util.LinkedList;
 
-import net.minecraft.src.IBlockAccess;
-import net.minecraft.src.World;
 import buildcraft.BuildCraftTransport;
-import buildcraft.additionalpipes.transport.IPipeProvideRedstonePowerHook;
 import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
 import buildcraft.api.transport.IPipedItem;
@@ -23,8 +20,7 @@ import buildcraft.transport.IPipeTransportItemsHook;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.pipes.PipeLogicStone;
 
-public class PipeItemsRedstone extends APPipe implements IPipeTransportItemsHook,
-IPipeProvideRedstonePowerHook {
+public class PipeItemsRedstone extends APPipe implements IPipeTransportItemsHook {
 
 	public @TileNetworkData boolean isPowering = false;
 	public PipeItemsRedstone(int itemID) {
@@ -100,17 +96,6 @@ IPipeProvideRedstonePowerHook {
 	@Override
 	public boolean isIndirectlyPoweringTo(int l) {
 		return isPoweringTo(l);
-	}
-
-	@Override
-	public boolean isPoweringTo(IBlockAccess iblockaccess, int i, int j, int k,
-			int l) {
-		return isPoweringTo(l);
-	}
-
-	@Override
-	public boolean isIndirectlyPoweringTo(World world, int i, int j, int k, int l) {
-		return isIndirectlyPoweringTo(l);
 	}
 
 	@Override

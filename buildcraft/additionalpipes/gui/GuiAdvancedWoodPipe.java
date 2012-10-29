@@ -11,12 +11,16 @@ package buildcraft.additionalpipes.gui;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiContainer;
 import net.minecraft.src.IInventory;
+import net.minecraft.src.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
 import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.additionalpipes.logic.PipeLogicAdvancedWood;
+import buildcraft.additionalpipes.network.NetworkHandler;
+import buildcraft.additionalpipes.network.PacketAdditionalPipes;
+import buildcraft.additionalpipes.pipes.logic.PipeLogicAdvancedWood;
 import buildcraft.transport.TileGenericPipe;
+import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiAdvancedWoodPipe extends GuiContainer {
 
@@ -26,11 +30,11 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 	TileGenericPipe container;
 	private GuiButton[] buttons = new GuiButton[1];
 
-	public GuiAdvancedWoodPipe(IInventory playerInventorys, IInventory filterInventorys, TileGenericPipe container) {
+	public GuiAdvancedWoodPipe(IInventory playerInventorys, TileGenericPipe container) {
 
-		super(new CraftingAdvancedWoodPipe(playerInventorys, filterInventorys));
+		super(new ContainerAdvancedWoodPipe(playerInventorys, (PipeLogicAdvancedWood) container.pipe.logic));
 		playerInventory = playerInventorys;
-		filterInventory = filterInventorys;
+		filterInventory = (PipeLogicAdvancedWood) container.pipe.logic;
 		this.container = container;
 		//container = theContainer;
 		xSize = 175;
@@ -47,7 +51,8 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 		controlList.add(buttons[0]);
 	}
 
-	protected void drawGuiContainerForegroundLayer() {
+	@Override
+	protected void drawGuiContainerForegroundLayer(int p1, int p2) {
 		if (((PipeLogicAdvancedWood)container.pipe.logic).exclude) {
 			buttons[0].displayString = "These items are excluded";
 		}
@@ -55,26 +60,19 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 			buttons[0].displayString = "These items are required";
 		}
 
-		fontRenderer.drawString(filterInventory.getInvName(), 8, 6, 0x404040);
-		fontRenderer.drawString(playerInventory.getInvName(), 8, 66, 0x404040);
+		fontRenderer.drawString(StatCollector.translateToLocal(filterInventory.getInvName()), 8, 6, 0x404040);
+		fontRenderer.drawString(StatCollector.translateToLocal(playerInventory.getInvName()), 8, 66, 0x404040);
 	}
 
 	@Override
 	protected void actionPerformed(GuiButton guibutton) {
-		//TODO exclude
-		/*
 		if (guibutton.id == 1) {
-			((PipeLogicAdvancedWood)container.pipe.logic).exclude = !((PipeLogicAdvancedWood)container.pipe.logic).exclude;
+			PacketAdditionalPipes packet = new PacketAdditionalPipes(NetworkHandler.ADV_WOOD_DATA, false);
+			packet.writeInt(container.xCoord);
+			packet.writeInt(container.yCoord);
+			packet.writeInt(container.zCoord);
+			PacketDispatcher.sendPacketToServer(packet.makePacket());
 		}
-
-		PacketPayload payload = container.pipe.getNetworkPacket();
-		PacketAdditionalPipes packet = new PacketAdditionalPipes(NetworkID.PACKET_PIPE_DESC, payload);
-		packet.posX = container.pipe.xCoord;
-		packet.posY = container.pipe.yCoord;
-		packet.posZ = container.pipe.zCoord;
-
-		ModLoader.getMinecraftInstance().getSendQueue().addToSendQueue(packet.getPacket());
-		 */
 	}
 
 	@Override

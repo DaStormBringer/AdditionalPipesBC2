@@ -6,10 +6,11 @@
  * granted by the copyright holder.
  */
 
-package buildcraft.additionalpipes.logic;
+package buildcraft.additionalpipes.pipes.logic;
 
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.IInventory;
+import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.NBTTagList;
@@ -28,16 +29,12 @@ import buildcraft.transport.TileGenericPipe;
 import buildcraft.transport.pipes.PipeLogic;
 import buildcraft.transport.pipes.PipeLogicWood;
 
-public class PipeLogicAdvancedWood extends PipeLogic {
+public class PipeLogicAdvancedWood extends PipeLogic implements IInventory {
 
-	@TileNetworkData (staticSize = 9)
 	public ItemStack [] items = new ItemStack [9];
 
 	@TileNetworkData
 	public boolean exclude = false;
-
-	@TileNetworkData
-	public int nextTexture;
 
 	public void switchSource () {
 		int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
@@ -46,9 +43,7 @@ public class PipeLogicAdvancedWood extends PipeLogic {
 		for (int i = meta + 1; i <= meta + 6; ++i) {
 
 			Orientations o = Orientations.values() [i % 6];
-
 			Position pos = new Position (xCoord, yCoord, zCoord, o);
-
 			pos.moveForwards(1);
 
 			TileEntity tile = worldObj.getBlockTileEntity((int) pos.x, (int) pos.y,
@@ -76,24 +71,19 @@ public class PipeLogicAdvancedWood extends PipeLogic {
 
 	@Override
 	public boolean blockActivated(EntityPlayer entityplayer) {
-
-		ItemStack equippedItem = entityplayer.getCurrentEquippedItem();
-
-		if (equippedItem != null) {
-
-			if (equippedItem.getItem() instanceof IToolWrench) {
-				switchSource();
-				return true;
-			}
-
-			if (AdditionalPipes.isPipe(equippedItem.getItem())) {
-				return false;
-			}
+		Item equipped = entityplayer.getCurrentEquippedItem() != null ? entityplayer.getCurrentEquippedItem().getItem() : null;
+		if (equipped instanceof IToolWrench
+				&& ((IToolWrench) equipped).canWrench(entityplayer, xCoord, yCoord, zCoord)) {
+			switchSource();
+			((IToolWrench) equipped).wrenchUsed(entityplayer, xCoord, yCoord, zCoord);
+			return true;
+		}
+		if(AdditionalPipes.isPipe(equipped)) {
+			return false;
 		}
 
 		entityplayer.openGui(AdditionalPipes.instance, GuiHandler.PIPE_WOODEN_ADV,
 				container.worldObj, container.xCoord, container.yCoord, container.zCoord);
-
 		return true;
 	}
 
@@ -122,20 +112,13 @@ public class PipeLogicAdvancedWood extends PipeLogic {
 	private void switchSourceIfNeeded () {
 		int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 
-		if (meta > 5) {
+		if (meta > 5)
 			switchSource();
-		}
 		else {
-			Position pos = new Position(xCoord, yCoord, zCoord,
-					Orientations.values()[meta]);
-			pos.moveForwards(1);
+			TileEntity tile = container.getTile(Orientations.values()[meta]);
 
-			TileEntity tile = worldObj.getBlockTileEntity((int) pos.x, (int) pos.y,
-					(int) pos.z);
-
-			if (!isInput(tile)) {
+			if (!isInput(tile))
 				switchSource();
-			}
 		}
 	}
 
@@ -172,12 +155,71 @@ public class PipeLogicAdvancedWood extends PipeLogic {
 		nbttagcompound.setTag("items", nbttaglist);
 	}
 
+	@Override
 	public int getSizeInventory() {
 		return items.length;
 	}
 
+	@Override
 	public ItemStack getStackInSlot(int var1) {
 		return items[var1];
+	}
+
+	@Override
+	public ItemStack decrStackSize(int i, int amt) {
+		ItemStack stack = getStackInSlot(i);
+		if (stack != null) {
+			if (stack.stackSize <= amt) {
+				setInventorySlotContents(i, null);
+			} else {
+				stack = stack.splitStack(amt);
+				if (stack.stackSize == 0) {
+					setInventorySlotContents(i, null);
+				}
+			}
+		}
+		return stack;
+	}
+
+	@Override
+	public ItemStack getStackInSlotOnClosing(int i) {
+		ItemStack stack = getStackInSlot(i);
+		if (stack != null) {
+			setInventorySlotContents(i, null);
+		}
+		return stack;
+	}
+
+	@Override
+	public void setInventorySlotContents(int var1, ItemStack var2) {
+		items[var1] = var2;
+	}
+
+	@Override
+	public String getInvName() {
+		return "container.advancedWooden";
+	}
+
+	@Override
+	public int getInventoryStackLimit() {
+		return 64;
+	}
+
+	@Override
+	public void onInventoryChanged() {
+	}
+
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer var1) {
+		return true;
+	}
+
+	@Override
+	public void openChest() {
+	}
+
+	@Override
+	public void closeChest() {
 	}
 
 }

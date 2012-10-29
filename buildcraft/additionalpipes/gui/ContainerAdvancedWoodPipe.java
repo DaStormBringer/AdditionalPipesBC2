@@ -9,17 +9,24 @@
 package buildcraft.additionalpipes.gui;
 
 import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.ICrafting;
 import net.minecraft.src.IInventory;
 import net.minecraft.src.Slot;
+import buildcraft.additionalpipes.pipes.logic.PipeLogicAdvancedWood;
 import buildcraft.core.gui.BuildCraftContainer;
 
-public class CraftingAdvancedWoodPipe extends BuildCraftContainer {
+public class ContainerAdvancedWoodPipe extends BuildCraftContainer {
 
-	IInventory playerIInventory;
-	IInventory filterIInventory;
+	private PipeLogicAdvancedWood logic;
+	private IInventory playerIInventory;
+	private IInventory filterIInventory;
 
-	public CraftingAdvancedWoodPipe (IInventory playerInventory, IInventory filterInventory) {
+	private boolean exclude;
+
+	public ContainerAdvancedWoodPipe (IInventory playerInventory, PipeLogicAdvancedWood filterInventory) {
 		super (filterInventory.getSizeInventory());
+		logic = filterInventory;
+		exclude = !logic.exclude;
 		playerIInventory = playerInventory;
 		filterIInventory = filterInventory;
 
@@ -45,6 +52,26 @@ public class CraftingAdvancedWoodPipe extends BuildCraftContainer {
 	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer) {
 		return true;
+	}
+
+	@Override
+	public void updateCraftingResults() {
+		super.updateCraftingResults();
+		for (Object crafter : crafters) {
+			if(exclude != logic.exclude) {
+				((ICrafting) crafter).updateCraftingInventoryInfo(this, 0, logic.exclude ? 1 : 0);
+			}
+		}
+		exclude = logic.exclude;
+	}
+
+	@Override
+	public void updateProgressBar(int i, int j) {
+		switch(i) {
+		case 0:
+			logic.exclude = (j == 1);
+			break;
+		}
 	}
 
 }

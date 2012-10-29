@@ -6,10 +6,10 @@ import net.minecraft.src.GuiContainer;
 import org.lwjgl.opengl.GL11;
 
 import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.additionalpipes.logic.PipeLogicDistributor;
 import buildcraft.additionalpipes.network.NetworkHandler;
 import buildcraft.additionalpipes.network.PacketAdditionalPipes;
 import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
+import buildcraft.additionalpipes.pipes.logic.PipeLogicDistributor;
 import buildcraft.transport.TileGenericPipe;
 import cpw.mods.fml.common.network.PacketDispatcher;
 

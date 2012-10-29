@@ -3,8 +3,8 @@ package buildcraft.additionalpipes.gui;
 import net.minecraft.src.Container;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ICrafting;
-import buildcraft.additionalpipes.logic.PipeLogicDistributor;
 import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
+import buildcraft.additionalpipes.pipes.logic.PipeLogicDistributor;
 import buildcraft.transport.TileGenericPipe;
 
 public class ContainerDistributionPipe extends Container {

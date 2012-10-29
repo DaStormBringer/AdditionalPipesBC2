@@ -3,7 +3,7 @@ package buildcraft.additionalpipes.pipes;
 import java.util.LinkedList;
 import java.util.List;
 
-import buildcraft.additionalpipes.logic.PipeLogicTeleport;
+import buildcraft.additionalpipes.pipes.logic.PipeLogicTeleport;
 import buildcraft.api.core.Position;
 import buildcraft.transport.PipeTransport;
 import buildcraft.transport.TileGenericPipe;

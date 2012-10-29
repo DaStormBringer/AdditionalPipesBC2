@@ -15,13 +15,14 @@ import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
 import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.additionalpipes.logic.PipeLogicAdvancedWood;
+import buildcraft.additionalpipes.pipes.logic.PipeLogicAdvancedWood;
 import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
-import buildcraft.api.liquids.ITankContainer;
 import buildcraft.api.power.IPowerProvider;
 import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerFramework;
+import buildcraft.api.transport.IPipedItem;
+import buildcraft.api.transport.PipeManager;
 import buildcraft.core.EntityPassiveItem;
 import buildcraft.core.utils.Utils;
 import buildcraft.transport.Pipe;
@@ -52,52 +53,40 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
 
 	@Override
 	public void doWork() {
-		if (powerProvider.getEnergyStored() <= 0) {
+		if (powerProvider.getEnergyStored() <= 0)
 			return;
-		}
 
 		World w = worldObj;
 
 		int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 
-		if (meta > 5) {
+		if (meta > 5)
 			return;
-		}
 
-		Position pos = new Position(xCoord, yCoord, zCoord,
-				Orientations.values()[meta]);
+		Position pos = new Position(xCoord, yCoord, zCoord,	Orientations.values()[meta]);
 		pos.moveForwards(1);
 		int blockId = w.getBlockId((int) pos.x, (int) pos.y, (int) pos.z);
-		TileEntity tile = w.getBlockTileEntity((int) pos.x, (int) pos.y,
-				(int) pos.z);
-
-		if (tile == null
-				|| !(tile instanceof IInventory || tile instanceof ITankContainer)) {
-			return;
-		}
+		TileEntity tile = w.getBlockTileEntity((int) pos.x, (int) pos.y, (int) pos.z);
 
 		if (tile instanceof IInventory) {
+			if (!PipeManager.canExtractItems(this, w, (int) pos.x, (int) pos.y, (int) pos.z))
+				return;
+
 			IInventory inventory = (IInventory) tile;
 
-			ItemStack stack = checkExtract(inventory, true,
+			ItemStack extracted = checkExtract(inventory, true,
 					pos.orientation.reverse());
 
-			if (stack == null || stack.stackSize == 0) {
+			if (extracted == null || extracted.stackSize == 0) {
 				powerProvider.useEnergy(1, 1, false);
 				return;
 			}
 
-			Position entityPos = new Position(pos.x + 0.5, pos.y
-					+ Utils.getPipeFloorOf(stack), pos.z + 0.5,
+			Position entityPos = new Position(pos.x + 0.5, pos.y + Utils.getPipeFloorOf(extracted), pos.z + 0.5,
 					pos.orientation.reverse());
-
 			entityPos.moveForwards(0.5);
-
-			EntityPassiveItem entity = new EntityPassiveItem(w, entityPos.x,
-					entityPos.y, entityPos.z, stack);
-
-			((PipeTransportItems) transport).entityEntering(entity,
-					entityPos.orientation);
+			IPipedItem entity = new EntityPassiveItem(w, entityPos.x, entityPos.y, entityPos.z, extracted);
+			((PipeTransportItems) transport).entityEntering(entity, entityPos.orientation);
 		}
 	}
 
@@ -113,36 +102,30 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
 		//			return ((ISpecialInventory) inventory).extractItem(doRemove, from);
 		//		}
 		IInventory inv = Utils.getInventory(inventory);
-		ItemStack result = checkExtractGeneric(inv, doRemove, from);
+		ItemStack result = checkExtractGeneric(inv, doRemove, from, 0, inv.getSizeInventory() - 1);
 		return result;
 	}
 
-	public ItemStack checkExtractGeneric(IInventory inventory,
-			boolean doRemove, Orientations from) {
-		for (int k = 0; k < inventory.getSizeInventory(); ++k) {
-			if (inventory.getStackInSlot(k) != null
-					&& inventory.getStackInSlot(k).stackSize > 0) {
+	public ItemStack checkExtractGeneric(IInventory inventory, boolean doRemove, Orientations from, int start, int stop) {
+		for (int k = start; k <= stop; ++k)
+			if (inventory.getStackInSlot(k) != null && inventory.getStackInSlot(k).stackSize > 0) {
 
 				ItemStack slot = inventory.getStackInSlot(k);
 
-				if (slot != null && slot.stackSize > 0 && CanExtract(slot)) {
-					if (doRemove) {
+				if (slot != null && slot.stackSize > 0 && canExtract(slot))
+					if (doRemove)
 						return inventory.decrStackSize(k, (int) powerProvider.useEnergy(1, slot.stackSize, true));
-					}
-					else {
+					else
 						return slot;
-					}
-				}
 			}
-		}
-
 		return null;
 	}
-	public boolean CanExtract(ItemStack item) {
+
+
+	public boolean canExtract(ItemStack item) {
 		PipeLogicAdvancedWood logic = (PipeLogicAdvancedWood) this.logic;
 		for (int i = 0; i < logic.getSizeInventory(); i++) {
 			ItemStack stack = logic.getStackInSlot(i);
-
 			if (stack != null && stack.itemID == item.itemID) {
 				if ((Item.itemsList[item.itemID].isDamageable())) {
 					return !logic.exclude;
@@ -152,7 +135,6 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
 				}
 			}
 		}
-
 		return logic.exclude;
 	}
 
@@ -178,6 +160,14 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
 
 	@Override
 	public int getTextureIndex(Orientations direction) {
-		return 7;
+		if (direction == Orientations.Unknown)
+			return 7;
+		else {
+			int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+			if (metadata == direction.ordinal())
+				return 6;
+			else
+				return 7;
+		}
 	}
 }

@@ -8,11 +8,8 @@
 
 package buildcraft.additionalpipes.pipes;
 
-import net.minecraft.src.IBlockAccess;
 import net.minecraft.src.TileEntity;
-import net.minecraft.src.World;
 import buildcraft.BuildCraftTransport;
-import buildcraft.additionalpipes.transport.IPipeProvideRedstonePowerHook;
 import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
 import buildcraft.api.liquids.ITankContainer;
@@ -23,7 +20,7 @@ import buildcraft.core.utils.Utils;
 import buildcraft.transport.PipeTransportLiquids;
 import buildcraft.transport.pipes.PipeLogicGold;
 
-public class PipeLiquidsRedstone extends APPipe implements IPipeProvideRedstonePowerHook {
+public class PipeLiquidsRedstone extends APPipe {
 	public @TileNetworkData boolean isPowering = false;
 
 	public PipeLiquidsRedstone(int itemID) {
@@ -106,17 +103,6 @@ public class PipeLiquidsRedstone extends APPipe implements IPipeProvideRedstoneP
 		}
 
 		return false;
-	}
-
-	@Override
-	public boolean isPoweringTo(IBlockAccess iblockaccess, int i, int j, int k,
-			int l) {
-		return isPoweringTo(l);
-	}
-
-	@Override
-	public boolean isIndirectlyPoweringTo(World world, int i, int j, int k, int l) {
-		return isIndirectlyPoweringTo(l);
 	}
 
 	@Override

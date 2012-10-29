@@ -12,7 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.src.TileEntity;
-import buildcraft.additionalpipes.logic.PipeLogicTeleport;
+import buildcraft.additionalpipes.pipes.logic.PipeLogicTeleport;
 import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
 import buildcraft.api.liquids.ITankContainer;

@@ -86,15 +86,12 @@ public class AdditionalPipes {
 	//Item Teleport
 	public Item pipeItemTeleport;
 	public static @ConfigId int itemTeleportId = 4047;
-	public static String TEXTURE_ITEM_TELEPORT = PATH + "BlueItem.png";
 	//Liquid Teleport
 	public Item pipeLiquidTeleport;
 	public static @ConfigId int liquidTeleportId = 4048;
-	public static String TEXTURE_LIQUID_TELEPORT = PATH + "BlueLiquid.png";
 	//Power Teleport
 	public Item pipePowerTeleport;
 	public static @ConfigId int powerTeleportId = 4049;
-	public static String TEXTURE_POWER_TELEPORT = PATH + "BluePower.png";
 	//Distributor
 	public Item pipeDistributor;
 	public static @ConfigId int distributorTeleportId = 4046;
@@ -109,17 +106,12 @@ public class AdditionalPipes {
 	//Advanced Insertion
 	public Item pipeAdvancedInsertion;
 	public static @ConfigId int insertionId = 4044;
-	public static String TEXTURE_INSERTION = PATH + "AdvInsert.png";
 	//Redstone
 	public Item pipeRedStone;
 	public static @ConfigId int redstoneId = 4043;
-	public static String TEXTURE_REDSTONE = PATH + "RS.png";
-	public static String TEXTURE_REDSTONE_POWERED = PATH + "RSP.png";
 	//Redstone Liquid
 	public Item pipeRedStoneLiquid;
 	public static @ConfigId int redstoneLiquidId = 4042;
-	public static String TEXTURE_LIQUID_REDSTONE = PATH + "RSL.png";
-	public static String TEXTURE_LIQUID_REDSTONE_POWERED = PATH + "RSLP.png";
 	//chunk loader
 	public Block blockChunkLoader;
 	public static @ConfigId(block=true) int chunkLoaderId = 189;
@@ -129,8 +121,7 @@ public class AdditionalPipes {
 	private Configuration config;
 	public static int laserKeyCode = 64;
 	public static KeyBinding laserKey;
-	public static @ConfigBool boolean lagFix = false;
-	public static @ConfigBool boolean wrenchOpensGui = false;
+	public static @ConfigBool boolean wrenchOpensGui = true;
 	public static @ConfigBool boolean allowWRRemove = false; //Remove waterproofing/redstone
 	public static double powerLossCfg = .95;
 
@@ -287,7 +278,7 @@ public class AdditionalPipes {
 	}
 
 	public static boolean isPipe(Item item) {
-		if (BlockGenericPipe.pipes.containsKey(item.shiftedIndex)) {
+		if (item != null && BlockGenericPipe.pipes.containsKey(item.shiftedIndex)) {
 			return true;
 		}
 		return false;

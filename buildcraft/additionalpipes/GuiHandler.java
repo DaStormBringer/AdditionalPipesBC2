@@ -1,14 +1,14 @@
 package buildcraft.additionalpipes;
 
 import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.IInventory;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
+import buildcraft.additionalpipes.gui.ContainerAdvancedWoodPipe;
 import buildcraft.additionalpipes.gui.ContainerTeleportPipe;
-import buildcraft.additionalpipes.gui.CraftingAdvancedWoodPipe;
 import buildcraft.additionalpipes.gui.GuiAdvancedWoodPipe;
 import buildcraft.additionalpipes.gui.GuiDistributionPipe;
 import buildcraft.additionalpipes.gui.GuiTeleportPipe;
+import buildcraft.additionalpipes.pipes.logic.PipeLogicAdvancedWood;
 import buildcraft.transport.TileGenericPipe;
 import cpw.mods.fml.common.network.IGuiHandler;
 
@@ -31,7 +31,7 @@ public class GuiHandler implements IGuiHandler {
 		case PIPE_DIST:
 			return null;
 		case PIPE_WOODEN_ADV:
-			return new CraftingAdvancedWoodPipe(player.inventory, (IInventory) tile);
+			return new ContainerAdvancedWoodPipe(player.inventory, (PipeLogicAdvancedWood) ((TileGenericPipe) tile).pipe.logic);
 		default:
 			return null;
 		}
@@ -50,7 +50,7 @@ public class GuiHandler implements IGuiHandler {
 		case PIPE_DIST:
 			return new GuiDistributionPipe((TileGenericPipe) tile);
 		case PIPE_WOODEN_ADV:
-			return new GuiAdvancedWoodPipe(player.inventory, (IInventory) tile, (TileGenericPipe)tile);
+			return new GuiAdvancedWoodPipe(player.inventory, (TileGenericPipe) tile);
 		default:
 			return null;
 		}

@@ -6,7 +6,7 @@
  * granted by the copyright holder.
  */
 
-package buildcraft.additionalpipes.logic;
+package buildcraft.additionalpipes.pipes.logic;
 
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.IInventory;

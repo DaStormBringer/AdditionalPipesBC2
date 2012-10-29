@@ -15,7 +15,7 @@ import java.util.Random;
 import net.minecraft.src.IInventory;
 import net.minecraft.src.TileEntity;
 import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.additionalpipes.logic.PipeLogicTeleport;
+import buildcraft.additionalpipes.pipes.logic.PipeLogicTeleport;
 import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
 import buildcraft.api.transport.IPipeEntry;
