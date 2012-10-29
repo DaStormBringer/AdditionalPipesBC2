@@ -4,6 +4,7 @@ import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
 import buildcraft.additionalpipes.gui.ContainerAdvancedWoodPipe;
+import buildcraft.additionalpipes.gui.ContainerDistributionPipe;
 import buildcraft.additionalpipes.gui.ContainerTeleportPipe;
 import buildcraft.additionalpipes.gui.GuiAdvancedWoodPipe;
 import buildcraft.additionalpipes.gui.GuiDistributionPipe;
@@ -29,7 +30,7 @@ public class GuiHandler implements IGuiHandler {
 		case PIPE_TP:
 			return new ContainerTeleportPipe((TileGenericPipe) tile);
 		case PIPE_DIST:
-			return null;
+			return new ContainerDistributionPipe((TileGenericPipe) tile);
 		case PIPE_WOODEN_ADV:
 			return new ContainerAdvancedWoodPipe(player.inventory, (PipeLogicAdvancedWood) ((TileGenericPipe) tile).pipe.logic);
 		default:

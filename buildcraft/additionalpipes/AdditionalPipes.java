@@ -195,7 +195,7 @@ public class AdditionalPipes {
 		// Item Teleport Pipe
 		pipeItemTeleport = createPipe(itemTeleportId, PipeItemTeleport.class, "Item Teleport Pipe");
 		if (loadItemTeleport) {
-			GameRegistry.addRecipe(new ItemStack(pipeItemTeleport, 4), new Object[]{"dgd", 'd', BuildCraftCore.diamondGearItem, 'g', Block.glass});
+			GameRegistry.addRecipe(new ItemStack(pipeItemTeleport, 6), new Object[]{"dgd", 'd', BuildCraftCore.diamondGearItem, 'g', Block.glass});
 		}
 
 		// Liquid Teleport Pipe

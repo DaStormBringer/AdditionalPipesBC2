@@ -30,9 +30,7 @@ public class PipeLogicDistributor extends PipeLogic {
 	public int curTick = 0;
 
 	public void switchPosition() {
-
 		int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-
 		int nextMetadata = metadata;
 
 		for (int l = 0; l < 6; ++l) {
@@ -97,26 +95,19 @@ public class PipeLogicDistributor extends PipeLogic {
 	@Override
 	public void onBlockPlaced() {
 		super.onBlockPlaced();
-
 		worldObj.setBlockMetadata(xCoord, yCoord, zCoord, 1);
 		switchPosition();
 	}
 
 	@Override
 	public boolean blockActivated(EntityPlayer entityplayer) {
-
 		ItemStack equippedItem = entityplayer.getCurrentEquippedItem();
-
 		if (equippedItem != null) {
-
 			if (equippedItem.getItem() instanceof IToolWrench) {
-
 				switchPosition();
 				worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
-
 				return true;
 			}
-
 			if (AdditionalPipes.isPipe(equippedItem.getItem())) {
 				return false;
 			}
@@ -146,7 +137,6 @@ public class PipeLogicDistributor extends PipeLogic {
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
-
 		super.readFromNBT(nbt);
 		curTick = nbt.getInteger("curTick");
 
