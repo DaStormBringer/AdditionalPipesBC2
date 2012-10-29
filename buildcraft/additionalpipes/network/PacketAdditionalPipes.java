@@ -23,9 +23,9 @@ public class PacketAdditionalPipes {
 	}
 
 	public void writeInt(int i) {
-		data.write(i & 0xFF000000);
-		data.write(i & 0xFF0000);
-		data.write(i & 0xFF00);
+		data.write((i & 0xFF000000) >> 24);
+		data.write((i & 0xFF0000) >> 16);
+		data.write((i & 0xFF00) >> 8);
 		data.write(i & 0xFF);
 	}
 

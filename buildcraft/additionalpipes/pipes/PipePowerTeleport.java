@@ -12,7 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.src.TileEntity;
-import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.logic.PipeLogicTeleport;
 import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
@@ -40,7 +39,6 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 	}
 
 	public double calculateLoss(int distance, double power) {
-
 		return power;
 	}
 
@@ -229,13 +227,8 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 	}
 
 	@Override
-	public String getTextureFile() {
-		return AdditionalPipes.TEXTURE_POWER_TELEPORT;
-	}
-
-	@Override
 	public int getTextureIndex(Orientations direction) {
-		return 0;
+		return 3;
 	}
 
 }

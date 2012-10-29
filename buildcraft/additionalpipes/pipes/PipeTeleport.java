@@ -3,14 +3,12 @@ package buildcraft.additionalpipes.pipes;
 import java.util.LinkedList;
 import java.util.List;
 
-import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.logic.PipeLogicTeleport;
 import buildcraft.api.core.Position;
-import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransport;
 import buildcraft.transport.TileGenericPipe;
 
-public abstract class PipeTeleport extends Pipe {
+public abstract class PipeTeleport extends APPipe {
 
 	public final PipeLogicTeleport logic;
 
@@ -30,55 +28,42 @@ public abstract class PipeTeleport extends Pipe {
 		}
 	}
 
-	public List<PipeTeleport> getConnectedPipes(boolean ignoreReceive) {
-
-		List<PipeTeleport> temp = new LinkedList<PipeTeleport>();
+	public List<PipeTeleport> getConnectedPipes(boolean forceReceive) {
+		List<PipeTeleport> connected = new LinkedList<PipeTeleport>();
 		removeOldPipes();
 
 		PipeLogicTeleport logic = this.logic;
 
 		for (PipeTeleport pipe : teleportPipes) {
-
 			if (!this.getClass().equals(pipe.getClass())) {
 				continue;
 			}
 
 			PipeLogicTeleport pipeLogic = pipe.logic;
-
-			if (pipeLogic.owner.equalsIgnoreCase(logic.owner) || !AdditionalPipes.proxy.isServer(worldObj)) {
-
-				if (pipeLogic.canReceive || ignoreReceive) {
-
-					if (pipeLogic.freq == logic.freq) {
-
-						if (xCoord != pipe.xCoord || yCoord != pipe.yCoord || zCoord != pipe.zCoord ) {
-
-							temp.add(pipe);
-						}
-					}
+			if (pipeLogic.freq == logic.freq &&
+					(pipeLogic.canReceive || forceReceive) &&
+					pipeLogic.owner.equalsIgnoreCase(logic.owner)) {
+				if (xCoord != pipe.xCoord || yCoord != pipe.yCoord || zCoord != pipe.zCoord ) {
+					connected.add(pipe);
 				}
 			}
 		}
 
-		return temp;
+		return connected;
 	}
 
 	public void removeOldPipes() {
-
-		LinkedList <PipeTeleport> toRemove = new LinkedList <PipeTeleport> ();
-
+		LinkedList <PipeTeleport> toRemove = new LinkedList <PipeTeleport>();
 		for (PipeTeleport pipe : teleportPipes) {
-
 			if (!(worldObj.getBlockTileEntity(pipe.xCoord, pipe.yCoord, pipe.zCoord) instanceof TileGenericPipe)) {
 				toRemove.add(pipe);
 			}
 		}
-
 		teleportPipes.removeAll(toRemove);
 	}
 
 	public Position getPosition() {
-		return new Position (xCoord, yCoord, zCoord);
+		return new Position(xCoord, yCoord, zCoord);
 	}
 
 }

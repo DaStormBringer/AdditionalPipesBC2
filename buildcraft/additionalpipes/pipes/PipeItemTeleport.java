@@ -195,11 +195,6 @@ public class PipeItemTeleport extends PipeTeleport implements IPipeTransportItem
 	}
 
 	@Override
-	public String getTextureFile() {
-		return AdditionalPipes.TEXTURE_ITEM_TELEPORT;
-	}
-
-	@Override
 	public int getTextureIndex(Orientations direction) {
 		return 0;
 	}

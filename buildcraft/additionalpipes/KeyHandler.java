@@ -3,8 +3,11 @@ package buildcraft.additionalpipes;
 import java.util.EnumSet;
 
 import net.minecraft.src.KeyBinding;
+import buildcraft.additionalpipes.network.NetworkHandler;
+import buildcraft.additionalpipes.network.PacketAdditionalPipes;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.common.TickType;
+import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class KeyHandler extends KeyBindingRegistry.KeyHandler{
 
@@ -20,8 +23,12 @@ public class KeyHandler extends KeyBindingRegistry.KeyHandler{
 	@Override
 	public void keyDown(EnumSet<TickType> types, KeyBinding kb,
 			boolean tickEnd, boolean isRepeat) {
-		if (kb.keyCode == AdditionalPipes.laserKey.keyCode) {
+		if (tickEnd && kb.keyCode == AdditionalPipes.laserKey.keyCode) {
 			AdditionalPipes.instance.chunkLoadViewer.toggleLasers();
+			if(AdditionalPipes.instance.chunkLoadViewer.lasersActive()) {
+				PacketAdditionalPipes packet = new PacketAdditionalPipes(NetworkHandler.CHUNKLOAD_REQUEST, false);
+				PacketDispatcher.sendPacketToServer(packet.makePacket());
+			}
 		}
 	}
 

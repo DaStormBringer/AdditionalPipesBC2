@@ -34,7 +34,7 @@ public class PipeItemsDistributor extends Pipe implements IPipeTransportItemsHoo
 
 	@Override
 	public int getTextureIndex(Orientations connection) {
-		return 0;
+		return 10;
 	}
 
 	@Override
@@ -110,7 +110,7 @@ public class PipeItemsDistributor extends Pipe implements IPipeTransportItemsHoo
 
 	@Override
 	public String getTextureFile() {
-		return AdditionalPipes.TEXTURE_DISTRIBUTOR;
+		return AdditionalPipes.TEXTURE_PIPES;
 	}
 
 }

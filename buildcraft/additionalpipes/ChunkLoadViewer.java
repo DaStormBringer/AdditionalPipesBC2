@@ -20,10 +20,10 @@ import cpw.mods.fml.client.FMLClientHandler;
 public class ChunkLoadViewer {
 	public static final int MAX_SIGHT_RANGE = 63;
 
-	public int sightRange = 5;
-	public List<Box> lasers = new LinkedList<Box>();
+	private int sightRange = 5;
+	private List<Box> lasers = new LinkedList<Box>();
 	public ChunkCoordIntPair[] persistentChunks = new ChunkCoordIntPair[0];
-
+	private boolean active = false;
 	//client methods
 	public void toggleLasers(){
 		if(lasersActive()){
@@ -36,7 +36,7 @@ public class ChunkLoadViewer {
 	public void activateLasers(){
 		deactivateLasers();
 		EntityClientPlayerMP player = FMLClientHandler.instance().getClient().thePlayer;
-		int playerY = (int) player.posY;
+		int playerY = (int) player.posY - 2;
 		for (ChunkCoordIntPair coords : persistentChunks) {
 			int chunkX = coords.chunkXPos * 16;
 			int chunkZ = coords.chunkZPos * 16;
@@ -50,6 +50,7 @@ public class ChunkLoadViewer {
 			insideLaser.createLasers(player.worldObj, LaserKind.Red);
 			lasers.add(insideLaser);
 		}
+		active = true;
 	}
 
 	public void deactivateLasers(){
@@ -57,10 +58,11 @@ public class ChunkLoadViewer {
 			laser.deleteLasers();
 		}
 		lasers.clear();
+		active = false;
 	}
 
 	public boolean lasersActive(){
-		return !lasers.isEmpty();
+		return active;
 	}
 
 	public void recievePersistentChunks(ChunkCoordIntPair[] chunks) {
@@ -70,6 +72,7 @@ public class ChunkLoadViewer {
 
 	//server methods
 	public void sendPersistentChunksToPlayer(EntityPlayerMP player) {
+		if(!AdditionalPipes.chunkSight) { return;}
 		if(sightRange > MAX_SIGHT_RANGE) sightRange = MAX_SIGHT_RANGE;
 
 		SetMultimap<ChunkCoordIntPair, Ticket> persistentChunks =
@@ -94,6 +97,13 @@ public class ChunkLoadViewer {
 			packet.writeInt(coords.chunkZPos);
 		}
 		player.playerNetServerHandler.sendPacketToPlayer(packet.makePacket());
+	}
+
+	public void setSightRange(int range) {
+		sightRange = range;
+		if(sightRange > MAX_SIGHT_RANGE)
+			sightRange = MAX_SIGHT_RANGE;
+
 	}
 
 }

@@ -13,7 +13,6 @@ import java.util.LinkedList;
 import net.minecraft.src.IBlockAccess;
 import net.minecraft.src.World;
 import buildcraft.BuildCraftTransport;
-import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.transport.IPipeProvideRedstonePowerHook;
 import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
@@ -21,11 +20,11 @@ import buildcraft.api.transport.IPipedItem;
 import buildcraft.core.network.TileNetworkData;
 import buildcraft.core.utils.Utils;
 import buildcraft.transport.IPipeTransportItemsHook;
-import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.pipes.PipeLogicStone;
 
-public class PipeItemsRedstone extends Pipe implements IPipeTransportItemsHook, IPipeProvideRedstonePowerHook {
+public class PipeItemsRedstone extends APPipe implements IPipeTransportItemsHook,
+IPipeProvideRedstonePowerHook {
 
 	public @TileNetworkData boolean isPowering = false;
 	public PipeItemsRedstone(int itemID) {
@@ -119,18 +118,8 @@ public class PipeItemsRedstone extends Pipe implements IPipeTransportItemsHook, 
 	}
 
 	@Override
-	public String getTextureFile() {
-		if (!isPowering) {
-			return AdditionalPipes.TEXTURE_REDSTONE;
-		}
-		else {
-			return AdditionalPipes.TEXTURE_REDSTONE_POWERED;
-		}
-	}
-
-	@Override
 	public int getTextureIndex(Orientations direction) {
-		return 0;
+		return isPowering ? 5 : 4;
 	}
 
 }

@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import net.minecraft.src.ChunkCoordIntPair;
 import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.EntityPlayerMP;
 import net.minecraft.src.INetworkManager;
 import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.TileEntity;
@@ -38,6 +39,8 @@ public class NetworkHandler implements IPacketHandler {
 				handleChunkLoadData(data);
 				break;
 			case CHUNKLOAD_REQUEST:
+				AdditionalPipes.instance.chunkLoadViewer
+				.sendPersistentChunksToPlayer((EntityPlayerMP) player);
 				break;
 			}
 		} catch (IOException e) {

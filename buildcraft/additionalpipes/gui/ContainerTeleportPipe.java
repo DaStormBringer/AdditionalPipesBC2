@@ -9,8 +9,8 @@ import buildcraft.transport.TileGenericPipe;
 public class ContainerTeleportPipe extends Container {
 
 	private PipeTeleport pipe;
-	private int freq = 0;
-	private boolean canReceive = false;
+	private int freq;
+	private boolean canReceive;
 
 	public ContainerTeleportPipe(TileGenericPipe tile) {
 		pipe = (PipeTeleport) tile.pipe;
@@ -41,10 +41,10 @@ public class ContainerTeleportPipe extends Container {
 	@Override
 	public void updateProgressBar(int i, int j) {
 		switch(i) {
-		case 1:
+		case 0:
 			pipe.logic.freq = j;
 			break;
-		case 2:
+		case 1:
 			pipe.logic.canReceive = (j == 1);
 			break;
 		}

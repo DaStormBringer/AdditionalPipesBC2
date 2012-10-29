@@ -12,19 +12,18 @@ import net.minecraft.src.IBlockAccess;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
 import buildcraft.BuildCraftTransport;
-import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.transport.IPipeProvideRedstonePowerHook;
 import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
 import buildcraft.api.liquids.ITankContainer;
+import buildcraft.api.liquids.LiquidStack;
 import buildcraft.api.transport.IPipeEntry;
 import buildcraft.core.network.TileNetworkData;
 import buildcraft.core.utils.Utils;
-import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransportLiquids;
 import buildcraft.transport.pipes.PipeLogicGold;
 
-public class PipeLiquidsRedstone extends Pipe implements IPipeProvideRedstonePowerHook {
+public class PipeLiquidsRedstone extends APPipe implements IPipeProvideRedstonePowerHook {
 	public @TileNetworkData boolean isPowering = false;
 
 	public PipeLiquidsRedstone(int itemID) {
@@ -41,7 +40,9 @@ public class PipeLiquidsRedstone extends Pipe implements IPipeProvideRedstonePow
 	@Override
 	public boolean isPoweringTo(int l) {
 		//System.out.println("RedStoneIsPoweringTo");
-		if (((PipeTransportLiquids)transport).getTanks()[0].getLiquid().amount < 250) {
+		LiquidStack liquid = ((PipeTransportLiquids) transport)
+				.getTanks()[Orientations.Unknown.ordinal()].getLiquid();
+		if (liquid == null || liquid.amount == 0) {
 			isPowering = false;
 			return false;
 		}
@@ -79,7 +80,9 @@ public class PipeLiquidsRedstone extends Pipe implements IPipeProvideRedstonePow
 
 		//System.out.println("Quantity: " + (((PipeTransportLiquids)this.transport).getLiquidQuantity()) + " - Wanted: " + computeMaxLiquid() + " - Qua2: " + computeEnds()[1]);
 		//System.out.println("Quantity: " + ((PipeTransportLiquids)this.transport).getCenter());
-		if ( ((PipeTransportLiquids)transport).getTanks()[0].getLiquid().amount < 250 && isPowering) {
+		LiquidStack liquid = ((PipeTransportLiquids) transport)
+				.getTanks()[Orientations.Unknown.ordinal()].getLiquid();
+		if (liquid == null || liquid.amount == 0 && isPowering) {
 			isPowering = false;
 			UpdateTiles(container.xCoord, container.yCoord, container.zCoord);
 		}
@@ -117,16 +120,7 @@ public class PipeLiquidsRedstone extends Pipe implements IPipeProvideRedstonePow
 	}
 
 	@Override
-	public String getTextureFile() {
-		if (!isPowering) {
-			return AdditionalPipes.TEXTURE_REDSTONE;
-		} else {
-			return AdditionalPipes.TEXTURE_REDSTONE_POWERED;
-		}
-	}
-
-	@Override
 	public int getTextureIndex(Orientations direction) {
-		return 0;
+		return isPowering ? 15 : 1;
 	}
 }

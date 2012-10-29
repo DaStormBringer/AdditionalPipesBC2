@@ -15,7 +15,6 @@ import net.minecraft.src.TileEntity;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
-import buildcraft.api.inventory.ISpecialInventory;
 import buildcraft.api.transport.IPipedItem;
 import buildcraft.core.inventory.TransactorSimple;
 import buildcraft.core.utils.Utils;
@@ -27,8 +26,7 @@ import buildcraft.transport.pipes.PipeLogicStone;
 public class PipeItemsAdvancedInsertion extends Pipe implements IPipeTransportItemsHook {
 
 	public PipeItemsAdvancedInsertion(int itemID) {
-		super(new PipeTransportItems(), new PipeLogicStone (), itemID);
-
+		super(new PipeTransportItems(), new PipeLogicStone(), itemID);
 	}
 
 	@Override
@@ -39,8 +37,6 @@ public class PipeItemsAdvancedInsertion extends Pipe implements IPipeTransportIt
 
 	public LinkedList<Orientations> filterPossibleMovements(LinkedList<Orientations> possibleOrientations, Position pos, IPipedItem item, int Level) {
 		LinkedList<Orientations> newOris = new LinkedList<Orientations>();
-		LinkedList<Orientations> nullReturn = new LinkedList<Orientations>();
-		nullReturn.add(Orientations.values()[0]);
 
 		for (int o = 0; o < 6; ++o) {
 			if (Orientations.values()[o] != pos.orientation.reverse()) {
@@ -50,7 +46,7 @@ public class PipeItemsAdvancedInsertion extends Pipe implements IPipeTransportIt
 
 				TileEntity entity = worldObj.getBlockTileEntity((int) newPos.x, (int) newPos.y, (int) newPos.z);
 
-				if (entity instanceof ISpecialInventory) {
+				if (entity instanceof IInventory) {
 					TransactorSimple transactor = new TransactorSimple((IInventory) entity);
 					if (transactor.add(item.getItemStack(), newPos.orientation.reverse(), false).stackSize > 0) {
 						newOris.add(newPos.orientation);
@@ -79,12 +75,12 @@ public class PipeItemsAdvancedInsertion extends Pipe implements IPipeTransportIt
 
 	@Override
 	public String getTextureFile() {
-		return AdditionalPipes.TEXTURE_INSERTION;
+		return AdditionalPipes.TEXTURE_PIPES;
 	}
 
 	@Override
 	public int getTextureIndex(Orientations direction) {
-		return 1;
+		return 8;
 	}
 
 	@Override

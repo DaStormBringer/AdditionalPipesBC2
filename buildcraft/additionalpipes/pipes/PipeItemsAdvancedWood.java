@@ -173,11 +173,11 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
 
 	@Override
 	public String getTextureFile() {
-		return AdditionalPipes.TEXTURE_ADVANCEDWOOD;
+		return AdditionalPipes.TEXTURE_PIPES;
 	}
 
 	@Override
 	public int getTextureIndex(Orientations direction) {
-		return 0;
+		return 7;
 	}
 }

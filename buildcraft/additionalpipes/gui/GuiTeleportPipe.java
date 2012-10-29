@@ -28,29 +28,23 @@ public class GuiTeleportPipe extends GuiContainer {
 
 	@Override
 	public void initGui() {
-
 		super.initGui();
-		int bw = xSize - 20;
-
-		controlList.add(buttons[0] =  new GuiButton(1, (width - xSize) / 2 + 10, (height - ySize) / 2 + 20, bw / 6, 20, "-100"));
-		controlList.add(buttons[1] =  new GuiButton(2, (width - xSize) / 2 + 12 + bw / 6, (height - ySize) / 2 + 20, bw / 6, 20, "-10"));
-		controlList.add(buttons[2] =  new GuiButton(3, (width - xSize) / 2 + 12 + bw * 2 / 6, (height - ySize) / 2 + 20, bw / 6, 20, "-1"));
-		controlList.add(buttons[3] =  new GuiButton(4, (width - xSize) / 2 + 12 + bw * 3 / 6, (height - ySize) / 2 + 20, bw / 6, 20, "+1"));
-		controlList.add(buttons[4] =  new GuiButton(5, (width - xSize) / 2 + 12 + bw * 4 / 6, (height - ySize) / 2 + 20, bw / 6, 20, "+10"));
-		controlList.add(buttons[5] =  new GuiButton(6, (width - xSize) / 2 + 16 + bw * 5 / 6, (height - ySize) / 2 + 20, bw / 6, 20, "+100"));
-		controlList.add(buttons[6] =  new GuiButton(7, (width - xSize) / 2 + 16, (height - ySize) / 2 + 52, bw / 6, 20, "Switch"));
+		int bw = xSize - 22;
+		controlList.add(buttons[0] = new GuiButton(1, (width - xSize) / 2 + 10, (height - ySize) / 2 + 20, bw / 6, 20, "-100"));
+		controlList.add(buttons[1] = new GuiButton(2, (width - xSize) / 2 + 12 + bw / 6, (height - ySize) / 2 + 20, bw / 6, 20, "-10"));
+		controlList.add(buttons[2] = new GuiButton(3, (width - xSize) / 2 + 12 + bw * 2 / 6, (height - ySize) / 2 + 20, bw / 6, 20, "-1"));
+		controlList.add(buttons[3] = new GuiButton(4, (width - xSize) / 2 + 12 + bw * 3 / 6, (height - ySize) / 2 + 20, bw / 6, 20, "+1"));
+		controlList.add(buttons[4] = new GuiButton(5, (width - xSize) / 2 + 12 + bw * 4 / 6, (height - ySize) / 2 + 20, bw / 6, 20, "+10"));
+		controlList.add(buttons[5] = new GuiButton(6, (width - xSize) / 2 + 16 + bw * 5 / 6, (height - ySize) / 2 + 20, bw / 6, 20, "+100"));
+		controlList.add(buttons[6] = new GuiButton(7, (width - xSize) / 2 + 16, (height - ySize) / 2 + 52, bw / 6, 20, "Switch"));
 	}
-	protected void drawGuiContainerForegroundLayer() {
 
+	@Override
+	protected void drawGuiContainerForegroundLayer(int p1, int p2) {
 		fontRenderer.drawString("Frequency: " + pipe.logic.freq, 8, 6, 0x404040);
-
 		fontRenderer.drawString("Connected Pipes: " + pipe.getConnectedPipes(true).size(), 100, 6, 0x404040);
-
 		fontRenderer.drawString("Can Receive: " + pipe.logic.canReceive, 8, 42, 0x404040);
-		fontRenderer.drawString("Owner: " + pipe.logic.owner, 8, 75, 0x404040);
-
-		//fontRenderer.drawString(filterInventory.getInvName(), 8, 6, 0x404040);
-		//fontRenderer.drawString(playerInventory.getInvName(), 8, ySize - 97, 0x404040);
+		//fontRenderer.drawString("Owner: " + pipe.logic.owner, 8, 75, 0x404040);
 	}
 	@Override
 	protected void actionPerformed(GuiButton guibutton) {
@@ -83,7 +77,7 @@ public class GuiTeleportPipe extends GuiContainer {
 			freq = 0;
 		}
 
-		PacketAdditionalPipes packet = new PacketAdditionalPipes(NetworkHandler.TELE_PIPE_DATA, true);
+		PacketAdditionalPipes packet = new PacketAdditionalPipes(NetworkHandler.TELE_PIPE_DATA, false);
 		packet.writeInt(pipe.xCoord);
 		packet.writeInt(pipe.yCoord);
 		packet.writeInt(pipe.zCoord);
@@ -94,7 +88,7 @@ public class GuiTeleportPipe extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-		int i = mc.renderEngine.getTexture(AdditionalPipes.PATH + "gui/gui.png");
+		int i = mc.renderEngine.getTexture(AdditionalPipes.PATH + "gui.png");
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		mc.renderEngine.bindTexture(i);
 		int j = (width - xSize) / 2;

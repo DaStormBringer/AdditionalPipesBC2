@@ -12,7 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.src.TileEntity;
-import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.logic.PipeLogicTeleport;
 import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
@@ -133,13 +132,8 @@ public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportL
 	}
 
 	@Override
-	public String getTextureFile() {
-		return AdditionalPipes.TEXTURE_LIQUID_TELEPORT;
-	}
-
-	@Override
 	public int getTextureIndex(Orientations direction) {
-		return 0;
+		return 2;
 	}
 
 }

@@ -27,7 +27,6 @@ import buildcraft.additionalpipes.pipes.PipeLiquidsRedstone;
 import buildcraft.additionalpipes.pipes.PipeLiquidsTeleport;
 import buildcraft.additionalpipes.pipes.PipePowerTeleport;
 import buildcraft.transport.BlockGenericPipe;
-import buildcraft.transport.ItemPipe;
 import buildcraft.transport.Pipe;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
@@ -69,9 +68,11 @@ public class AdditionalPipes {
 	private static @interface ConfigBool {}
 
 	public ChunkLoadViewer chunkLoadViewer = new ChunkLoadViewer();
+	public static @ConfigBool boolean chunkSight = true;
+	public static int chunkSightRange = 5;
 
 	public static final String PATH = "/buildcraft/additionalpipes/gui/";
-	public static String MASTER_TEXTURE = PATH + "block_textures.png";
+	public static String TEXTURE_PIPES = PATH + "MasterFile.png";
 
 	public static @ConfigBool boolean loadItemsAdvancedInsertion = true,
 			loadItemsAdvancedWood = true,
@@ -83,44 +84,44 @@ public class AdditionalPipes {
 			loadPowerTeleport = true,
 			loadChunkLoader = true;
 	//Item Teleport
-	public static Item pipeItemTeleport;
+	public Item pipeItemTeleport;
 	public static @ConfigId int itemTeleportId = 4047;
 	public static String TEXTURE_ITEM_TELEPORT = PATH + "BlueItem.png";
 	//Liquid Teleport
-	public static Item pipeLiquidTeleport;
+	public Item pipeLiquidTeleport;
 	public static @ConfigId int liquidTeleportId = 4048;
 	public static String TEXTURE_LIQUID_TELEPORT = PATH + "BlueLiquid.png";
 	//Power Teleport
-	public static Item pipePowerTeleport;
+	public Item pipePowerTeleport;
 	public static @ConfigId int powerTeleportId = 4049;
 	public static String TEXTURE_POWER_TELEPORT = PATH + "BluePower.png";
 	//Distributor
-	public static Item pipeDistributor;
+	public Item pipeDistributor;
 	public static @ConfigId int distributorTeleportId = 4046;
 	public static String TEXTURE_DISTRIBUTOR_BASE = PATH + "Dist";
 	public static String TEXTURE_DISTRIBUTOR = PATH + "DistributionOpen.png";
 	public static String TEXTURE_DISTRIBUTOR_CLOSED = PATH + "DistributionClosed.png";
 	//Advanced Wood
-	public static Item pipeAdvancedWood;
+	public Item pipeAdvancedWood;
 	public static @ConfigId int advancedWoodId = 4045;
 	public static String TEXTURE_ADVANCEDWOOD = PATH + "AdvancedWood.png";
 	public static String TEXTURE_ADVANCEDWOOD_CLOSED = PATH + "AdvancedWoodClosed.png";
 	//Advanced Insertion
-	public static Item pipeAdvancedInsertion;
+	public Item pipeAdvancedInsertion;
 	public static @ConfigId int insertionId = 4044;
 	public static String TEXTURE_INSERTION = PATH + "AdvInsert.png";
 	//Redstone
-	public static Item pipeRedStone;
+	public Item pipeRedStone;
 	public static @ConfigId int redstoneId = 4043;
 	public static String TEXTURE_REDSTONE = PATH + "RS.png";
 	public static String TEXTURE_REDSTONE_POWERED = PATH + "RSP.png";
 	//Redstone Liquid
-	public static Item pipeRedStoneLiquid;
+	public Item pipeRedStoneLiquid;
 	public static @ConfigId int redstoneLiquidId = 4042;
 	public static String TEXTURE_LIQUID_REDSTONE = PATH + "RSL.png";
 	public static String TEXTURE_LIQUID_REDSTONE_POWERED = PATH + "RSLP.png";
 	//chunk loader
-	public static Block blockChunkLoader;
+	public Block blockChunkLoader;
 	public static @ConfigId(block=true) int chunkLoaderId = 189;
 	public static String TEXTURE_CHUNKLOADER = PATH + "chunkloader.png";
 
@@ -162,7 +163,7 @@ public class AdditionalPipes {
 			}
 
 			Property powerLoss = config.get(Configuration.CATEGORY_GENERAL,
-					"powerLoss", (int) (powerLossCfg * 1000));
+					"powerLoss", (int) (powerLossCfg * 100));
 			powerLoss.comment = "Percentage of power a power teleport pipe transmits. Between 0 and 100.";
 			powerLossCfg = powerLoss.getInt() / 100.0;
 			if(powerLossCfg > 1.00) {
@@ -170,6 +171,11 @@ public class AdditionalPipes {
 			} else if(powerLossCfg < 0.0) {
 				powerLossCfg = 0.0;
 			}
+
+			Property chunkLoadSightRange = config.get(Configuration.CATEGORY_GENERAL,
+					"chunkSightRange", chunkSightRange);
+			chunkLoadSightRange.comment = "Range of chunk load lasers.";
+			chunkLoadViewer.setSightRange(chunkLoadSightRange.getInt());
 
 			Property laserKey = config.get(Configuration.CATEGORY_GENERAL,
 					"laserKeyChar", laserKeyCode);
@@ -228,7 +234,7 @@ public class AdditionalPipes {
 		// Advanced Insertion Pipe
 		pipeAdvancedInsertion = createPipe(insertionId, PipeItemsAdvancedInsertion.class, "Advanced Insertion Pipe");
 		if (loadItemsAdvancedInsertion) {
-			GameRegistry.addRecipe(new ItemStack(pipeAdvancedInsertion, 8), new Object[]{" r ", "SgS", 'r', Item.redstone, 'S', Block.stone, 'g', Block.glass});
+			GameRegistry.addRecipe(new ItemStack(pipeAdvancedInsertion, 8), new Object[]{" r ", "OgO", 'r', Item.redstone, 'O', Block.obsidian, 'g', Block.glass});
 		}
 
 		// Redstone Pipe
@@ -275,15 +281,10 @@ public class AdditionalPipes {
 	private Item createPipe(int id, Class<? extends Pipe> clas, String description) {
 		Item res = BlockGenericPipe.registerPipe(id, clas);
 		res.setItemName(clas.getSimpleName());
+		LanguageRegistry.addName(res, description);
 		proxy.registerPipeRendering(res);
 		return res;
 	}
-
-	private static Item createPipe(int id, Class<? extends Pipe> clas) {
-		ItemPipe res = BlockGenericPipe.registerPipe(id, clas);
-		return res;
-	}
-
 
 	public static boolean isPipe(Item item) {
 		if (BlockGenericPipe.pipes.containsKey(item.shiftedIndex)) {
