@@ -17,7 +17,7 @@ import com.google.common.collect.SetMultimap;
 
 import cpw.mods.fml.client.FMLClientHandler;
 
-public class ChunkLoadViewer {
+public class ChunkLoadDataProxy {
 	public static final int MAX_SIGHT_RANGE = 63;
 
 	private int sightRange = 5;

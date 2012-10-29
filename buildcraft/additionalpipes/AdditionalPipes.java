@@ -44,13 +44,13 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
 @Mod(modid=AdditionalPipes.MODID, name=AdditionalPipes.NAME,
-dependencies="", version=AdditionalPipes.VERSION)
+dependencies="required-after:BuildCraft|Transport", version=AdditionalPipes.VERSION)
 @NetworkMod(channels={AdditionalPipes.CHANNEL},
 clientSideRequired=true, packetHandler=NetworkHandler.class)
 public class AdditionalPipes {
 	public static final String MODID = "AdditionalPipes";
 	public static final String NAME = "Additional Pipes for BuildCraft";
-	public static final String VERSION = "2.1.3u1";
+	public static final String VERSION = "2.1.3u3";
 	public static final String CHANNEL = "AdditionalPipes";
 
 	@Instance(MODID)
@@ -67,7 +67,7 @@ public class AdditionalPipes {
 	@Retention(RetentionPolicy.RUNTIME)
 	private static @interface ConfigBool {}
 
-	public ChunkLoadViewer chunkLoadViewer = new ChunkLoadViewer();
+	public ChunkLoadDataProxy chunkLoadViewer = new ChunkLoadDataProxy();
 	public static @ConfigBool boolean chunkSight = true;
 	public static int chunkSightRange = 5;
 
