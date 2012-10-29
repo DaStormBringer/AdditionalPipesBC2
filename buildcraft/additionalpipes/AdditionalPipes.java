@@ -264,7 +264,7 @@ public class AdditionalPipes {
 		GameRegistry.registerBlock(blockChunkLoader);
 		GameRegistry.registerTileEntity(TileChunkLoader.class, "Teleport Tether");
 		if (loadChunkLoader) {
-			GameRegistry.addRecipe(new ItemStack(blockChunkLoader), new Object[]{"iii", "iLi", "iii", Character.valueOf('i'), Item.ingotIron, Character.valueOf('L'), new ItemStack(Item.dyePowder, 1, 4)});
+			GameRegistry.addRecipe(new ItemStack(blockChunkLoader), new Object[]{"iii", "iLi", "iii", 'i', Item.ingotIron, 'L', new ItemStack(Item.dyePowder, 1, 4)});
 		}
 	}
 
