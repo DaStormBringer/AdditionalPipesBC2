@@ -8,7 +8,6 @@
 
 package buildcraft.additionalpipes.pipes;
 
-import net.minecraft.src.Block;
 import net.minecraft.src.IInventory;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
@@ -27,7 +26,6 @@ import buildcraft.core.EntityPassiveItem;
 import buildcraft.core.utils.Utils;
 import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransportItems;
-import buildcraft.transport.pipes.PipeLogicWood;
 
 public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
 
@@ -74,8 +72,7 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
 				(int) pos.z);
 
 		if (tile == null
-				|| !(tile instanceof IInventory || tile instanceof ITankContainer)
-				|| PipeLogicWood.isExcludedFromExtraction(Block.blocksList[blockId])) {
+				|| !(tile instanceof IInventory || tile instanceof ITankContainer)) {
 			return;
 		}
 
@@ -142,20 +139,21 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
 		return null;
 	}
 	public boolean CanExtract(ItemStack item) {
+		PipeLogicAdvancedWood logic = (PipeLogicAdvancedWood) this.logic;
 		for (int i = 0; i < logic.getSizeInventory(); i++) {
 			ItemStack stack = logic.getStackInSlot(i);
 
 			if (stack != null && stack.itemID == item.itemID) {
 				if ((Item.itemsList[item.itemID].isDamageable())) {
-					return !((PipeLogicAdvancedWood)logic).exclude;
+					return !logic.exclude;
 				}
 				else if (stack.getItemDamage() == item.getItemDamage()) {
-					return !((PipeLogicAdvancedWood)logic).exclude;
+					return !logic.exclude;
 				}
 			}
 		}
 
-		return ((PipeLogicAdvancedWood)logic).exclude;
+		return logic.exclude;
 	}
 
 	@Override

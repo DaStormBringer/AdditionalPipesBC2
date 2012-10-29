@@ -15,12 +15,12 @@ import java.util.Random;
 import net.minecraft.src.IInventory;
 import net.minecraft.src.TileEntity;
 import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.additionalpipes.GuiHandler;
 import buildcraft.additionalpipes.logic.PipeLogicTeleport;
 import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
 import buildcraft.api.transport.IPipeEntry;
 import buildcraft.api.transport.IPipedItem;
+import buildcraft.core.inventory.TransactorSimple;
 import buildcraft.core.utils.Utils;
 import buildcraft.transport.IPipeTransportItemsHook;
 import buildcraft.transport.PipeTransportItems;
@@ -31,7 +31,7 @@ public class PipeItemTeleport extends PipeTeleport implements IPipeTransportItem
 	LinkedList <Integer> idsToRemove = new LinkedList <Integer>();
 
 	public PipeItemTeleport(int itemID) {
-		super(new PipeTransportItems(), new PipeLogicTeleport(GuiHandler.PIPE_TP), itemID);
+		super(new PipeTransportItems(), new PipeLogicTeleport(), itemID);
 	}
 
 	@Override
@@ -94,12 +94,8 @@ public class PipeItemTeleport extends PipeTeleport implements IPipeTransportItem
 		for (int o = 0; o < 6; ++o) {
 			if (Orientations.values()[o] != pos1.orientation.reverse()
 					&& container.pipe.outputOpen(Orientations.values()[o])) {
-				Position newPos = new Position(pos1);
-				newPos.orientation = Orientations.values()[o];
-				newPos.moveForwards(1.0);
-
-				if (((PipeTransportItems)transport).canReceivePipeObjects(newPos, item)) {
-					temp.add(newPos.orientation);
+				if (((PipeTransportItems)transport).canReceivePipeObjects(Orientations.values()[o], item)) {
+					temp.add(Orientations.values()[o]);
 				}
 			}
 		}
@@ -124,7 +120,7 @@ public class PipeItemTeleport extends PipeTeleport implements IPipeTransportItem
 				//This pipe can actually receive items
 				idsToRemove.add(item.getEntityId());
 				((PipeTransportItems) transport).scheduleRemoval(item);
-				Position newItemPos = getNewItemPos(destPos, newPos, Utils.getPipeFloorOf(item.item));
+				Position newItemPos = getNewItemPos(destPos, newPos, Utils.getPipeFloorOf(item.getItemStack()));
 				item.setPosition(newItemPos.x, newItemPos.y, newItemPos.z);
 				((PipeTransportItems)pipe.pipe.transport).entityEntering(item, newPos);
 			}
@@ -132,22 +128,17 @@ public class PipeItemTeleport extends PipeTeleport implements IPipeTransportItem
 		else if (tile instanceof IPipeEntry) {
 			idsToRemove.add(item.getEntityId());
 			((PipeTransportItems) transport).scheduleRemoval(item);
-			Position newItemPos = getNewItemPos(destPos, newPos, Utils.getPipeFloorOf(item.item));
+			Position newItemPos = getNewItemPos(destPos, newPos, Utils.getPipeFloorOf(item.getItemStack()));
 			item.setPosition(newItemPos.x, newItemPos.y, newItemPos.z);
 			((IPipeEntry) tile).entityEntering(item, newPos);
 		}
 		else if (tile instanceof IInventory) {
-			StackUtil utils = new StackUtil(item.item);
-
-			if (!APIProxy.isClient(worldObj)) {
-				if (utils.checkAvailableSlot((IInventory) tile, true, destPos.orientation.reverse()) && utils.items.stackSize == 0) {
+			TransactorSimple transactor = new TransactorSimple((IInventory) tile);
+			if (AdditionalPipes.proxy.isServer(worldObj)) {
+				if (transactor.add(item.getItemStack(), destPos.orientation.reverse(), true).stackSize == 0) {
 					idsToRemove.add(item.getEntityId());
 					((PipeTransportItems) transport).scheduleRemoval(item);
 					// Do nothing, we're adding the object to the world
-				}
-				else {
-					//Wont accept it return...
-							newPos = pos.orientation.reverse();
 				}
 			}
 		}

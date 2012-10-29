@@ -9,7 +9,6 @@ import net.minecraft.src.Block;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.KeyBinding;
-import net.minecraft.src.ModLoader;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.Property;
@@ -27,7 +26,6 @@ import buildcraft.additionalpipes.pipes.PipeItemsRedstone;
 import buildcraft.additionalpipes.pipes.PipeLiquidsRedstone;
 import buildcraft.additionalpipes.pipes.PipeLiquidsTeleport;
 import buildcraft.additionalpipes.pipes.PipePowerTeleport;
-import buildcraft.core.proxy.CoreProxy;
 import buildcraft.transport.BlockGenericPipe;
 import buildcraft.transport.ItemPipe;
 import buildcraft.transport.Pipe;
@@ -42,6 +40,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
@@ -186,7 +185,8 @@ public class AdditionalPipes {
 	@Init
 	public void init(FMLInitializationEvent event) {
 		laserKey = new KeyBinding("laserKeyBinding", laserKeyCode);
-		ModLoader.addLocalization("laserKeyBinding", "Turn on/off chunk loader boundries");
+		//ModLoader.addLocalization("laserKeyBinding", "Turn on/off chunk loader boundries");
+		NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
 		ForgeChunkManager.setForcedChunkLoadingCallback(this,  new ChunkLoadingHandler());
 		proxy.registerKeyHandler();
 		proxy.registerRendering();
@@ -275,7 +275,6 @@ public class AdditionalPipes {
 	private Item createPipe(int id, Class<? extends Pipe> clas, String description) {
 		Item res = BlockGenericPipe.registerPipe(id, clas);
 		res.setItemName(clas.getSimpleName());
-		CoreProxy.proxy.addName(res, description);
 		proxy.registerPipeRendering(res);
 		return res;
 	}

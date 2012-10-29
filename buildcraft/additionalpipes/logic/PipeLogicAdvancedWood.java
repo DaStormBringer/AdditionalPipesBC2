@@ -172,4 +172,12 @@ public class PipeLogicAdvancedWood extends PipeLogic {
 		nbttagcompound.setTag("items", nbttaglist);
 	}
 
+	public int getSizeInventory() {
+		return items.length;
+	}
+
+	public ItemStack getStackInSlot(int var1) {
+		return items[var1];
+	}
+
 }

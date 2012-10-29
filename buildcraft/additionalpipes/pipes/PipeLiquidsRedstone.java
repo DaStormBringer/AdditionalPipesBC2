@@ -41,7 +41,7 @@ public class PipeLiquidsRedstone extends Pipe implements IPipeProvideRedstonePow
 	@Override
 	public boolean isPoweringTo(int l) {
 		//System.out.println("RedStoneIsPoweringTo");
-		if (((PipeTransportLiquids)transport).getCenter() < 250) {
+		if (((PipeTransportLiquids)transport).getTanks()[0].getLiquid().amount < 250) {
 			isPowering = false;
 			return false;
 		}
@@ -79,7 +79,7 @@ public class PipeLiquidsRedstone extends Pipe implements IPipeProvideRedstonePow
 
 		//System.out.println("Quantity: " + (((PipeTransportLiquids)this.transport).getLiquidQuantity()) + " - Wanted: " + computeMaxLiquid() + " - Qua2: " + computeEnds()[1]);
 		//System.out.println("Quantity: " + ((PipeTransportLiquids)this.transport).getCenter());
-		if ( ((PipeTransportLiquids)transport).getCenter() < 250 && isPowering) {
+		if ( ((PipeTransportLiquids)transport).getTanks()[0].getLiquid().amount < 250 && isPowering) {
 			isPowering = false;
 			UpdateTiles(container.xCoord, container.yCoord, container.zCoord);
 		}
@@ -87,28 +87,6 @@ public class PipeLiquidsRedstone extends Pipe implements IPipeProvideRedstonePow
 			isPowering = true;
 			UpdateTiles(container.xCoord, container.yCoord, container.zCoord);
 		}
-	}
-
-	private int[] computeEnds() {
-		int outputNumber = 0;
-		int total = 0;
-		int ret[] = new int[2];
-
-		for (int i = 0; i < 6; ++i) {
-			Position p = new Position(xCoord, yCoord, zCoord, Orientations.values()[i]);
-			p.moveForwards(1);
-
-			if (canRec(p)) {
-				ret[0]++;
-				ret[1] += ((PipeTransportLiquids)transport).side[i].average;
-			}
-		}
-
-		return ret;
-	}
-
-	public int computeMaxLiquid() {
-		return ((computeEnds()[0] + 1) * PipeTransportLiquids.LIQUID_IN_PIPE);
 	}
 
 	public boolean canRec(Position p) {

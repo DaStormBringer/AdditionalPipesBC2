@@ -13,7 +13,6 @@ import java.util.List;
 
 import net.minecraft.src.TileEntity;
 import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.additionalpipes.GuiHandler;
 import buildcraft.additionalpipes.logic.PipeLogicTeleport;
 import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
@@ -36,7 +35,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 	}
 
 	public PipePowerTeleport(int itemID) {
-		super(new PipeTransportPower(), new PipeLogicTeleport(GuiHandler.PIPE_TP), itemID);
+		super(new PipeTransportPower(), new PipeLogicTeleport(), itemID);
 
 	}
 

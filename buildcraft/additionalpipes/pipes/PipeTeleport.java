@@ -45,7 +45,7 @@ public abstract class PipeTeleport extends Pipe {
 
 			PipeLogicTeleport pipeLogic = pipe.logic;
 
-			if (pipeLogic.owner.equalsIgnoreCase(logic.owner) || !AdditionalPipes.proxy.isOnServer(worldObj)) {
+			if (pipeLogic.owner.equalsIgnoreCase(logic.owner) || !AdditionalPipes.proxy.isServer(worldObj)) {
 
 				if (pipeLogic.canReceive || ignoreReceive) {
 

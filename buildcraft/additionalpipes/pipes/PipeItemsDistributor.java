@@ -18,6 +18,7 @@ import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
 import buildcraft.api.transport.IPipeEntry;
 import buildcraft.api.transport.IPipedItem;
+import buildcraft.core.inventory.TransactorSimple;
 import buildcraft.core.utils.Utils;
 import buildcraft.energy.TileEngine;
 import buildcraft.transport.IPipeTransportItemsHook;
@@ -90,8 +91,8 @@ public class PipeItemsDistributor extends Pipe implements IPipeTransportItemsHoo
 			return pipe.pipe.transport instanceof PipeTransportItems;
 		}
 		else if (entity instanceof IInventory) {
-			if (new StackUtil(item.item).checkAvailableSlot((IInventory) entity,
-					false, p.orientation.reverse())) {
+			TransactorSimple transactor = new TransactorSimple((IInventory) entity);
+			if (transactor.add(item.getItemStack(), p.orientation.reverse(), false).stackSize == 0) {
 				return true;
 			}
 		}

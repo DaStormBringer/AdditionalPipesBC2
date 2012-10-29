@@ -6,6 +6,7 @@ import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
 import buildcraft.BuildCraftTransport;
 import buildcraft.additionalpipes.AdditionalPipes;
+import buildcraft.additionalpipes.GuiHandler;
 import buildcraft.api.tools.IToolWrench;
 import buildcraft.transport.Pipe;
 import buildcraft.transport.TileGenericPipe;
@@ -17,16 +18,13 @@ public class PipeLogicTeleport extends PipeLogic {
 	public boolean canReceive = false;
 	public String owner = "";
 
-	protected int guiId;
-
-	public PipeLogicTeleport(int guiId) {
+	public PipeLogicTeleport() {
 		super();
-		this.guiId = guiId;
 	}
 
 	@Override
 	public boolean blockActivated(EntityPlayer player) {
-		if(!AdditionalPipes.proxy.isOnServer(player.worldObj)) return true;
+		if(!AdditionalPipes.proxy.isServer(player.worldObj)) return true;
 		if (owner == null || owner.equalsIgnoreCase("")) {
 			owner = player.username;
 		}
@@ -39,8 +37,7 @@ public class PipeLogicTeleport extends PipeLogic {
 				return false;
 			}
 		}
-		player.openGui(AdditionalPipes.instance, guiId,
-				container.worldObj, container.xCoord, container.yCoord, container.zCoord);
+		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_TP, worldObj, xCoord, yCoord, zCoord);
 		return true;
 	}
 

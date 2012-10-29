@@ -9,14 +9,15 @@
 package buildcraft.additionalpipes.pipes;
 
 import java.util.LinkedList;
-import java.util.Random;
 
 import net.minecraft.src.IInventory;
 import net.minecraft.src.TileEntity;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
+import buildcraft.api.inventory.ISpecialInventory;
 import buildcraft.api.transport.IPipedItem;
+import buildcraft.core.inventory.TransactorSimple;
 import buildcraft.core.utils.Utils;
 import buildcraft.transport.IPipeTransportItemsHook;
 import buildcraft.transport.Pipe;
@@ -49,43 +50,21 @@ public class PipeItemsAdvancedInsertion extends Pipe implements IPipeTransportIt
 
 				TileEntity entity = worldObj.getBlockTileEntity((int) newPos.x, (int) newPos.y, (int) newPos.z);
 
-				if (entity instanceof IInventory) {
-					if (new StackUtil(item.getItemStack()).checkAvailableSlot((IInventory) entity, false, newPos.orientation.reverse())) {
+				if (entity instanceof ISpecialInventory) {
+					TransactorSimple transactor = new TransactorSimple((IInventory) entity);
+					if (transactor.add(item.getItemStack(), newPos.orientation.reverse(), false).stackSize > 0) {
 						newOris.add(newPos.orientation);
 					}
 				}
 			}
 		}
 
-
 		//System.out.println("NewOris Size: " + newOris.size() + " - PO Size: " + possibleOrientations.size() + " - Level: " + Level);
 		if (newOris.size() > 0) {
-			Position destPos =  new Position(pos.x, pos.y, pos.z, newOris.get( (new Random()) .nextInt(newOris.size()) ) );
-			destPos.moveForwards(1.0);
-			StackUtil utils = new StackUtil(item.getItemStack());
-			TileEntity tile = worldObj.getBlockTileEntity((int) destPos.x, (int) destPos.y, (int) destPos.z);
-
-			if (!APIProxy.isClient(worldObj)) {
-				if (utils.checkAvailableSlot((IInventory) tile, true, destPos.orientation.reverse()) && utils.items.stackSize == 0) {
-					item.remove();
-					((PipeTransportItems) transport).scheduleRemoval(item);
-				}
-				else {
-					item.setItemStack(utils.items);
-					return this.filterPossibleMovements(possibleOrientations, pos, item, (Level + 1));
-					//EntityItem dropped = item.toEntityItem(destPos.orientation);
-				}
-			}
-
-			//System.out.println("Insertion Output 2 : " + destPos.orientation);
-			return nullReturn;
+			return newOris;
 		}
 
-		if (Level == 0) {
-			return possibleOrientations;
-		}
-
-		return ((PipeTransportItems)transport).getPossibleMovements(pos, item);
+		return possibleOrientations;
 	}
 
 	@Override
@@ -105,7 +84,7 @@ public class PipeItemsAdvancedInsertion extends Pipe implements IPipeTransportIt
 
 	@Override
 	public int getTextureIndex(Orientations direction) {
-		return 0;
+		return 1;
 	}
 
 	@Override

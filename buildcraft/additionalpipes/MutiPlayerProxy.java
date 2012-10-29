@@ -12,7 +12,7 @@ public class MutiPlayerProxy {
 	public boolean HDFound = false;
 	public boolean OFFound = false;
 
-	public boolean isOnServer(World world) {
+	public boolean isServer(World world) {
 		return !world.isRemote;
 	}
 

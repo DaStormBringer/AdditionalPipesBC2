@@ -13,7 +13,6 @@ import java.util.List;
 
 import net.minecraft.src.TileEntity;
 import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.additionalpipes.GuiHandler;
 import buildcraft.additionalpipes.logic.PipeLogicTeleport;
 import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
@@ -36,7 +35,7 @@ public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportL
 	}
 
 	public PipeLiquidsTeleport(int itemID) {
-		super(new PipeTransportLiquids(), new PipeLogicTeleport(GuiHandler.PIPE_TP), itemID);
+		super(new PipeTransportLiquids(), new PipeLogicTeleport(), itemID);
 
 		((PipeTransportLiquids) transport).flowRate = 80;
 		((PipeTransportLiquids) transport).travelDelay = 2;
@@ -125,7 +124,7 @@ public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportL
 		while (theList.size() > 0 && used <= 0) {
 			a = worldObj.rand.nextInt(theList.size());
 			//System.out.println("A: " + a);
-			used = theList.get(a).iliquid.fill(resource, doFill);
+			used = theList.get(a).iliquid.fill(Orientations.Unknown, resource, doFill);
 			theList.remove(a);
 		}
 
