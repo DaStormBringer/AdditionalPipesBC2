@@ -51,7 +51,7 @@ public class AdditionalPipes {
 	public static final String MODID = "AdditionalPipes";
 	public static final String NAME = "Additional Pipes for BuildCraft";
 	public static final String VERSION = "2.1.3u3";
-	public static final String CHANNEL = "AdditionalPipes";
+	public static final String CHANNEL = MODID;
 
 	@Instance(MODID)
 	public static AdditionalPipes instance;
@@ -67,7 +67,7 @@ public class AdditionalPipes {
 	@Retention(RetentionPolicy.RUNTIME)
 	private static @interface ConfigBool {}
 
-	public ChunkLoadDataProxy chunkLoadViewer = new ChunkLoadDataProxy();
+	public ChunkLoadViewDataProxy chunkLoadViewer = new ChunkLoadViewDataProxy();
 	public static @ConfigBool boolean chunkSight = true;
 	public static int chunkSightRange = 5;
 

@@ -16,15 +16,20 @@ import buildcraft.core.Box;
 import com.google.common.collect.SetMultimap;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
 
-public class ChunkLoadDataProxy {
-	public static final int MAX_SIGHT_RANGE = 63;
+public class ChunkLoadViewDataProxy {
+	public static final int MAX_SIGHT_RANGE = 31;
 
-	private int sightRange = 5;
+	//used by server
+	private int sightRange = 2;
+
+	//used by client
 	private List<Box> lasers = new LinkedList<Box>();
 	public ChunkCoordIntPair[] persistentChunks = new ChunkCoordIntPair[0];
 	private boolean active = false;
-	//client methods
+
+	//laser methods (client)
 	public void toggleLasers(){
 		if(lasersActive()){
 			deactivateLasers();
@@ -65,12 +70,30 @@ public class ChunkLoadDataProxy {
 		return active;
 	}
 
-	public void recievePersistentChunks(ChunkCoordIntPair[] chunks) {
+	//packet methods
+
+	//sets how far the server will search for chunkloaded chunks
+	//when sending data to the player (server)
+	public void setSightRange(int range) {
+		sightRange = range;
+		if(sightRange > MAX_SIGHT_RANGE)
+			sightRange = MAX_SIGHT_RANGE;
+
+	}
+
+	//client
+	public void requestPersistentChunks() {
+		PacketAdditionalPipes packet = new PacketAdditionalPipes(NetworkHandler.CHUNKLOAD_REQUEST, false);
+		PacketDispatcher.sendPacketToServer(packet.makePacket());
+	}
+
+	//client
+	public void receivePersistentChunks(ChunkCoordIntPair[] chunks) {
 		persistentChunks = chunks;
 		activateLasers();
 	}
 
-	//server methods
+	//server
 	public void sendPersistentChunksToPlayer(EntityPlayerMP player) {
 		if(!AdditionalPipes.chunkSight) { return;}
 		if(sightRange > MAX_SIGHT_RANGE) sightRange = MAX_SIGHT_RANGE;
@@ -81,8 +104,8 @@ public class ChunkLoadDataProxy {
 		int playerX = (((int) player.posX) >> 4) - sightRange / 2,
 				playerZ = (((int) player.posZ) >> 4) - sightRange / 2;
 
-		for(int i = 0; i  < sightRange; i++) {
-			for(int j = 0; j < sightRange; j++) {
+		for(int i = -sightRange; i  <= sightRange; i++) {
+			for(int j = -sightRange; j <= sightRange; j++) {
 				ChunkCoordIntPair coords = new ChunkCoordIntPair(playerX + i, playerZ + j);
 				if(persistentChunks.containsKey(coords)) {
 					chunksInRange.add(coords);
@@ -98,12 +121,4 @@ public class ChunkLoadDataProxy {
 		}
 		player.playerNetServerHandler.sendPacketToPlayer(packet.makePacket());
 	}
-
-	public void setSightRange(int range) {
-		sightRange = range;
-		if(sightRange > MAX_SIGHT_RANGE)
-			sightRange = MAX_SIGHT_RANGE;
-
-	}
-
 }

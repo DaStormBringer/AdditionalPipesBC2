@@ -39,17 +39,14 @@ public class PipeItemsAdvancedInsertion extends Pipe implements IPipeTransportIt
 		LinkedList<Orientations> newOris = new LinkedList<Orientations>();
 
 		for (int o = 0; o < 6; ++o) {
-			if (Orientations.values()[o] != pos.orientation.reverse()) {
-				Position newPos = new Position(pos);
-				newPos.orientation = Orientations.values()[o];
-				newPos.moveForwards(1.0);
-
-				TileEntity entity = worldObj.getBlockTileEntity((int) newPos.x, (int) newPos.y, (int) newPos.z);
+			Orientations orientation = Orientations.values()[o];
+			if (orientation != pos.orientation.reverse()) {
+				TileEntity entity = container.getTile(orientation);
 
 				if (entity instanceof IInventory) {
 					TransactorSimple transactor = new TransactorSimple((IInventory) entity);
-					if (transactor.add(item.getItemStack(), newPos.orientation.reverse(), false).stackSize > 0) {
-						newOris.add(newPos.orientation);
+					if (transactor.add(item.getItemStack(), orientation.reverse(), false).stackSize > 0) {
+						newOris.add(orientation);
 					}
 				}
 			}

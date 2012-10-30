@@ -16,11 +16,8 @@ import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.pipes.logic.PipeLogicDistributor;
 import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
-import buildcraft.api.transport.IPipeEntry;
 import buildcraft.api.transport.IPipedItem;
-import buildcraft.core.inventory.TransactorSimple;
 import buildcraft.core.utils.Utils;
-import buildcraft.energy.TileEngine;
 import buildcraft.transport.IPipeTransportItemsHook;
 import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransportItems;
@@ -34,69 +31,71 @@ public class PipeItemsDistributor extends Pipe implements IPipeTransportItemsHoo
 
 	@Override
 	public int getTextureIndex(Orientations connection) {
-		return 10;
+		switch (connection) {
+		case YNeg:
+			return 10;
+		case YPos:
+			return 11;
+		case ZNeg:
+			return 12;
+		case ZPos:
+			return 13;
+		case XNeg:
+			return 14;
+		case XPos:
+		default:
+			return 9;
+		}
 	}
 
 	@Override
 	public LinkedList<Orientations> filterPossibleMovements(LinkedList<Orientations> possibleOrientations, Position pos, IPipedItem item) {
-
 		PipeLogicDistributor pipeLogic = (PipeLogicDistributor) logic;
-
-		((PipeLogicDistributor)logic).switchIfNeeded();
 
 		LinkedList<Orientations> result = new LinkedList<Orientations>();
 
-		for (int o = 0; o < 6; ++o) {
-			if (container.pipe.outputOpen(Orientations.values()[o])) {
-				Position newPos = new Position(pos);
-				newPos.orientation = Orientations.values()[o];
-				newPos.moveForwards(1.0);
+		if (pipeLogic.curTick >= pipeLogic.distData[pipeLogic.distSide]) {
+			nextOpenValidInventory();
+		}
 
-				if (canReceivePipeObjects(newPos, item)) {
-					result.add(newPos.orientation);
+		for (int o = 0; o < 6; ++o) {
+			Orientations orientation = Orientations.values()[o];
+			if (!(item.getPosition().orientation == orientation.reverse())) {
+				if (canReceivePipeObjects(container.getTile(orientation))) {
+					result.add(orientation);
 				}
 			}
 		}
 
-		pipeLogic.curTick++;
+		pipeLogic.curTick += item.getItemStack().stackSize;
 
-		if (pipeLogic.curTick >= pipeLogic.distData[worldObj.getBlockMetadata(xCoord, yCoord, zCoord)]) {
-			((PipeLogicDistributor)logic).switchPosition();
-			pipeLogic.curTick = 0;
-		}
-
-
-		worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
 		return result;
 	}
 
-	public boolean canReceivePipeObjects(Position p,
-			IPipedItem item) {
-		TileEntity entity = worldObj.getBlockTileEntity((int) p.x, (int) p.y,
-				(int) p.z);
+	private void nextOpenValidInventory() {
+		PipeLogicDistributor pipeLogic = (PipeLogicDistributor) logic;
+		pipeLogic.curTick = 0;
+		for (int o = 0; o < 6; ++o) {
+			pipeLogic.distSide = (pipeLogic.distSide + 1) % pipeLogic.distData.length;
+			Orientations orientation = Orientations.values()[o];
+			if (pipeLogic.distData[pipeLogic.distSide] > 0 &&
+					canReceivePipeObjects(container.getTile(orientation))) {
+				break;
+			}
+		}
+	}
 
-		if (!Utils.checkLegacyPipesConnections(worldObj, (int) p.x, (int) p.y,
-				(int) p.z, xCoord, yCoord, zCoord)) {
+	public boolean canReceivePipeObjects(TileEntity entity) {
+		if (!Utils.checkPipesConnections(container, entity)) {
 			return false;
 		}
-
-		if (entity instanceof IPipeEntry) {
-			return true;
-		}
-		else if (entity instanceof TileEngine) {
-			return false;
-		}
-		else if (entity instanceof TileGenericPipe) {
+		if (entity instanceof TileGenericPipe) {
 			TileGenericPipe pipe = (TileGenericPipe) entity;
 			return pipe.pipe.transport instanceof PipeTransportItems;
 		}
-		else if (entity instanceof IInventory) {
-			TransactorSimple transactor = new TransactorSimple((IInventory) entity);
-			if (transactor.add(item.getItemStack(), p.orientation.reverse(), false).stackSize == 0) {
-				return true;
-			}
+		if (entity instanceof IInventory) {
+			return true;
 		}
-
 		return false;
 	}
 

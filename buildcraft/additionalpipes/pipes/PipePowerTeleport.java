@@ -154,7 +154,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 		TileEntity entity = worldObj.getBlockTileEntity((int) p.x, (int) p.y, (int) p.z);
 
 		if (entity instanceof TileGenericPipe || entity instanceof IPowerReceptor) {
-			if (Utils.checkLegacyPipesConnections(worldObj, (int) p.x, (int) p.y, (int) p.z, xCoord, yCoord, zCoord)) {
+			if (Utils.checkPipesConnections(container, entity)) {
 				return true;
 			}
 		}

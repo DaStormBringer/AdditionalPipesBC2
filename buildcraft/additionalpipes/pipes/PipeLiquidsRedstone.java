@@ -93,8 +93,7 @@ public class PipeLiquidsRedstone extends APPipe {
 		TileEntity entity = worldObj.getBlockTileEntity((int) p.x, (int) p.y,
 				(int) p.z);
 
-		if (!Utils.checkLegacyPipesConnections(worldObj, (int) p.x, (int) p.y,
-				(int) p.z, xCoord, yCoord, zCoord)) {
+		if (!Utils.checkPipesConnections(entity, container)) {
 			return false;
 		}
 

@@ -13,6 +13,7 @@ import net.minecraft.src.TileEntity;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.additionalpipes.pipes.logic.PipeLogicAdvancedWood;
+import buildcraft.additionalpipes.pipes.logic.PipeLogicDistributor;
 import buildcraft.transport.TileGenericPipe;
 import buildcraft.transport.pipes.PipeLogic;
 import cpw.mods.fml.common.network.IPacketHandler;
@@ -44,6 +45,7 @@ public class NetworkHandler implements IPacketHandler {
 				}
 				break;
 			case DIST_PIPE_DATA:
+				handleDistPipeData(player, data);
 				break;
 			case TELE_PIPE_DATA:
 				handleTelePipeData(player, data);
@@ -55,6 +57,37 @@ public class NetworkHandler implements IPacketHandler {
 				AdditionalPipes.instance.chunkLoadViewer
 				.sendPersistentChunksToPlayer((EntityPlayerMP) player);
 				break;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void handleDistPipeData(Player player, DataInputStream data) {
+		try {
+			TileEntity te = getTileEntity(player, data);
+			if(te instanceof TileGenericPipe) {
+				int index = data.read();
+				int newData = data.readInt();
+				PipeLogicDistributor logic = (PipeLogicDistributor) ((TileGenericPipe) te).pipe.logic;
+
+				if(newData >= 0 && index >= 0 && index < logic.distData.length) {
+					logic.distData[index] = newData;
+					boolean found = newData > 0;
+					if(!found) {
+						for (int i = 0; i < logic.distData.length; i++) {
+							if (logic.distData[i] > 0) {
+								found = true;
+							}
+						}
+					}
+					if (!found) {
+						for (int i = 0; i < logic.distData.length; i++) {
+							logic.distData[i] = 1;
+						}
+					}
+
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -84,7 +117,7 @@ public class NetworkHandler implements IPacketHandler {
 			for(int i = 0; i < size; i++) {
 				chunks[i] = new ChunkCoordIntPair(data.readInt(), data.readInt());
 			}
-			AdditionalPipes.instance.chunkLoadViewer.recievePersistentChunks(chunks);
+			AdditionalPipes.instance.chunkLoadViewer.receivePersistentChunks(chunks);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

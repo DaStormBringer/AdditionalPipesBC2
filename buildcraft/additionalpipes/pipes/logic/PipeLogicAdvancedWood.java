@@ -52,15 +52,14 @@ public class PipeLogicAdvancedWood extends PipeLogic implements IInventory {
 
 		if (newMeta != meta) {
 			worldObj.setBlockMetadata(xCoord, yCoord, zCoord, newMeta);
-			worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
+			container.scheduleRenderUpdate();
+			//worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 
 	public boolean isInput(TileEntity tile) {
-		return !(tile instanceof TileGenericPipe)
-				&& (tile instanceof IInventory || tile instanceof ITankContainer)
-				&&  Utils.checkLegacyPipesConnections(worldObj, xCoord, yCoord,
-						zCoord, tile.xCoord, tile.yCoord, tile.zCoord);
+		return !(tile instanceof TileGenericPipe) && (tile instanceof IInventory || tile instanceof ITankContainer)
+				&& Utils.checkPipesConnections(container, tile);
 	}
 
 
@@ -111,7 +110,6 @@ public class PipeLogicAdvancedWood extends PipeLogic implements IInventory {
 			switchSource();
 		else {
 			TileEntity tile = container.getTile(Orientations.values()[meta]);
-
 			if (!isInput(tile))
 				switchSource();
 		}

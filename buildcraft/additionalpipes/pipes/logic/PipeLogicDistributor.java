@@ -9,111 +9,38 @@
 package buildcraft.additionalpipes.pipes.logic;
 
 import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.IInventory;
-import net.minecraft.src.ItemStack;
+import net.minecraft.src.Item;
 import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.TileEntity;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.GuiHandler;
 import buildcraft.api.core.Orientations;
-import buildcraft.api.core.Position;
-import buildcraft.api.liquids.ITankContainer;
-import buildcraft.api.tools.IToolWrench;
-import buildcraft.api.transport.IPipeEntry;
-import buildcraft.transport.TileGenericPipe;
 import buildcraft.transport.pipes.PipeLogic;
-import buildcraft.transport.pipes.PipeLogicWood;
 
 public class PipeLogicDistributor extends PipeLogic {
 
 	public int distData[] = {1, 1, 1, 1, 1, 1};
+	public int distSide = 0;
 	public int curTick = 0;
-
-	public void switchPosition() {
-		int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-		int nextMetadata = metadata;
-
-		for (int l = 0; l < 6; ++l) {
-			nextMetadata ++;
-
-			if (nextMetadata > 5) {
-				nextMetadata = 0;
-			}
-
-			Position pos = new Position(xCoord, yCoord, zCoord, Orientations.values()[nextMetadata]);
-			pos.moveForwards(1.0);
-
-			TileEntity tile = worldObj.getBlockTileEntity((int) pos.x, (int) pos.y, (int) pos.z);
-
-			if (tile instanceof TileGenericPipe) {
-				if (((TileGenericPipe) tile).pipe.logic instanceof PipeLogicWood || ((TileGenericPipe) tile).pipe.logic instanceof PipeLogicAdvancedWood) {
-					continue;
-				}
-			}
-
-			if (tile instanceof IPipeEntry || tile instanceof IInventory || tile instanceof ITankContainer || tile instanceof TileGenericPipe) {
-				if (distData[nextMetadata] > 0) {
-					worldObj.setBlockMetadata(xCoord, yCoord, zCoord, nextMetadata);
-					return;
-				}
-			}
-		}
-	}
-	public void switchIfNeeded() {
-		int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-
-		int nextMetadata = metadata;
-
-		for (int l = 0; l < 6; ++l) {
-			if (nextMetadata > 5) {
-				nextMetadata = 0;
-			}
-
-			Position pos = new Position(xCoord, yCoord, zCoord, Orientations.values()[nextMetadata]);
-			pos.moveForwards(1.0);
-
-			TileEntity tile = worldObj.getBlockTileEntity((int) pos.x, (int) pos.y, (int) pos.z);
-
-			if (tile instanceof TileGenericPipe) {
-				if (((TileGenericPipe) tile).pipe.logic instanceof PipeLogicWood || ((TileGenericPipe) tile).pipe.logic instanceof PipeLogicAdvancedWood) {
-					continue;
-				}
-			}
-
-			if (tile instanceof IPipeEntry || tile instanceof IInventory || tile instanceof ITankContainer || tile instanceof TileGenericPipe) {
-				if (distData[nextMetadata] > 0) {
-					worldObj.setBlockMetadata(xCoord, yCoord, zCoord, nextMetadata);
-					return;
-				}
-			}
-
-			nextMetadata ++;
-		}
-	}
-
 
 	@Override
 	public void onBlockPlaced() {
 		super.onBlockPlaced();
-		worldObj.setBlockMetadata(xCoord, yCoord, zCoord, 1);
-		switchPosition();
 	}
 
 	@Override
-	public boolean blockActivated(EntityPlayer entityplayer) {
-		ItemStack equippedItem = entityplayer.getCurrentEquippedItem();
-		if (equippedItem != null) {
-			if (equippedItem.getItem() instanceof IToolWrench) {
-				switchPosition();
-				worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
-				return true;
-			}
-			if (AdditionalPipes.isPipe(equippedItem.getItem())) {
+	public boolean blockActivated(EntityPlayer player) {
+		if(player.isSneaking()) {
+			return false;
+		}
+
+		Item equipped = player.getCurrentEquippedItem() != null ? player.getCurrentEquippedItem().getItem() : null;
+		if (equipped != null) {
+			if (AdditionalPipes.isPipe(equipped)) {
 				return false;
 			}
 		}
 
-		entityplayer.openGui(AdditionalPipes.instance, GuiHandler.PIPE_DIST,
+		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_DIST,
 				container.worldObj, container.xCoord, container.yCoord, container.zCoord);
 
 		return true;
@@ -121,7 +48,7 @@ public class PipeLogicDistributor extends PipeLogic {
 
 	@Override
 	public boolean outputOpen(Orientations to) {
-		return to.ordinal() == worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+		return to.ordinal() == distSide;
 	}
 
 	@Override
@@ -130,6 +57,7 @@ public class PipeLogicDistributor extends PipeLogic {
 		super.writeToNBT(nbt);
 
 		nbt.setInteger("curTick", curTick);
+		nbt.setInteger("distSide", distSide);
 		for (int i = 0; i < distData.length; i++) {
 			nbt.setInteger("distData" + i, distData[i]);
 		}
@@ -139,6 +67,7 @@ public class PipeLogicDistributor extends PipeLogic {
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		curTick = nbt.getInteger("curTick");
+		distSide = nbt.getInteger("distSide");
 
 		boolean found = false;
 		for (int i = 0; i < distData.length; i++) {

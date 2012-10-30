@@ -38,30 +38,30 @@ public class GuiDistributionPipe extends GuiContainer {
 		super.initGui();
 		//int bw = this.xSize - 20;
 		int guiX = (width - xSize) / 2 + 30;
-		int guiY = (height - ySize) / 2 - 7;
+		int guiY = (height - ySize) / 2 - 10;
 
 		controlList.add(buttons[0]  =  new GuiButton(1, guiX + 1,       guiY + 24, 20, 17, "-"));
-		controlList.add(buttons[1]  =  new GuiButton(2, guiX + 3 + 20,  guiY + 24, 30, 17, "1000"));
+		controlList.add(buttons[1]  =  new GuiButton(2, guiX + 3 + 20,  guiY + 24, 30, 17, "0"));
 		controlList.add(buttons[2]  =  new GuiButton(3, guiX + 5 + 50,  guiY + 24, 20, 17, "+"));
 
 		controlList.add(buttons[3]  =  new GuiButton(4, guiX + 1,       guiY + 25 + 17, 20, 17, "-"));
-		controlList.add(buttons[4]  =  new GuiButton(5, guiX + 3 + 20,  guiY + 25 + 17, 30, 17, "1000"));
+		controlList.add(buttons[4]  =  new GuiButton(5, guiX + 3 + 20,  guiY + 25 + 17, 30, 17, "0"));
 		controlList.add(buttons[5]  =  new GuiButton(6, guiX + 5 + 50,  guiY + 25 + 17, 20, 17, "+"));
 
 		controlList.add(buttons[6]  =  new GuiButton(7, guiX + 1,       guiY + 26 + 17 * 2, 20, 17, "-"));
-		controlList.add(buttons[7]  =  new GuiButton(8, guiX + 3 + 20,  guiY + 26 + 17 * 2, 30, 17, "1000"));
+		controlList.add(buttons[7]  =  new GuiButton(8, guiX + 3 + 20,  guiY + 26 + 17 * 2, 30, 17, "0"));
 		controlList.add(buttons[8]  =  new GuiButton(9, guiX + 5 + 50,  guiY + 26 + 17 * 2, 20, 17, "+"));
 
 		controlList.add(buttons[9]  =  new GuiButton(10, guiX + 1,      guiY + 27 + 17 * 3, 20, 17, "-"));
-		controlList.add(buttons[10] =  new GuiButton(11, guiX + 3 + 20, guiY + 27 + 17 * 3, 30, 17, "1000"));
+		controlList.add(buttons[10] =  new GuiButton(11, guiX + 3 + 20, guiY + 27 + 17 * 3, 30, 17, "0"));
 		controlList.add(buttons[11] =  new GuiButton(12, guiX + 5 + 50, guiY + 27 + 17 * 3, 20, 17, "+"));
 
 		controlList.add(buttons[12] =  new GuiButton(13, guiX + 1,      guiY + 28 + 17 * 4, 20, 17, "-"));
-		controlList.add(buttons[13] =  new GuiButton(14, guiX + 3 + 20, guiY + 28 + 17 * 4, 30, 17, "1000"));
+		controlList.add(buttons[13] =  new GuiButton(14, guiX + 3 + 20, guiY + 28 + 17 * 4, 30, 17, "0"));
 		controlList.add(buttons[14] =  new GuiButton(15, guiX + 5 + 50, guiY + 28 + 17 * 4, 20, 17, "+"));
 
 		controlList.add(buttons[15] =  new GuiButton(16, guiX + 1,      guiY + 29 + 17 * 5, 20, 17, "-"));
-		controlList.add(buttons[16] =  new GuiButton(17, guiX + 3 + 20, guiY + 29 + 17 * 5, 30, 17, "1000"));
+		controlList.add(buttons[16] =  new GuiButton(17, guiX + 3 + 20, guiY + 29 + 17 * 5, 30, 17, "0"));
 		controlList.add(buttons[17] =  new GuiButton(18, guiX + 5 + 50, guiY + 29 + 17 * 5, 20, 17, "+"));
 
 	}
@@ -79,12 +79,21 @@ public class GuiDistributionPipe extends GuiContainer {
 	@Override
 	protected void actionPerformed(GuiButton guibutton) {
 		PipeLogicDistributor pipeLogic = (PipeLogicDistributor) pipe.logic;
-
+		int index = (guibutton.id - 1) / 3;
+		int newData = pipeLogic.distData[index];
+		if((guibutton.id - 1) % 3 == 0) {
+			newData--;
+		} else {
+			newData++;
+		}
+		/* //Old code
 		switch (guibutton.id) {
 		case 1:
+			index = 0;
 			pipeLogic.distData[0] -= 1;
 			break;
 		case 3:
+			index = 0;
 			pipeLogic.distData[0] += 1;
 			break;
 		case 4:
@@ -118,27 +127,16 @@ public class GuiDistributionPipe extends GuiContainer {
 			pipeLogic.distData[5] += 1;
 			break;
 		}
+		 */
 
-		boolean found = false;
-		for (int i = 0; i < pipeLogic.distData.length; i++) {
-			if (pipeLogic.distData[i] < 0) {
-				pipeLogic.distData[i] = 0;
-			}
-			if (pipeLogic.distData[i] > 0) {
-				found = true;
-			}
-		}
-		if (!found) {
-			for (int i = 0; i < pipeLogic.distData.length; i++) {
-				pipeLogic.distData[i] = 1;
-			}
-		}
+		if(newData < 0) return;
 
 		PacketAdditionalPipes packet = new PacketAdditionalPipes(NetworkHandler.DIST_PIPE_DATA, true);
 		packet.writeInt(pipe.xCoord);
 		packet.writeInt(pipe.yCoord);
 		packet.writeInt(pipe.zCoord);
-		packet.write((byte) guibutton.id);
+		packet.write((byte) index);
+		packet.writeInt(newData);
 		PacketDispatcher.sendPacketToServer(packet.makePacket());
 	}
 
