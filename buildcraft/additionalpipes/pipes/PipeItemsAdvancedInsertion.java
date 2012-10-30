@@ -31,11 +31,6 @@ public class PipeItemsAdvancedInsertion extends Pipe implements IPipeTransportIt
 
 	@Override
 	public LinkedList<Orientations> filterPossibleMovements(LinkedList<Orientations> possibleOrientations, Position pos, IPipedItem item) {
-		return filterPossibleMovements(possibleOrientations, pos, item, 0);
-	}
-
-
-	public LinkedList<Orientations> filterPossibleMovements(LinkedList<Orientations> possibleOrientations, Position pos, IPipedItem item, int Level) {
 		LinkedList<Orientations> newOris = new LinkedList<Orientations>();
 
 		for (int o = 0; o < 6; ++o) {

@@ -26,11 +26,11 @@ import buildcraft.transport.IPipeTransportItemsHook;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.TileGenericPipe;
 
-public class PipeItemTeleport extends PipeTeleport implements IPipeTransportItemsHook {
+public class PipeItemsTeleport extends PipeTeleport implements IPipeTransportItemsHook {
 
 	LinkedList <Integer> idsToRemove = new LinkedList <Integer>();
 
-	public PipeItemTeleport(int itemID) {
+	public PipeItemsTeleport(int itemID) {
 		super(new PipeTransportItems(), new PipeLogicTeleport(), itemID);
 	}
 

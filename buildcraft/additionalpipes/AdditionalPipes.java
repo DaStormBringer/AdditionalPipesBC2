@@ -1,11 +1,15 @@
 package buildcraft.additionalpipes;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
+import java.util.Properties;
 import java.util.logging.Level;
 
 import net.minecraft.src.Block;
+import net.minecraft.src.EnumRarity;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.KeyBinding;
@@ -18,15 +22,17 @@ import buildcraft.additionalpipes.chunkloader.BlockChunkLoader;
 import buildcraft.additionalpipes.chunkloader.ChunkLoadingHandler;
 import buildcraft.additionalpipes.chunkloader.TileChunkLoader;
 import buildcraft.additionalpipes.network.NetworkHandler;
-import buildcraft.additionalpipes.pipes.PipeItemTeleport;
 import buildcraft.additionalpipes.pipes.PipeItemsAdvancedInsertion;
 import buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
 import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
 import buildcraft.additionalpipes.pipes.PipeItemsRedstone;
+import buildcraft.additionalpipes.pipes.PipeItemsTeleport;
 import buildcraft.additionalpipes.pipes.PipeLiquidsRedstone;
 import buildcraft.additionalpipes.pipes.PipeLiquidsTeleport;
 import buildcraft.additionalpipes.pipes.PipePowerTeleport;
+import buildcraft.core.utils.Localization;
 import buildcraft.transport.BlockGenericPipe;
+import buildcraft.transport.ItemPipe;
 import buildcraft.transport.Pipe;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
@@ -71,14 +77,15 @@ public class AdditionalPipes {
 	public static @ConfigBool boolean chunkSight = true;
 	public static int chunkSightRange = 5;
 
-	public static final String TEXTURE_PATH = "/buildcraft/additionalpipes/sprites/";
-	public static final String TEXTURE_MASTER = TEXTURE_PATH + "textures.png";
-	public static final String TEXTURE_PIPES = TEXTURE_PATH + "pipes.png";
-	public static final String TEXTURE_BLOCKS = TEXTURE_PATH + "blocks.png";
+	public static final String BASE_PATH = "/buildcraft/additionalpipes";
+	public static final String TEXTURE_PATH = BASE_PATH + "/sprites";
+	public static final String TEXTURE_MASTER = TEXTURE_PATH + "/textures.png";
+	public static final String TEXTURE_PIPES = TEXTURE_PATH + "/pipes.png";
+	public static final String TEXTURE_BLOCKS = TEXTURE_PATH + "/blocks.png";
 
-	public static final String TEXTURE_GUI_TELEPORT = TEXTURE_PATH + "blankSmallGui.png";
-	public static final String TEXTURE_GUI_ADVANCEDWOOD = TEXTURE_PATH + "advancedWoodGui.png";
-	public static final String TEXTURE_GUI_DISTRIBUTION = TEXTURE_PATH + "distributionGui.png";
+	public static final String TEXTURE_GUI_TELEPORT = TEXTURE_PATH + "/blankSmallGui.png";
+	public static final String TEXTURE_GUI_ADVANCEDWOOD = TEXTURE_PATH + "/advancedWoodGui.png";
+	public static final String TEXTURE_GUI_DISTRIBUTION = TEXTURE_PATH + "/distributionGui.png";
 
 	public static @ConfigBool boolean loadItemsAdvancedInsertion = true,
 			loadItemsAdvancedWood = true,
@@ -170,7 +177,7 @@ public class AdditionalPipes {
 
 			Property laserKey = config.get(Configuration.CATEGORY_GENERAL,
 					"laserKeyChar", laserKeyCode);
-			laserKey.comment = "Key to toggle chunk load lasers.";
+			laserKey.comment = "Default key to toggle chunk load lasers. (can be overridden in options.txt/ingame GUI)";
 			laserKeyCode = laserKey.getInt();
 		} catch (Exception e) {
 			FMLLog.log(Level.SEVERE, e, "Failed to load Additional Pipes configs.");
@@ -187,54 +194,66 @@ public class AdditionalPipes {
 		ForgeChunkManager.setForcedChunkLoadingCallback(this,  new ChunkLoadingHandler());
 		proxy.registerKeyHandler();
 		proxy.registerRendering();
+
+		Properties en_US = null;
+		Localization.addLocalization(BASE_PATH + "/lang/", "en_US");
+		try {
+			en_US = new Properties();
+			en_US.load(AdditionalPipes.class.getResourceAsStream((BASE_PATH + "/lang/en_US.properties")));
+			LanguageRegistry.instance().addStringLocalization(en_US);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@PostInit
 	public void modsLoaded(FMLPostInitializationEvent event) {
 		// Item Teleport Pipe
-		pipeItemTeleport = createPipe(itemTeleportId, PipeItemTeleport.class, "Item Teleport Pipe");
+		pipeItemTeleport = createPipeSpecial(itemTeleportId, PipeItemsTeleport.class, EnumRarity.rare);
 		if (loadItemTeleport) {
 			GameRegistry.addRecipe(new ItemStack(pipeItemTeleport, 6), new Object[]{"dgd", 'd', BuildCraftCore.diamondGearItem, 'g', Block.glass});
 		}
 
 		// Liquid Teleport Pipe
-		pipeLiquidTeleport = createPipe(liquidTeleportId, PipeLiquidsTeleport.class, "Waterproof Teleport Pipe");
+		pipeLiquidTeleport = createPipeSpecial(liquidTeleportId, PipeLiquidsTeleport.class, EnumRarity.rare);
 		if (loadLiquidsTeleport) {
 			GameRegistry.addRecipe(new ItemStack(pipeLiquidTeleport), new Object[]{"w", "P", 'w', BuildCraftTransport.pipeWaterproof, 'P', pipeItemTeleport});
 		}
 
 		// Power Teleport Pipe
-		pipePowerTeleport = createPipe(powerTeleportId, PipePowerTeleport.class, "Power Teleport Pipe");
+		pipePowerTeleport = createPipeSpecial(powerTeleportId, PipePowerTeleport.class, EnumRarity.rare);
 		if (loadPowerTeleport) {
 			GameRegistry.addRecipe(new ItemStack(pipePowerTeleport), new Object[]{"r", "P", 'r', Item.redstone, 'P', pipeItemTeleport});
 		}
 
 		// Distributor Pipe
-		pipeDistributor = createPipe(distributorTransportId, PipeItemsDistributor.class, "Distribution Transport Pipe");
+		pipeDistributor = createPipe(distributorTransportId, PipeItemsDistributor.class);
 		if (loadItemsDistributor) {
 			GameRegistry.addRecipe(new ItemStack(pipeDistributor, 8), new Object[]{" r ", "IgI", 'r', Item.redstone, 'I', Item.ingotIron, 'g', Block.glass});
 		}
 
 		// Advanced Wooded Pipe
-		pipeAdvancedWood = createPipe(advancedWoodId, PipeItemsAdvancedWood.class, "Extraction Transport Pipe");
+		pipeAdvancedWood = createPipe(advancedWoodId, PipeItemsAdvancedWood.class);
 		if (loadItemsAdvancedWood) {
 			GameRegistry.addRecipe(new ItemStack(pipeAdvancedWood, 8), new Object[]{" r ", "WgW", 'r', Item.redstone, 'W', Block.planks, 'g', Block.glass});
 		}
 
 		// Advanced Insertion Pipe
-		pipeAdvancedInsertion = createPipe(insertionId, PipeItemsAdvancedInsertion.class, "Insertion Transport Pipe");
+		pipeAdvancedInsertion = createPipe(insertionId, PipeItemsAdvancedInsertion.class);
 		if (loadItemsAdvancedInsertion) {
 			GameRegistry.addRecipe(new ItemStack(pipeAdvancedInsertion, 8), new Object[]{" r ", "OgO", 'r', Item.redstone, 'O', Block.obsidian, 'g', Block.glass});
 		}
 
 		// Redstone Pipe
-		pipeRedStone = createPipe(redstoneId, PipeItemsRedstone.class, "Redstone Transport Pipe");
+		pipeRedStone = createPipe(redstoneId, PipeItemsRedstone.class);
 		if (loadItemsRedstone) {
 			GameRegistry.addRecipe(new ItemStack(pipeRedStone, 8), new Object[]{"RgR", 'R', Item.redstone, 'g', Block.glass});
 		}
 
 		// Redstone Liquid Pipe
-		pipeRedStoneLiquid = createPipe(redstoneLiquidId, PipeLiquidsRedstone.class, "Redstone Waterproof Pipe");
+		pipeRedStoneLiquid = createPipe(redstoneLiquidId, PipeLiquidsRedstone.class);
 		if (loadLiquidsRedstone) {
 			GameRegistry.addRecipe(new ItemStack(pipeRedStoneLiquid), new Object[]{"w", "P", 'w', BuildCraftTransport.pipeWaterproof, 'P', pipeRedStone});
 		}
@@ -258,23 +277,58 @@ public class AdditionalPipes {
 
 		//ChunkLoader
 		blockChunkLoader = new BlockChunkLoader(chunkLoaderId, 0);
-		blockChunkLoader.setBlockName("Teleport Tether");
-		LanguageRegistry.addName(blockChunkLoader, "Teleport Tether");
+		blockChunkLoader.setBlockName("TeleportTether");
 		GameRegistry.registerBlock(blockChunkLoader);
-		GameRegistry.registerTileEntity(TileChunkLoader.class, "Teleport Tether");
+		GameRegistry.registerTileEntity(TileChunkLoader.class, "TeleportTether");
 		if (loadChunkLoader) {
 			GameRegistry.addRecipe(new ItemStack(blockChunkLoader), new Object[]{"iii", "iLi", "iii", 'i', Item.ingotIron, 'L', new ItemStack(Item.dyePowder, 1, 4)});
 		}
 	}
 
 
-	private Item createPipe(int id, Class<? extends Pipe> clas, String description) {
+	private static Item createPipe(int id, Class<? extends Pipe> clas) {
 		Item res = BlockGenericPipe.registerPipe(id, clas);
 		res.setItemName(clas.getSimpleName());
-		LanguageRegistry.addName(res, description);
 		proxy.registerPipeRendering(res);
 		return res;
 	}
+
+	//special pipe code
+	private static class ItemPipeAP extends ItemPipe {
+		private EnumRarity rarity;
+		protected ItemPipeAP(int i) {
+			super(i);
+			rarity = EnumRarity.common;
+		}
+		public EnumRarity getRarity(ItemStack stack){
+			return rarity;
+		}
+		public void setRarity(EnumRarity rarity){
+			this.rarity = rarity;
+		}
+	}
+
+	private static Item createPipeSpecial(int id, Class<? extends Pipe> clas, EnumRarity rarity){
+		ItemPipeAP item = new ItemPipeAP(id);
+		item.setItemName(clas.getSimpleName());
+		item.setRarity(rarity);
+		proxy.registerPipeRendering(item);
+
+		BlockGenericPipe.pipes.put(item.shiftedIndex, clas);
+
+		try {
+			Pipe dummyPipe = clas.getConstructor(int.class).newInstance(id);
+			if (dummyPipe != null){
+				item.setTextureFile(dummyPipe.getTextureFile());
+				item.setTextureIndex(dummyPipe.getTextureIndexForItem());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return item;
+	}
+	//special pipe code
 
 	public static boolean isPipe(Item item) {
 		if (item != null && BlockGenericPipe.pipes.containsKey(item.shiftedIndex)) {
