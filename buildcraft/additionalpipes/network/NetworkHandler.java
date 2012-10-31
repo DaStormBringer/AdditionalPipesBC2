@@ -3,6 +3,7 @@ package buildcraft.additionalpipes.network;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.logging.Level;
 
 import net.minecraft.src.ChunkCoordIntPair;
 import net.minecraft.src.EntityPlayer;
@@ -32,7 +33,7 @@ public class NetworkHandler implements IPacketHandler {
 	public void onPacketData(INetworkManager manager,
 			Packet250CustomPayload packet, Player player) {
 		DataInputStream data = new DataInputStream(new ByteArrayInputStream(packet.data));
-		byte packetID;
+		byte packetID = -1;
 		try {
 			packetID = data.readByte();
 			switch(packetID) {
@@ -59,7 +60,7 @@ public class NetworkHandler implements IPacketHandler {
 				break;
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			AdditionalPipes.instance.logger.log(Level.SEVERE, "Error handling packet " + packetID, e);
 		}
 	}
 
@@ -90,7 +91,7 @@ public class NetworkHandler implements IPacketHandler {
 				}
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			AdditionalPipes.instance.logger.log(Level.SEVERE, "Error handling distribution pipe packet.", e);
 		}
 	}
 
@@ -106,7 +107,7 @@ public class NetworkHandler implements IPacketHandler {
 				pipe.logic.canReceive = (data.read() == 1);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			AdditionalPipes.instance.logger.log(Level.SEVERE, "Error handling teleport pipe packet.", e);
 		}
 	}
 
@@ -119,7 +120,7 @@ public class NetworkHandler implements IPacketHandler {
 			}
 			AdditionalPipes.instance.chunkLoadViewer.receivePersistentChunks(chunks);
 		} catch (IOException e) {
-			e.printStackTrace();
+			AdditionalPipes.instance.logger.log(Level.SEVERE, "Error handling chunk load data.", e);
 		}
 	}
 
@@ -132,7 +133,7 @@ public class NetworkHandler implements IPacketHandler {
 			z = data.readInt();
 			te = ((EntityPlayer) player).worldObj.getBlockTileEntity(x, y, z);
 		} catch (IOException e) {
-			e.printStackTrace();
+			AdditionalPipes.instance.logger.log(Level.SEVERE, "Error getting tileentity position from packet.", e);
 		}
 		return te;
 	}

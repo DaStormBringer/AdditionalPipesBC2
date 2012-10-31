@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Properties;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import net.minecraft.src.Block;
 import net.minecraft.src.EnumRarity;
@@ -40,10 +42,12 @@ import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.PostInit;
 import cpw.mods.fml.common.Mod.PreInit;
+import cpw.mods.fml.common.Mod.ServerStarting;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -52,11 +56,11 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 @Mod(modid=AdditionalPipes.MODID, name=AdditionalPipes.NAME,
 dependencies="required-after:BuildCraft|Transport", version=AdditionalPipes.VERSION)
 @NetworkMod(channels={AdditionalPipes.CHANNEL},
-clientSideRequired=true, packetHandler=NetworkHandler.class)
+clientSideRequired=true, serverSideRequired=true, packetHandler=NetworkHandler.class)
 public class AdditionalPipes {
 	public static final String MODID = "AdditionalPipes";
 	public static final String NAME = "Additional Pipes for BuildCraft";
-	public static final String VERSION = "2.1.3u3";
+	public static final String VERSION = "2.1.3u5";
 	public static final String CHANNEL = MODID;
 
 	@Instance(MODID)
@@ -66,6 +70,8 @@ public class AdditionalPipes {
 			serverSide = "buildcraft.additionalpipes.MutiPlayerProxy")
 	public static MutiPlayerProxy proxy;
 
+	public Logger logger;
+
 	@Retention(RetentionPolicy.RUNTIME)
 	private static @interface ConfigId {
 		public boolean block() default false;
@@ -73,10 +79,7 @@ public class AdditionalPipes {
 	@Retention(RetentionPolicy.RUNTIME)
 	private static @interface ConfigBool {}
 
-	public ChunkLoadViewDataProxy chunkLoadViewer = new ChunkLoadViewDataProxy();
-	public static @ConfigBool boolean chunkSight = true;
-	public static int chunkSightRange = 5;
-
+	//textures
 	public static final String BASE_PATH = "/buildcraft/additionalpipes";
 	public static final String TEXTURE_PATH = BASE_PATH + "/sprites";
 	public static final String TEXTURE_MASTER = TEXTURE_PATH + "/textures.png";
@@ -87,113 +90,63 @@ public class AdditionalPipes {
 	public static final String TEXTURE_GUI_ADVANCEDWOOD = TEXTURE_PATH + "/advancedWoodGui.png";
 	public static final String TEXTURE_GUI_DISTRIBUTION = TEXTURE_PATH + "/distributionGui.png";
 
-	public static @ConfigBool boolean loadItemsAdvancedInsertion = true,
-			loadItemsAdvancedWood = true,
-			loadItemsDistributor = true,
-			loadItemsRedstone = true,
-			loadLiquidsRedstone = true,
-			loadItemTeleport = true,
-			loadLiquidsTeleport = true,
-			loadPowerTeleport = true,
-			loadChunkLoader = true;
+	//chunk load boundaries
+	public final ChunkLoadViewDataProxy chunkLoadViewer = new ChunkLoadViewDataProxy();
+	public @ConfigBool boolean chunkSight = true;
+	public int chunkSightRange = 2; //config option
+
+	//enable/disable crafting
+	public @ConfigBool boolean enableItemsAdvancedInsertion = true,
+			enableItemsAdvancedWood = true,
+			enableItemsDistributor = true,
+			enableItemsRedstone = true,
+			enableLiquidsRedstone = true,
+			enableItemTeleport = true,
+			enableLiquidsTeleport = true,
+			enablePowerTeleport = true,
+			enbableChunkLoader = true;
 	//Item Teleport
 	public Item pipeItemTeleport;
-	public static @ConfigId int itemTeleportId = 4047;
+	public @ConfigId int itemTeleportId = 4047;
 	//Liquid Teleport
 	public Item pipeLiquidTeleport;
-	public static @ConfigId int liquidTeleportId = 4048;
+	public @ConfigId int liquidTeleportId = 4048;
 	//Power Teleport
 	public Item pipePowerTeleport;
-	public static @ConfigId int powerTeleportId = 4049;
+	public @ConfigId int powerTeleportId = 4049;
 	//Distributor
 	public Item pipeDistributor;
-	public static @ConfigId int distributorTransportId = 4046;
+	public @ConfigId int distributorTransportId = 4046;
 	//Advanced Wood
 	public Item pipeAdvancedWood;
-	public static @ConfigId int advancedWoodId = 4045;
+	public @ConfigId int advancedWoodId = 4045;
 	//Advanced Insertion
 	public Item pipeAdvancedInsertion;
-	public static @ConfigId int insertionId = 4044;
+	public @ConfigId int insertionId = 4044;
 	//Redstone
 	public Item pipeRedStone;
-	public static @ConfigId int redstoneId = 4043;
+	public @ConfigId int redstoneId = 4043;
 	//Redstone Liquid
 	public Item pipeRedStoneLiquid;
-	public static @ConfigId int redstoneLiquidId = 4042;
+	public @ConfigId int redstoneLiquidId = 4042;
 	//chunk loader
 	public Block blockChunkLoader;
-	public static @ConfigId(block=true) int chunkLoaderId = 189;
-
-	//configs
-	private Configuration config;
-	public static int laserKeyCode = 64; //config option (& in options menu)
-	public static KeyBinding laserKey;
-	public static @ConfigBool boolean wrenchOpensGui = true;
-	public static @ConfigBool boolean allowWRRemove = false;
-	public static double powerLossCfg = .95; //config option
+	public @ConfigId(block=true) int chunkLoaderId = 189;
+	//keybinding
+	public int laserKeyCode = 64; //config option (& in options menu)
+	public KeyBinding laserKey;
+	//misc
+	public @ConfigBool boolean wrenchOpensGui = true;
+	public @ConfigBool boolean allowWRRemove = false;
+	public double powerLossCfg = .95; //config option
 
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event) {
-		config = new Configuration(
-				event.getSuggestedConfigurationFile());
-		try {
-			config.load();
-			Field[] fields = AdditionalPipes.class.getFields();
-			for(Field field : fields){
-				ConfigId annotation = field.getAnnotation(ConfigId.class);
-				if(annotation != null){
-					int id = field.getInt(null);
-					if(annotation.block()){
-						id = config.getBlock(field.getName(), id).getInt();
-					}else{
-						id = config.getItem(field.getName(), id).getInt();
-					}
-					field.setInt(null, id);
-				} else {
-					ConfigBool boolAnnotation = field.getAnnotation(ConfigBool.class);
-					if(boolAnnotation != null){
-						boolean bool = field.getBoolean(null);
-						bool = config.get(Configuration.CATEGORY_GENERAL,
-								field.getName(), bool).getBoolean(bool);
-						field.setBoolean(null, bool);
-					}
-				}
-			}
+		loadConfigs(new Configuration(event.getSuggestedConfigurationFile()));
 
-			Property powerLoss = config.get(Configuration.CATEGORY_GENERAL,
-					"powerLoss", (int) (powerLossCfg * 100));
-			powerLoss.comment = "Percentage of power a power teleport pipe transmits. Between 0 and 100.";
-			powerLossCfg = powerLoss.getInt() / 100.0;
-			if(powerLossCfg > 1.00) {
-				powerLossCfg = 0.99;
-			} else if(powerLossCfg < 0.0) {
-				powerLossCfg = 0.0;
-			}
-
-			Property chunkLoadSightRange = config.get(Configuration.CATEGORY_GENERAL,
-					"chunkSightRange", chunkSightRange);
-			chunkLoadSightRange.comment = "Range of chunk load lasers.";
-			chunkLoadViewer.setSightRange(chunkLoadSightRange.getInt());
-
-			Property laserKey = config.get(Configuration.CATEGORY_GENERAL,
-					"laserKeyChar", laserKeyCode);
-			laserKey.comment = "Default key to toggle chunk load lasers. (can be overridden in options.txt/ingame GUI)";
-			laserKeyCode = laserKey.getInt();
-		} catch (Exception e) {
-			FMLLog.log(Level.SEVERE, e, "Failed to load Additional Pipes configs.");
-		} finally {
-			config.save();
-		}
-	}
-
-	@Init
-	public void init(FMLInitializationEvent event) {
-		laserKey = new KeyBinding("laserKeyBinding", laserKeyCode);
-		//ModLoader.addLocalization("laserKeyBinding", "Turn on/off chunk loader boundries");
-		NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
-		ForgeChunkManager.setForcedChunkLoadingCallback(this,  new ChunkLoadingHandler());
-		proxy.registerKeyHandler();
-		proxy.registerRendering();
+		logger = Logger.getLogger(MODID);
+		logger.setParent(FMLLog.getLogger());
+		logger.setLevel(Level.FINEST); //debugging
 
 		Properties en_US = null;
 		Localization.addLocalization(BASE_PATH + "/lang/", "en_US");
@@ -202,61 +155,23 @@ public class AdditionalPipes {
 			en_US.load(AdditionalPipes.class.getResourceAsStream((BASE_PATH + "/lang/en_US.properties")));
 			LanguageRegistry.instance().addStringLocalization(en_US);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Couldn't find default localization file.", e);
 		} catch (IOException e) {
-			e.printStackTrace();
-		}
+			logger.log(Level.SEVERE, "Failed to load default localization.", e);		}
+	}
+
+	@Init
+	public void init(FMLInitializationEvent event) {
+		laserKey = new KeyBinding("Toggle chunk loading boundries", laserKeyCode);
+		NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
+		ForgeChunkManager.setForcedChunkLoadingCallback(this,  new ChunkLoadingHandler());
+		proxy.registerKeyHandler();
+		proxy.registerRendering();
 	}
 
 	@PostInit
 	public void modsLoaded(FMLPostInitializationEvent event) {
-		// Item Teleport Pipe
-		pipeItemTeleport = createPipeSpecial(itemTeleportId, PipeItemsTeleport.class, EnumRarity.rare);
-		if (loadItemTeleport) {
-			GameRegistry.addRecipe(new ItemStack(pipeItemTeleport, 6), new Object[]{"dgd", 'd', BuildCraftCore.diamondGearItem, 'g', Block.glass});
-		}
-
-		// Liquid Teleport Pipe
-		pipeLiquidTeleport = createPipeSpecial(liquidTeleportId, PipeLiquidsTeleport.class, EnumRarity.rare);
-		if (loadLiquidsTeleport) {
-			GameRegistry.addRecipe(new ItemStack(pipeLiquidTeleport), new Object[]{"w", "P", 'w', BuildCraftTransport.pipeWaterproof, 'P', pipeItemTeleport});
-		}
-
-		// Power Teleport Pipe
-		pipePowerTeleport = createPipeSpecial(powerTeleportId, PipePowerTeleport.class, EnumRarity.rare);
-		if (loadPowerTeleport) {
-			GameRegistry.addRecipe(new ItemStack(pipePowerTeleport), new Object[]{"r", "P", 'r', Item.redstone, 'P', pipeItemTeleport});
-		}
-
-		// Distributor Pipe
-		pipeDistributor = createPipe(distributorTransportId, PipeItemsDistributor.class);
-		if (loadItemsDistributor) {
-			GameRegistry.addRecipe(new ItemStack(pipeDistributor, 8), new Object[]{" r ", "IgI", 'r', Item.redstone, 'I', Item.ingotIron, 'g', Block.glass});
-		}
-
-		// Advanced Wooded Pipe
-		pipeAdvancedWood = createPipe(advancedWoodId, PipeItemsAdvancedWood.class);
-		if (loadItemsAdvancedWood) {
-			GameRegistry.addRecipe(new ItemStack(pipeAdvancedWood, 8), new Object[]{" r ", "WgW", 'r', Item.redstone, 'W', Block.planks, 'g', Block.glass});
-		}
-
-		// Advanced Insertion Pipe
-		pipeAdvancedInsertion = createPipe(insertionId, PipeItemsAdvancedInsertion.class);
-		if (loadItemsAdvancedInsertion) {
-			GameRegistry.addRecipe(new ItemStack(pipeAdvancedInsertion, 8), new Object[]{" r ", "OgO", 'r', Item.redstone, 'O', Block.obsidian, 'g', Block.glass});
-		}
-
-		// Redstone Pipe
-		pipeRedStone = createPipe(redstoneId, PipeItemsRedstone.class);
-		if (loadItemsRedstone) {
-			GameRegistry.addRecipe(new ItemStack(pipeRedStone, 8), new Object[]{"RgR", 'R', Item.redstone, 'g', Block.glass});
-		}
-
-		// Redstone Liquid Pipe
-		pipeRedStoneLiquid = createPipe(redstoneLiquidId, PipeLiquidsRedstone.class);
-		if (loadLiquidsRedstone) {
-			GameRegistry.addRecipe(new ItemStack(pipeRedStoneLiquid), new Object[]{"w", "P", 'w', BuildCraftTransport.pipeWaterproof, 'P', pipeRedStone});
-		}
+		loadPipes();
 
 		if (allowWRRemove) {
 			//Additional Pipes
@@ -280,11 +195,119 @@ public class AdditionalPipes {
 		blockChunkLoader.setBlockName("TeleportTether");
 		GameRegistry.registerBlock(blockChunkLoader);
 		GameRegistry.registerTileEntity(TileChunkLoader.class, "TeleportTether");
-		if (loadChunkLoader) {
+		if (enbableChunkLoader) {
 			GameRegistry.addRecipe(new ItemStack(blockChunkLoader), new Object[]{"iii", "iLi", "iii", 'i', Item.ingotIron, 'L', new ItemStack(Item.dyePowder, 1, 4)});
 		}
 	}
 
+	@ServerStarting
+	public void onServerStart(FMLServerStartingEvent event) {
+		event.registerServerCommand(new CommandAdditionalPipes());
+	}
+
+	private void loadConfigs(Configuration config) {
+		try {
+			config.load();
+			Field[] fields = AdditionalPipes.class.getFields();
+			for(Field field : fields){
+				if(!Modifier.isStatic(field.getModifiers())) {
+
+					ConfigId annotation = field.getAnnotation(ConfigId.class);
+					if(annotation != null) {
+						int id = field.getInt(this);
+						if(annotation.block()){
+							id = config.getBlock(field.getName(), id).getInt();
+						}else{
+							id = config.getItem(field.getName(), id).getInt();
+						}
+						field.setInt(this, id);
+					} else {
+						if(field.isAnnotationPresent(ConfigBool.class)){
+							boolean bool = field.getBoolean(this);
+							bool = config.get(Configuration.CATEGORY_GENERAL,
+									field.getName(), bool).getBoolean(bool);
+							field.setBoolean(this, bool);
+						}
+					}
+
+				}
+			}
+
+			Property powerLoss = config.get(Configuration.CATEGORY_GENERAL,
+					"powerLoss", (int) (powerLossCfg * 100));
+			powerLoss.comment = "Percentage of power a power teleport pipe transmits. Between 0 and 100.";
+			powerLossCfg = powerLoss.getInt() / 100.0;
+			if(powerLossCfg > 1.00) {
+				powerLossCfg = 0.99;
+			} else if(powerLossCfg < 0.0) {
+				powerLossCfg = 0.0;
+			}
+
+			Property chunkLoadSightRange = config.get(Configuration.CATEGORY_GENERAL,
+					"chunkSightRange", chunkSightRange);
+			chunkLoadSightRange.comment = "Range of chunk load lasers.";
+			chunkLoadViewer.setSightRange(chunkLoadSightRange.getInt());
+
+			Property laserKey = config.get(Configuration.CATEGORY_GENERAL,
+					"laserKeyChar", laserKeyCode);
+			laserKey.comment = "Default key to toggle chunk load boundaries.";
+			laserKeyCode = laserKey.getInt();
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "Error loading Additional Pipes configs.", e);
+		} finally {
+			config.save();
+		}
+	}
+
+	private void loadPipes(){
+		// Item Teleport Pipe
+		pipeItemTeleport = createPipeSpecial(itemTeleportId, PipeItemsTeleport.class, EnumRarity.rare);
+		if (enableItemTeleport) {
+			GameRegistry.addRecipe(new ItemStack(pipeItemTeleport, 6), new Object[]{"dgd", 'd', BuildCraftCore.diamondGearItem, 'g', Block.glass});
+		}
+
+		// Liquid Teleport Pipe
+		pipeLiquidTeleport = createPipeSpecial(liquidTeleportId, PipeLiquidsTeleport.class, EnumRarity.rare);
+		if (enableLiquidsTeleport) {
+			GameRegistry.addRecipe(new ItemStack(pipeLiquidTeleport), new Object[]{"w", "P", 'w', BuildCraftTransport.pipeWaterproof, 'P', pipeItemTeleport});
+		}
+
+		// Power Teleport Pipe
+		pipePowerTeleport = createPipeSpecial(powerTeleportId, PipePowerTeleport.class, EnumRarity.rare);
+		if (enablePowerTeleport) {
+			GameRegistry.addRecipe(new ItemStack(pipePowerTeleport), new Object[]{"r", "P", 'r', Item.redstone, 'P', pipeItemTeleport});
+		}
+
+		// Distributor Pipe
+		pipeDistributor = createPipe(distributorTransportId, PipeItemsDistributor.class);
+		if (enableItemsDistributor) {
+			GameRegistry.addRecipe(new ItemStack(pipeDistributor, 8), new Object[]{" r ", "IgI", 'r', Item.redstone, 'I', Item.ingotIron, 'g', Block.glass});
+		}
+
+		// Advanced Wooded Pipe
+		pipeAdvancedWood = createPipe(advancedWoodId, PipeItemsAdvancedWood.class);
+		if (enableItemsAdvancedWood) {
+			GameRegistry.addRecipe(new ItemStack(pipeAdvancedWood, 8), new Object[]{" r ", "WgW", 'r', Item.redstone, 'W', Block.planks, 'g', Block.glass});
+		}
+
+		// Advanced Insertion Pipe
+		pipeAdvancedInsertion = createPipe(insertionId, PipeItemsAdvancedInsertion.class);
+		if (enableItemsAdvancedInsertion) {
+			GameRegistry.addRecipe(new ItemStack(pipeAdvancedInsertion, 8), new Object[]{" r ", "OgO", 'r', Item.redstone, 'O', Block.obsidian, 'g', Block.glass});
+		}
+
+		// Redstone Pipe
+		pipeRedStone = createPipe(redstoneId, PipeItemsRedstone.class);
+		if (enableItemsRedstone) {
+			GameRegistry.addRecipe(new ItemStack(pipeRedStone, 8), new Object[]{"RgR", 'R', Item.redstone, 'g', Block.glass});
+		}
+
+		// Redstone Liquid Pipe
+		pipeRedStoneLiquid = createPipe(redstoneLiquidId, PipeLiquidsRedstone.class);
+		if (enableLiquidsRedstone) {
+			GameRegistry.addRecipe(new ItemStack(pipeRedStoneLiquid), new Object[]{"w", "P", 'w', BuildCraftTransport.pipeWaterproof, 'P', pipeRedStone});
+		}
+	}
 
 	private static Item createPipe(int id, Class<? extends Pipe> clas) {
 		Item res = BlockGenericPipe.registerPipe(id, clas);
@@ -300,6 +323,7 @@ public class AdditionalPipes {
 			super(i);
 			rarity = EnumRarity.common;
 		}
+		@Override
 		public EnumRarity getRarity(ItemStack stack){
 			return rarity;
 		}
@@ -308,7 +332,7 @@ public class AdditionalPipes {
 		}
 	}
 
-	private static Item createPipeSpecial(int id, Class<? extends Pipe> clas, EnumRarity rarity){
+	private Item createPipeSpecial(int id, Class<? extends Pipe> clas, EnumRarity rarity){
 		ItemPipeAP item = new ItemPipeAP(id);
 		item.setItemName(clas.getSimpleName());
 		item.setRarity(rarity);
@@ -323,12 +347,11 @@ public class AdditionalPipes {
 				item.setTextureIndex(dummyPipe.getTextureIndexForItem());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Error during special pipe creation.", e);
 		}
 
 		return item;
 	}
-	//special pipe code
 
 	public static boolean isPipe(Item item) {
 		if (item != null && BlockGenericPipe.pipes.containsKey(item.shiftedIndex)) {

@@ -215,4 +215,10 @@ public class PipeLogicAdvancedWood extends PipeLogic implements IInventory {
 	public void closeChest() {
 	}
 
+	@Override
+	public boolean doDrop() {
+		Utils.dropItems(worldObj, this, xCoord, yCoord, zCoord);
+		return true;
+	}
+
 }

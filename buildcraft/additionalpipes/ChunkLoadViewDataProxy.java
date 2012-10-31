@@ -95,7 +95,7 @@ public class ChunkLoadViewDataProxy {
 
 	//server
 	public void sendPersistentChunksToPlayer(EntityPlayerMP player) {
-		if(!AdditionalPipes.chunkSight) { return;}
+		if(!AdditionalPipes.instance.chunkSight) { return;}
 		if(sightRange > MAX_SIGHT_RANGE) sightRange = MAX_SIGHT_RANGE;
 
 		SetMultimap<ChunkCoordIntPair, Ticket> persistentChunks =

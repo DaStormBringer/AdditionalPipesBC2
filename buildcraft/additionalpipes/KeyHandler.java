@@ -20,7 +20,7 @@ public class KeyHandler extends KeyBindingRegistry.KeyHandler{
 	@Override
 	public void keyDown(EnumSet<TickType> types, KeyBinding kb,
 			boolean tickEnd, boolean isRepeat) {
-		if (tickEnd && kb.keyCode == AdditionalPipes.laserKey.keyCode) {
+		if (tickEnd && kb.keyCode == AdditionalPipes.instance.laserKey.keyCode) {
 			ChunkLoadViewDataProxy viewer = AdditionalPipes.instance.chunkLoadViewer;
 			viewer.toggleLasers();
 			if(viewer.lasersActive()) {

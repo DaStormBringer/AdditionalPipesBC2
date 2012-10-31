@@ -46,7 +46,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 	public void receiveEnergy(Orientations from, double val) {
 
 		((PipeTransportPower)transport).step();
-		List<PipeTeleport> pipeList = getConnectedPipes(false);
+		List<PipeTeleport> pipeList = TeleportManager.instance.getConnectedPipes(this, false);
 		List<PipeTeleport> sendingToList = new LinkedList<PipeTeleport>();
 
 		if (pipeList.size() == 0) {
@@ -197,7 +197,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 			return;
 		}
 
-		List<PipeTeleport> pipeList = getConnectedPipes(true);
+		List<PipeTeleport> pipeList = TeleportManager.instance.getConnectedPipes(this, true);
 
 		if (pipeList.size() == 0) {
 			return;

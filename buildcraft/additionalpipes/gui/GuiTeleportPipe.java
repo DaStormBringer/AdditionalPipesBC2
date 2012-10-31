@@ -15,11 +15,13 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 public class GuiTeleportPipe extends GuiContainer {
 
 	private PipeTeleport pipe;
+	private ContainerTeleportPipe container;
 	private GuiButton[] buttons = new GuiButton[7];
 
 	public GuiTeleportPipe(TileGenericPipe tile) {
 		super(new ContainerTeleportPipe(tile));
 
+		container = (ContainerTeleportPipe) inventorySlots;
 		pipe = (PipeTeleport) tile.pipe;
 
 		xSize = 228;
@@ -42,7 +44,7 @@ public class GuiTeleportPipe extends GuiContainer {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int p1, int p2) {
 		fontRenderer.drawString("Frequency: " + pipe.logic.freq, 8, 6, 0x404040);
-		fontRenderer.drawString("Connected Pipes: " + pipe.getConnectedPipes(true).size(), 100, 6, 0x404040);
+		fontRenderer.drawString("Connected Pipes: " + container.connectedPipes, 100, 6, 0x404040);
 		fontRenderer.drawString("Can Receive: " + pipe.logic.canReceive, 8, 42, 0x404040);
 		//fontRenderer.drawString("Owner: " + pipe.logic.owner, 8, 75, 0x404040);
 	}

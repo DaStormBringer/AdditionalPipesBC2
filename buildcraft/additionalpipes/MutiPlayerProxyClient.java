@@ -9,7 +9,7 @@ import cpw.mods.fml.client.registry.KeyBindingRegistry;
 public class MutiPlayerProxyClient extends MutiPlayerProxy {
 	@Override
 	public void registerKeyHandler() {
-		KeyBinding[] bindings = new KeyBinding[] { AdditionalPipes.laserKey };
+		KeyBinding[] bindings = new KeyBinding[] { AdditionalPipes.instance.laserKey };
 		boolean[] repeatableBindings = new boolean[] { false };
 		KeyBindingRegistry.registerKeyBinding(new KeyHandler(bindings, repeatableBindings));
 	}

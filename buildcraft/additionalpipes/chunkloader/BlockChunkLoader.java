@@ -28,8 +28,13 @@ public class BlockChunkLoader extends BlockContainer {
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World var1) {
+	public TileEntity createNewTileEntity(World world, int meta) {
 		return new TileChunkLoader();
+	}
+
+	@Override
+	public TileEntity createNewTileEntity(World world) {
+		return null;
 	}
 
 }

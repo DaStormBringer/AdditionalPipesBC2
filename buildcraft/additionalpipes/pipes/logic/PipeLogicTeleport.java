@@ -33,11 +33,15 @@ public class PipeLogicTeleport extends PipeLogic {
 			if (AdditionalPipes.isPipe(equippedItem.getItem()))  {
 				return false;
 			}
-			if (equippedItem.getItem() instanceof IToolWrench && !AdditionalPipes.wrenchOpensGui) {
+			if (equippedItem.getItem() instanceof IToolWrench && !AdditionalPipes.instance.wrenchOpensGui) {
 				return false;
 			}
 		}
-		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_TP, worldObj, xCoord, yCoord, zCoord);
+		if(owner.equals(player.username)) {
+			player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_TP, worldObj, xCoord, yCoord, zCoord);
+		} else {
+			player.sendChatToPlayer(AdditionalPipes.MODID + ": This pipe is owned by " + owner);
+		}
 		return true;
 	}
 
@@ -49,8 +53,7 @@ public class PipeLogicTeleport extends PipeLogic {
 		}
 		if (BuildCraftTransport.alwaysConnectPipes) {
 			return super.isPipeConnected(tile);
-		}
-		else {
+		} else {
 			if (pipe == null) {
 				return false;
 			}
