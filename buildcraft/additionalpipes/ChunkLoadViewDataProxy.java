@@ -1,5 +1,6 @@
 package buildcraft.additionalpipes;
 
+import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,18 +17,27 @@ import buildcraft.core.Box;
 import com.google.common.collect.SetMultimap;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.IScheduledTickHandler;
+import cpw.mods.fml.common.TickType;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
-public class ChunkLoadViewDataProxy {
+public class ChunkLoadViewDataProxy implements IScheduledTickHandler {
 	public static final int MAX_SIGHT_RANGE = 31;
 
 	//used by server
-	private int sightRange = 2;
+	private int sightRange;
 
 	//used by client
-	private List<Box> lasers = new LinkedList<Box>();
-	public ChunkCoordIntPair[] persistentChunks = new ChunkCoordIntPair[0];
+	private List<Box> lasers;
+	public ChunkCoordIntPair[] persistentChunks;
 	private boolean active = false;
+
+	public ChunkLoadViewDataProxy(int chunkSightRange) {
+		setSightRange(chunkSightRange);
+		lasers = new LinkedList<Box>();
+		persistentChunks = new ChunkCoordIntPair[0];
+		active = false;
+	}
 
 	//laser methods (client)
 	public void toggleLasers(){
@@ -90,7 +100,9 @@ public class ChunkLoadViewDataProxy {
 	//client
 	public void receivePersistentChunks(ChunkCoordIntPair[] chunks) {
 		persistentChunks = chunks;
-		activateLasers();
+		if(active) {
+			activateLasers();
+		}
 	}
 
 	//server
@@ -120,5 +132,30 @@ public class ChunkLoadViewDataProxy {
 			packet.writeInt(coords.chunkZPos);
 		}
 		player.playerNetServerHandler.sendPacketToPlayer(packet.makePacket());
+	}
+
+	@Override
+	public void tickStart(EnumSet<TickType> type, Object... tickData) {}
+
+	@Override
+	public void tickEnd(EnumSet<TickType> type, Object... tickData) {
+		if(lasersActive()) {
+			requestPersistentChunks();
+		}
+	}
+
+	@Override
+	public EnumSet<TickType> ticks() {
+		return EnumSet.of(TickType.CLIENT);
+	}
+
+	@Override
+	public String getLabel() {
+		return getClass().getSimpleName();
+	}
+
+	@Override
+	public int nextTickSpacing() {
+		return 20;
 	}
 }

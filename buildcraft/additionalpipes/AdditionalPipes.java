@@ -43,6 +43,7 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.PostInit;
 import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.Mod.ServerStarting;
+import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -52,6 +53,7 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import cpw.mods.fml.common.registry.TickRegistry;
 
 @Mod(modid=AdditionalPipes.MODID, name=AdditionalPipes.NAME,
 dependencies="required-after:BuildCraft|Transport", version=AdditionalPipes.VERSION)
@@ -73,11 +75,11 @@ public class AdditionalPipes {
 	public Logger logger;
 
 	@Retention(RetentionPolicy.RUNTIME)
-	private static @interface ConfigId {
+	private static @interface CfgId {
 		public boolean block() default false;
 	}
 	@Retention(RetentionPolicy.RUNTIME)
-	private static @interface ConfigBool {}
+	private static @interface CfgBool {}
 
 	//textures
 	public static final String BASE_PATH = "/buildcraft/additionalpipes";
@@ -91,12 +93,12 @@ public class AdditionalPipes {
 	public static final String TEXTURE_GUI_DISTRIBUTION = TEXTURE_PATH + "/distributionGui.png";
 
 	//chunk load boundaries
-	public final ChunkLoadViewDataProxy chunkLoadViewer = new ChunkLoadViewDataProxy();
-	public @ConfigBool boolean chunkSight = true;
-	public int chunkSightRange = 2; //config option
+	public ChunkLoadViewDataProxy chunkLoadViewer;
+	public @CfgBool boolean chunkSight = true;
+	public int chunkSightRange = 4; //config option
 
 	//enable/disable crafting
-	public @ConfigBool boolean enableItemsAdvancedInsertion = true,
+	public @CfgBool boolean enableItemsAdvancedInsertion = true,
 			enableItemsAdvancedWood = true,
 			enableItemsDistributor = true,
 			enableItemsRedstone = true,
@@ -107,37 +109,37 @@ public class AdditionalPipes {
 			enbableChunkLoader = true;
 	//Item Teleport
 	public Item pipeItemTeleport;
-	public @ConfigId int itemTeleportId = 4047;
+	public @CfgId int itemTeleportId = 4047;
 	//Liquid Teleport
 	public Item pipeLiquidTeleport;
-	public @ConfigId int liquidTeleportId = 4048;
+	public @CfgId int liquidTeleportId = 4048;
 	//Power Teleport
 	public Item pipePowerTeleport;
-	public @ConfigId int powerTeleportId = 4049;
+	public @CfgId int powerTeleportId = 4049;
 	//Distributor
 	public Item pipeDistributor;
-	public @ConfigId int distributorTransportId = 4046;
+	public @CfgId int distributorTransportId = 4046;
 	//Advanced Wood
 	public Item pipeAdvancedWood;
-	public @ConfigId int advancedWoodId = 4045;
+	public @CfgId int advancedWoodId = 4045;
 	//Advanced Insertion
 	public Item pipeAdvancedInsertion;
-	public @ConfigId int insertionId = 4044;
+	public @CfgId int insertionId = 4044;
 	//Redstone
 	public Item pipeRedStone;
-	public @ConfigId int redstoneId = 4043;
+	public @CfgId int redstoneId = 4043;
 	//Redstone Liquid
 	public Item pipeRedStoneLiquid;
-	public @ConfigId int redstoneLiquidId = 4042;
+	public @CfgId int redstoneLiquidId = 4042;
 	//chunk loader
 	public Block blockChunkLoader;
-	public @ConfigId(block=true) int chunkLoaderId = 189;
+	public @CfgId(block=true) int chunkLoaderId = 189;
 	//keybinding
 	public int laserKeyCode = 64; //config option (& in options menu)
 	public KeyBinding laserKey;
 	//misc
-	public @ConfigBool boolean wrenchOpensGui = true;
-	public @ConfigBool boolean allowWRRemove = false;
+	public @CfgBool boolean wrenchOpensGui = true;
+	public @CfgBool boolean allowWRRemove = false;
 	public double powerLossCfg = .95; //config option
 
 	@PreInit
@@ -165,6 +167,8 @@ public class AdditionalPipes {
 		laserKey = new KeyBinding("Toggle chunk loading boundries", laserKeyCode);
 		NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
 		ForgeChunkManager.setForcedChunkLoadingCallback(this,  new ChunkLoadingHandler());
+		chunkLoadViewer = new ChunkLoadViewDataProxy(chunkSightRange);
+		TickRegistry.registerScheduledTickHandler(chunkLoadViewer, Side.CLIENT);
 		proxy.registerKeyHandler();
 		proxy.registerRendering();
 	}
@@ -212,7 +216,7 @@ public class AdditionalPipes {
 			for(Field field : fields){
 				if(!Modifier.isStatic(field.getModifiers())) {
 
-					ConfigId annotation = field.getAnnotation(ConfigId.class);
+					CfgId annotation = field.getAnnotation(CfgId.class);
 					if(annotation != null) {
 						int id = field.getInt(this);
 						if(annotation.block()){
@@ -222,7 +226,7 @@ public class AdditionalPipes {
 						}
 						field.setInt(this, id);
 					} else {
-						if(field.isAnnotationPresent(ConfigBool.class)){
+						if(field.isAnnotationPresent(CfgBool.class)){
 							boolean bool = field.getBoolean(this);
 							bool = config.get(Configuration.CATEGORY_GENERAL,
 									field.getName(), bool).getBoolean(bool);
@@ -245,8 +249,7 @@ public class AdditionalPipes {
 
 			Property chunkLoadSightRange = config.get(Configuration.CATEGORY_GENERAL,
 					"chunkSightRange", chunkSightRange);
-			chunkLoadSightRange.comment = "Range of chunk load lasers.";
-			chunkLoadViewer.setSightRange(chunkLoadSightRange.getInt());
+			chunkLoadSightRange.comment = "Range of chunk load boundaries.";
 
 			Property laserKey = config.get(Configuration.CATEGORY_GENERAL,
 					"laserKeyChar", laserKeyCode);
