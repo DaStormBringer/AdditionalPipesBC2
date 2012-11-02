@@ -39,7 +39,7 @@ public class GuiTeleportPipe extends GuiContainer {
 		controlList.add(buttons[3] = new GuiButton(4, x + 12 + bw * 3 / 6, y + 52, bw / 6, 20, "+1"));
 		controlList.add(buttons[4] = new GuiButton(5, x + 12 + bw * 4 / 6, y + 52, bw / 6, 20, "+10"));
 		controlList.add(buttons[5] = new GuiButton(6, x + 16 + bw * 5 / 6, y + 52, bw / 6, 20, "+100"));
-		controlList.add(buttons[6] = new GuiButton(7, x + 12,              y + 15, bw / 1, 20, "Send Only"));
+		controlList.add(buttons[6] = new GuiButton(7, x + 10,              y + 15, bw / 1, 20, "Send Only"));
 	}
 
 	@Override

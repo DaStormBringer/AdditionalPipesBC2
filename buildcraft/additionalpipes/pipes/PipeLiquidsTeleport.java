@@ -26,21 +26,6 @@ public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportL
 		((PipeTransportLiquids) transport).travelDelay = 2;
 	}
 
-	private List<ITankContainer> getPossibleLiquidMovements(PipeTeleport pipe) {
-		List<ITankContainer> result = new LinkedList<ITankContainer>();
-
-		for (int o = 0; o < 6; ++o) {
-			if (pipe.logic.outputOpen((Orientations.values()[o]))) {
-				//For (possibly) better handling in future
-				//int space = BuildCraftCore.OIL_BUCKET_QUANTITY / 4 - sideToCenter[((Orientations.values()[o]).reverse()).ordinal()] - centerToSide[((Orientations.values()[o]).reverse()).ordinal()] + flowRate;
-				ITankContainer te = (ITankContainer) pipe.container.getTile(Orientations.values()[o]);
-				result.add(te);
-			}
-		}
-
-		return result;
-	}
-
 	@Override
 	public int fill(Orientations from, LiquidStack resource, boolean doFill) {
 		List<PipeTeleport> pipeList = TeleportManager.instance.getConnectedPipes(this, false);
@@ -64,6 +49,19 @@ public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportL
 		}
 
 		return used;
+	}
+
+	private static List<ITankContainer> getPossibleLiquidMovements(PipeTeleport pipe) {
+		List<ITankContainer> result = new LinkedList<ITankContainer>();
+
+		for (int o = 0; o < 6; ++o) {
+			if (pipe.logic.outputOpen((Orientations.values()[o]))) {
+				ITankContainer te = (ITankContainer) pipe.container.getTile(Orientations.values()[o]);
+				result.add(te);
+			}
+		}
+
+		return result;
 	}
 
 	@Override

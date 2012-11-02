@@ -190,7 +190,7 @@ public class PipeLogicAdvancedWood extends PipeLogic implements IInventory {
 
 	@Override
 	public String getInvName() {
-		return "container.advancedWooden";
+		return "item.PipeItemsAdvancedWood";
 	}
 
 	@Override

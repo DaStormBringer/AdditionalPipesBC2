@@ -64,6 +64,9 @@ public class TileChunkLoader extends TileEntity {
 	public void forceChunkLoading(Ticket ticket) {
 		chunkTicket = ticket;
 		for (ChunkCoordIntPair coord : getLoadArea()) {
+			AdditionalPipes.instance.logger.info(
+					String.format("Force loading chunk %s in %s",
+							coord, worldObj.provider.getClass()));
 			ForgeChunkManager.forceChunk(ticket, coord);
 		}
 	}
