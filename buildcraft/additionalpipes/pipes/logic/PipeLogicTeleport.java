@@ -7,6 +7,7 @@ import net.minecraft.src.TileEntity;
 import buildcraft.BuildCraftTransport;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.GuiHandler;
+import buildcraft.api.core.Orientations;
 import buildcraft.api.tools.IToolWrench;
 import buildcraft.transport.Pipe;
 import buildcraft.transport.TileGenericPipe;
@@ -18,14 +19,10 @@ public class PipeLogicTeleport extends PipeLogic {
 	public boolean canReceive = false;
 	public String owner = "";
 
-	public PipeLogicTeleport() {
-		super();
-	}
-
 	@Override
 	public boolean blockActivated(EntityPlayer player) {
 		if(!AdditionalPipes.proxy.isServer(player.worldObj)) return true;
-		if (owner == null || owner.equalsIgnoreCase("")) {
+		if (owner == null || "".equalsIgnoreCase(owner)) {
 			owner = player.username;
 		}
 		ItemStack equippedItem = player.getCurrentEquippedItem();
@@ -37,7 +34,7 @@ public class PipeLogicTeleport extends PipeLogic {
 				return false;
 			}
 		}
-		if(owner.equals(player.username)) {
+		if(owner.equals(player.username) || player.capabilities.isCreativeMode) {
 			player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_TP, worldObj, xCoord, yCoord, zCoord);
 		} else {
 			player.sendChatToPlayer(AdditionalPipes.MODID + ": This pipe is owned by " + owner);
@@ -54,14 +51,16 @@ public class PipeLogicTeleport extends PipeLogic {
 		if (BuildCraftTransport.alwaysConnectPipes) {
 			return super.isPipeConnected(tile);
 		} else {
-			if (pipe == null) {
+			if(pipe != null && this.getClass().equals(pipe.logic.getClass())) {
 				return false;
 			}
-			if (container.pipe.getClass().equals(pipe.getClass()) && super.isPipeConnected(tile)) {
-				return true;
-			}
-			return true;
+			return pipe != null;
 		}
+	}
+
+	@Override
+	public boolean outputOpen(Orientations to) {
+		return isPipeConnected(container.getTile(to));
 	}
 
 	@Override

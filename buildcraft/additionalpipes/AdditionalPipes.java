@@ -32,6 +32,7 @@ import buildcraft.additionalpipes.pipes.PipeItemsTeleport;
 import buildcraft.additionalpipes.pipes.PipeLiquidsRedstone;
 import buildcraft.additionalpipes.pipes.PipeLiquidsTeleport;
 import buildcraft.additionalpipes.pipes.PipePowerTeleport;
+import buildcraft.additionalpipes.pipes.TeleportManager;
 import buildcraft.core.utils.Localization;
 import buildcraft.transport.BlockGenericPipe;
 import buildcraft.transport.ItemPipe;
@@ -107,15 +108,18 @@ public class AdditionalPipes {
 			enableLiquidsTeleport = true,
 			enablePowerTeleport = true,
 			enbableChunkLoader = true;
-	//Item Teleport
-	public Item pipeItemTeleport;
-	public @CfgId int itemTeleportId = 4047;
-	//Liquid Teleport
-	public Item pipeLiquidTeleport;
-	public @CfgId int liquidTeleportId = 4048;
+	//meter
+	public Item powerMeter;
+	public @CfgId int powerMeterId = 4050;
 	//Power Teleport
 	public Item pipePowerTeleport;
 	public @CfgId int powerTeleportId = 4049;
+	//Liquid Teleport
+	public Item pipeLiquidTeleport;
+	public @CfgId int liquidTeleportId = 4048;
+	//Item Teleport
+	public Item pipeItemTeleport;
+	public @CfgId int itemTeleportId = 4047;
 	//Distributor
 	public Item pipeDistributor;
 	public @CfgId int distributorTransportId = 4046;
@@ -134,6 +138,8 @@ public class AdditionalPipes {
 	//chunk loader
 	public Block blockChunkLoader;
 	public @CfgId(block=true) int chunkLoaderId = 189;
+	public Block blockPhasedChest;
+	public @CfgId(block=true) int phasedChestId = 190;
 	//keybinding
 	public int laserKeyCode = 64; //config option (& in options menu)
 	public KeyBinding laserKey;
@@ -148,7 +154,7 @@ public class AdditionalPipes {
 
 		logger = Logger.getLogger(MODID);
 		logger.setParent(FMLLog.getLogger());
-		logger.setLevel(Level.FINEST); //debugging
+		//logger.setLevel(Level.WARNING); //DEBUG
 
 		Properties en_US = null;
 		Localization.addLocalization(BASE_PATH + "/lang/", "en_US");
@@ -207,6 +213,7 @@ public class AdditionalPipes {
 	@ServerStarting
 	public void onServerStart(FMLServerStartingEvent event) {
 		event.registerServerCommand(new CommandAdditionalPipes());
+		TeleportManager.instance.teleportPipes.clear();
 	}
 
 	private void loadConfigs(Configuration config) {

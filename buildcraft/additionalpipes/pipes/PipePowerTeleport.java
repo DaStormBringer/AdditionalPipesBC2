@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.src.TileEntity;
+import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.pipes.logic.PipeLogicTeleport;
 import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
@@ -25,11 +26,11 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 
 	public class PowerReturn {
 		public TileEntity tile;
-		public Orientations ori;
+		public Orientations orientation;
 
 		public PowerReturn(TileEntity te, Orientations o) {
 			tile = te;
-			ori = o;
+			orientation = o;
 		}
 	}
 
@@ -38,42 +39,66 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 
 	}
 
-	public double calculateLoss(int distance, double power) {
-		return power;
+	@Override
+	public void requestEnergy(Orientations from, int is) {
+		((PipeTransportPower)transport).step();
+
+		if (!logic.canReceive) { //No need to waste CPU
+			return;
+		}
+
+		List<PipeTeleport> pipeList = TeleportManager.instance.getConnectedPipes(this, true);
+
+		if (pipeList.size() <= 0) {
+			return;
+		}
+
+		for (PipeTeleport pipe : pipeList) {
+			LinkedList<Orientations> possibleMovements = getRealPossibleMovements(pipe.getPosition());
+			for (Orientations orientation : possibleMovements) {
+				TileEntity tile = pipe.container.getTile(orientation);
+				if (tile instanceof TileGenericPipe) {
+					TileGenericPipe adjacentTile = (TileGenericPipe) tile;
+					PipeTransportPower nearbyTransport = (PipeTransportPower) adjacentTile.pipe.transport;
+					nearbyTransport.requestEnergy(orientation.reverse(), is);
+				}
+			}
+		}
 	}
 
 	@Override
 	public void receiveEnergy(Orientations from, double val) {
-
 		((PipeTransportPower)transport).step();
-		List<PipeTeleport> pipeList = TeleportManager.instance.getConnectedPipes(this, false);
+		List<PipeTeleport> connectedPipes = TeleportManager.instance.getConnectedPipes(this, false);
 		List<PipeTeleport> sendingToList = new LinkedList<PipeTeleport>();
 
-		if (pipeList.size() == 0) {
+		//no connected pipes, leave!
+		if (connectedPipes.size() <= 0) {
 			return;
 		}
 
-		for (int a = 0; a < pipeList.size(); a++) {
-			if (TeleportNeedsPower(pipeList.get(a)).size() > 0) {
-				sendingToList.add(pipeList.get(a));
+		for (PipeTeleport pipe : connectedPipes) {
+			if (needsPower(pipe).size() > 0) {
+				sendingToList.add(pipe);
 			}
 		}
 
-		if (sendingToList.size() == 0) {
+		//no pipes need energy, leave!
+		if (sendingToList.size() <= 0) {
 			return;
 		}
 
+		//TODO proportional power relay
 		double powerToSend = val / sendingToList.size();
 
-		//System.out.println("SendingToList: " + sendingToList.size() + " - PowerToSend: " + powerToSend);
-		for (int a = 0; a < sendingToList.size(); a++) {
-			List<PowerReturn> needsPower = TeleportNeedsPower(sendingToList.get(a));
+		for (PipeTeleport receiver : sendingToList) {
+			List<PowerReturn> needsPower = needsPower(receiver);
 
 			if (needsPower.size() == 0) {
 				return;
 			}
 
-			double powerToSendAfterLoss = calculateLoss(getDistance(sendingToList.get(a).xCoord, sendingToList.get(a).yCoord, sendingToList.get(a).zCoord), powerToSend);
+			double powerToSendAfterLoss = AdditionalPipes.instance.powerLossCfg * powerToSend;
 			//System.out.println("Power After Loss: " + powerToSendAfterLoss);
 			double powerToSend2 = powerToSendAfterLoss / needsPower.size();
 
@@ -82,7 +107,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 				if (needsPower.get(b).tile instanceof TileGenericPipe) {
 					TileGenericPipe nearbyTile = (TileGenericPipe) needsPower.get(b).tile;
 					PipeTransportPower nearbyTransport = (PipeTransportPower) nearbyTile.pipe.transport;
-					nearbyTransport.receiveEnergy(needsPower.get(b).ori, powerToSend);
+					nearbyTransport.receiveEnergy(needsPower.get(b).orientation, powerToSend);
 				}
 				else if (needsPower.get(b).tile instanceof IPowerReceptor) {
 					IPowerReceptor pow = (IPowerReceptor) needsPower.get(b);
@@ -94,8 +119,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 
 	}
 
-	public List<PowerReturn> TeleportNeedsPower(PipeTeleport a) {
-
+	private List<PowerReturn> needsPower(PipeTeleport a) {
 		LinkedList<Orientations> theList = getRealPossibleMovements(a.getPosition());
 		List<PowerReturn> needsPower = new LinkedList<PowerReturn>();
 
@@ -106,7 +130,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 				destPos.moveForwards(1.0);
 				TileEntity tile = worldObj.getBlockTileEntity((int)destPos.x, (int)destPos.y, (int)destPos.z);
 
-				if (TileNeedsPower(tile)) {
+				if (tileNeedsPower(tile)) {
 					needsPower.add(new PowerReturn(tile, newPos.reverse()));
 				}
 
@@ -116,114 +140,37 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 		return needsPower;
 	}
 
-	public boolean TileNeedsPower(TileEntity tile) {
-
+	//precondition: power pipe that isn't tp
+	private boolean tileNeedsPower(TileEntity tile) {
 		if (tile instanceof TileGenericPipe) {
 			PipeTransportPower ttb = (PipeTransportPower) ((TileGenericPipe)tile).pipe.transport;
-
 			for (int i = 0; i < ttb.powerQuery.length; i++)
 				if (ttb.powerQuery[i] > 0) {
 					return true;
 				}
 		}
 		else if (tile instanceof IPowerReceptor) {
+			return ((IPowerReceptor) tile).powerRequest() > 0;
 		}
 
 		return false;
 	}
 
-	public LinkedList<Orientations> getRealPossibleMovements(Position pos) {
+	//returns all adjacent pipes
+	private LinkedList<Orientations> getRealPossibleMovements(Position pos) {
 		LinkedList<Orientations> result = new LinkedList<Orientations>();
 
 		for (int o = 0; o < 6; ++o) {
 			if (Orientations.values()[o] != pos.orientation.reverse() && container.pipe.outputOpen(Orientations.values()[o])) {
-				Position newPos = new Position(pos);
-				newPos.orientation = Orientations.values()[o];
-				newPos.moveForwards(1.0);
-
-				if (canReceivePower(newPos)) {
-					result.add(newPos.orientation);
+				TileEntity te = container.getTile(Orientations.values()[o]);
+				if ((te instanceof TileGenericPipe || te instanceof IPowerReceptor) &&
+						Utils.checkPipesConnections(container, te)) {
+					result.add(Orientations.values()[o]);
 				}
 			}
 		}
 
 		return result;
-	}
-
-	public boolean canReceivePower(Position p) {
-		TileEntity entity = worldObj.getBlockTileEntity((int) p.x, (int) p.y, (int) p.z);
-
-		if (entity instanceof TileGenericPipe || entity instanceof IPowerReceptor) {
-			if (Utils.checkPipesConnections(container, entity)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-	/*
-    @Override
-    public void setPosition (int xCoord, int yCoord, int zCoord) {
-
-        LinkedList <PipePowerTeleport> toRemove = new LinkedList <PipePowerTeleport> ();
-
-        for (int i = 0; i < PowerTeleportPipes.size(); i++) {
-            if (PowerTeleportPipes.get(i).xCoord == xCoord &&  PowerTeleportPipes.get(i).yCoord == yCoord && PowerTeleportPipes.get(i).zCoord == zCoord) {
-                //System.out.println("Removed OldLoc: " + i);
-                toRemove.add(PowerTeleportPipes.get(i));
-            }
-        }
-
-        PowerTeleportPipes.removeAll(toRemove);
-        PowerTeleportPipes.add(this);
-        super.setPosition(xCoord, yCoord, zCoord);
-    }*/
-
-	public int getDistance(int x, int y, int z) {
-		return (int) Math.sqrt(((xCoord - x) * (xCoord - x)) + ((yCoord - y) * (yCoord - y)) + ((zCoord - z) * (zCoord - z)));
-	}
-
-	@Override
-	public Position getPosition() {
-		return new Position (xCoord, yCoord, zCoord);
-	}
-
-	@Override
-	public void requestEnergy(Orientations from, int is) {
-
-		((PipeTransportPower)transport).step();
-
-		if (!logic.canReceive) { //No need to waste CPU
-			return;
-		}
-
-		List<PipeTeleport> pipeList = TeleportManager.instance.getConnectedPipes(this, true);
-
-		if (pipeList.size() == 0) {
-			return;
-		}
-
-		for (int a = 0; a < pipeList.size(); a++) {
-			LinkedList<Orientations> theList = getRealPossibleMovements(pipeList.get(a).getPosition());
-
-			if (theList.size() > 0) {
-				for (int b = 0; b < theList.size(); b++) {
-					Orientations newPos = theList.get(b);
-					Position destPos = new Position(pipeList.get(a).xCoord, pipeList.get(a).yCoord, pipeList.get(a).zCoord, newPos);
-					destPos.moveForwards(1.0);
-
-					//System.out.println(getPosition().toString() + " RequestEnergy: " + from.toString() + " - Val: " + is + " - Dest: " + destPos.toString());
-
-					TileEntity tile = worldObj.getBlockTileEntity((int)destPos.x, (int)destPos.y, (int)destPos.z);
-
-					if (tile instanceof TileGenericPipe) {
-						TileGenericPipe nearbyTile = (TileGenericPipe) tile;
-						PipeTransportPower nearbyTransport = (PipeTransportPower) nearbyTile.pipe.transport;
-						nearbyTransport.requestEnergy(newPos.reverse(), is);
-					}
-				}
-			}
-		}
 	}
 
 	@Override

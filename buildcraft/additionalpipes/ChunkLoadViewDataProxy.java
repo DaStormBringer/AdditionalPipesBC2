@@ -51,7 +51,7 @@ public class ChunkLoadViewDataProxy implements IScheduledTickHandler {
 	public void activateLasers(){
 		deactivateLasers();
 		EntityClientPlayerMP player = FMLClientHandler.instance().getClient().thePlayer;
-		int playerY = (int) player.posY - 2;
+		int playerY = (int) player.posY - 1;
 		for (ChunkCoordIntPair coords : persistentChunks) {
 			int chunkX = coords.chunkXPos * 16;
 			int chunkZ = coords.chunkZPos * 16;
@@ -132,6 +132,7 @@ public class ChunkLoadViewDataProxy implements IScheduledTickHandler {
 			packet.writeInt(coords.chunkZPos);
 		}
 		player.playerNetServerHandler.sendPacketToPlayer(packet.makePacket());
+		AdditionalPipes.instance.logger.info("[ChunkLoadViewDataProxy] Sent chunks within " + sightRange + " of player.");
 	}
 
 	@Override
@@ -140,7 +141,7 @@ public class ChunkLoadViewDataProxy implements IScheduledTickHandler {
 	@Override
 	public void tickEnd(EnumSet<TickType> type, Object... tickData) {
 		if(lasersActive()) {
-			requestPersistentChunks();
+			//requestPersistentChunks();
 		}
 	}
 

@@ -31,21 +31,26 @@ public class GuiTeleportPipe extends GuiContainer {
 	@Override
 	public void initGui() {
 		super.initGui();
+		int x = (width - xSize) / 2, y = (height - ySize) / 2;
 		int bw = xSize - 22;
-		controlList.add(buttons[0] = new GuiButton(1, (width - xSize) / 2 + 10, (height - ySize) / 2 + 20, bw / 6, 20, "-100"));
-		controlList.add(buttons[1] = new GuiButton(2, (width - xSize) / 2 + 12 + bw / 6, (height - ySize) / 2 + 20, bw / 6, 20, "-10"));
-		controlList.add(buttons[2] = new GuiButton(3, (width - xSize) / 2 + 12 + bw * 2 / 6, (height - ySize) / 2 + 20, bw / 6, 20, "-1"));
-		controlList.add(buttons[3] = new GuiButton(4, (width - xSize) / 2 + 12 + bw * 3 / 6, (height - ySize) / 2 + 20, bw / 6, 20, "+1"));
-		controlList.add(buttons[4] = new GuiButton(5, (width - xSize) / 2 + 12 + bw * 4 / 6, (height - ySize) / 2 + 20, bw / 6, 20, "+10"));
-		controlList.add(buttons[5] = new GuiButton(6, (width - xSize) / 2 + 16 + bw * 5 / 6, (height - ySize) / 2 + 20, bw / 6, 20, "+100"));
-		controlList.add(buttons[6] = new GuiButton(7, (width - xSize) / 2 + 16, (height - ySize) / 2 + 52, bw / 6, 20, "Switch"));
+		controlList.add(buttons[0] = new GuiButton(1, x + 10,              y + 52, bw / 6, 20, "-100"));
+		controlList.add(buttons[1] = new GuiButton(2, x + 12 + bw / 6,     y + 52, bw / 6, 20, "-10"));
+		controlList.add(buttons[2] = new GuiButton(3, x + 12 + bw * 2 / 6, y + 52, bw / 6, 20, "-1"));
+		controlList.add(buttons[3] = new GuiButton(4, x + 12 + bw * 3 / 6, y + 52, bw / 6, 20, "+1"));
+		controlList.add(buttons[4] = new GuiButton(5, x + 12 + bw * 4 / 6, y + 52, bw / 6, 20, "+10"));
+		controlList.add(buttons[5] = new GuiButton(6, x + 16 + bw * 5 / 6, y + 52, bw / 6, 20, "+100"));
+		controlList.add(buttons[6] = new GuiButton(7, x + 12,              y + 15, bw / 1, 20, "Send Only"));
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int p1, int p2) {
-		fontRenderer.drawString("Frequency: " + pipe.logic.freq, 8, 6, 0x404040);
-		fontRenderer.drawString("Connected Pipes: " + container.connectedPipes, 100, 6, 0x404040);
-		fontRenderer.drawString("Can Receive: " + pipe.logic.canReceive, 8, 42, 0x404040);
+		fontRenderer.drawString("Frequency: " + pipe.logic.freq, 8, 40, 0x404040);
+		fontRenderer.drawString("Number of Outputs: " + container.connectedPipes, 100, 40, 0x404040);
+		if(pipe.logic.canReceive) {
+			buttons[6].displayString = "Send & Receive";
+		} else {
+			buttons[6].displayString = "Send Only";
+		}
 		//fontRenderer.drawString("Owner: " + pipe.logic.owner, 8, 75, 0x404040);
 	}
 	@Override

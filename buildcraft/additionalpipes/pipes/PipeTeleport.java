@@ -1,10 +1,13 @@
 package buildcraft.additionalpipes.pipes;
 
+import java.util.Random;
+
 import buildcraft.additionalpipes.pipes.logic.PipeLogicTeleport;
 import buildcraft.api.core.Position;
 import buildcraft.transport.PipeTransport;
 
 public abstract class PipeTeleport extends APPipe {
+	protected static final Random rand = new Random();
 
 	public final PipeLogicTeleport logic;
 
@@ -26,14 +29,14 @@ public abstract class PipeTeleport extends APPipe {
 
 	@Override
 	public void invalidate() {
-		super.initialize();
+		super.invalidate();
 		TeleportManager.instance.remove(this);
 	}
 
 	@Override
 	public void onChunkUnload() {
-		super.initialize();
-		TeleportManager.instance.add(this);
+		super.onChunkUnload();
+		TeleportManager.instance.remove(this);
 	}
 
 	public Position getPosition() {

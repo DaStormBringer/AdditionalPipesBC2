@@ -3,6 +3,7 @@ package buildcraft.additionalpipes.gui;
 import net.minecraft.src.Container;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ICrafting;
+import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.additionalpipes.pipes.TeleportManager;
 import buildcraft.transport.TileGenericPipe;
@@ -34,9 +35,9 @@ public class ContainerTeleportPipe extends Container {
 		int connectedPipesNew = connectedPipes;
 		if(ticks % 100 == 0) { //reduce lag
 			ticks = 0;
-			System.out.println("Old:" + connectedPipesNew);
+			AdditionalPipes.instance.logger.info("Old connected:" + connectedPipesNew);
 			connectedPipesNew = TeleportManager.instance.getConnectedPipes(pipe, false).size();
-			System.out.println("New:" + connectedPipesNew);
+			AdditionalPipes.instance.logger.info("New connected:" + connectedPipesNew);
 		}
 		ticks++;
 		for (Object crafter : crafters) {

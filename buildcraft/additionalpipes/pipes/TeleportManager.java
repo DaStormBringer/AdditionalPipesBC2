@@ -18,15 +18,17 @@ public class TeleportManager {
 	}
 
 	public void add(PipeTeleport pipe) {
+		if(!AdditionalPipes.proxy.isServer(pipe.worldObj)) return;
 		teleportPipes.add(pipe);
-		AdditionalPipes.instance.logger.finest(
+		AdditionalPipes.instance.logger.info(
 				String.format("[TeleportManager] Pipe added: %s @ (%d, %d, %d), %d pipes in network",
 						pipe.getClass().getSimpleName(), pipe.xCoord, pipe.yCoord, pipe.zCoord, teleportPipes.size()));
 	}
 
 	public void remove(PipeTeleport pipe){
+		if(!AdditionalPipes.proxy.isServer(pipe.worldObj)) return;
 		teleportPipes.remove(pipe);
-		AdditionalPipes.instance.logger.finest(
+		AdditionalPipes.instance.logger.info(
 				String.format("[TeleportManager] Pipe removed: %s @ (%d, %d, %d), %d pipes in network",
 						pipe.getClass().getSimpleName(), pipe.xCoord, pipe.yCoord, pipe.zCoord, teleportPipes.size()));
 	}
@@ -38,7 +40,7 @@ public class TeleportManager {
 		PipeLogicTeleport logic = pipe.logic;
 
 		for (PipeTeleport other : teleportPipes) {
-			if (!pipe.getClass().equals(other.getClass())) {
+			if (!pipe.getClass().equals(other.getClass()) || other.container.isInvalid()) {
 				continue;
 			}
 			PipeLogicTeleport otherLogic = other.logic;
@@ -51,16 +53,18 @@ public class TeleportManager {
 					otherLogic.freq == logic.freq &&
 					(otherLogic.canReceive || forceReceive) &&
 					otherLogic.owner.equalsIgnoreCase(logic.owner)) {
-				connected.add(pipe);
+				connected.add(other);
 			}
 		}
 		return connected;
 	}
 
+	//legacy code
 	public void removeOldPipes() {
 		LinkedList <PipeTeleport> toRemove = new LinkedList <PipeTeleport>();
-		for (PipeTeleport pipe : TeleportManager.instance.teleportPipes) {
-			if (!(pipe.worldObj.getBlockTileEntity(pipe.xCoord, pipe.yCoord, pipe.zCoord) instanceof TileGenericPipe)) {
+		for (PipeTeleport pipe : teleportPipes) {
+			if (!(pipe.worldObj.getBlockTileEntity(pipe.xCoord, pipe.yCoord, pipe.zCoord) instanceof TileGenericPipe) ||
+					pipe.container.isInvalid()) {
 				toRemove.add(pipe);
 			}
 		}
