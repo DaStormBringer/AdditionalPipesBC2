@@ -169,10 +169,9 @@ public class AdditionalPipes {
 			en_US = new Properties();
 			en_US.load(AdditionalPipes.class.getResourceAsStream((BASE_PATH + "/lang/en_US.properties")));
 			LanguageRegistry.instance().addStringLocalization(en_US);
-		} catch (FileNotFoundException e) {
-			logger.log(Level.SEVERE, "Couldn't find default localization file.", e);
-		} catch (IOException e) {
-			logger.log(Level.SEVERE, "Failed to load default localization.", e);		}
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "Failed to load default localization.", e);
+		}
 	}
 
 	@Init
