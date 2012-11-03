@@ -52,14 +52,14 @@ public class TeleportManager {
 			if ((pipe.xCoord != other.xCoord || pipe.yCoord != other.yCoord || pipe.zCoord != other.zCoord ) &&
 					otherLogic.freq == logic.freq &&
 					(otherLogic.canReceive || forceReceive) &&
-					otherLogic.owner.equalsIgnoreCase(logic.owner)) {
+					(otherLogic.isPublic || otherLogic.owner.equalsIgnoreCase(logic.owner))) {
 				connected.add(other);
 			}
 		}
 		return connected;
 	}
 
-	//legacy code
+	//legacy code (unused)
 	public void removeOldPipes() {
 		LinkedList <PipeTeleport> toRemove = new LinkedList <PipeTeleport>();
 		for (PipeTeleport pipe : teleportPipes) {

@@ -18,6 +18,7 @@ public class PipeLogicTeleport extends PipeLogic {
 	public int freq = 0;
 	public boolean canReceive = false;
 	public String owner = "";
+	public boolean isPublic = false;
 
 	@Override
 	public boolean blockActivated(EntityPlayer player) {
@@ -70,6 +71,7 @@ public class PipeLogicTeleport extends PipeLogic {
 		nbttagcompound.setInteger("freq", freq);
 		nbttagcompound.setBoolean("canReceive", canReceive);
 		nbttagcompound.setString("owner", owner);
+		nbttagcompound.setBoolean("isPublic", isPublic);
 	}
 
 	@Override
@@ -79,6 +81,7 @@ public class PipeLogicTeleport extends PipeLogic {
 		freq = nbttagcompound.getInteger("freq");
 		canReceive = nbttagcompound.getBoolean("canReceive");
 		owner = nbttagcompound.getString("owner");
+		isPublic = nbttagcompound.getBoolean("isPublic");
 	}
 
 }
