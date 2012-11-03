@@ -16,7 +16,7 @@ public class GuiTeleportPipe extends GuiContainer {
 
 	private PipeTeleport pipe;
 	private ContainerTeleportPipe container;
-	private GuiButton[] buttons = new GuiButton[7];
+	private GuiButton[] buttons = new GuiButton[8];
 
 	public GuiTeleportPipe(TileGenericPipe tile) {
 		super(new ContainerTeleportPipe(tile));
@@ -39,7 +39,8 @@ public class GuiTeleportPipe extends GuiContainer {
 		controlList.add(buttons[3] = new GuiButton(4, x + 12 + bw * 3 / 6, y + 52, bw / 6, 20, "+1"));
 		controlList.add(buttons[4] = new GuiButton(5, x + 12 + bw * 4 / 6, y + 52, bw / 6, 20, "+10"));
 		controlList.add(buttons[5] = new GuiButton(6, x + 16 + bw * 5 / 6, y + 52, bw / 6, 20, "+100"));
-		controlList.add(buttons[6] = new GuiButton(7, x + 10,              y + 15, bw / 1, 20, "Send Only"));
+		controlList.add(buttons[6] = new GuiButton(7, x + 10,              y + 15, bw / 2, 20, "Send Only"));
+		controlList.add(buttons[7] = new GuiButton(8, x + 10 + bw * 3 / 6, y + 15, bw / 2, 20, "Private"));
 	}
 
 	@Override
@@ -51,12 +52,18 @@ public class GuiTeleportPipe extends GuiContainer {
 		} else {
 			buttons[6].displayString = "Send Only";
 		}
+		if(pipe.logic.isPublic) {
+			buttons[7].displayString = "Public";
+		} else {
+			buttons[7].displayString = "Private";
+		}
 		//fontRenderer.drawString("Owner: " + pipe.logic.owner, 8, 75, 0x404040);
 	}
 	@Override
 	protected void actionPerformed(GuiButton guibutton) {
 		int freq = pipe.logic.freq;
 		boolean canReceive = pipe.logic.canReceive;
+		boolean isPublic = pipe.logic.isPublic;
 		switch(guibutton.id) {
 		case 1:
 			freq -= 100;
@@ -77,7 +84,10 @@ public class GuiTeleportPipe extends GuiContainer {
 			freq += 100;
 			break;
 		case 7:
-			canReceive = !pipe.logic.canReceive;
+			canReceive = !canReceive;
+			break;
+		case 8:
+			isPublic = !isPublic;
 			break;
 		}
 		if (freq < 0) {
@@ -90,6 +100,7 @@ public class GuiTeleportPipe extends GuiContainer {
 		packet.writeInt(pipe.zCoord);
 		packet.writeInt(freq);
 		packet.write((byte) (canReceive ? 1 : 0));
+		packet.write((byte) (isPublic ? 1 : 0));
 		PacketDispatcher.sendPacketToServer(packet.makePacket());
 	}
 

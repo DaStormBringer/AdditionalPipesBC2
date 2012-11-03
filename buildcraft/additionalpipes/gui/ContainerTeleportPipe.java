@@ -15,12 +15,12 @@ public class ContainerTeleportPipe extends Container {
 	private int ticks = 0;
 	private PipeTeleport pipe;
 	private int freq;
-	private boolean canReceive;
-
+	private boolean canReceive, isPublic;
 
 	public ContainerTeleportPipe(TileGenericPipe tile) {
 		pipe = (PipeTeleport) tile.pipe;
 		canReceive = !pipe.logic.canReceive;
+		isPublic = !pipe.logic.isPublic;
 		freq = -1;
 	}
 
@@ -33,7 +33,7 @@ public class ContainerTeleportPipe extends Container {
 	public void updateCraftingResults() {
 		super.updateCraftingResults();
 		int connectedPipesNew = connectedPipes;
-		if(ticks % 100 == 0) { //reduce lag
+		if(ticks % 40 == 0) { //reduce lag
 			ticks = 0;
 			AdditionalPipes.instance.logger.info("Old connected:" + connectedPipesNew);
 			connectedPipesNew = TeleportManager.instance.getConnectedPipes(pipe, false).size();
@@ -50,9 +50,13 @@ public class ContainerTeleportPipe extends Container {
 			if(connectedPipesNew != connectedPipes) {
 				((ICrafting) crafter).updateCraftingInventoryInfo(this, 2, connectedPipesNew);
 			}
+			if(isPublic != pipe.logic.isPublic) {
+				((ICrafting) crafter).updateCraftingInventoryInfo(this, 3, pipe.logic.isPublic ? 1 : 0);
+			}
 		}
 		canReceive = pipe.logic.canReceive;
 		freq = pipe.logic.freq;
+		isPublic = pipe.logic.isPublic;
 		connectedPipes = connectedPipesNew;
 	}
 
@@ -67,6 +71,9 @@ public class ContainerTeleportPipe extends Container {
 			break;
 		case 2:
 			connectedPipes = j;
+			break;
+		case 3:
+			pipe.logic.isPublic = (j == 1);
 			break;
 		}
 	}

@@ -15,6 +15,7 @@ import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.additionalpipes.pipes.logic.PipeLogicAdvancedWood;
 import buildcraft.additionalpipes.pipes.logic.PipeLogicDistributor;
+import buildcraft.additionalpipes.pipes.logic.PipeLogicTeleport;
 import buildcraft.transport.TileGenericPipe;
 import buildcraft.transport.pipes.PipeLogic;
 import cpw.mods.fml.common.network.IPacketHandler;
@@ -100,11 +101,18 @@ public class NetworkHandler implements IPacketHandler {
 			TileEntity te = getTileEntity(player, data);
 			if(te instanceof TileGenericPipe) {
 				PipeTeleport pipe = (PipeTeleport) ((TileGenericPipe) te).pipe;
+				//only allow the owner to change pipe state
+				EntityPlayerMP entityPlayer = (EntityPlayerMP) player;
+				if(!PipeLogicTeleport.canPlayerUsePipe(entityPlayer, pipe.logic)) {
+					entityPlayer.sendChatToPlayer(AdditionalPipes.MODID + ": Only the owner may change pipe state.");
+					return;
+				}
 				pipe.logic.freq = data.readInt();
 				if(pipe.logic.freq < 0) {
 					pipe.logic.freq = 0;
 				}
 				pipe.logic.canReceive = (data.read() == 1);
+				pipe.logic.isPublic = (data.read() == 1);
 			}
 		} catch (IOException e) {
 			AdditionalPipes.instance.logger.log(Level.SEVERE, "Error handling teleport pipe packet.", e);

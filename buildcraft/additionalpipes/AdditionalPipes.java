@@ -63,7 +63,7 @@ clientSideRequired=true, serverSideRequired=true, packetHandler=NetworkHandler.c
 public class AdditionalPipes {
 	public static final String MODID = "AdditionalPipes";
 	public static final String NAME = "Additional Pipes for BuildCraft";
-	public static final String VERSION = "2.1.3u9";
+	public static final String VERSION = "2.1.3u14";
 	public static final String CHANNEL = MODID;
 
 	@Instance(MODID)
@@ -99,24 +99,25 @@ public class AdditionalPipes {
 	public int chunkSightRange = 4; //config option
 
 	//enable/disable crafting
-	public @CfgBool boolean enableItemsAdvancedInsertion = true,
-			enableItemsAdvancedWood = true,
-			enableItemsDistributor = true,
-			enableItemsRedstone = true,
-			enableLiquidsRedstone = true,
-			enableItemTeleport = true,
-			enableLiquidsTeleport = true,
-			enablePowerTeleport = true,
-			enbableChunkLoader = true;
-	//teleport scanner
+	public @CfgBool boolean
+	enableItemsAdvancedInsertion = true,
+	enableItemsAdvancedWood = true,
+	enableItemsDistributor = false, //TODO fix
+	enableItemsRedstone = true,
+	enableLiquidsRedstone = true,
+	enableItemTeleport = true,
+	enableLiquidsTeleport = true,
+	enablePowerTeleport = true,
+	enbableChunkLoader = true;
+	//teleport scanner TODO
 	public Item teleportScanner;
 	public @CfgId int teleportScannerId = 4052;
-	//meter
+	//meter TODO
 	public Item powerMeter;
 	public @CfgId int powerMeterId = 4051;
-	//item crossover pipe
-	public Item pipePowerTeleport;
-	public @CfgId int powerTeleportId = 4050;
+	//item crossover pipe TODO
+	public Item pipeItemCrossover;
+	public @CfgId int pipeItemCrossoverId = 4050;
 	//Power Teleport
 	public Item pipePowerTeleport;
 	public @CfgId int powerTeleportId = 4049;
