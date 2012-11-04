@@ -22,10 +22,10 @@ import buildcraft.transport.TileGenericPipe;
 
 public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPowerHook {
 
-	private static class PowerEntry {
+	private static class PowerRequest {
 		public final TileGenericPipe tile;
 		public final Orientations orientation;
-		public PowerEntry(TileGenericPipe te, Orientations o) {
+		public PowerRequest(TileGenericPipe te, Orientations o) {
 			tile = te;
 			orientation = o;
 		}
@@ -88,37 +88,35 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 		double powerToSend = AdditionalPipes.instance.powerLossCfg * val / sendingToList.size();
 
 		for (PipeTeleport receiver : sendingToList) {
-			List<PowerEntry> needsPower = getPipesNeedsPower(receiver);
+			List<PowerRequest> needsPower = getPipesNeedsPower(receiver);
 
 			if (needsPower.size() <= 0) {
 				continue;
 			}
 
-			double powerToSend2 = powerToSend / needsPower.size();
+			double dividedPowerToSend = powerToSend / needsPower.size();
 
-			for (PowerEntry powerEntry : needsPower) {
+			for (PowerRequest powerEntry : needsPower) {
 				PipeTransportPower nearbyTransport = (PipeTransportPower) powerEntry.tile.pipe.transport;
-				nearbyTransport.receiveEnergy(powerEntry.orientation, powerToSend);
+				nearbyTransport.receiveEnergy(powerEntry.orientation, dividedPowerToSend);
 			}
 
 		}
 	}
 
 
-	private List<PowerEntry> getPipesNeedsPower(PipeTeleport pipe) {
+	private List<PowerRequest> getPipesNeedsPower(PipeTeleport pipe) {
 		LinkedList<Orientations> possibleMovements = getRealPossibleMovements(pipe);
-		List<PowerEntry> needsPower = new LinkedList<PowerEntry>();
+		List<PowerRequest> needsPower = new LinkedList<PowerRequest>();
 
 		if (possibleMovements.size() > 0) {
-			for (int b = 0; b < possibleMovements.size(); b++) {
-				Orientations orientation = possibleMovements.get(b);
+			for (Orientations orientation : possibleMovements) {
 				TileEntity tile = pipe.container.getTile(orientation);
 				if (tile instanceof TileGenericPipe){
 					TileGenericPipe adjacentPipe = (TileGenericPipe) tile;
 					if(pipeNeedsPower(adjacentPipe)) {
-						needsPower.add(new PowerEntry(adjacentPipe, orientation));
+						needsPower.add(new PowerRequest(adjacentPipe, orientation.reverse()));
 					}
-
 				}
 			}
 		}

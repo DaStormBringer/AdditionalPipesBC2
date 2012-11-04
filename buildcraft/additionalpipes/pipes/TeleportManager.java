@@ -52,7 +52,7 @@ public class TeleportManager {
 			if ((pipe.xCoord != other.xCoord || pipe.yCoord != other.yCoord || pipe.zCoord != other.zCoord ) &&
 					otherLogic.freq == logic.freq &&
 					(otherLogic.canReceive || forceReceive) &&
-					(otherLogic.isPublic || otherLogic.owner.equalsIgnoreCase(logic.owner))) {
+					((logic.isPublic && otherLogic.isPublic)  || otherLogic.owner.equalsIgnoreCase(logic.owner))) {
 				connected.add(other);
 			}
 		}
