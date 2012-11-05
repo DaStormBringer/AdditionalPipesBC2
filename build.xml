@@ -1,0 +1,49 @@
+<project name="AdditionalPipes" basedir="../" default="package">
+	<property name="version" value="2.1.3u17" />
+	<property name="mcp.dir" value="mcp" />
+	<property name="src.dir" value="AdditionalPipes" />
+	<property name="build.dir" value="build/additionalpipes" />
+	
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+	</target>
+	
+	<target name="copy-src">
+		<copy todir="${mcp.dir}/src/minecraft/buildcraft">
+			<fileset dir="${src.dir}/buildcraft" />
+		</copy>
+	</target>
+	
+	<target name="compile" depends="copy-src">
+		<exec dir="${mcp.dir}" executable="cmd" osfamily="windows">
+			<arg line="/c recompile.bat"/>
+		</exec>
+		<exec dir="${mcp.dir}" executable="sh" osfamily="unix">
+			<arg value="recompile.sh" />
+		</exec>
+		
+		<exec dir="${mcp.dir}" executable="cmd" osfamily="windows">
+			<arg line="/c reobfuscate.bat"/>
+		</exec>
+		<exec dir="${mcp.dir}" executable="sh" osfamily="unix">
+			<arg value="reobfuscate.sh" />
+		</exec>	
+	</target>
+	
+	<target name="package" depends="clean, compile">
+		<mkdir dir="${build.dir}" />
+		<copy todir="${build.dir}">
+			<fileset dir="${mcp.dir}/reobf/minecraft/buildcraft/additionalpipes" />
+		</copy>
+
+		<copy todir="${build.dir}" file="${src.dir}/mcmod.info" />
+		<copy todir="${build.dir}/lang">
+			<fileset dir="${src.dir}/buildcraft/additionalpipes/lang" />
+		</copy>
+		<copy todir="${build.dir}/sprites">
+			<fileset dir="${src.dir}/buildcraft/additionalpipes/sprites" />
+		</copy>
+
+		<jar destfile="${build.dir}/AdditionalPipes-${version}.jar" basedir="${build.dir}" />
+	</target>
+</project>
