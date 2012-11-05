@@ -2,8 +2,9 @@
 	<property name="version" value="2.1.3u17" />
 	<property name="mcp.dir" value="mcp" />
 	<property name="src.dir" value="AdditionalPipes" />
-	<property name="build.dir" value="build/additionalpipes" />
-	
+	<property name="jar.dir" value="build/AdditionalPipes" />
+	<property name="build.dir" value="${jar.dir}/buildcraft/additionalpipes" />
+
 	<target name="clean">
 		<delete dir="${build.dir}"/>
 	</target>
@@ -44,6 +45,6 @@
 			<fileset dir="${src.dir}/buildcraft/additionalpipes/sprites" />
 		</copy>
 
-		<jar destfile="${build.dir}/AdditionalPipes-${version}.jar" basedir="${build.dir}" />
+		<jar destfile="${jar.dir}/AdditionalPipes-${version}.jar" basedir="${jar.dir}" />
 	</target>
 </project>
