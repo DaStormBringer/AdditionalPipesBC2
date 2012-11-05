@@ -7,11 +7,17 @@ import buildcraft.transport.TransportProxyClient;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
 
 public class MutiPlayerProxyClient extends MutiPlayerProxy {
+	
 	@Override
 	public void registerKeyHandler() {
-		KeyBinding[] bindings = new KeyBinding[] { AdditionalPipes.instance.laserKey };
+		KeyHandler.laserKey = new KeyBinding("Toggle chunk loading boundries", 
+				AdditionalPipes.instance.laserKeyCode);
+		
+		KeyBinding[] bindings = new KeyBinding[] { KeyHandler.laserKey };
 		boolean[] repeatableBindings = new boolean[] { false };
-		KeyBindingRegistry.registerKeyBinding(new KeyHandler(bindings, repeatableBindings));
+		
+		KeyHandler keyHandler = new KeyHandler(bindings, repeatableBindings);
+		KeyBindingRegistry.registerKeyBinding(keyHandler);
 	}
 
 	@Override

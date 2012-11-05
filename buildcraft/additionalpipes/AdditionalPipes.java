@@ -12,7 +12,6 @@ import net.minecraft.src.Block;
 import net.minecraft.src.EnumRarity;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
-import net.minecraft.src.KeyBinding;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.Property;
@@ -65,7 +64,7 @@ clientSideRequired=true, serverSideRequired=true, packetHandler=NetworkHandler.c
 public class AdditionalPipes {
 	public static final String MODID = "AdditionalPipes";
 	public static final String NAME = "Additional Pipes for BuildCraft";
-	public static final String VERSION = "2.1.3u14";
+	public static final String VERSION = "2.1.3u17";
 	public static final String CHANNEL = MODID;
 
 	@Instance(MODID)
@@ -150,7 +149,6 @@ public class AdditionalPipes {
 	public @CfgId(block=true) int chunkLoaderId = 189;
 	//keybinding
 	public int laserKeyCode = 64; //config option (& in options menu)
-	public KeyBinding laserKey;
 	//misc
 	public @CfgBool boolean wrenchOpensGui = true;
 	public @CfgBool boolean allowWRRemove = false;
@@ -162,7 +160,7 @@ public class AdditionalPipes {
 
 		logger = Logger.getLogger(MODID);
 		logger.setParent(FMLLog.getLogger());
-		//logger.setLevel(Level.WARNING); //DEBUG
+		logger.setLevel(Level.WARNING); //DEBUG
 
 		Properties en_US = null;
 		Localization.addLocalization(BASE_PATH + "/lang/", "en_US");
@@ -177,7 +175,6 @@ public class AdditionalPipes {
 
 	@Init
 	public void init(FMLInitializationEvent event) {
-		laserKey = new KeyBinding("Toggle chunk loading boundries", laserKeyCode);
 		NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
 		ForgeChunkManager.setForcedChunkLoadingCallback(this,  new ChunkLoadingHandler());
 		chunkLoadViewer = new ChunkLoadViewDataProxy(chunkSightRange);
@@ -278,7 +275,7 @@ public class AdditionalPipes {
 
 	private void loadPipes(){
 		// Item Teleport Pipe
-		pipeItemsTeleport = createPipeSpecial(pipeItemsTeleportId, PipeItemsTeleport.class, EnumRarity.rare);
+		pipeItemsTeleport = createPipeSpecial(pipeItemsTeleportId, PipeItemsTeleport.class);
 		if (enableItemsTeleport) {
 			GameRegistry.addRecipe(new ItemStack(pipeItemsTeleport, 4), new Object[]{"dgd", 'd', BuildCraftCore.diamondGearItem, 'g', Block.glass});
 			AssemblyRecipe.assemblyRecipes.add(
@@ -290,13 +287,13 @@ public class AdditionalPipes {
 		}
 
 		// Liquid Teleport Pipe
-		pipeLiquidsTeleport = createPipeSpecial(pipeLiquidsTeleportId, PipeLiquidsTeleport.class, EnumRarity.rare);
+		pipeLiquidsTeleport = createPipeSpecial(pipeLiquidsTeleportId, PipeLiquidsTeleport.class);
 		if (enableLiquidsTeleport) {
 			GameRegistry.addRecipe(new ItemStack(pipeLiquidsTeleport), new Object[]{"w", "P", 'w', BuildCraftTransport.pipeWaterproof, 'P', pipeItemsTeleport});
 		}
 
 		// Power Teleport Pipe
-		pipePowerTeleport = createPipeSpecial(pipePowerTeleportId, PipePowerTeleport.class, EnumRarity.rare);
+		pipePowerTeleport = createPipeSpecial(pipePowerTeleportId, PipePowerTeleport.class);
 		if (enablePowerTeleport) {
 			GameRegistry.addRecipe(new ItemStack(pipePowerTeleport), new Object[]{"r", "P", 'r', Item.redstone, 'P', pipeItemsTeleport});
 		}
@@ -348,24 +345,18 @@ public class AdditionalPipes {
 
 	//special pipe code
 	private static class ItemPipeAP extends ItemPipe {
-		private EnumRarity rarity;
 		protected ItemPipeAP(int i) {
 			super(i);
-			rarity = EnumRarity.common;
 		}
-		@Override
+		//@Override
 		public EnumRarity getRarity(ItemStack stack){
-			return rarity;
-		}
-		public void setRarity(EnumRarity rarity){
-			this.rarity = rarity;
+			return EnumRarity.rare;
 		}
 	}
 
-	private Item createPipeSpecial(int id, Class<? extends Pipe> clas, EnumRarity rarity){
+	private Item createPipeSpecial(int id, Class<? extends Pipe> clas) {
 		ItemPipeAP item = new ItemPipeAP(id);
 		item.setItemName(clas.getSimpleName());
-		item.setRarity(rarity);
 		proxy.registerPipeRendering(item);
 
 		BlockGenericPipe.pipes.put(item.shiftedIndex, clas);

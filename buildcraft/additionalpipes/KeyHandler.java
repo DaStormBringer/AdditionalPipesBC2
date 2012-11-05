@@ -6,8 +6,10 @@ import net.minecraft.src.KeyBinding;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.common.TickType;
 
-public class KeyHandler extends KeyBindingRegistry.KeyHandler{
-
+public class KeyHandler extends KeyBindingRegistry.KeyHandler {
+	
+	public static KeyBinding laserKey;
+	
 	public KeyHandler(KeyBinding[] keyBindings, boolean[] repeatings) {
 		super(keyBindings, repeatings);
 	}
@@ -20,7 +22,7 @@ public class KeyHandler extends KeyBindingRegistry.KeyHandler{
 	@Override
 	public void keyDown(EnumSet<TickType> types, KeyBinding kb,
 			boolean tickEnd, boolean isRepeat) {
-		if (tickEnd && kb.keyCode == AdditionalPipes.instance.laserKey.keyCode) {
+		if (tickEnd && kb.keyCode == laserKey.keyCode) {
 			ChunkLoadViewDataProxy viewer = AdditionalPipes.instance.chunkLoadViewer;
 			viewer.toggleLasers();
 			if(viewer.lasersActive()) {
