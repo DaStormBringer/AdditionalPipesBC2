@@ -68,7 +68,7 @@ clientSideRequired=true, serverSideRequired=true, packetHandler=NetworkHandler.c
 public class AdditionalPipes {
 	public static final String MODID = "AdditionalPipes";
 	public static final String NAME = "Additional Pipes for BuildCraft";
-	public static final String VERSION = "2.1.3u18";
+	public static final String VERSION = "@VERSION@";
 	public static final String CHANNEL = MODID;
 
 	@Instance(MODID)
@@ -361,8 +361,6 @@ public class AdditionalPipes {
 		protected ItemPipeAP(int i) {
 			super(i);
 		}
-		//@Override
-		@Override
 		public EnumRarity getRarity(ItemStack stack){
 			return EnumRarity.rare;
 		}

@@ -1,5 +1,5 @@
 <project name="AdditionalPipes" basedir="../" default="package">
-	<property name="version" value="2.1.3u17" />
+	<property name="version" value="2.1.3u18" />
 	<property name="mcp.dir" value="mcp" />
 	<property name="src.dir" value="AdditionalPipes" />
 	<property name="jar.dir" value="build/AdditionalPipes" />
@@ -12,6 +12,9 @@
 	<target name="copy-src">
 		<copy todir="${mcp.dir}/src/minecraft/buildcraft">
 			<fileset dir="${src.dir}/buildcraft" />
+			<filterset>
+				<filter token="VERSION" value="${version}" />
+			</filterset>
 		</copy>
 	</target>
 	
@@ -37,7 +40,11 @@
 			<fileset dir="${mcp.dir}/reobf/minecraft/buildcraft/additionalpipes" />
 		</copy>
 
-		<copy todir="${build.dir}" file="${src.dir}/mcmod.info" />
+		<copy todir="${build.dir}" file="${src.dir}/mcmod.info">
+			<filterset>
+				<filter token="VERSION" value="${version}" />
+			</filterset>
+		</copy>
 		<copy todir="${build.dir}/lang">
 			<fileset dir="${src.dir}/buildcraft/additionalpipes/lang" />
 		</copy>
