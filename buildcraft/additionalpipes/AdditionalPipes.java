@@ -21,6 +21,8 @@ import buildcraft.BuildCraftTransport;
 import buildcraft.additionalpipes.chunkloader.BlockChunkLoader;
 import buildcraft.additionalpipes.chunkloader.ChunkLoadingHandler;
 import buildcraft.additionalpipes.chunkloader.TileChunkLoader;
+import buildcraft.additionalpipes.gates.GateProvider;
+import buildcraft.additionalpipes.gates.TriggerPipeClosed;
 import buildcraft.additionalpipes.network.NetworkHandler;
 import buildcraft.additionalpipes.pipes.PipeItemsAdvancedInsertion;
 import buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
@@ -32,6 +34,8 @@ import buildcraft.additionalpipes.pipes.PipeLiquidsRedstone;
 import buildcraft.additionalpipes.pipes.PipeLiquidsTeleport;
 import buildcraft.additionalpipes.pipes.PipePowerTeleport;
 import buildcraft.additionalpipes.pipes.TeleportManager;
+import buildcraft.api.gates.ActionManager;
+import buildcraft.api.gates.ITrigger;
 import buildcraft.api.recipes.AssemblyRecipe;
 import buildcraft.core.utils.Localization;
 import buildcraft.transport.BlockGenericPipe;
@@ -64,7 +68,7 @@ clientSideRequired=true, serverSideRequired=true, packetHandler=NetworkHandler.c
 public class AdditionalPipes {
 	public static final String MODID = "AdditionalPipes";
 	public static final String NAME = "Additional Pipes for BuildCraft";
-	public static final String VERSION = "2.1.3u17";
+	public static final String VERSION = "2.1.3u18";
 	public static final String CHANNEL = MODID;
 
 	@Instance(MODID)
@@ -101,7 +105,7 @@ public class AdditionalPipes {
 
 	//enable/disable crafting
 	public @CfgBool boolean
-	enableItemsAdvancedInsertion = true,
+	enableItemsAdvancedInsertion = true,	
 	enableItemsAdvancedWood = true,
 	enableItemsDistributor = false, //TODO fix
 	enableItemsRedstone = true,
@@ -147,6 +151,9 @@ public class AdditionalPipes {
 	//chunk loader
 	public Block blockChunkLoader;
 	public @CfgId(block=true) int chunkLoaderId = 189;
+	
+	public ITrigger triggerPipeClosed;
+	
 	//keybinding
 	public int laserKeyCode = 64; //config option (& in options menu)
 	//misc
@@ -185,7 +192,13 @@ public class AdditionalPipes {
 
 	@PostInit
 	public void modsLoaded(FMLPostInitializationEvent event) {
+		powerMeter = new ItemPowerMeter(powerMeterId).setItemName("powerMeter");
+		LanguageRegistry.addName(powerMeter, "Power Meter");
+		
 		loadPipes();
+		
+		triggerPipeClosed = new TriggerPipeClosed(212);
+		ActionManager.registerTriggerProvider(new GateProvider());
 
 		if (allowWRRemove) {
 			//Additional Pipes
@@ -349,6 +362,7 @@ public class AdditionalPipes {
 			super(i);
 		}
 		//@Override
+		@Override
 		public EnumRarity getRarity(ItemStack stack){
 			return EnumRarity.rare;
 		}

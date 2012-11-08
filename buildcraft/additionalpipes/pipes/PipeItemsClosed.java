@@ -52,9 +52,11 @@ public class PipeItemsClosed extends Pipe implements IInventory {
 		NBTTagList list = new NBTTagList();
 
 		for (ItemStack stack : inventory) {
-			NBTTagCompound stackTag = new NBTTagCompound();
-			stack.writeToNBT(stackTag);
-			list.appendTag(stackTag);
+			if(stack != null) {
+				NBTTagCompound stackTag = new NBTTagCompound();
+				stack.writeToNBT(stackTag);
+				list.appendTag(stackTag);
+			}
 		}
 
 		nbttagcompound.setTag("closedInventory", list);
