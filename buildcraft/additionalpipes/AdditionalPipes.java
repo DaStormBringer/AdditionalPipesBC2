@@ -91,8 +91,8 @@ public class AdditionalPipes {
 	public static final String BASE_PATH = "/buildcraft/additionalpipes";
 	public static final String TEXTURE_PATH = BASE_PATH + "/sprites";
 	public static final String TEXTURE_MASTER = TEXTURE_PATH + "/textures.png";
-	public static final String TEXTURE_PIPES = TEXTURE_PATH + "/pipes.png";
 	public static final String TEXTURE_BLOCKS = TEXTURE_PATH + "/blocks.png";
+	public static final String TEXTURE_TRIGGERS = TEXTURE_PATH + "/triggers.png";
 
 	public static final String TEXTURE_GUI_TELEPORT = TEXTURE_PATH + "/blankSmallGui.png";
 	public static final String TEXTURE_GUI_ADVANCEDWOOD = TEXTURE_PATH + "/advancedWoodGui.png";
@@ -348,7 +348,7 @@ public class AdditionalPipes {
 		// Closed Items Pipe
 		pipeItemsClosed = createPipe(pipeItemsClosedId, PipeItemsClosed.class);
 		if (enableItemsClosed) {
-			GameRegistry.addRecipe(new ItemStack(pipeItemsClosed), new Object[]{"r", "S", 'w', BuildCraftTransport.pipeItemsSandstone, 'r', Item.redstone});
+			GameRegistry.addRecipe(new ItemStack(pipeItemsClosed), new Object[]{"r", "I", 'I', BuildCraftTransport.pipeItemsIron, 'r', Item.redstone});
 		}
 		
 	}

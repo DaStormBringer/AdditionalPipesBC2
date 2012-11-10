@@ -11,7 +11,9 @@
 	
 	<target name="copy-src">
 		<copy todir="${mcp.dir}/src/minecraft/buildcraft">
-			<fileset dir="${src.dir}/buildcraft" />
+			<fileset dir="${src.dir}/buildcraft">
+				<exclude name="**/*.png"/>
+			</fileset>
 			<filterset>
 				<filter token="VERSION" value="${version}" />
 			</filterset>

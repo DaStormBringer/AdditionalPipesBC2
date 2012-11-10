@@ -1,6 +1,6 @@
 [{
-  "modid": "AdditionalPipes",
-  "name": "Additional Pipes for BuildCraft",
+  "modid": "APUnofficial",
+  "name": "Additional Pipes (Unofficial)",
   "version": "@VERSION@"
   "description": "Teleport, insertion, extraction, and many more new pipes.",
   "credits": "Credits to Zeldo, DaStormBringer, and Kyprus for their work on the mod.",

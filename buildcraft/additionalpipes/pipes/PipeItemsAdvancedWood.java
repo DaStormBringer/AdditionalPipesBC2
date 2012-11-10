@@ -28,7 +28,7 @@ import buildcraft.core.utils.Utils;
 import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransportItems;
 
-public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
+public class PipeItemsAdvancedWood extends APPipe implements IPowerReceptor {
 
 	private IPowerProvider powerProvider;
 
@@ -151,11 +151,6 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
 	@Override
 	public void readFromNBT(NBTTagCompound nbttagcompound) {
 		super.readFromNBT(nbttagcompound);
-	}
-
-	@Override
-	public String getTextureFile() {
-		return AdditionalPipes.TEXTURE_PIPES;
 	}
 
 	@Override

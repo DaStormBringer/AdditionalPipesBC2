@@ -24,7 +24,7 @@ import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.pipes.PipeLogic;
 
-public class PipeItemsClosed extends Pipe implements IInventory {
+public class PipeItemsClosed extends APPipe implements IInventory {
 
 	private ItemStack[] inventory = new ItemStack[27];
 
@@ -74,13 +74,8 @@ public class PipeItemsClosed extends Pipe implements IInventory {
 	}
 
 	@Override
-	public String getTextureFile() {
-		return DefaultProps.TEXTURE_BLOCKS;
-	}
-
-	@Override
 	public int getTextureIndex(ForgeDirection direction) {
-		return 1 * 16 + 13;
+		return 0; //TODO fix
 	}
 
 	@Override

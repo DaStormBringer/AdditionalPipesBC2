@@ -14,7 +14,7 @@ public abstract class APPipe extends Pipe {
 
 	@Override
 	public String getTextureFile() {
-		return AdditionalPipes.TEXTURE_PIPES;
+		return AdditionalPipes.TEXTURE_MASTER;
 	}
 
 	@Override

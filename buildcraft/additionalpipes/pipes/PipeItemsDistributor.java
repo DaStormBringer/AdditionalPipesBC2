@@ -23,7 +23,7 @@ import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.TileGenericPipe;
 
-public class PipeItemsDistributor extends Pipe implements IPipeTransportItemsHook {
+public class PipeItemsDistributor extends APPipe implements IPipeTransportItemsHook {
 
 	public PipeItemsDistributor(int itemID) {
 		super(new PipeTransportItems(), new PipeLogicDistributor(), itemID);
@@ -104,11 +104,6 @@ public class PipeItemsDistributor extends Pipe implements IPipeTransportItemsHoo
 
 	@Override
 	public void readjustSpeed(IPipedItem item) {
-	}
-
-	@Override
-	public String getTextureFile() {
-		return AdditionalPipes.TEXTURE_PIPES;
 	}
 
 }

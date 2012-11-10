@@ -15,7 +15,7 @@ public class TriggerPipeClosed extends Trigger implements ITriggerPipe {
 
 	@Override
 	public String getTextureFile() {
-		return AdditionalPipes.TEXTURE_MASTER;
+		return AdditionalPipes.TEXTURE_TRIGGERS;
 	}
 
 	@Override

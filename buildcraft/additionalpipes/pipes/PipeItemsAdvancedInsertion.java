@@ -23,7 +23,7 @@ import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.pipes.PipeLogicStone;
 
-public class PipeItemsAdvancedInsertion extends Pipe implements IPipeTransportItemsHook {
+public class PipeItemsAdvancedInsertion extends APPipe implements IPipeTransportItemsHook {
 
 	public PipeItemsAdvancedInsertion(int itemID) {
 		super(new PipeTransportItems(), new PipeLogicStone(), itemID);
@@ -63,11 +63,6 @@ public class PipeItemsAdvancedInsertion extends Pipe implements IPipeTransportIt
 		if (item.getSpeed() < Utils.pipeNormalSpeed) {
 			item.setSpeed(Utils.pipeNormalSpeed);
 		}
-	}
-
-	@Override
-	public String getTextureFile() {
-		return AdditionalPipes.TEXTURE_PIPES;
 	}
 
 	@Override
