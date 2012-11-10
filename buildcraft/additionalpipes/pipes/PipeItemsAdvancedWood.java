@@ -15,7 +15,6 @@ import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
 import net.minecraftforge.common.ForgeDirection;
-import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.pipes.logic.PipeLogicAdvancedWood;
 import buildcraft.api.core.Position;
 import buildcraft.api.power.IPowerProvider;
@@ -25,7 +24,6 @@ import buildcraft.api.transport.IPipedItem;
 import buildcraft.api.transport.PipeManager;
 import buildcraft.core.EntityPassiveItem;
 import buildcraft.core.utils.Utils;
-import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransportItems;
 
 public class PipeItemsAdvancedWood extends APPipe implements IPowerReceptor {

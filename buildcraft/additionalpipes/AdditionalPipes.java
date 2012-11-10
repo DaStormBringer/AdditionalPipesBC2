@@ -365,6 +365,7 @@ public class AdditionalPipes {
 		protected ItemPipeAP(int i) {
 			super(i);
 		}
+		@Override
 		public EnumRarity getRarity(ItemStack stack){
 			return EnumRarity.rare;
 		}

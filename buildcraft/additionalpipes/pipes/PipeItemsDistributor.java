@@ -13,13 +13,11 @@ import java.util.LinkedList;
 import net.minecraft.src.IInventory;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.pipes.logic.PipeLogicDistributor;
 import buildcraft.api.core.Position;
 import buildcraft.api.transport.IPipedItem;
 import buildcraft.core.utils.Utils;
 import buildcraft.transport.IPipeTransportItemsHook;
-import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.TileGenericPipe;
 
