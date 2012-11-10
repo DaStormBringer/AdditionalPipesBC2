@@ -66,7 +66,7 @@ version=AdditionalPipes.VERSION)
 @NetworkMod(channels={AdditionalPipes.CHANNEL},
 clientSideRequired=true, serverSideRequired=true, packetHandler=NetworkHandler.class)
 public class AdditionalPipes {
-	public static final String MODID = "AdditionalPipesUnofficial";
+	public static final String MODID = "APUnofficial";
 	public static final String NAME = "Additional Pipes for BuildCraft";
 	public static final String VERSION = "2.1.3u19";
 	public static final String CHANNEL = MODID;
@@ -105,7 +105,7 @@ public class AdditionalPipes {
 
 	//enable/disable crafting
 	public @CfgBool boolean
-	enableItemsAdvancedInsertion = true,	
+	enableItemsAdvancedInsertion = true,
 	enableItemsAdvancedWood = true,
 	enableItemsDistributor = false, //TODO fix
 	enableItemsRedstone = true,
@@ -117,10 +117,10 @@ public class AdditionalPipes {
 	enbableChunkLoader = true;
 	//teleport scanner TODO
 	public Item teleportScanner;
-	public @CfgId int teleportScannerId = 4061;
+	public @CfgId int teleportScannerId = 14061;
 	//meter TODO
 	public Item powerMeter;
-	public @CfgId int powerMeterId = 4060;
+	public @CfgId int powerMeterId = 14060;
 	//Items Closed
 	public Item pipeItemsClosed;
 	public @CfgId int pipeItemsClosedId = 4050;
@@ -218,12 +218,14 @@ public class AdditionalPipes {
 		}
 
 		//ChunkLoader
-		blockChunkLoader = new BlockChunkLoader(chunkLoaderId, 0);
-		blockChunkLoader.setBlockName("TeleportTether");
-		GameRegistry.registerBlock(blockChunkLoader);
-		GameRegistry.registerTileEntity(TileChunkLoader.class, "TeleportTether");
-		if (enbableChunkLoader) {
-			GameRegistry.addRecipe(new ItemStack(blockChunkLoader), new Object[]{"iii", "iLi", "iii", 'i', Item.ingotIron, 'L', new ItemStack(Item.dyePowder, 1, 4)});
+		if(chunkLoaderId == -1) {
+			blockChunkLoader = new BlockChunkLoader(chunkLoaderId, 0);
+			blockChunkLoader.setBlockName("TeleportTether");
+			GameRegistry.registerBlock(blockChunkLoader);
+			GameRegistry.registerTileEntity(TileChunkLoader.class, "TeleportTether");
+			if (enbableChunkLoader) {
+				GameRegistry.addRecipe(new ItemStack(blockChunkLoader), new Object[]{"iii", "iLi", "iii", 'i', Item.ingotIron, 'L', new ItemStack(Item.dyePowder, 1, 4)});
+			}
 		}
 	}
 
@@ -236,6 +238,8 @@ public class AdditionalPipes {
 	private void loadConfigs(Configuration config) {
 		try {
 			config.load();
+			config.addCustomCategoryComment(Configuration.CATEGORY_BLOCK, "Set block id to -1 to disable loading the block.");
+			config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, "Disabling items/blocks only disables recipes.");
 			Field[] fields = AdditionalPipes.class.getFields();
 			for(Field field : fields){
 				if(!Modifier.isStatic(field.getModifiers())) {
