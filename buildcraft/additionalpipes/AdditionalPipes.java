@@ -66,7 +66,7 @@ version=AdditionalPipes.VERSION)
 @NetworkMod(channels={AdditionalPipes.CHANNEL},
 clientSideRequired=true, serverSideRequired=true, packetHandler=NetworkHandler.class)
 public class AdditionalPipes {
-	public static final String MODID = "AdditionalPipes";
+	public static final String MODID = "AdditionalPipesUnofficial";
 	public static final String NAME = "Additional Pipes for BuildCraft";
 	public static final String VERSION = "2.1.3u19";
 	public static final String CHANNEL = MODID;
