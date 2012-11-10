@@ -9,8 +9,8 @@
 package buildcraft.additionalpipes.pipes;
 
 import net.minecraft.src.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
 import buildcraft.BuildCraftTransport;
-import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
 import buildcraft.api.liquids.ITankContainer;
 import buildcraft.api.liquids.LiquidStack;
@@ -38,7 +38,7 @@ public class PipeLiquidsRedstone extends APPipe {
 	public boolean isPoweringTo(int l) {
 		//System.out.println("RedStoneIsPoweringTo");
 		LiquidStack liquid = ((PipeTransportLiquids) transport)
-				.getTanks()[Orientations.Unknown.ordinal()].getLiquid();
+				.getTanks()[ForgeDirection.UNKNOWN.ordinal()].getLiquid();
 		if (liquid == null || liquid.amount == 0) {
 			isPowering = false;
 			return false;
@@ -78,7 +78,7 @@ public class PipeLiquidsRedstone extends APPipe {
 		//System.out.println("Quantity: " + (((PipeTransportLiquids)this.transport).getLiquidQuantity()) + " - Wanted: " + computeMaxLiquid() + " - Qua2: " + computeEnds()[1]);
 		//System.out.println("Quantity: " + ((PipeTransportLiquids)this.transport).getCenter());
 		LiquidStack liquid = ((PipeTransportLiquids) transport)
-				.getTanks()[Orientations.Unknown.ordinal()].getLiquid();
+				.getTanks()[ForgeDirection.UNKNOWN.ordinal()].getLiquid();
 		if (liquid == null || liquid.amount == 0 && isPowering) {
 			isPowering = false;
 			UpdateTiles(container.xCoord, container.yCoord, container.zCoord);
@@ -105,7 +105,7 @@ public class PipeLiquidsRedstone extends APPipe {
 	}
 
 	@Override
-	public int getTextureIndex(Orientations direction) {
+	public int getTextureIndex(ForgeDirection direction) {
 		return isPowering ? 15 : 1;
 	}
 }

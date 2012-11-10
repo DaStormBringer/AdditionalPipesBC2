@@ -12,9 +12,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.src.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.pipes.logic.PipeLogicTeleport;
-import buildcraft.api.core.Orientations;
 import buildcraft.core.utils.Utils;
 import buildcraft.transport.IPipeTransportPowerHook;
 import buildcraft.transport.PipeTransportPower;
@@ -24,8 +24,8 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 
 	private static class PowerRequest {
 		public final TileGenericPipe tile;
-		public final Orientations orientation;
-		public PowerRequest(TileGenericPipe te, Orientations o) {
+		public final ForgeDirection orientation;
+		public PowerRequest(TileGenericPipe te, ForgeDirection o) {
 			tile = te;
 			orientation = o;
 		}
@@ -36,7 +36,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 	}
 
 	@Override
-	public void requestEnergy(Orientations from, int is) {
+	public void requestEnergy(ForgeDirection from, int is) {
 		((PipeTransportPower)transport).step();
 
 		if (!logic.canReceive) { //No need to waste CPU
@@ -50,20 +50,20 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 		}
 
 		for (PipeTeleport pipe : pipeList) {
-			LinkedList<Orientations> possibleMovements = getRealPossibleMovements(pipe);
-			for (Orientations orientation : possibleMovements) {
+			LinkedList<ForgeDirection> possibleMovements = getRealPossibleMovements(pipe);
+			for (ForgeDirection orientation : possibleMovements) {
 				TileEntity tile = pipe.container.getTile(orientation);
 				if (tile instanceof TileGenericPipe) {
 					TileGenericPipe adjacentTile = (TileGenericPipe) tile;
 					PipeTransportPower nearbyTransport = (PipeTransportPower) adjacentTile.pipe.transport;
-					nearbyTransport.requestEnergy(orientation.reverse(), is);
+					nearbyTransport.requestEnergy(orientation.getOpposite(), is);
 				}
 			}
 		}
 	}
 
 	@Override
-	public void receiveEnergy(Orientations from, double val) {
+	public void receiveEnergy(ForgeDirection from, double val) {
 		((PipeTransportPower)transport).step();
 		List<PipeTeleport> connectedPipes = TeleportManager.instance.getConnectedPipes(this, false);
 		List<PipeTeleport> sendingToList = new LinkedList<PipeTeleport>();
@@ -106,16 +106,16 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 
 
 	private List<PowerRequest> getPipesNeedsPower(PipeTeleport pipe) {
-		LinkedList<Orientations> possibleMovements = getRealPossibleMovements(pipe);
+		LinkedList<ForgeDirection> possibleMovements = getRealPossibleMovements(pipe);
 		List<PowerRequest> needsPower = new LinkedList<PowerRequest>();
 
 		if (possibleMovements.size() > 0) {
-			for (Orientations orientation : possibleMovements) {
+			for (ForgeDirection orientation : possibleMovements) {
 				TileEntity tile = pipe.container.getTile(orientation);
 				if (tile instanceof TileGenericPipe){
 					TileGenericPipe adjacentPipe = (TileGenericPipe) tile;
 					if(pipeNeedsPower(adjacentPipe)) {
-						needsPower.add(new PowerRequest(adjacentPipe, orientation.reverse()));
+						needsPower.add(new PowerRequest(adjacentPipe, orientation.getOpposite()));
 					}
 				}
 			}
@@ -137,11 +137,10 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 	}
 
 	//returns all adjacent pipes
-	private static LinkedList<Orientations> getRealPossibleMovements(PipeTeleport pipe) {
-		LinkedList<Orientations> result = new LinkedList<Orientations>();
+	private static LinkedList<ForgeDirection> getRealPossibleMovements(PipeTeleport pipe) {
+		LinkedList<ForgeDirection> result = new LinkedList<ForgeDirection>();
 
-		for (int o = 0; o < 6; ++o) {
-			Orientations orientation = Orientations.values()[o];
+		for (ForgeDirection orientation : ForgeDirection.VALID_DIRECTIONS) {
 			if (pipe.outputOpen(orientation)) {
 				TileEntity te = pipe.container.getTile(orientation);
 				if ((te instanceof TileGenericPipe) &&
@@ -155,7 +154,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 	}
 
 	@Override
-	public int getTextureIndex(Orientations direction) {
+	public int getTextureIndex(ForgeDirection direction) {
 		return 3;
 	}
 

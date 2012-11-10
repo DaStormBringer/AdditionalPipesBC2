@@ -11,8 +11,9 @@ package buildcraft.additionalpipes.pipes;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.minecraftforge.common.ForgeDirection;
+
 import buildcraft.additionalpipes.pipes.logic.PipeLogicTeleport;
-import buildcraft.api.core.Orientations;
 import buildcraft.api.liquids.ITankContainer;
 import buildcraft.api.liquids.LiquidStack;
 import buildcraft.transport.IPipeTransportLiquidsHook;
@@ -27,7 +28,7 @@ public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportL
 	}
 
 	@Override
-	public int fill(Orientations from, LiquidStack resource, boolean doFill) {
+	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill) {
 		List<PipeTeleport> pipeList = TeleportManager.instance.getConnectedPipes(this, false);
 
 		if (pipeList.size() == 0) {
@@ -44,7 +45,7 @@ public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportL
 		int used = 0;
 		while (possibleMovements.size() > 0 && used <= 0) {
 			int a = rand.nextInt(possibleMovements.size());
-			used = possibleMovements.get(a).fill(Orientations.Unknown, resource, doFill);
+			used = possibleMovements.get(a).fill(ForgeDirection.UNKNOWN, resource, doFill);
 			possibleMovements.remove(a);
 		}
 
@@ -54,9 +55,9 @@ public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportL
 	private static List<ITankContainer> getPossibleLiquidMovements(PipeTeleport pipe) {
 		List<ITankContainer> result = new LinkedList<ITankContainer>();
 
-		for (int o = 0; o < 6; ++o) {
-			if (pipe.logic.outputOpen((Orientations.values()[o]))) {
-				ITankContainer te = (ITankContainer) pipe.container.getTile(Orientations.values()[o]);
+		for (ForgeDirection o : ForgeDirection.VALID_DIRECTIONS) {
+			if (pipe.logic.outputOpen(o)) {
+				ITankContainer te = (ITankContainer) pipe.container.getTile(o);
 				result.add(te);
 			}
 		}
@@ -65,7 +66,7 @@ public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportL
 	}
 
 	@Override
-	public int getTextureIndex(Orientations direction) {
+	public int getTextureIndex(ForgeDirection direction) {
 		return 2;
 	}
 

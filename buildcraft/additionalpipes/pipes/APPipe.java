@@ -1,7 +1,7 @@
 package buildcraft.additionalpipes.pipes;
 
+import net.minecraftforge.common.ForgeDirection;
 import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.api.core.Orientations;
 import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransport;
 import buildcraft.transport.pipes.PipeLogic;
@@ -18,5 +18,5 @@ public abstract class APPipe extends Pipe {
 	}
 
 	@Override
-	public abstract int getTextureIndex(Orientations direction);
+	public abstract int getTextureIndex(ForgeDirection direction);
 }

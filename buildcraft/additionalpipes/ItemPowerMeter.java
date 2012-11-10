@@ -1,6 +1,5 @@
 package buildcraft.additionalpipes;
 
-import buildcraft.api.core.Orientations;
 import buildcraft.api.power.IPowerProvider;
 import buildcraft.api.power.IPowerReceptor;
 import net.minecraft.src.CreativeTabs;
@@ -9,6 +8,7 @@ import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
+import net.minecraftforge.common.ForgeDirection;
 
 public class ItemPowerMeter extends Item {
 
@@ -29,8 +29,8 @@ public class ItemPowerMeter extends Item {
 			IPowerReceptor receptor = (IPowerReceptor) te;
 			IPowerProvider provider = receptor.getPowerProvider();
 
-			if(player.capabilities.isCreativeMode && Orientations.dirs()[side] == Orientations.YPos) {
-				receptor.getPowerProvider().receiveEnergy(1000, Orientations.dirs()[side]);
+			if(player.capabilities.isCreativeMode && ForgeDirection.VALID_DIRECTIONS[side] == ForgeDirection.UP) {
+				receptor.getPowerProvider().receiveEnergy(1000, ForgeDirection.VALID_DIRECTIONS[side]);
 			}
 
 			player.sendChatToPlayer(String.format("R:%d L:%d m:%d M:%d A:%d S:%d",

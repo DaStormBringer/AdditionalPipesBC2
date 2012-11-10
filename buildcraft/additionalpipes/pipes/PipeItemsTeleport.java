@@ -11,9 +11,10 @@ package buildcraft.additionalpipes.pipes;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.minecraftforge.common.ForgeDirection;
+
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.pipes.logic.PipeLogicTeleport;
-import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
 import buildcraft.api.transport.IPipedItem;
 import buildcraft.transport.IPipeTransportItemsHook;
@@ -35,12 +36,12 @@ public class PipeItemsTeleport extends PipeTeleport implements IPipeTransportIte
 	}
 
 	@Override
-	public LinkedList<Orientations> filterPossibleMovements(LinkedList<Orientations> possibleOrientations, Position pos, IPipedItem item) {
+	public LinkedList<ForgeDirection> filterPossibleMovements(LinkedList<ForgeDirection> possibleOrientations, Position pos, IPipedItem item) {
 		return possibleOrientations;
 	}
 
 	@Override
-	public void entityEntered(IPipedItem item, Orientations orientation) {
+	public void entityEntered(IPipedItem item, ForgeDirection orientation) {
 		List<PipeTeleport> connectedTeleportPipes = TeleportManager.instance.getConnectedPipes(this, false);
 		//no teleport pipes connected, use default
 		if (connectedTeleportPipes.size() <= 0) {
@@ -48,21 +49,21 @@ public class PipeItemsTeleport extends PipeTeleport implements IPipeTransportIte
 		}
 
 		//output to random pipe
-		LinkedList<Orientations> outputOrientations = new LinkedList<Orientations>();
+		LinkedList<ForgeDirection> outputOrientations = new LinkedList<ForgeDirection>();
 		PipeTeleport otherPipe = connectedTeleportPipes.get(
 				rand.nextInt(connectedTeleportPipes.size()));
 
 		//find possible output orientations
-		for (int o = 0; o < 6; o++) {
-			if (otherPipe.outputOpen(Orientations.values()[o]))
-				outputOrientations.add(Orientations.values()[o]);
+		for (ForgeDirection o : ForgeDirection.VALID_DIRECTIONS) {
+			if (otherPipe.outputOpen(o))
+				outputOrientations.add(o);
 		}
 		//no outputs found, default behaviour
 		if (outputOrientations.size() <= 0) {
 			return;
 		}
 
-		Orientations newOrientation = outputOrientations.get(rand.nextInt(outputOrientations.size()));
+		ForgeDirection newOrientation = outputOrientations.get(rand.nextInt(outputOrientations.size()));
 		TileGenericPipe destination = (TileGenericPipe) otherPipe.container.getTile(newOrientation);
 		item.setContainer(destination);
 		item.setPosition(destination.xCoord + 0.5, destination.yCoord, destination.zCoord + 0.5);
@@ -72,7 +73,7 @@ public class PipeItemsTeleport extends PipeTeleport implements IPipeTransportIte
 	}
 
 	@Override
-	public int getTextureIndex(Orientations direction) {
+	public int getTextureIndex(ForgeDirection direction) {
 		return 0;
 	}
 

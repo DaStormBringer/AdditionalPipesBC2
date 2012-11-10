@@ -14,9 +14,9 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
+import net.minecraftforge.common.ForgeDirection;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.pipes.logic.PipeLogicAdvancedWood;
-import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
 import buildcraft.api.power.IPowerProvider;
 import buildcraft.api.power.IPowerReceptor;
@@ -63,7 +63,7 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
 		if (meta > 5)
 			return;
 
-		Position pos = new Position(xCoord, yCoord, zCoord,	Orientations.values()[meta]);
+		Position pos = new Position(xCoord, yCoord, zCoord,	ForgeDirection.VALID_DIRECTIONS[meta]);
 		pos.moveForwards(1);
 		int blockId = w.getBlockId((int) pos.x, (int) pos.y, (int) pos.z);
 		TileEntity tile = w.getBlockTileEntity((int) pos.x, (int) pos.y, (int) pos.z);
@@ -75,7 +75,7 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
 			IInventory inventory = (IInventory) tile;
 
 			ItemStack extracted = checkExtract(inventory, true,
-					pos.orientation.reverse());
+					pos.orientation.getOpposite());
 
 			if (extracted == null || extracted.stackSize == 0) {
 				powerProvider.useEnergy(1, 1, false);
@@ -83,7 +83,7 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
 			}
 
 			Position entityPos = new Position(pos.x + 0.5, pos.y + Utils.getPipeFloorOf(extracted), pos.z + 0.5,
-					pos.orientation.reverse());
+					pos.orientation.getOpposite());
 			entityPos.moveForwards(0.5);
 			IPipedItem entity = new EntityPassiveItem(w, entityPos.x, entityPos.y, entityPos.z, extracted);
 			((PipeTransportItems) transport).entityEntering(entity, entityPos.orientation);
@@ -96,7 +96,7 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
 	 * on the position of the pipe.
 	 */
 	public ItemStack checkExtract(IInventory inventory, boolean doRemove,
-			Orientations from) {
+			ForgeDirection from) {
 		//		if (inventory instanceof ISpecialInventory) {
 		//			//At the moment we are going to let special inventorys handle there own. Might change if popular demand
 		//			return ((ISpecialInventory) inventory).extractItem(doRemove, from);
@@ -106,7 +106,7 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
 		return result;
 	}
 
-	public ItemStack checkExtractGeneric(IInventory inventory, boolean doRemove, Orientations from, int start, int stop) {
+	public ItemStack checkExtractGeneric(IInventory inventory, boolean doRemove, ForgeDirection from, int start, int stop) {
 		for (int k = start; k <= stop; ++k)
 			if (inventory.getStackInSlot(k) != null && inventory.getStackInSlot(k).stackSize > 0) {
 
@@ -159,8 +159,8 @@ public class PipeItemsAdvancedWood extends Pipe implements IPowerReceptor {
 	}
 
 	@Override
-	public int getTextureIndex(Orientations direction) {
-		if (direction == Orientations.Unknown)
+	public int getTextureIndex(ForgeDirection direction) {
+		if (direction == ForgeDirection.UNKNOWN)
 			return 6;
 		else {
 			int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);

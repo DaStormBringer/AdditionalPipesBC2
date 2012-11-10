@@ -12,8 +12,8 @@ import java.util.LinkedList;
 
 import net.minecraft.src.IInventory;
 import net.minecraft.src.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
 import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
 import buildcraft.api.transport.IPipedItem;
 import buildcraft.core.inventory.TransactorSimple;
@@ -30,17 +30,17 @@ public class PipeItemsAdvancedInsertion extends Pipe implements IPipeTransportIt
 	}
 
 	@Override
-	public LinkedList<Orientations> filterPossibleMovements(LinkedList<Orientations> possibleOrientations, Position pos, IPipedItem item) {
-		LinkedList<Orientations> newOris = new LinkedList<Orientations>();
+	public LinkedList<ForgeDirection> filterPossibleMovements(LinkedList<ForgeDirection> possibleOrientations, Position pos, IPipedItem item) {
+		LinkedList<ForgeDirection> newOris = new LinkedList<ForgeDirection>();
 
 		for (int o = 0; o < 6; ++o) {
-			Orientations orientation = Orientations.values()[o];
-			if (orientation != pos.orientation.reverse()) {
+			ForgeDirection orientation = ForgeDirection.values()[o];
+			if (orientation != pos.orientation.getOpposite()) {
 				TileEntity entity = container.getTile(orientation);
 
 				if (entity instanceof IInventory) {
 					TransactorSimple transactor = new TransactorSimple((IInventory) entity);
-					if (transactor.add(item.getItemStack(), orientation.reverse(), false).stackSize > 0) {
+					if (transactor.add(item.getItemStack(), orientation.getOpposite(), false).stackSize > 0) {
 						newOris.add(orientation);
 					}
 				}
@@ -71,12 +71,12 @@ public class PipeItemsAdvancedInsertion extends Pipe implements IPipeTransportIt
 	}
 
 	@Override
-	public int getTextureIndex(Orientations direction) {
+	public int getTextureIndex(ForgeDirection direction) {
 		return 8;
 	}
 
 	@Override
-	public void entityEntered(IPipedItem item, Orientations orientation) {
+	public void entityEntered(IPipedItem item, ForgeDirection orientation) {
 	}
 
 }

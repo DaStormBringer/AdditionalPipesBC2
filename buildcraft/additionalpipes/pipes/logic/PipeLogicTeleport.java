@@ -4,10 +4,10 @@ import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
 import buildcraft.BuildCraftTransport;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.GuiHandler;
-import buildcraft.api.core.Orientations;
 import buildcraft.api.tools.IToolWrench;
 import buildcraft.transport.Pipe;
 import buildcraft.transport.TileGenericPipe;
@@ -60,7 +60,7 @@ public class PipeLogicTeleport extends PipeLogic {
 	}
 
 	@Override
-	public boolean outputOpen(Orientations to) {
+	public boolean outputOpen(ForgeDirection to) {
 		return isPipeConnected(container.getTile(to));
 	}
 

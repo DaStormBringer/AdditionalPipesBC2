@@ -10,8 +10,9 @@ package buildcraft.additionalpipes.pipes;
 
 import java.util.LinkedList;
 
+import net.minecraftforge.common.ForgeDirection;
+
 import buildcraft.BuildCraftTransport;
-import buildcraft.api.core.Orientations;
 import buildcraft.api.core.Position;
 import buildcraft.api.transport.IPipedItem;
 import buildcraft.core.network.TileNetworkData;
@@ -39,8 +40,8 @@ public class PipeItemsRedstone extends APPipe implements IPipeTransportItemsHook
 	}
 
 	@Override
-	public LinkedList<Orientations> filterPossibleMovements(
-			LinkedList<Orientations> possibleOrientations, Position pos,
+	public LinkedList<ForgeDirection> filterPossibleMovements(
+			LinkedList<ForgeDirection> possibleOrientations, Position pos,
 			IPipedItem item) {
 		return possibleOrientations;
 	}
@@ -99,11 +100,11 @@ public class PipeItemsRedstone extends APPipe implements IPipeTransportItemsHook
 	}
 
 	@Override
-	public void entityEntered(IPipedItem item, Orientations orientation) {
+	public void entityEntered(IPipedItem item, ForgeDirection orientation) {
 	}
 
 	@Override
-	public int getTextureIndex(Orientations direction) {
+	public int getTextureIndex(ForgeDirection direction) {
 		return isPowering ? 5 : 4;
 	}
 

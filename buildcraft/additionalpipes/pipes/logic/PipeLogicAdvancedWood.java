@@ -15,10 +15,10 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.NBTTagList;
 import net.minecraft.src.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
 import buildcraft.BuildCraftTransport;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.GuiHandler;
-import buildcraft.api.core.Orientations;
 import buildcraft.api.liquids.ITankContainer;
 import buildcraft.api.tools.IToolWrench;
 import buildcraft.api.transport.PipeManager;
@@ -41,7 +41,7 @@ public class PipeLogicAdvancedWood extends PipeLogic implements IInventory {
 		int newMeta = 6;
 
 		for (int i = meta + 1; i <= meta + 6; ++i) {
-			Orientations o = Orientations.values()[i % 6];
+			ForgeDirection o = ForgeDirection.VALID_DIRECTIONS[i % 6];
 			TileEntity tile = container.getTile(o);
 			if (isInput(tile))
 				if (PipeManager.canExtractItems(container.getPipe(), tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord)) {
@@ -109,7 +109,7 @@ public class PipeLogicAdvancedWood extends PipeLogic implements IInventory {
 		if (meta > 5)
 			switchSource();
 		else {
-			TileEntity tile = container.getTile(Orientations.values()[meta]);
+			TileEntity tile = container.getTile(ForgeDirection.VALID_DIRECTIONS[meta]);
 			if (!isInput(tile))
 				switchSource();
 		}

@@ -11,9 +11,9 @@ package buildcraft.additionalpipes.pipes.logic;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Item;
 import net.minecraft.src.NBTTagCompound;
+import net.minecraftforge.common.ForgeDirection;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.GuiHandler;
-import buildcraft.api.core.Orientations;
 import buildcraft.transport.pipes.PipeLogic;
 
 public class PipeLogicDistributor extends PipeLogic {
@@ -47,7 +47,7 @@ public class PipeLogicDistributor extends PipeLogic {
 	}
 
 	@Override
-	public boolean outputOpen(Orientations to) {
+	public boolean outputOpen(ForgeDirection to) {
 		return to.ordinal() == distSide;
 	}
 

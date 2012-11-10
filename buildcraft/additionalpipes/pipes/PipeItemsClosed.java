@@ -14,8 +14,8 @@ import net.minecraft.src.IInventory;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.NBTTagList;
+import net.minecraftforge.common.ForgeDirection;
 
-import buildcraft.api.core.Orientations;
 import buildcraft.core.DefaultProps;
 import buildcraft.core.inventory.Transactor;
 import buildcraft.core.inventory.TransactorSimple;
@@ -42,7 +42,7 @@ public class PipeItemsClosed extends Pipe implements IInventory {
 	public void onDropped(EntityItem item) {
 		super.onDropped(item);
 		Transactor transactor = new TransactorSimple(this);
-		transactor.add(item.item.copy(), Orientations.Unknown, true);
+		transactor.add(item.item.copy(), ForgeDirection.UNKNOWN, true);
 		item.item.stackSize = 0;
 	}
 
@@ -79,7 +79,7 @@ public class PipeItemsClosed extends Pipe implements IInventory {
 	}
 
 	@Override
-	public int getTextureIndex(Orientations direction) {
+	public int getTextureIndex(ForgeDirection direction) {
 		return 1 * 16 + 13;
 	}
 
