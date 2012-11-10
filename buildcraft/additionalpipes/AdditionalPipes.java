@@ -68,7 +68,7 @@ clientSideRequired=true, serverSideRequired=true, packetHandler=NetworkHandler.c
 public class AdditionalPipes {
 	public static final String MODID = "APUnofficial";
 	public static final String NAME = "Additional Pipes for BuildCraft";
-	public static final String VERSION = "2.1.3u19";
+	public static final String VERSION = "@VERSION@";
 	public static final String CHANNEL = MODID;
 
 	@Instance(MODID)
