@@ -23,6 +23,7 @@ import buildcraft.additionalpipes.chunkloader.ChunkLoadingHandler;
 import buildcraft.additionalpipes.chunkloader.TileChunkLoader;
 import buildcraft.additionalpipes.gates.GateProvider;
 import buildcraft.additionalpipes.gates.TriggerPipeClosed;
+import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.additionalpipes.network.NetworkHandler;
 import buildcraft.additionalpipes.pipes.PipeItemsAdvancedInsertion;
 import buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
@@ -63,13 +64,14 @@ import cpw.mods.fml.common.registry.TickRegistry;
 @Mod(modid=AdditionalPipes.MODID, name=AdditionalPipes.NAME,
 dependencies="required-after:BuildCraft|Transport;required-after:BuildCraft|Silicon",
 version=AdditionalPipes.VERSION)
-@NetworkMod(channels={AdditionalPipes.CHANNEL},
+@NetworkMod(channels={AdditionalPipes.CHANNEL, AdditionalPipes.CHANNELNBT},
 clientSideRequired=true, serverSideRequired=true, packetHandler=NetworkHandler.class)
 public class AdditionalPipes {
 	public static final String MODID = "APUnofficial";
 	public static final String NAME = "Additional Pipes for BuildCraft";
-	public static final String VERSION = "@VERSION@";
+	public static final String VERSION = "2.1.3u20";
 	public static final String CHANNEL = MODID;
+	public static final String CHANNELNBT = CHANNEL + "NBT";
 
 	@Instance(MODID)
 	public static AdditionalPipes instance;

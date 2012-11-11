@@ -1,5 +1,6 @@
 package buildcraft.additionalpipes.gui;
 
+import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiContainer;
 
@@ -18,8 +19,8 @@ public class GuiTeleportPipe extends GuiContainer {
 	private ContainerTeleportPipe container;
 	private GuiButton[] buttons = new GuiButton[8];
 
-	public GuiTeleportPipe(TileGenericPipe tile) {
-		super(new ContainerTeleportPipe(tile));
+	public GuiTeleportPipe(EntityPlayer player, TileGenericPipe tile) {
+		super(new ContainerTeleportPipe(player, tile));
 
 		container = (ContainerTeleportPipe) inventorySlots;
 		pipe = (PipeTeleport) tile.pipe;
@@ -47,6 +48,7 @@ public class GuiTeleportPipe extends GuiContainer {
 	protected void drawGuiContainerForegroundLayer(int p1, int p2) {
 		fontRenderer.drawString("Frequency: " + pipe.logic.freq, 8, 40, 0x404040);
 		fontRenderer.drawString("Number of Outputs: " + container.connectedPipes, 100, 40, 0x404040);
+		fontRenderer.drawString("Owner: " + pipe.logic.owner, 8, 100, 0x404040);
 		if(pipe.logic.canReceive) {
 			buttons[6].displayString = "Send & Receive";
 		} else {
@@ -94,7 +96,7 @@ public class GuiTeleportPipe extends GuiContainer {
 			freq = 0;
 		}
 
-		PacketAdditionalPipes packet = new PacketAdditionalPipes(NetworkHandler.TELE_PIPE_DATA, false);
+		PacketAdditionalPipes packet = new PacketAdditionalPipes(NetworkHandler.TELE_PIPE_DATA_SET, false);
 		packet.writeInt(pipe.xCoord);
 		packet.writeInt(pipe.yCoord);
 		packet.writeInt(pipe.zCoord);

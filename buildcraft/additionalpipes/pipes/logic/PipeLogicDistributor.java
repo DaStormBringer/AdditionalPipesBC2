@@ -13,7 +13,7 @@ import net.minecraft.src.Item;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.additionalpipes.GuiHandler;
+import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.transport.pipes.PipeLogic;
 
 public class PipeLogicDistributor extends PipeLogic {

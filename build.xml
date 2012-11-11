@@ -1,6 +1,6 @@
 <project name="AdditionalPipes" basedir="../" default="package">
 	<property name="version" value="2.1.3u20" />
-	<property name="mcp.dir" value="mcp" />
+	<property name="mcp.dir" value="build/mcp" />
 	<property name="src.dir" value="AdditionalPipes" />
 	<property name="jar.dir" value="build/AdditionalPipes" />
 	<property name="build.dir" value="${jar.dir}/buildcraft/additionalpipes" />

@@ -7,7 +7,7 @@ import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import buildcraft.BuildCraftTransport;
 import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.additionalpipes.GuiHandler;
+import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.api.tools.IToolWrench;
 import buildcraft.transport.Pipe;
 import buildcraft.transport.TileGenericPipe;
