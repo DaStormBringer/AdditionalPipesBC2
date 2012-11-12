@@ -12,7 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraftforge.common.ForgeDirection;
-
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.pipes.logic.PipeLogicTeleport;
 import buildcraft.api.core.Position;

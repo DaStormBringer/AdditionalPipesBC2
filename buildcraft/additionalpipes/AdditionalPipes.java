@@ -68,8 +68,8 @@ version=AdditionalPipes.VERSION)
 clientSideRequired=true, serverSideRequired=true, packetHandler=NetworkHandler.class)
 public class AdditionalPipes {
 	public static final String MODID = "APUnofficial";
-	public static final String NAME = "Additional Pipes for BuildCraft";
-	public static final String VERSION = "2.1.3u20";
+	public static final String NAME = "Additional Pipes Unofficial";
+	public static final String VERSION = "@VERSION@";
 	public static final String CHANNEL = MODID;
 	public static final String CHANNELNBT = CHANNEL + "NBT";
 
@@ -153,9 +153,9 @@ public class AdditionalPipes {
 	//chunk loader
 	public Block blockChunkLoader;
 	public @CfgId(block=true) int chunkLoaderId = 189;
-	
+
 	public ITrigger triggerPipeClosed;
-	
+
 	//keybinding
 	public int laserKeyCode = 64; //config option (& in options menu)
 	//misc
@@ -196,9 +196,9 @@ public class AdditionalPipes {
 	public void modsLoaded(FMLPostInitializationEvent event) {
 		powerMeter = new ItemPowerMeter(powerMeterId).setItemName("powerMeter");
 		LanguageRegistry.addName(powerMeter, "Power Meter");
-		
+
 		loadPipes();
-		
+
 		triggerPipeClosed = new TriggerPipeClosed(212);
 		ActionManager.registerTriggerProvider(new GateProvider());
 
@@ -299,10 +299,10 @@ public class AdditionalPipes {
 			GameRegistry.addRecipe(new ItemStack(pipeItemsTeleport, 4), new Object[]{"dgd", 'd', BuildCraftCore.diamondGearItem, 'g', Block.glass});
 			AssemblyRecipe.assemblyRecipes.add(
 					new AssemblyRecipe(new ItemStack[]{
-								new ItemStack(BuildCraftSilicon.redstoneChipset, 1 , 4),
-								new ItemStack(BuildCraftTransport.pipeItemsDiamond, 2),
-								new ItemStack(BuildCraftSilicon.redstoneChipset, 1, 3)},
-						10000, new ItemStack(pipeItemsTeleport, 2)));
+							new ItemStack(BuildCraftSilicon.redstoneChipset, 1 , 4),
+							new ItemStack(BuildCraftTransport.pipeItemsDiamond, 2),
+							new ItemStack(BuildCraftSilicon.redstoneChipset, 1, 3)},
+							10000, new ItemStack(pipeItemsTeleport, 2)));
 		}
 
 		// Liquid Teleport Pipe
@@ -346,13 +346,13 @@ public class AdditionalPipes {
 		if (enableLiquidsRedstone) {
 			GameRegistry.addRecipe(new ItemStack(pipeLiquidsRedstone), new Object[]{"w", "P", 'w', BuildCraftTransport.pipeWaterproof, 'P', pipeItemsRedStone});
 		}
-		
+
 		// Closed Items Pipe
 		pipeItemsClosed = createPipe(pipeItemsClosedId, PipeItemsClosed.class);
 		if (enableItemsClosed) {
 			GameRegistry.addRecipe(new ItemStack(pipeItemsClosed), new Object[]{"r", "I", 'I', BuildCraftTransport.pipeItemsIron, 'r', Item.redstone});
 		}
-		
+
 	}
 
 	private static Item createPipe(int id, Class<? extends Pipe> clas) {

@@ -10,10 +10,10 @@ package buildcraft.additionalpipes.pipes;
 
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.liquids.ITankContainer;
+import net.minecraftforge.liquids.LiquidStack;
 import buildcraft.BuildCraftTransport;
 import buildcraft.api.core.Position;
-import buildcraft.api.liquids.ITankContainer;
-import buildcraft.api.liquids.LiquidStack;
 import buildcraft.api.transport.IPipeEntry;
 import buildcraft.core.network.TileNetworkData;
 import buildcraft.core.utils.Utils;

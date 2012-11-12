@@ -1,7 +1,5 @@
 package buildcraft.additionalpipes.gui;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
 import net.minecraft.src.Container;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ICrafting;
@@ -12,6 +10,8 @@ import buildcraft.additionalpipes.network.PacketNBTTagData;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.additionalpipes.pipes.TeleportManager;
 import buildcraft.transport.TileGenericPipe;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
 
 public class ContainerTeleportPipe extends Container {
 
@@ -28,7 +28,7 @@ public class ContainerTeleportPipe extends Container {
 		canReceive = !pipe.logic.canReceive;
 		isPublic = !pipe.logic.isPublic;
 		freq = -1;
-		
+
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setInteger("id", NetworkHandler.TELE_PIPE_DATA);
 		tag.setInteger("xCoord", pipe.xCoord);

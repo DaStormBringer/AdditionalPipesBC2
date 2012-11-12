@@ -7,9 +7,9 @@ import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.common.TickType;
 
 public class KeyHandler extends KeyBindingRegistry.KeyHandler {
-	
+
 	public static KeyBinding laserKey;
-	
+
 	public KeyHandler(KeyBinding[] keyBindings, boolean[] repeatings) {
 		super(keyBindings, repeatings);
 	}

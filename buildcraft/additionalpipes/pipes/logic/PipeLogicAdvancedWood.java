@@ -19,7 +19,6 @@ import net.minecraftforge.common.ForgeDirection;
 import buildcraft.BuildCraftTransport;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
-import buildcraft.api.liquids.ITankContainer;
 import buildcraft.api.tools.IToolWrench;
 import buildcraft.api.transport.PipeManager;
 import buildcraft.core.network.TileNetworkData;
@@ -58,7 +57,7 @@ public class PipeLogicAdvancedWood extends PipeLogic implements IInventory {
 	}
 
 	public boolean isInput(TileEntity tile) {
-		return !(tile instanceof TileGenericPipe) && (tile instanceof IInventory || tile instanceof ITankContainer)
+		return !(tile instanceof TileGenericPipe) && tile instanceof IInventory
 				&& Utils.checkPipesConnections(container, tile);
 	}
 

@@ -12,10 +12,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraftforge.common.ForgeDirection;
-
+import net.minecraftforge.liquids.ITankContainer;
+import net.minecraftforge.liquids.LiquidStack;
 import buildcraft.additionalpipes.pipes.logic.PipeLogicTeleport;
-import buildcraft.api.liquids.ITankContainer;
-import buildcraft.api.liquids.LiquidStack;
 import buildcraft.transport.IPipeTransportLiquidsHook;
 import buildcraft.transport.PipeTransportLiquids;
 

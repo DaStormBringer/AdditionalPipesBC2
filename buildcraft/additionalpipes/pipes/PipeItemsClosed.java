@@ -8,7 +8,6 @@
 
 package buildcraft.additionalpipes.pipes;
 
-import net.minecraft.src.EntityItem;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.IInventory;
 import net.minecraft.src.ItemStack;
@@ -16,7 +15,6 @@ import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.NBTTagList;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-
 import buildcraft.core.inventory.Transactor;
 import buildcraft.core.inventory.TransactorSimple;
 import buildcraft.core.utils.Utils;

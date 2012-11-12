@@ -11,7 +11,6 @@ package buildcraft.additionalpipes.pipes;
 import java.util.LinkedList;
 
 import net.minecraftforge.common.ForgeDirection;
-
 import buildcraft.BuildCraftTransport;
 import buildcraft.api.core.Position;
 import buildcraft.api.transport.IPipedItem;

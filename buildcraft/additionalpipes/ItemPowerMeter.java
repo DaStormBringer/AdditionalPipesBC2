@@ -1,7 +1,5 @@
 package buildcraft.additionalpipes;
 
-import buildcraft.api.power.IPowerProvider;
-import buildcraft.api.power.IPowerReceptor;
 import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Item;
@@ -9,6 +7,8 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
 import net.minecraftforge.common.ForgeDirection;
+import buildcraft.api.power.IPowerProvider;
+import buildcraft.api.power.IPowerReceptor;
 
 public class ItemPowerMeter extends Item {
 
