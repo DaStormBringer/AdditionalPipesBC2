@@ -118,8 +118,8 @@ public class NetworkHandler implements IPacketHandler {
 				PipeTeleport pipe = (PipeTeleport) ((TileGenericPipe) te).pipe;
 				//only allow the owner to change pipe state
 				EntityPlayerMP entityPlayer = (EntityPlayerMP) player;
-				if(!PipeLogicTeleport.canPlayerUsePipe(entityPlayer, pipe.logic)) {
-					entityPlayer.sendChatToPlayer(AdditionalPipes.MODID + ": Only the owner may change pipe state.");
+				if(!PipeLogicTeleport.canPlayerModifyPipe(entityPlayer, pipe.logic)) {
+					entityPlayer.sendChatToPlayer("You may not change pipe state.");
 					return;
 				}
 				pipe.logic.freq = data.readInt();

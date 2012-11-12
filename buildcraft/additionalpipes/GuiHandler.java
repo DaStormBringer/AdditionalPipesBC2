@@ -28,7 +28,7 @@ public class GuiHandler implements IGuiHandler {
 		}
 		switch(ID) {
 		case PIPE_TP:
-			return new ContainerTeleportPipe((TileGenericPipe) tile);
+			return new ContainerTeleportPipe(player, (TileGenericPipe) tile);
 		case PIPE_DIST:
 			return new ContainerDistributionPipe((TileGenericPipe) tile);
 		case PIPE_WOODEN_ADV:
@@ -47,7 +47,7 @@ public class GuiHandler implements IGuiHandler {
 		}
 		switch(ID) {
 		case PIPE_TP:
-			return new GuiTeleportPipe((TileGenericPipe) tile);
+			return new GuiTeleportPipe(player, (TileGenericPipe) tile);
 		case PIPE_DIST:
 			return new GuiDistributionPipe((TileGenericPipe) tile);
 		case PIPE_WOODEN_ADV:

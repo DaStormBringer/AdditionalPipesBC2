@@ -35,11 +35,7 @@ public class PipeLogicTeleport extends PipeLogic {
 				return false;
 			}
 		}
-		if(canPlayerUsePipe(player, this)) {
-			player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_TP, worldObj, xCoord, yCoord, zCoord);
-		} else {
-			player.sendChatToPlayer(AdditionalPipes.MODID + ": This pipe is private");
-		}
+		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_TP, worldObj, xCoord, yCoord, zCoord);
 		return true;
 	}
 
@@ -84,7 +80,7 @@ public class PipeLogicTeleport extends PipeLogic {
 		isPublic = nbttagcompound.getBoolean("isPublic");
 	}
 
-	public static boolean canPlayerUsePipe(EntityPlayer player, PipeLogicTeleport logic) {
+	public static boolean canPlayerModifyPipe(EntityPlayer player, PipeLogicTeleport logic) {
 		if(logic.isPublic || logic.owner.equals(player.username) || player.capabilities.isCreativeMode)
 			return true;
 		return false;

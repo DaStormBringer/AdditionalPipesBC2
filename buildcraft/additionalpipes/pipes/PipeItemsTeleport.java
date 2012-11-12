@@ -42,6 +42,9 @@ public class PipeItemsTeleport extends PipeTeleport implements IPipeTransportIte
 
 	@Override
 	public void entityEntered(IPipedItem item, ForgeDirection orientation) {
+		if(!AdditionalPipes.proxy.isServer(this.worldObj)) {
+			return;
+		}
 		List<PipeTeleport> connectedTeleportPipes = TeleportManager.instance.getConnectedPipes(this, false);
 		//no teleport pipes connected, use default
 		if (connectedTeleportPipes.size() <= 0) {
@@ -50,8 +53,7 @@ public class PipeItemsTeleport extends PipeTeleport implements IPipeTransportIte
 
 		//output to random pipe
 		LinkedList<ForgeDirection> outputOrientations = new LinkedList<ForgeDirection>();
-		PipeTeleport otherPipe = connectedTeleportPipes.get(
-				rand.nextInt(connectedTeleportPipes.size()));
+		PipeTeleport otherPipe = connectedTeleportPipes.get(rand.nextInt(connectedTeleportPipes.size()));
 
 		//find possible output orientations
 		for (ForgeDirection o : ForgeDirection.VALID_DIRECTIONS) {
@@ -69,7 +71,7 @@ public class PipeItemsTeleport extends PipeTeleport implements IPipeTransportIte
 		item.setPosition(destination.xCoord + 0.5, destination.yCoord, destination.zCoord + 0.5);
 		destination.pipe.transport.entityEntering(item, newOrientation);
 		transport.scheduleRemoval(item);
-		AdditionalPipes.instance.logger.info("Teleported item from " + getPosition() + " to " + item.getPosition());
+		AdditionalPipes.instance.logger.info("Teleported item from " + getPosition() + " to " + otherPipe.getPosition() + " with orientation" + newOrientation);
 	}
 
 	@Override

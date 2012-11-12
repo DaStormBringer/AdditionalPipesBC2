@@ -11,7 +11,7 @@ public class TeleportManager {
 
 	public static TeleportManager instance = new TeleportManager();
 
-	public List<PipeTeleport> teleportPipes;
+	public final List<PipeTeleport> teleportPipes;
 
 	private TeleportManager(){
 		teleportPipes = new LinkedList<PipeTeleport>();

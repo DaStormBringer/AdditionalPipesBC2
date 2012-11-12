@@ -233,7 +233,7 @@ public class AdditionalPipes {
 
 	@ServerStarting
 	public void onServerStart(FMLServerStartingEvent event) {
-		event.registerServerCommand(new CommandAdditionalPipes());
+		//event.registerServerCommand(new CommandAdditionalPipes());
 		TeleportManager.instance.teleportPipes.clear();
 	}
 

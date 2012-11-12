@@ -14,15 +14,18 @@ import net.minecraft.src.IInventory;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.NBTTagList;
+import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 
 import buildcraft.core.inventory.Transactor;
 import buildcraft.core.inventory.TransactorSimple;
 import buildcraft.core.utils.Utils;
+import buildcraft.transport.EntityData;
+import buildcraft.transport.IItemTravelingHook;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.pipes.PipeLogic;
 
-public class PipeItemsClosed extends APPipe implements IInventory {
+public class PipeItemsClosed extends APPipe implements IInventory, IItemTravelingHook {
 
 	private ItemStack[] inventory = new ItemStack[27];
 
@@ -37,12 +40,21 @@ public class PipeItemsClosed extends APPipe implements IInventory {
 	}
 
 	@Override
-	public void onDropped(EntityItem item) {
-		super.onDropped(item);
-		Transactor transactor = new TransactorSimple(this);
-		transactor.add(item.item.copy(), ForgeDirection.UNKNOWN, true);
-		item.item.stackSize = 0;
+	public void centerReached(PipeTransportItems pipe, EntityData data) {
 	}
+
+	@Override
+	public void endReached(PipeTransportItems pipe, EntityData data,
+			TileEntity tile) {
+	}
+
+	@Override
+	public void drop(PipeTransportItems pipe, EntityData data) {
+		Transactor transactor = new TransactorSimple(this);
+		transactor.add(data.item.getItemStack().copy(), ForgeDirection.UNKNOWN, true);
+		data.item.getItemStack().stackSize = 0;
+	}
+
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbttagcompound) {
