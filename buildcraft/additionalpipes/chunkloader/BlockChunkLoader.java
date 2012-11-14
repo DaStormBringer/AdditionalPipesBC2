@@ -11,7 +11,7 @@ public class BlockChunkLoader extends BlockContainer {
 
 	public BlockChunkLoader(int BlockID, int i) {
 		super(BlockID, i, Material.cloth);
-		setTextureFile(AdditionalPipes.TEXTURE_BLOCKS);
+		setTextureFile(AdditionalPipes.TEXTURE_MASTER);
 		setCreativeTab(CreativeTabs.tabRedstone);
 	}
 

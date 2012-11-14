@@ -8,7 +8,6 @@ import net.minecraftforge.common.ForgeDirection;
 import buildcraft.BuildCraftTransport;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
-import buildcraft.api.tools.IToolWrench;
 import buildcraft.transport.Pipe;
 import buildcraft.transport.TileGenericPipe;
 import buildcraft.transport.pipes.PipeLogic;
@@ -27,13 +26,8 @@ public class PipeLogicTeleport extends PipeLogic {
 			owner = player.username;
 		}
 		ItemStack equippedItem = player.getCurrentEquippedItem();
-		if (equippedItem != null) {
-			if (AdditionalPipes.isPipe(equippedItem.getItem()))  {
-				return false;
-			}
-			if (equippedItem.getItem() instanceof IToolWrench && !AdditionalPipes.instance.wrenchOpensGui) {
-				return false;
-			}
+		if (equippedItem != null && AdditionalPipes.isPipe(equippedItem.getItem()))  {
+			return false;
 		}
 		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_TP, worldObj, xCoord, yCoord, zCoord);
 		return true;

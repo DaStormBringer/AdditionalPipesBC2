@@ -38,7 +38,7 @@ public class PipeLiquidsRedstone extends APPipe {
 	public boolean isPoweringTo(int l) {
 		//System.out.println("RedStoneIsPoweringTo");
 		LiquidStack liquid = ((PipeTransportLiquids) transport)
-				.getTanks()[ForgeDirection.UNKNOWN.ordinal()].getLiquid();
+				.getTanks(ForgeDirection.UNKNOWN)[ForgeDirection.UNKNOWN.ordinal()].getLiquid();
 		if (liquid == null || liquid.amount == 0) {
 			isPowering = false;
 			return false;
@@ -78,7 +78,7 @@ public class PipeLiquidsRedstone extends APPipe {
 		//System.out.println("Quantity: " + (((PipeTransportLiquids)this.transport).getLiquidQuantity()) + " - Wanted: " + computeMaxLiquid() + " - Qua2: " + computeEnds()[1]);
 		//System.out.println("Quantity: " + ((PipeTransportLiquids)this.transport).getCenter());
 		LiquidStack liquid = ((PipeTransportLiquids) transport)
-				.getTanks()[ForgeDirection.UNKNOWN.ordinal()].getLiquid();
+				.getTanks(ForgeDirection.UNKNOWN)[ForgeDirection.UNKNOWN.ordinal()].getLiquid();
 		if (liquid == null || liquid.amount == 0 && isPowering) {
 			isPowering = false;
 			UpdateTiles(container.xCoord, container.yCoord, container.zCoord);

@@ -33,6 +33,7 @@ import buildcraft.additionalpipes.pipes.PipeItemsRedstone;
 import buildcraft.additionalpipes.pipes.PipeItemsTeleport;
 import buildcraft.additionalpipes.pipes.PipeLiquidsRedstone;
 import buildcraft.additionalpipes.pipes.PipeLiquidsTeleport;
+import buildcraft.additionalpipes.pipes.PipePowerSwitch;
 import buildcraft.additionalpipes.pipes.PipePowerTeleport;
 import buildcraft.additionalpipes.pipes.TeleportManager;
 import buildcraft.api.gates.ActionManager;
@@ -93,7 +94,6 @@ public class AdditionalPipes {
 	public static final String BASE_PATH = "/buildcraft/additionalpipes";
 	public static final String TEXTURE_PATH = BASE_PATH + "/sprites";
 	public static final String TEXTURE_MASTER = TEXTURE_PATH + "/textures.png";
-	public static final String TEXTURE_BLOCKS = TEXTURE_PATH + "/blocks.png";
 	public static final String TEXTURE_TRIGGERS = TEXTURE_PATH + "/triggers.png";
 
 	public static final String TEXTURE_GUI_TELEPORT = TEXTURE_PATH + "/blankSmallGui.png";
@@ -105,24 +105,15 @@ public class AdditionalPipes {
 	public @CfgBool boolean chunkSight = true;
 	public int chunkSightRange = 4; //config option
 
-	//enable/disable crafting
-	public @CfgBool boolean
-	enableItemsAdvancedInsertion = true,
-	enableItemsAdvancedWood = true,
-	enableItemsDistributor = false, //TODO fix
-	enableItemsRedstone = true,
-	enableLiquidsRedstone = true,
-	enableItemsTeleport = true,
-	enableLiquidsTeleport = true,
-	enablePowerTeleport = true,
-	enableItemsClosed = true,
-	enbableChunkLoader = true;
 	//teleport scanner TODO
-	public Item teleportScanner;
-	public @CfgId int teleportScannerId = 14061;
+	//public Item teleportScanner;
+	//public @CfgId int teleportScannerId = 14061;
 	//meter TODO
-	public Item powerMeter;
-	public @CfgId int powerMeterId = 14060;
+	//public Item powerMeter;
+	//public @CfgId int powerMeterId = 14060;
+	//Items Closed
+	public Item pipePowerSwitch;
+	public @CfgId int pipePowerSwitchId = 4051;
 	//Items Closed
 	public Item pipeItemsClosed;
 	public @CfgId int pipeItemsClosedId = 4050;
@@ -154,12 +145,12 @@ public class AdditionalPipes {
 	public Block blockChunkLoader;
 	public @CfgId(block=true) int chunkLoaderId = 189;
 
+	public @CfgBool boolean enableTriggers = true;
 	public ITrigger triggerPipeClosed;
 
 	//keybinding
 	public int laserKeyCode = 64; //config option (& in options menu)
 	//misc
-	public @CfgBool boolean wrenchOpensGui = true;
 	public @CfgBool boolean allowWRRemove = false;
 	public double powerLossCfg = .95; //config option
 
@@ -194,13 +185,15 @@ public class AdditionalPipes {
 
 	@PostInit
 	public void modsLoaded(FMLPostInitializationEvent event) {
-		powerMeter = new ItemPowerMeter(powerMeterId).setItemName("powerMeter");
-		LanguageRegistry.addName(powerMeter, "Power Meter");
+		//powerMeter = new ItemPowerMeter(powerMeterId).setItemName("powerMeter");
+		//LanguageRegistry.addName(powerMeter, "Power Meter");
 
 		loadPipes();
 
-		triggerPipeClosed = new TriggerPipeClosed(212);
-		ActionManager.registerTriggerProvider(new GateProvider());
+		if(enableTriggers) {
+			triggerPipeClosed = new TriggerPipeClosed(212);
+			ActionManager.registerTriggerProvider(new GateProvider());
+		}
 
 		if (allowWRRemove) {
 			//Additional Pipes
@@ -220,12 +213,12 @@ public class AdditionalPipes {
 		}
 
 		//ChunkLoader
-		if(chunkLoaderId == -1) {
-			blockChunkLoader = new BlockChunkLoader(chunkLoaderId, 0);
+		if(chunkLoaderId != 0) {
+			blockChunkLoader = new BlockChunkLoader(chunkLoaderId > 0 ? chunkLoaderId : -chunkLoaderId, 32);
 			blockChunkLoader.setBlockName("TeleportTether");
 			GameRegistry.registerBlock(blockChunkLoader);
 			GameRegistry.registerTileEntity(TileChunkLoader.class, "TeleportTether");
-			if (enbableChunkLoader) {
+			if (chunkLoaderId > 0) {
 				GameRegistry.addRecipe(new ItemStack(blockChunkLoader), new Object[]{"iii", "iLi", "iii", 'i', Item.ingotIron, 'L', new ItemStack(Item.dyePowder, 1, 4)});
 			}
 		}
@@ -240,7 +233,8 @@ public class AdditionalPipes {
 	private void loadConfigs(Configuration config) {
 		try {
 			config.load();
-			config.addCustomCategoryComment(Configuration.CATEGORY_BLOCK, "Set block id to -1 to disable loading the block.");
+			config.addCustomCategoryComment(Configuration.CATEGORY_BLOCK, "Set id to 0 to disable loading the block, add - in front of id to disable recipe only.");
+			config.addCustomCategoryComment(Configuration.CATEGORY_ITEM, "Set id to -1 to disable loading the item, add - in front of id to disable recipe only.");
 			config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, "Disabling items/blocks only disables recipes.");
 			Field[] fields = AdditionalPipes.class.getFields();
 			for(Field field : fields){
@@ -294,65 +288,70 @@ public class AdditionalPipes {
 
 	private void loadPipes(){
 		// Item Teleport Pipe
-		pipeItemsTeleport = createPipeSpecial(pipeItemsTeleportId, PipeItemsTeleport.class);
-		if (enableItemsTeleport) {
-			GameRegistry.addRecipe(new ItemStack(pipeItemsTeleport, 4), new Object[]{"dgd", 'd', BuildCraftCore.diamondGearItem, 'g', Block.glass});
-			AssemblyRecipe.assemblyRecipes.add(
-					new AssemblyRecipe(new ItemStack[]{
-							new ItemStack(BuildCraftSilicon.redstoneChipset, 1 , 4),
-							new ItemStack(BuildCraftTransport.pipeItemsDiamond, 2),
-							new ItemStack(BuildCraftSilicon.redstoneChipset, 1, 3)},
-							10000, new ItemStack(pipeItemsTeleport, 2)));
+		if(pipeItemsTeleportId != 0) {
+			pipeItemsTeleport = createPipeSpecial(pipeItemsTeleportId > 0 ? pipeItemsTeleportId : -pipeItemsTeleportId, PipeItemsTeleport.class);
+			if (pipeItemsTeleportId > 0) {
+				GameRegistry.addRecipe(new ItemStack(pipeItemsTeleport, 4), new Object[]{"dgd", 'd', BuildCraftCore.diamondGearItem, 'g', Block.glass});
+				AssemblyRecipe.assemblyRecipes.add(
+						new AssemblyRecipe(new ItemStack[]{
+								new ItemStack(BuildCraftSilicon.redstoneChipset, 1 , 4),
+								new ItemStack(BuildCraftTransport.pipeItemsDiamond, 2),
+								new ItemStack(BuildCraftSilicon.redstoneChipset, 1, 3)},
+								10000, new ItemStack(pipeItemsTeleport, 2)));
+			}
+
 		}
 
 		// Liquid Teleport Pipe
-		pipeLiquidsTeleport = createPipeSpecial(pipeLiquidsTeleportId, PipeLiquidsTeleport.class);
-		if (enableLiquidsTeleport) {
-			GameRegistry.addRecipe(new ItemStack(pipeLiquidsTeleport), new Object[]{"w", "P", 'w', BuildCraftTransport.pipeWaterproof, 'P', pipeItemsTeleport});
+		if(pipeLiquidsTeleportId != 0) {
+			pipeLiquidsTeleport = createPipeSpecial(pipeLiquidsTeleportId > 0 ? pipeLiquidsTeleportId : -pipeLiquidsTeleportId, PipeLiquidsTeleport.class);
+			if (pipeItemsTeleport != null && pipeLiquidsTeleportId > 0) {
+				GameRegistry.addRecipe(new ItemStack(pipeLiquidsTeleport), new Object[]{"w", "P", 'w', BuildCraftTransport.pipeWaterproof, 'P', pipeItemsTeleport});
+			}
 		}
 
 		// Power Teleport Pipe
-		pipePowerTeleport = createPipeSpecial(pipePowerTeleportId, PipePowerTeleport.class);
-		if (enablePowerTeleport) {
-			GameRegistry.addRecipe(new ItemStack(pipePowerTeleport), new Object[]{"r", "P", 'r', Item.redstone, 'P', pipeItemsTeleport});
+		if(pipePowerTeleportId != 0) {
+			pipePowerTeleport = createPipeSpecial(pipePowerTeleportId > 0 ? pipePowerTeleportId : -pipePowerTeleportId, PipePowerTeleport.class);
+			if (pipeItemsTeleport != null && pipePowerTeleportId > 0) {
+				GameRegistry.addRecipe(new ItemStack(pipePowerTeleport), new Object[]{"r", "P", 'r', Item.redstone, 'P', pipeItemsTeleport});
+			}
 		}
 
 		// Distributor Pipe
-		pipeItemsDistributor = createPipe(pipeItemsDistributorId, PipeItemsDistributor.class);
-		if (enableItemsDistributor) {
-			GameRegistry.addRecipe(new ItemStack(pipeItemsDistributor, 8), new Object[]{" r ", "IgI", 'r', Item.redstone, 'I', Item.ingotIron, 'g', Block.glass});
-		}
+		pipeItemsDistributor = doCreatePipeAndRecipe(pipeItemsDistributorId, PipeItemsDistributor.class,
+				new Object[]{" r ", "IgI", 'r', Item.redstone, 'I', Item.ingotIron, 'g', Block.glass});
 
 		// Advanced Wooded Pipe
-		pipeItemsAdvancedWood = createPipe(pipeItemsAdvancedWoodId, PipeItemsAdvancedWood.class);
-		if (enableItemsAdvancedWood) {
-			GameRegistry.addRecipe(new ItemStack(pipeItemsAdvancedWood, 8), new Object[]{" r ", "WgW", 'r', Item.redstone, 'W', Block.planks, 'g', Block.glass});
-		}
+		pipeItemsAdvancedWood = doCreatePipeAndRecipe(pipeItemsAdvancedWoodId, PipeItemsAdvancedWood.class,
+				new Object[]{" r ", "WgW", 'r', Item.redstone, 'W', Block.planks, 'g', Block.glass});
 
 		// Advanced Insertion Pipe
-		pipeItemsAdvancedInsertion = createPipe(pipeItemsAdvancedInsertionId, PipeItemsAdvancedInsertion.class);
-		if (enableItemsAdvancedInsertion) {
-			GameRegistry.addRecipe(new ItemStack(pipeItemsAdvancedInsertion, 8), new Object[]{" r ", "OgO", 'r', Item.redstone, 'O', Block.obsidian, 'g', Block.glass});
-		}
+		pipeItemsAdvancedInsertion = doCreatePipeAndRecipe(pipeItemsAdvancedInsertionId, PipeItemsAdvancedInsertion.class,
+				new Object[]{" r ", "OgO", 'r', Item.redstone, 'O', Block.obsidian, 'g', Block.glass});
 
 		// Redstone Pipe
-		pipeItemsRedStone = createPipe(pipeItemsRedStoneId, PipeItemsRedstone.class);
-		if (enableItemsRedstone) {
-			GameRegistry.addRecipe(new ItemStack(pipeItemsRedStone, 8), new Object[]{"RgR", 'R', Item.redstone, 'g', Block.glass});
-		}
+		pipeItemsRedStone = doCreatePipeAndRecipe(pipeItemsRedStoneId, PipeItemsRedstone.class,
+				new Object[]{"RgR", 'R', Item.redstone, 'g', Block.glass});
 
 		// Redstone Liquid Pipe
-		pipeLiquidsRedstone = createPipe(pipeLiquidsRedstoneId, PipeLiquidsRedstone.class);
-		if (enableLiquidsRedstone) {
-			GameRegistry.addRecipe(new ItemStack(pipeLiquidsRedstone), new Object[]{"w", "P", 'w', BuildCraftTransport.pipeWaterproof, 'P', pipeItemsRedStone});
-		}
+		pipeLiquidsRedstone = doCreatePipeAndRecipe(pipeLiquidsRedstoneId, PipeLiquidsRedstone.class,
+				new Object[]{"w", "P", 'w', BuildCraftTransport.pipeWaterproof, 'P', pipeItemsRedStone});
 
 		// Closed Items Pipe
-		pipeItemsClosed = createPipe(pipeItemsClosedId, PipeItemsClosed.class);
-		if (enableItemsClosed) {
-			GameRegistry.addRecipe(new ItemStack(pipeItemsClosed), new Object[]{"r", "I", 'I', BuildCraftTransport.pipeItemsIron, 'r', Item.redstone});
-		}
+		pipeItemsClosed = doCreatePipeAndRecipe(pipeItemsClosedId, PipeItemsClosed.class,
+				new Object[]{"r", "I", 'I', BuildCraftTransport.pipeItemsIron, 'r', Item.redstone});
 
+		//power switch pipe
+		pipePowerSwitch = doCreatePipeAndRecipe(pipePowerSwitchId, PipePowerSwitch.class,
+				new Object[]{"r", "I", 'I', pipeItemsRedStone, 'r', Item.redstone});
+	}
+
+	private Item doCreatePipeAndRecipe(int id, Class<? extends Pipe> clas, Object[] recipe) {
+		if(id == 0) return null;
+		Item pipe = createPipe(id > 0 ? id : -id, clas);
+		GameRegistry.addRecipe(new ItemStack(pipe), recipe);
+		return pipe;
 	}
 
 	private static Item createPipe(int id, Class<? extends Pipe> clas) {
@@ -374,7 +373,7 @@ public class AdditionalPipes {
 	}
 
 	private Item createPipeSpecial(int id, Class<? extends Pipe> clas) {
-		ItemPipeAP item = new ItemPipeAP(id);
+		ItemPipe item = new ItemPipeAP(id);
 		item.setItemName(clas.getSimpleName());
 		proxy.registerPipeRendering(item);
 
@@ -388,11 +387,13 @@ public class AdditionalPipes {
 			}
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Error during special pipe creation.", e);
+			item = (ItemPipe) createPipe(id, clas);
 		}
 
 		return item;
 	}
 
+	//legacy method
 	public static boolean isPipe(Item item) {
 		if (item != null && BlockGenericPipe.pipes.containsKey(item.shiftedIndex)) {
 			return true;

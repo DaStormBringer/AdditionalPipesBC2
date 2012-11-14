@@ -29,6 +29,7 @@ public class PipeItemsClosed extends APPipe implements IInventory, IItemTravelin
 
 	public PipeItemsClosed(int itemID) {
 		super(new PipeTransportItems(), new PipeLogic(), itemID);
+		((PipeTransportItems) transport).travelHook = this;
 	}
 
 	@Override
@@ -49,8 +50,10 @@ public class PipeItemsClosed extends APPipe implements IInventory, IItemTravelin
 	@Override
 	public void drop(PipeTransportItems pipe, EntityData data) {
 		Transactor transactor = new TransactorSimple(this);
+		System.out.print("Dtopped");
 		transactor.add(data.item.getItemStack().copy(), ForgeDirection.UNKNOWN, true);
 		data.item.getItemStack().stackSize = 0;
+		container.scheduleNeighborChange();
 	}
 
 
@@ -83,7 +86,7 @@ public class PipeItemsClosed extends APPipe implements IInventory, IItemTravelin
 
 	@Override
 	public int getTextureIndex(ForgeDirection direction) {
-		return 0; //TODO fix
+		return 18 + (getStackInSlot(0) == null ? 0 : 1);
 	}
 
 	@Override

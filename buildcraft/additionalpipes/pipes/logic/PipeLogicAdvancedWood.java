@@ -21,7 +21,6 @@ import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.api.tools.IToolWrench;
 import buildcraft.api.transport.PipeManager;
-import buildcraft.core.network.TileNetworkData;
 import buildcraft.core.utils.Utils;
 import buildcraft.transport.Pipe;
 import buildcraft.transport.TileGenericPipe;
@@ -32,7 +31,6 @@ public class PipeLogicAdvancedWood extends PipeLogic implements IInventory {
 
 	public ItemStack [] items = new ItemStack [9];
 
-	@TileNetworkData
 	public boolean exclude = false;
 
 	public void switchSource () {
