@@ -15,7 +15,8 @@ import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import buildcraft.api.core.Position;
 import buildcraft.api.transport.IPipedItem;
-import buildcraft.core.inventory.TransactorSimple;
+import buildcraft.core.inventory.ITransactor;
+import buildcraft.core.inventory.Transactor;
 import buildcraft.core.utils.Utils;
 import buildcraft.transport.IPipeTransportItemsHook;
 import buildcraft.transport.PipeTransportItems;
@@ -32,21 +33,21 @@ public class PipeItemsAdvancedInsertion extends APPipe implements IPipeTransport
 		LinkedList<ForgeDirection> newOris = new LinkedList<ForgeDirection>();
 
 		for (int o = 0; o < 6; ++o) {
-			ForgeDirection orientation = ForgeDirection.values()[o];
+			ForgeDirection orientation = ForgeDirection.VALID_DIRECTIONS[o];
 			if (orientation != pos.orientation.getOpposite()) {
 				TileEntity entity = container.getTile(orientation);
-
 				if (entity instanceof IInventory) {
-					TransactorSimple transactor = new TransactorSimple((IInventory) entity);
-					if (transactor.add(item.getItemStack(), orientation.getOpposite(), false).stackSize > 0) {
+					if (item.getPosition().orientation == orientation.getOpposite()) {
+						//continue;
+					}
+					ITransactor transactor = Transactor.getTransactorFor(entity);
+					if(transactor.add(item.getItemStack(), orientation.getOpposite(), false).stackSize > 0) {
 						newOris.add(orientation);
 					}
 				}
 			}
 		}
-
-		//System.out.println("NewOris Size: " + newOris.size() + " - PO Size: " + possibleOrientations.size() + " - Level: " + Level);
-		if (newOris.size() > 0) {
+		if(newOris.size() > 0) {
 			return newOris;
 		}
 

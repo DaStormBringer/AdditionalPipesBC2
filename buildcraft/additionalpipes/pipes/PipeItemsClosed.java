@@ -1,11 +1,3 @@
-/**
- * BuildCraft is open-source. It is distributed under the terms of the
- * BuildCraft Open Source License. It grants rights to read, modify, compile
- * or run the code. It does *NOT* grant the right to redistribute this software
- * or its modifications in any form, binary or source, except if expressively
- * granted by the copyright holder.
- */
-
 package buildcraft.additionalpipes.pipes;
 
 import net.minecraft.src.EntityPlayer;
@@ -15,20 +7,20 @@ import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.NBTTagList;
 import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import buildcraft.additionalpipes.pipes.logic.PipeLogicClosed;
 import buildcraft.core.inventory.Transactor;
 import buildcraft.core.inventory.TransactorSimple;
 import buildcraft.core.utils.Utils;
 import buildcraft.transport.EntityData;
 import buildcraft.transport.IItemTravelingHook;
 import buildcraft.transport.PipeTransportItems;
-import buildcraft.transport.pipes.PipeLogic;
 
 public class PipeItemsClosed extends APPipe implements IInventory, IItemTravelingHook {
 
-	private ItemStack[] inventory = new ItemStack[27];
+	private ItemStack[] inventory = new ItemStack[10];
 
 	public PipeItemsClosed(int itemID) {
-		super(new PipeTransportItems(), new PipeLogic(), itemID);
+		super(new PipeTransportItems(), new PipeLogicClosed(), itemID);
 		((PipeTransportItems) transport).travelHook = this;
 	}
 
@@ -50,10 +42,15 @@ public class PipeItemsClosed extends APPipe implements IInventory, IItemTravelin
 	@Override
 	public void drop(PipeTransportItems pipe, EntityData data) {
 		Transactor transactor = new TransactorSimple(this);
-		System.out.print("Dtopped");
 		transactor.add(data.item.getItemStack().copy(), ForgeDirection.UNKNOWN, true);
+		if(inventory[inventory.length - 1] != null) {
+			for(int i = 1; i < inventory.length; i++) {
+				inventory[i - 1] = inventory[i];
+			}
+		}
+		inventory[inventory.length - 1] = null;
 		data.item.getItemStack().stackSize = 0;
-		container.scheduleNeighborChange();
+		container.scheduleRenderUpdate();
 	}
 
 
