@@ -59,16 +59,16 @@ public class ContainerTeleportPipe extends Container {
 		ticks++;
 		for (Object crafter : crafters) {
 			if(freq != pipe.logic.freq) {
-				((ICrafting) crafter).updateCraftingInventoryInfo(this, 0, pipe.logic.freq);
+				((ICrafting) crafter).sendProgressBarUpdate(this, 0, pipe.logic.freq);
 			}
 			if(canReceive != pipe.logic.canReceive) {
-				((ICrafting) crafter).updateCraftingInventoryInfo(this, 1, pipe.logic.canReceive ? 1 : 0);
+				((ICrafting) crafter).sendProgressBarUpdate(this, 1, pipe.logic.canReceive ? 1 : 0);
 			}
 			if(connectedPipesNew != connectedPipes) {
-				((ICrafting) crafter).updateCraftingInventoryInfo(this, 2, connectedPipesNew);
+				((ICrafting) crafter).sendProgressBarUpdate(this, 2, connectedPipesNew);
 			}
 			if(isPublic != pipe.logic.isPublic) {
-				((ICrafting) crafter).updateCraftingInventoryInfo(this, 3, pipe.logic.isPublic ? 1 : 0);
+				((ICrafting) crafter).sendProgressBarUpdate(this, 3, pipe.logic.isPublic ? 1 : 0);
 			}
 		}
 		canReceive = pipe.logic.canReceive;

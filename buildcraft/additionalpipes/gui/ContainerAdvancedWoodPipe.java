@@ -59,7 +59,7 @@ public class ContainerAdvancedWoodPipe extends BuildCraftContainer {
 		super.updateCraftingResults();
 		for (Object crafter : crafters) {
 			if(exclude != logic.exclude) {
-				((ICrafting) crafter).updateCraftingInventoryInfo(this, 0, logic.exclude ? 1 : 0);
+				((ICrafting) crafter).sendProgressBarUpdate(this, 0, logic.exclude ? 1 : 0);
 			}
 		}
 		exclude = logic.exclude;

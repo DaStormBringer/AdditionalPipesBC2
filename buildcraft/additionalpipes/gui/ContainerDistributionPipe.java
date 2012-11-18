@@ -30,7 +30,7 @@ public class ContainerDistributionPipe extends Container {
 			ICrafting crafter = (ICrafting) obj;
 			for(int i = 0; i < lastDistData.length; i++) {
 				if(lastDistData[i] != pipe.logic.distData[i]) {
-					crafter.updateCraftingInventoryInfo(this, i, pipe.logic.distData[i]);
+					crafter.sendProgressBarUpdate(this, i, pipe.logic.distData[i]);
 				}
 			}
 		}
