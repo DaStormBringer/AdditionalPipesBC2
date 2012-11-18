@@ -4,18 +4,15 @@ import net.minecraft.src.Container;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ICrafting;
 import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
-import buildcraft.additionalpipes.pipes.logic.PipeLogicDistributor;
 import buildcraft.transport.TileGenericPipe;
 
 public class ContainerDistributionPipe extends Container {
 	private PipeItemsDistributor pipe;
-	private PipeLogicDistributor pipeLogic;
 	public int[] lastDistData;
 
 	public ContainerDistributionPipe(TileGenericPipe container) {
 		pipe = (PipeItemsDistributor) container.pipe;
-		pipeLogic = (PipeLogicDistributor) pipe.logic;
-		lastDistData = new int[pipeLogic.distData.length];
+		lastDistData = new int[pipe.logic.distData.length];
 		for(int i = 0; i < lastDistData.length; i++) {
 			lastDistData[i] = -1;
 		}
@@ -32,20 +29,20 @@ public class ContainerDistributionPipe extends Container {
 		for (Object obj : crafters) {
 			ICrafting crafter = (ICrafting) obj;
 			for(int i = 0; i < lastDistData.length; i++) {
-				if(lastDistData[i] != pipeLogic.distData[i]) {
-					crafter.updateCraftingInventoryInfo(this, i, pipeLogic.distData[i]);
+				if(lastDistData[i] != pipe.logic.distData[i]) {
+					crafter.updateCraftingInventoryInfo(this, i, pipe.logic.distData[i]);
 				}
 			}
 		}
 		for(int i = 0; i < lastDistData.length; i++) {
-			lastDistData[i] = pipeLogic.distData[i];
+			lastDistData[i] = pipe.logic.distData[i];
 		}
 	}
 
 	@Override
 	public void updateProgressBar(int i, int j) {
-		if(i >= 0 && i < pipeLogic.distData.length) {
-			pipeLogic.distData[i] = j;
+		if(i >= 0 && i < pipe.logic.distData.length) {
+			pipe.logic.distData[i] = j;
 		}
 	}
 }

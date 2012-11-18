@@ -81,6 +81,8 @@ public class AdditionalPipes {
 			serverSide = "buildcraft.additionalpipes.MutiPlayerProxy")
 	public static MutiPlayerProxy proxy;
 
+	public Configuration config;
+
 	public Logger logger;
 
 	@Retention(RetentionPolicy.RUNTIME)
@@ -156,7 +158,7 @@ public class AdditionalPipes {
 
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event) {
-		loadConfigs(new Configuration(event.getSuggestedConfigurationFile()));
+		config = new Configuration(event.getSuggestedConfigurationFile());
 
 		logger = Logger.getLogger(MODID);
 		logger.setParent(FMLLog.getLogger());
@@ -187,7 +189,8 @@ public class AdditionalPipes {
 	public void modsLoaded(FMLPostInitializationEvent event) {
 		//powerMeter = new ItemPowerMeter(powerMeterId).setItemName("powerMeter");
 		//LanguageRegistry.addName(powerMeter, "Power Meter");
-
+		
+		loadConfigs(config);
 		loadPipes();
 
 		if(enableTriggers) {

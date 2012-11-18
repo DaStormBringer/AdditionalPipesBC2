@@ -10,37 +10,36 @@ package buildcraft.additionalpipes.pipes;
 
 import java.util.LinkedList;
 
-import net.minecraft.src.IInventory;
-import net.minecraft.src.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import buildcraft.additionalpipes.pipes.logic.PipeLogicDistributor;
 import buildcraft.api.core.Position;
 import buildcraft.api.transport.IPipedItem;
-import buildcraft.core.utils.Utils;
 import buildcraft.transport.IPipeTransportItemsHook;
 import buildcraft.transport.PipeTransportItems;
-import buildcraft.transport.TileGenericPipe;
 
 public class PipeItemsDistributor extends APPipe implements IPipeTransportItemsHook {
 
+	public final PipeLogicDistributor logic;
+
 	public PipeItemsDistributor(int itemID) {
 		super(new PipeTransportItems(), new PipeLogicDistributor(), itemID);
+		logic = (PipeLogicDistributor) super.logic;
 	}
 
 	@Override
 	public int getTextureIndex(ForgeDirection connection) {
 		switch (connection) {
-		case DOWN:
+		case DOWN:    //-y
 			return 10;
-		case UP:
+		case UP:      //+y
 			return 11;
-		case NORTH: //-z
+		case NORTH:   //-z
 			return 12;
-		case SOUTH: //+z
+		case SOUTH:   //+z
 			return 13;
-		case WEST: //-x
+		case WEST:    //-x
 			return 14;
-		case EAST: //+x
+		case EAST:    //+x
 		default:
 			return 9;
 		}
@@ -48,52 +47,27 @@ public class PipeItemsDistributor extends APPipe implements IPipeTransportItemsH
 
 	@Override
 	public LinkedList<ForgeDirection> filterPossibleMovements(LinkedList<ForgeDirection> possibleOrientations, Position pos, IPipedItem item) {
-		PipeLogicDistributor pipeLogic = (PipeLogicDistributor) logic;
-
 		LinkedList<ForgeDirection> result = new LinkedList<ForgeDirection>();
 
-		if (pipeLogic.curTick >= pipeLogic.distData[pipeLogic.distSide]) {
-			nextOpenValidInventory();
+		if (logic.curTick >= logic.distData[logic.distSide]) {
+			toNextOpenSide();
 		}
 
-		for (ForgeDirection orientation : ForgeDirection.VALID_DIRECTIONS) {
-			if (!(item.getPosition().orientation == orientation.getOpposite())) {
-				if (canReceivePipeObjects(container.getTile(orientation))) {
-					result.add(orientation);
-				}
-			}
-		}
-
-		pipeLogic.curTick += item.getItemStack().stackSize;
-
+		result.add(ForgeDirection.VALID_DIRECTIONS[logic.distSide]);
+		logic.curTick += item.getItemStack().stackSize;
 		return result;
 	}
 
-	private void nextOpenValidInventory() {
-		PipeLogicDistributor pipeLogic = (PipeLogicDistributor) logic;
-		pipeLogic.curTick = 0;
-		for (int o = 0; o < 6; ++o) {
-			pipeLogic.distSide = (pipeLogic.distSide + 1) % pipeLogic.distData.length;
-			ForgeDirection orientation = ForgeDirection.values()[o];
-			if (pipeLogic.distData[pipeLogic.distSide] > 0 &&
-					canReceivePipeObjects(container.getTile(orientation))) {
+	private void toNextOpenSide() {
+		logic.curTick = 0;
+		for (int o = 0; o < logic.distData.length; ++o) {
+			logic.distSide = (logic.distSide + 1) % logic.distData.length;
+			if (logic.distData[logic.distSide] > 0 &&
+					container.isPipeConnected(ForgeDirection.VALID_DIRECTIONS[o])) {
 				break;
 			}
 		}
-	}
-
-	public boolean canReceivePipeObjects(TileEntity entity) {
-		if (!Utils.checkPipesConnections(container, entity)) {
-			return false;
-		}
-		if (entity instanceof TileGenericPipe) {
-			TileGenericPipe pipe = (TileGenericPipe) entity;
-			return pipe.pipe.transport instanceof PipeTransportItems;
-		}
-		if (entity instanceof IInventory) {
-			return true;
-		}
-		return false;
+		//no valid inventories found, do nothing
 	}
 
 	@Override

@@ -8,10 +8,11 @@
 
 package buildcraft.additionalpipes.pipes.logic;
 
+import java.util.Arrays;
+
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Item;
 import net.minecraft.src.NBTTagCompound;
-import net.minecraftforge.common.ForgeDirection;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.transport.pipes.PipeLogic;
@@ -21,11 +22,6 @@ public class PipeLogicDistributor extends PipeLogic {
 	public int distData[] = {1, 1, 1, 1, 1, 1};
 	public int distSide = 0;
 	public int curTick = 0;
-
-	@Override
-	public void onBlockPlaced() {
-		super.onBlockPlaced();
-	}
 
 	@Override
 	public boolean blockActivated(EntityPlayer player) {
@@ -46,14 +42,19 @@ public class PipeLogicDistributor extends PipeLogic {
 		return true;
 	}
 
-	@Override
-	public boolean outputOpen(ForgeDirection to) {
-		return to.ordinal() == distSide;
+	private void sanityCheck() {
+		for (int d : distData) {
+			if (d > 0) {
+				return;
+			}
+		}
+		for (int i = 0; i < distData.length; i++) {
+			Arrays.fill(distData, 1);
+		}
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
-
 		super.writeToNBT(nbt);
 
 		nbt.setInteger("curTick", curTick);
@@ -66,21 +67,13 @@ public class PipeLogicDistributor extends PipeLogic {
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
+
 		curTick = nbt.getInteger("curTick");
 		distSide = nbt.getInteger("distSide");
-
-		boolean found = false;
 		for (int i = 0; i < distData.length; i++) {
-			int d = nbt.getInteger("distData" + i);
-			if (d > 0) found = true;
-			distData[i] = d;
+			distData[i] = nbt.getInteger("distData" + i);
 		}
-
-		if (!found) {
-			for (int i = 0; i < distData.length; i++) {
-				distData[i] = 1;
-			}
-		}
+		sanityCheck();
 	}
 
 }

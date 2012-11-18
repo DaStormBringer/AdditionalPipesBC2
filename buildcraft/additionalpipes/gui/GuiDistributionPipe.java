@@ -67,7 +67,7 @@ public class GuiDistributionPipe extends GuiContainer {
 	}
 	@Override
 	protected void drawGuiContainerForegroundLayer(int p1, int p2) {
-		PipeLogicDistributor pipeLogic = (PipeLogicDistributor) pipe.logic;
+		PipeLogicDistributor pipeLogic = pipe.logic;
 		buttons[1].displayString  = "" + pipeLogic.distData[0];
 		buttons[4].displayString  = "" + pipeLogic.distData[1];
 		buttons[7].displayString  = "" + pipeLogic.distData[2];
@@ -78,7 +78,7 @@ public class GuiDistributionPipe extends GuiContainer {
 
 	@Override
 	protected void actionPerformed(GuiButton guibutton) {
-		PipeLogicDistributor pipeLogic = (PipeLogicDistributor) pipe.logic;
+		PipeLogicDistributor pipeLogic = pipe.logic;
 		int index = (guibutton.id - 1) / 3;
 		int newData = pipeLogic.distData[index];
 		if((guibutton.id - 1) % 3 == 0) {
