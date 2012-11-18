@@ -1,5 +1,6 @@
 package buildcraft.additionalpipes;
 
+import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
@@ -81,7 +82,7 @@ public class AdditionalPipes {
 			serverSide = "buildcraft.additionalpipes.MutiPlayerProxy")
 	public static MutiPlayerProxy proxy;
 
-	public Configuration config;
+	public File configFile;
 
 	public Logger logger;
 
@@ -158,7 +159,8 @@ public class AdditionalPipes {
 
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event) {
-		config = new Configuration(event.getSuggestedConfigurationFile());
+		configFile = event.getSuggestedConfigurationFile();
+		loadConfigs(false);
 
 		logger = Logger.getLogger(MODID);
 		logger.setParent(FMLLog.getLogger());
@@ -189,8 +191,7 @@ public class AdditionalPipes {
 	public void modsLoaded(FMLPostInitializationEvent event) {
 		//powerMeter = new ItemPowerMeter(powerMeterId).setItemName("powerMeter");
 		//LanguageRegistry.addName(powerMeter, "Power Meter");
-		
-		loadConfigs(config);
+		loadConfigs(true);
 		loadPipes();
 
 		if(enableTriggers) {
@@ -233,7 +234,11 @@ public class AdditionalPipes {
 		TeleportManager.instance.teleportPipes.clear();
 	}
 
-	private void loadConfigs(Configuration config) {
+	private void loadConfigs(boolean postInit) {
+		if((!configFile.exists() && !postInit) || (configFile.exists() && postInit)) {
+			return;
+		}
+		Configuration config = new Configuration(configFile);
 		try {
 			config.load();
 			config.addCustomCategoryComment(Configuration.CATEGORY_BLOCK, "Set id to 0 to disable loading the block, add - in front of id to disable recipe only.");
