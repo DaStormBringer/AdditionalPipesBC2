@@ -63,7 +63,7 @@ public class PipeItemsDistributor extends APPipe implements IPipeTransportItemsH
 		for (int o = 0; o < logic.distData.length; ++o) {
 			logic.distSide = (logic.distSide + 1) % logic.distData.length;
 			if (logic.distData[logic.distSide] > 0 &&
-					container.isPipeConnected(ForgeDirection.VALID_DIRECTIONS[o])) {
+					container.isPipeConnected(ForgeDirection.VALID_DIRECTIONS[logic.distSide])) {
 				break;
 			}
 		}

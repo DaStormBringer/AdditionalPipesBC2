@@ -6,7 +6,7 @@
 	<property name="build.dir" value="${jar.dir}/buildcraft/additionalpipes" />
 
 	<target name="clean">
-		<delete dir="${build.dir}"/>
+		<delete dir="${jar.dir}"/>
 	</target>
 	
 	<target name="copy-src">
