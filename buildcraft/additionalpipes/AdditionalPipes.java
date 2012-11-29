@@ -34,7 +34,9 @@ import buildcraft.additionalpipes.pipes.PipeItemsRedstone;
 import buildcraft.additionalpipes.pipes.PipeItemsTeleport;
 import buildcraft.additionalpipes.pipes.PipeLiquidsRedstone;
 import buildcraft.additionalpipes.pipes.PipeLiquidsTeleport;
-import buildcraft.additionalpipes.pipes.PipePowerSwitch;
+import buildcraft.additionalpipes.pipes.PipeSwitchItems;
+import buildcraft.additionalpipes.pipes.PipeSwitchLiquids;
+import buildcraft.additionalpipes.pipes.PipeSwitchPower;
 import buildcraft.additionalpipes.pipes.PipePowerTeleport;
 import buildcraft.additionalpipes.pipes.TeleportManager;
 import buildcraft.api.gates.ActionManager;
@@ -114,7 +116,11 @@ public class AdditionalPipes {
 	//meter TODO
 	//public Item powerMeter;
 	//public @CfgId int powerMeterId = 14060;
-	//Items Closed
+	//Switch pipes
+	public Item pipeLiquidsSwitch;
+	public @CfgId int pipeLiquidsSwitchId = 4053;
+	public Item pipeItemsSwitch;
+	public @CfgId int pipeItemsSwitchId = 4052;
 	public Item pipePowerSwitch;
 	public @CfgId int pipePowerSwitchId = 4051;
 	//Items Closed
@@ -349,10 +355,13 @@ public class AdditionalPipes {
 		// Closed Items Pipe
 		pipeItemsClosed = doCreatePipeAndRecipe(pipeItemsClosedId, PipeItemsClosed.class,
 				new Object[]{"r", "I", 'I', BuildCraftTransport.pipeItemsIron, 'r', Item.redstone});
-
-		//power switch pipe
-		pipePowerSwitch = doCreatePipeAndRecipe(pipePowerSwitchId, PipePowerSwitch.class,
-				new Object[]{"r", "I", 'I', pipeItemsRedStone, 'r', Item.redstone});
+		//switch pipes
+		pipeItemsSwitch = doCreatePipeAndRecipe(pipeItemsSwitchId, PipeSwitchItems.class,
+				new Object[]{"l", "I", 'I', pipeItemsRedStone, 'l', Block.lever});
+		pipePowerSwitch = doCreatePipeAndRecipe(pipePowerSwitchId, PipeSwitchPower.class,
+				new Object[]{"r", "I", 'I', pipeItemsSwitch, 'r', Item.redstone});
+		pipeLiquidsSwitch = doCreatePipeAndRecipe(pipeLiquidsSwitchId, PipeSwitchLiquids.class,
+				new Object[]{"r", "I", 'I', pipeItemsSwitch, 'w', BuildCraftTransport.pipeWaterproof});
 	}
 
 	private Item doCreatePipeAndRecipe(int id, Class<? extends Pipe> clas, Object[] recipe) {
@@ -374,7 +383,7 @@ public class AdditionalPipes {
 		protected ItemPipeAP(int i) {
 			super(i);
 		}
-		@Override
+
 		public EnumRarity getRarity(ItemStack stack){
 			return EnumRarity.rare;
 		}

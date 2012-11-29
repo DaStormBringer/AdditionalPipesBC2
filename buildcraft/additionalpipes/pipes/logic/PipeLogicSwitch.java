@@ -5,7 +5,7 @@ import net.minecraftforge.common.ForgeDirection;
 import buildcraft.transport.TileGenericPipe;
 import buildcraft.transport.pipes.PipeLogic;
 
-public class PipeLogicPowerSwitch extends PipeLogic {
+public class PipeLogicSwitch extends PipeLogic {
 
 	@Override
 	public void initialize() {
