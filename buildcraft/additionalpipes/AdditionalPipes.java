@@ -17,6 +17,7 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.Property;
 import buildcraft.BuildCraftCore;
+import buildcraft.BuildCraftFactory;
 import buildcraft.BuildCraftSilicon;
 import buildcraft.BuildCraftTransport;
 import buildcraft.additionalpipes.chunkloader.BlockChunkLoader;
@@ -34,6 +35,7 @@ import buildcraft.additionalpipes.pipes.PipeItemsRedstone;
 import buildcraft.additionalpipes.pipes.PipeItemsTeleport;
 import buildcraft.additionalpipes.pipes.PipeLiquidsRedstone;
 import buildcraft.additionalpipes.pipes.PipeLiquidsTeleport;
+import buildcraft.additionalpipes.pipes.PipeLiquidsWaterPump;
 import buildcraft.additionalpipes.pipes.PipeSwitchItems;
 import buildcraft.additionalpipes.pipes.PipeSwitchLiquids;
 import buildcraft.additionalpipes.pipes.PipeSwitchPower;
@@ -50,13 +52,11 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.Mod.PostInit;
 import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.Mod.ServerStarting;
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
@@ -66,7 +66,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 
 @Mod(modid=AdditionalPipes.MODID, name=AdditionalPipes.NAME,
-dependencies="required-after:BuildCraft|Transport;required-after:BuildCraft|Silicon",
+dependencies="after:BuildCraft|Transport;after:BuildCraft|Silicon;after:BuildCraft|Transport;after:BuildCraft|Factory",
 version=AdditionalPipes.VERSION)
 @NetworkMod(channels={AdditionalPipes.CHANNEL, AdditionalPipes.CHANNELNBT},
 clientSideRequired=true, serverSideRequired=true, packetHandler=NetworkHandler.class)
@@ -108,7 +108,7 @@ public class AdditionalPipes {
 	//chunk load boundaries
 	public ChunkLoadViewDataProxy chunkLoadViewer;
 	public @CfgBool boolean chunkSight = true;
-	public int chunkSightRange = 4; //config option
+	public int chunkSightRange = 8; //config option
 
 	//teleport scanner TODO
 	//public Item teleportScanner;
@@ -117,6 +117,8 @@ public class AdditionalPipes {
 	//public Item powerMeter;
 	//public @CfgId int powerMeterId = 14060;
 	//Switch pipes
+	public Item pipeLiquidsWaterPump;
+	public @CfgId int pipeLiquidsWaterPumpId = 4054;
 	public Item pipeLiquidsSwitch;
 	public @CfgId int pipeLiquidsSwitchId = 4053;
 	public Item pipeItemsSwitch;
@@ -191,10 +193,7 @@ public class AdditionalPipes {
 		TickRegistry.registerScheduledTickHandler(chunkLoadViewer, Side.CLIENT);
 		proxy.registerKeyHandler();
 		proxy.registerRendering();
-	}
 
-	@PostInit
-	public void modsLoaded(FMLPostInitializationEvent event) {
 		//powerMeter = new ItemPowerMeter(powerMeterId).setItemName("powerMeter");
 		//LanguageRegistry.addName(powerMeter, "Power Meter");
 		loadConfigs(true);
@@ -337,37 +336,50 @@ public class AdditionalPipes {
 				new Object[]{" r ", "IgI", 'r', Item.redstone, 'I', Item.ingotIron, 'g', Block.glass});
 
 		// Advanced Wooded Pipe
-		pipeItemsAdvancedWood = doCreatePipeAndRecipe(pipeItemsAdvancedWoodId, PipeItemsAdvancedWood.class,
-				new Object[]{" r ", "WgW", 'r', Item.redstone, 'W', Block.planks, 'g', Block.glass});
+		pipeItemsAdvancedWood = doCreatePipeAndRecipe(pipeItemsAdvancedWoodId, 8, PipeItemsAdvancedWood.class,
+				new Object[]{"WgW", 'W', BuildCraftCore.woodenGearItem, 'g', Block.glass});
 
 		// Advanced Insertion Pipe
-		pipeItemsAdvancedInsertion = doCreatePipeAndRecipe(pipeItemsAdvancedInsertionId, PipeItemsAdvancedInsertion.class,
-				new Object[]{" r ", "OgO", 'r', Item.redstone, 'O', Block.obsidian, 'g', Block.glass});
+		pipeItemsAdvancedInsertion = doCreatePipeAndRecipe(pipeItemsAdvancedInsertionId, 8, PipeItemsAdvancedInsertion.class,
+				new Object[]{"IgI", 'I', BuildCraftCore.ironGearItem, 'g', Block.glass});
 
 		// Redstone Pipe
-		pipeItemsRedStone = doCreatePipeAndRecipe(pipeItemsRedStoneId, PipeItemsRedstone.class,
+		pipeItemsRedStone = doCreatePipeAndRecipe(pipeItemsRedStoneId, 8, PipeItemsRedstone.class,
 				new Object[]{"RgR", 'R', Item.redstone, 'g', Block.glass});
-
 		// Redstone Liquid Pipe
 		pipeLiquidsRedstone = doCreatePipeAndRecipe(pipeLiquidsRedstoneId, PipeLiquidsRedstone.class,
 				new Object[]{"w", "P", 'w', BuildCraftTransport.pipeWaterproof, 'P', pipeItemsRedStone});
 
 		// Closed Items Pipe
 		pipeItemsClosed = doCreatePipeAndRecipe(pipeItemsClosedId, PipeItemsClosed.class,
-				new Object[]{"r", "I", 'I', BuildCraftTransport.pipeItemsIron, 'r', Item.redstone});
+				new Object[]{"r", "I", 'I', BuildCraftTransport.pipeItemsVoid, 'i', BuildCraftCore.ironGearItem});
 		//switch pipes
-		pipeItemsSwitch = doCreatePipeAndRecipe(pipeItemsSwitchId, PipeSwitchItems.class,
-				new Object[]{"l", "I", 'I', pipeItemsRedStone, 'l', Block.lever});
+		pipeItemsSwitch = doCreatePipeAndRecipe(pipeItemsSwitchId, 8, PipeSwitchItems.class,
+				new Object[]{"GgG", 'g', Block.glass, 'G', BuildCraftCore.goldGearItem});
 		pipePowerSwitch = doCreatePipeAndRecipe(pipePowerSwitchId, PipeSwitchPower.class,
 				new Object[]{"r", "I", 'I', pipeItemsSwitch, 'r', Item.redstone});
 		pipeLiquidsSwitch = doCreatePipeAndRecipe(pipeLiquidsSwitchId, PipeSwitchLiquids.class,
 				new Object[]{"r", "I", 'I', pipeItemsSwitch, 'w', BuildCraftTransport.pipeWaterproof});
+
+		//water pump pipe
+		pipeLiquidsWaterPump = doCreatePipeAndRecipe(pipeLiquidsWaterPumpId, PipeLiquidsWaterPump.class,
+				new Object[]{"rPr", "iLi", "wWw",
+					'r', Item.redstone,
+					'P', BuildCraftFactory.pumpBlock,
+					'i', pipeItemsSwitch,
+					'L', BuildCraftTransport.pipeLiquidsGold,
+					'w', BuildCraftTransport.pipeWaterproof,
+					'W', BuildCraftTransport.pipeLiquidsWood});
 	}
 
 	private Item doCreatePipeAndRecipe(int id, Class<? extends Pipe> clas, Object[] recipe) {
+		return doCreatePipeAndRecipe(id, 1, clas, recipe);
+	}
+
+	private Item doCreatePipeAndRecipe(int id, int output, Class<? extends Pipe> clas, Object[] recipe) {
 		if(id == 0) return null;
 		Item pipe = createPipe(id > 0 ? id : -id, clas);
-		GameRegistry.addRecipe(new ItemStack(pipe), recipe);
+		GameRegistry.addRecipe(new ItemStack(pipe, output), recipe);
 		return pipe;
 	}
 
