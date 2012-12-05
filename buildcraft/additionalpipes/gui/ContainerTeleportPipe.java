@@ -58,8 +58,8 @@ public class ContainerTeleportPipe extends Container {
 		}
 		ticks++;
 		for (Object crafter : crafters) {
-			if(freq != pipe.logic.freq) {
-				((ICrafting) crafter).sendProgressBarUpdate(this, 0, pipe.logic.freq);
+			if(freq != pipe.logic.frequency) {
+				((ICrafting) crafter).sendProgressBarUpdate(this, 0, pipe.logic.frequency);
 			}
 			if(canReceive != pipe.logic.canReceive) {
 				((ICrafting) crafter).sendProgressBarUpdate(this, 1, pipe.logic.canReceive ? 1 : 0);
@@ -72,7 +72,7 @@ public class ContainerTeleportPipe extends Container {
 			}
 		}
 		canReceive = pipe.logic.canReceive;
-		freq = pipe.logic.freq;
+		freq = pipe.logic.frequency;
 		isPublic = pipe.logic.isPublic;
 		connectedPipes = connectedPipesNew;
 	}
@@ -81,7 +81,7 @@ public class ContainerTeleportPipe extends Container {
 	public void updateProgressBar(int i, int j) {
 		switch(i) {
 		case 0:
-			pipe.logic.freq = j;
+			pipe.logic.frequency = j;
 			break;
 		case 1:
 			pipe.logic.canReceive = (j == 1);

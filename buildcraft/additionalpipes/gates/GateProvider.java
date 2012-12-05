@@ -6,6 +6,9 @@ import net.minecraft.src.Block;
 import net.minecraft.src.TileEntity;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.pipes.PipeItemsClosed;
+import buildcraft.additionalpipes.pipes.PipeTeleport;
+import buildcraft.api.gates.IAction;
+import buildcraft.api.gates.IActionProvider;
 import buildcraft.api.gates.ITrigger;
 import buildcraft.api.gates.ITriggerProvider;
 import buildcraft.api.transport.IPipe;
@@ -17,6 +20,12 @@ public class GateProvider implements ITriggerProvider {
 		LinkedList <ITrigger> list = new LinkedList<ITrigger>();
 		if(pipe instanceof PipeItemsClosed) {
 			list.add(AdditionalPipes.instance.triggerPipeClosed);
+		}
+		if(pipe instanceof PipeTeleport) {
+			list.add(AdditionalPipes.instance.triggerPhasedSignalRed);
+			list.add(AdditionalPipes.instance.triggerPhasedSignalGreen);
+			list.add(AdditionalPipes.instance.triggerPhasedSignalBlue);
+			list.add(AdditionalPipes.instance.triggerPhasedSignalYellow);
 		}
 		return list;
 	}

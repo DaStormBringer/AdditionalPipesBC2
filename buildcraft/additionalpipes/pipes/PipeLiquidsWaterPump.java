@@ -30,7 +30,7 @@ public class PipeLiquidsWaterPump extends APPipe {
 
 	@Override
 	public int getTextureIndex(ForgeDirection direction) {
-		return 1;
+		return 24;
 	}
 
 }

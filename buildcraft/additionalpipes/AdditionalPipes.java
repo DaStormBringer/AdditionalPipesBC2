@@ -24,6 +24,7 @@ import buildcraft.additionalpipes.chunkloader.BlockChunkLoader;
 import buildcraft.additionalpipes.chunkloader.ChunkLoadingHandler;
 import buildcraft.additionalpipes.chunkloader.TileChunkLoader;
 import buildcraft.additionalpipes.gates.GateProvider;
+import buildcraft.additionalpipes.gates.TriggerPhasedSignal;
 import buildcraft.additionalpipes.gates.TriggerPipeClosed;
 import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.additionalpipes.network.NetworkHandler;
@@ -44,6 +45,7 @@ import buildcraft.additionalpipes.pipes.TeleportManager;
 import buildcraft.api.gates.ActionManager;
 import buildcraft.api.gates.ITrigger;
 import buildcraft.api.recipes.AssemblyRecipe;
+import buildcraft.api.transport.IPipe;
 import buildcraft.core.utils.Localization;
 import buildcraft.transport.BlockGenericPipe;
 import buildcraft.transport.ItemPipe;
@@ -159,6 +161,10 @@ public class AdditionalPipes {
 	public @CfgBool boolean enableTriggers = true;
 	public ITrigger triggerPipeClosed;
 
+	public ITrigger triggerPhasedSignalRed;
+	public ITrigger triggerPhasedSignalBlue;
+	public ITrigger triggerPhasedSignalGreen;
+	public ITrigger triggerPhasedSignalYellow;
 	//keybinding
 	public int laserKeyCode = 64; //config option (& in options menu)
 	//misc
@@ -201,6 +207,10 @@ public class AdditionalPipes {
 
 		if(enableTriggers) {
 			triggerPipeClosed = new TriggerPipeClosed(212);
+			triggerPhasedSignalRed = new TriggerPhasedSignal(213, IPipe.WireColor.Red);
+			triggerPhasedSignalBlue = new TriggerPhasedSignal(214, IPipe.WireColor.Blue);
+			triggerPhasedSignalGreen = new TriggerPhasedSignal(215, IPipe.WireColor.Green);
+			triggerPhasedSignalYellow = new TriggerPhasedSignal(216, IPipe.WireColor.Yellow);
 			ActionManager.registerTriggerProvider(new GateProvider());
 		}
 
@@ -236,7 +246,7 @@ public class AdditionalPipes {
 	@ServerStarting
 	public void onServerStart(FMLServerStartingEvent event) {
 		//event.registerServerCommand(new CommandAdditionalPipes());
-		TeleportManager.instance.teleportPipes.clear();
+		TeleportManager.instance.reset();
 	}
 
 	private void loadConfigs(boolean postInit) {

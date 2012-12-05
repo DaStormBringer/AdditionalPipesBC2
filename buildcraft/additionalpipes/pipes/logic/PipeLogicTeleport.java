@@ -14,8 +14,9 @@ import buildcraft.transport.pipes.PipeLogic;
 
 public class PipeLogicTeleport extends PipeLogic {
 
-	public int freq = 0;
+	public int frequency = 0;
 	public boolean canReceive = false;
+	//public boolean canSend = true;
 	public String owner = "";
 	public boolean isPublic = false;
 
@@ -58,7 +59,7 @@ public class PipeLogicTeleport extends PipeLogic {
 	public void writeToNBT(NBTTagCompound nbttagcompound) {
 		super.writeToNBT(nbttagcompound);
 
-		nbttagcompound.setInteger("freq", freq);
+		nbttagcompound.setInteger("freq", frequency);
 		nbttagcompound.setBoolean("canReceive", canReceive);
 		nbttagcompound.setString("owner", owner);
 		nbttagcompound.setBoolean("isPublic", isPublic);
@@ -68,7 +69,7 @@ public class PipeLogicTeleport extends PipeLogic {
 	public void readFromNBT(NBTTagCompound nbttagcompound) {
 		super.readFromNBT(nbttagcompound);
 
-		freq = nbttagcompound.getInteger("freq");
+		frequency = nbttagcompound.getInteger("freq");
 		canReceive = nbttagcompound.getBoolean("canReceive");
 		owner = nbttagcompound.getString("owner");
 		isPublic = nbttagcompound.getBoolean("isPublic");
