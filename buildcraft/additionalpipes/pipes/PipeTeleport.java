@@ -1,11 +1,9 @@
 package buildcraft.additionalpipes.pipes;
 
-import java.util.HashMap;
 import java.util.Random;
 
 import buildcraft.additionalpipes.pipes.logic.PipeLogicTeleport;
 import buildcraft.api.core.Position;
-import buildcraft.api.gates.ActionManager;
 import buildcraft.transport.PipeTransport;
 
 public abstract class PipeTeleport extends APPipe {

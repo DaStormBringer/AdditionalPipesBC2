@@ -1,7 +1,6 @@
 package buildcraft.additionalpipes.gates;
 
 import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.additionalpipes.pipes.PipeItemsClosed;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.additionalpipes.pipes.TeleportManager;
 import buildcraft.api.gates.ITriggerParameter;

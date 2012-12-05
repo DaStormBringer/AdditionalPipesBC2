@@ -7,7 +7,6 @@ import java.util.Map;
 
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.pipes.logic.PipeLogicTeleport;
-import buildcraft.transport.TileGenericPipe;
 
 public class TeleportManager {
 	public static final TeleportManager instance = new TeleportManager();

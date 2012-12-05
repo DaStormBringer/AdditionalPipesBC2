@@ -40,7 +40,7 @@ public class CommandAdditionalPipes extends CommandBase {
 								StringBuffer sb = new StringBuffer();
 								sb.append('[');
 								sb.append(logic.container.pipe.getClass().getSimpleName());
-								sb.append(", Freq: ").append(logicTeleport.freq);
+								sb.append(", Freq: ").append(logicTeleport.frequency);
 								sb.append(", Receive: ").append(logicTeleport.canReceive);
 								sb.append(", Owner: ").append(logicTeleport.owner);
 								sb.append(']');
