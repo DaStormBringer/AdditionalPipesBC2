@@ -1,4 +1,4 @@
-## Update of Additional Pipes for BC3 and Minecraft 1.4.2
+## Update of Additional Pipes for BC3 and Minecraft 1.4+
 
 ### Credits to Zeldo, DaStormBringer, and Kyprus for their work on the mod.
 
@@ -8,13 +8,13 @@ Original Wiki: https://bitbucket.org/Kyprus/additionalpipes/wiki/Crafting
 
 Pipes still generally do the same thing. Some GUIs and recipes have changed (check NEI for recipes).
 
-#### Experimental Pipes ####
+#### Experimental Pipes & Gate Features ####
 
-Power Switch Pipe
+##### Power Switch Pipe #####
 
 Just a nifty little pipe with nice texture effects. Complete credits to ABO for the idea (the code is original though).
 
-Closed Pipe
+##### Closed Pipe #####
 
 This pipe has 3 functions:
 
@@ -25,3 +25,17 @@ This pipe has 3 functions:
 3. Stores the items it "drops" inside an buffer. This buffer will destroy the oldest stack to make space for new stack when full.
 
 Closed pipes also have a "closed" gate trigger which activates when the buffer has item(s) inside.
+
+##### Water Pump Pipe #####
+
+Just a pipe that fills with water if a source block is under it.
+
+##### Phased Signal Trigger #####
+
+This trigger only applies to phased pipes, and activates when any phased pipe with the same frequency *outputs* a pipe wire signal.
+
+Note #1: The other phased pipe has to *output* a pipe signal, not just receive one.
+
+Note #2: Phased signals do not take into account the owner of the pipe, whether the pipe is public/private, or whether the pipe is send/receive.
+
+Note #3: A phased pipe can send a phased signal to itself. Be careful.
