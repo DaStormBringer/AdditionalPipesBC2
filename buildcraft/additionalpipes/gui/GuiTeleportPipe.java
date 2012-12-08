@@ -46,7 +46,7 @@ public class GuiTeleportPipe extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int p1, int p2) {
-		fontRenderer.drawString("Frequency: " + pipe.logic.frequency, 8, 40, 0x404040);
+		fontRenderer.drawString("Frequency: " + pipe.logic.getFrequency(), 8, 40, 0x404040);
 		fontRenderer.drawString("Number of Outputs: " + container.connectedPipes, 100, 40, 0x404040);
 		fontRenderer.drawString("Owner: " + pipe.logic.owner, 8, 100, 0x404040);
 		if(pipe.logic.canReceive) {
@@ -63,7 +63,7 @@ public class GuiTeleportPipe extends GuiContainer {
 	}
 	@Override
 	protected void actionPerformed(GuiButton guibutton) {
-		int freq = pipe.logic.frequency;
+		int freq = pipe.logic.getFrequency();
 		boolean canReceive = pipe.logic.canReceive;
 		boolean isPublic = pipe.logic.isPublic;
 		switch(guibutton.id) {

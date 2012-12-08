@@ -37,10 +37,10 @@ import buildcraft.additionalpipes.pipes.PipeItemsTeleport;
 import buildcraft.additionalpipes.pipes.PipeLiquidsRedstone;
 import buildcraft.additionalpipes.pipes.PipeLiquidsTeleport;
 import buildcraft.additionalpipes.pipes.PipeLiquidsWaterPump;
+import buildcraft.additionalpipes.pipes.PipePowerTeleport;
 import buildcraft.additionalpipes.pipes.PipeSwitchItems;
 import buildcraft.additionalpipes.pipes.PipeSwitchLiquids;
 import buildcraft.additionalpipes.pipes.PipeSwitchPower;
-import buildcraft.additionalpipes.pipes.PipePowerTeleport;
 import buildcraft.additionalpipes.pipes.TeleportManager;
 import buildcraft.api.gates.ActionManager;
 import buildcraft.api.gates.ITrigger;
@@ -374,12 +374,12 @@ public class AdditionalPipes {
 		//water pump pipe
 		pipeLiquidsWaterPump = doCreatePipeAndRecipe(pipeLiquidsWaterPumpId, PipeLiquidsWaterPump.class,
 				new Object[]{"rPr", "iLi", "wWw",
-					'r', Item.redstone,
-					'P', BuildCraftFactory.pumpBlock,
-					'i', pipeItemsSwitch,
-					'L', BuildCraftTransport.pipeLiquidsGold,
-					'w', BuildCraftTransport.pipeWaterproof,
-					'W', BuildCraftTransport.pipeLiquidsWood});
+			'r', Item.redstone,
+			'P', BuildCraftFactory.pumpBlock,
+			'i', pipeItemsSwitch,
+			'L', BuildCraftTransport.pipeLiquidsGold,
+			'w', BuildCraftTransport.pipeWaterproof,
+			'W', BuildCraftTransport.pipeLiquidsWood});
 	}
 
 	private Item doCreatePipeAndRecipe(int id, Class<? extends Pipe> clas, Object[] recipe) {

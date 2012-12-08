@@ -1,12 +1,12 @@
 package buildcraft.additionalpipes.gui;
 
-import buildcraft.additionalpipes.pipes.PipeItemsClosed;
-import buildcraft.transport.Pipe;
 import net.minecraft.src.Container;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.InventoryPlayer;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.Slot;
+import buildcraft.additionalpipes.pipes.PipeItemsClosed;
+import buildcraft.transport.Pipe;
 
 //from dispenser code
 public class ContainerPipeClosed extends Container {

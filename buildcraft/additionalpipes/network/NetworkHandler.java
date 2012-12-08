@@ -122,10 +122,11 @@ public class NetworkHandler implements IPacketHandler {
 					entityPlayer.sendChatToPlayer("You may not change pipe state.");
 					return;
 				}
-				pipe.logic.frequency = data.readInt();
-				if(pipe.logic.frequency < 0) {
-					pipe.logic.frequency = 0;
+				int frequency = data.readInt();
+				if(frequency < 0) {
+					frequency = 0;
 				}
+				pipe.logic.setFrequency(frequency);
 				pipe.logic.canReceive = (data.read() == 1);
 				pipe.logic.isPublic = (data.read() == 1);
 			}

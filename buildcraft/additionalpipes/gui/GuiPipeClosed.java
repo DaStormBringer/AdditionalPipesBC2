@@ -1,11 +1,12 @@
 package buildcraft.additionalpipes.gui;
 
-import org.lwjgl.opengl.GL11;
-
-import buildcraft.transport.Pipe;
 import net.minecraft.src.GuiContainer;
 import net.minecraft.src.InventoryPlayer;
 import net.minecraft.src.StatCollector;
+
+import org.lwjgl.opengl.GL11;
+
+import buildcraft.transport.Pipe;
 
 public class GuiPipeClosed extends GuiContainer {
 

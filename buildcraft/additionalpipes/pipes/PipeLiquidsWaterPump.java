@@ -1,11 +1,11 @@
 package buildcraft.additionalpipes.pipes;
 
-import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.transport.PipeTransportLiquids;
-import buildcraft.transport.pipes.PipeLogic;
 import net.minecraft.src.Block;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.LiquidStack;
+import buildcraft.additionalpipes.AdditionalPipes;
+import buildcraft.transport.PipeTransportLiquids;
+import buildcraft.transport.pipes.PipeLogic;
 
 public class PipeLiquidsWaterPump extends APPipe {
 	private static final Block water = Block.waterStill;

@@ -56,7 +56,7 @@ public class TriggerPhasedSignal extends Trigger implements ITriggerPipe {
 	@Override
 	public boolean isTriggerActive(Pipe pipe, ITriggerParameter parameter) {
 		PipeTeleport teleportPipe = (PipeTeleport) pipe;
-		return TeleportManager.instance.phasedSignals.get(teleportPipe.logic.frequency)[colour.ordinal()] > 0;
+		return TeleportManager.instance.phasedSignals.get(teleportPipe.logic.getFrequency())[colour.ordinal()] > 0;
 	}
 
 }

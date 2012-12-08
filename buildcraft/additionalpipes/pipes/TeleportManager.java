@@ -21,9 +21,6 @@ public class TeleportManager {
 
 	public void add(PipeTeleport pipe) {
 		if(!AdditionalPipes.proxy.isServer(pipe.worldObj)) return;
-		if(!phasedSignals.containsKey(pipe.logic.frequency)) {
-			phasedSignals.put(pipe.logic.frequency, new Integer[] {0, 0, 0, 0});
-		}
 		teleportPipes.add(pipe);
 		AdditionalPipes.instance.logger.info(
 				String.format("[TeleportManager] Pipe added: %s @ (%d, %d, %d), %d pipes in network",
@@ -61,7 +58,7 @@ public class TeleportManager {
 			//pipe is open or forceReceive &&
 			//both public or same owner
 			if ((pipe.xCoord != other.xCoord || pipe.yCoord != other.yCoord || pipe.zCoord != other.zCoord ) &&
-					otherLogic.frequency == logic.frequency &&
+					otherLogic.getFrequency() == logic.getFrequency() &&
 					(otherLogic.canReceive || forceReceive) &&
 					(logic.isPublic ? otherLogic.isPublic  : otherLogic.owner.equalsIgnoreCase(logic.owner) )) {
 				connected.add(other);
@@ -80,7 +77,7 @@ public class TeleportManager {
 			}
 			PipeLogicTeleport otherLogic = other.logic;
 
-			if (otherLogic.frequency == logic.frequency &&
+			if (otherLogic.getFrequency() == logic.getFrequency() &&
 					(logic.isPublic ? otherLogic.isPublic  : otherLogic.owner.equalsIgnoreCase(logic.owner) )) {
 				pipes.add(other);
 			}

@@ -7,7 +7,7 @@ import buildcraft.transport.PipeTransport;
 public class PipeSwitch extends APPipe {
 
 	private final int textureIndex;
-	
+
 	public PipeSwitch(PipeTransport transport, int itemID, int textureIndex) {
 		super(transport, new PipeLogicSwitch(), itemID);
 		this.textureIndex = textureIndex;

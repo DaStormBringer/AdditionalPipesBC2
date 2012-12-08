@@ -22,7 +22,7 @@ public abstract class PipeTeleport extends APPipe {
 	public void updateEntity() {
 		for(int i = 0; i < broadcastSignal.length; i++) {
 			if(phasedBroadcastSignal[i] != broadcastSignal[i]) {
-				TeleportManager.instance.phasedSignals.get(logic.frequency)[i] += (broadcastSignal[i] ? 1 : -1);
+				TeleportManager.instance.phasedSignals.get(logic.getFrequency())[i] += (broadcastSignal[i] ? 1 : -1);
 				phasedBroadcastSignal[i] = broadcastSignal[i];
 			}
 		}
@@ -39,21 +39,14 @@ public abstract class PipeTeleport extends APPipe {
 	public void invalidate() {
 		super.invalidate();
 		TeleportManager.instance.remove(this);
-		removePhasedSignals();
+		logic.removePhasedSignals();
 	}
 
 	@Override
 	public void onChunkUnload() {
 		super.onChunkUnload();
 		TeleportManager.instance.remove(this);
-		removePhasedSignals();
-	}
-	private void removePhasedSignals() {
-		for(int i = 0; i < phasedBroadcastSignal.length; i++) {
-			if(phasedBroadcastSignal[i]) {
-				TeleportManager.instance.phasedSignals.get(logic.frequency)[i]--;
-			}
-		}
+		logic.removePhasedSignals();
 	}
 
 	public Position getPosition() {
