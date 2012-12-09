@@ -173,12 +173,12 @@ public class AdditionalPipes {
 
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event) {
-		configFile = event.getSuggestedConfigurationFile();
-		loadConfigs(false);
-
 		logger = Logger.getLogger(MODID);
 		logger.setParent(FMLLog.getLogger());
 		logger.setLevel(Level.WARNING); //DEBUG
+
+		configFile = event.getSuggestedConfigurationFile();
+		loadConfigs(false);
 
 		Properties en_US = null;
 		Localization.addLocalization(BASE_PATH + "/lang/", "en_US");
