@@ -118,42 +118,44 @@ public class AdditionalPipes {
 	//meter TODO
 	//public Item powerMeter;
 	//public @CfgId int powerMeterId = 14060;
-	//Switch pipes
-	public Item pipeLiquidsWaterPump;
-	public @CfgId int pipeLiquidsWaterPumpId = 4054;
-	public Item pipeLiquidsSwitch;
-	public @CfgId int pipeLiquidsSwitchId = 4053;
-	public Item pipeItemsSwitch;
-	public @CfgId int pipeItemsSwitchId = 4052;
-	public Item pipePowerSwitch;
-	public @CfgId int pipePowerSwitchId = 4051;
-	//Items Closed
-	public Item pipeItemsClosed;
-	public @CfgId int pipeItemsClosedId = 4050;
-	//Power Teleport
-	public Item pipePowerTeleport;
-	public @CfgId int pipePowerTeleportId = 4049;
-	//Liquid Teleport
-	public Item pipeLiquidsTeleport;
-	public @CfgId int pipeLiquidsTeleportId = 4048;
-	//Item Teleport
-	public Item pipeItemsTeleport;
-	public @CfgId int pipeItemsTeleportId = 4047;
-	//Distributor
-	public Item pipeItemsDistributor;
-	public @CfgId int pipeItemsDistributorId = 4046;
-	//Advanced Wood
-	public Item pipeItemsAdvancedWood;
-	public @CfgId int pipeItemsAdvancedWoodId = 4045;
-	//Advanced Insertion
-	public Item pipeItemsAdvancedInsertion;
-	public @CfgId int pipeItemsAdvancedInsertionId = 4044;
-	//Redstone
-	public Item pipeItemsRedStone;
-	public @CfgId int pipeItemsRedStoneId = 4043;
+
 	//Redstone Liquid
 	public Item pipeLiquidsRedstone;
 	public @CfgId int pipeLiquidsRedstoneId = 4042;
+	//Redstone
+	public Item pipeItemsRedStone;
+	public @CfgId int pipeItemsRedStoneId = 4043;
+	//Advanced Insertion
+	public Item pipeItemsAdvancedInsertion;
+	public @CfgId int pipeItemsAdvancedInsertionId = 4044;
+	//Advanced Wood
+	public Item pipeItemsAdvancedWood;
+	public @CfgId int pipeItemsAdvancedWoodId = 4045;
+	//Distributor
+	public Item pipeItemsDistributor;
+	public @CfgId int pipeItemsDistributorId = 4046;
+	//Item Teleport
+	public Item pipeItemsTeleport;
+	public @CfgId int pipeItemsTeleportId = 4047;
+	//Liquid Teleport
+	public Item pipeLiquidsTeleport;
+	public @CfgId int pipeLiquidsTeleportId = 4048;
+	//Power Teleport
+	public Item pipePowerTeleport;
+	public @CfgId int pipePowerTeleportId = 4049;
+	//Items Closed
+	public Item pipeItemsClosed;
+	public @CfgId int pipeItemsClosedId = 4050;
+	//Switch pipes
+	public Item pipePowerSwitch;
+	public @CfgId int pipePowerSwitchId = 4051;
+	public Item pipeItemsSwitch;
+	public @CfgId int pipeItemsSwitchId = 4052;
+	public Item pipeLiquidsSwitch;
+	public @CfgId int pipeLiquidsSwitchId = 4053;
+	//water pump pipe
+	public Item pipeLiquidsWaterPump;
+	public @CfgId int pipeLiquidsWaterPumpId = 4054;
 	//chunk loader
 	public Block blockChunkLoader;
 	public @CfgId(block=true) int chunkLoaderId = 189;
