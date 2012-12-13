@@ -259,7 +259,7 @@ public class AdditionalPipes {
 		try {
 			config.load();
 			config.addCustomCategoryComment(Configuration.CATEGORY_BLOCK, "Set id to 0 to disable loading the block, add - in front of id to disable recipe only.");
-			config.addCustomCategoryComment(Configuration.CATEGORY_ITEM, "Set id to -1 to disable loading the item, add - in front of id to disable recipe only.");
+			config.addCustomCategoryComment(Configuration.CATEGORY_ITEM, "Set id to 0 to disable loading the item, add - in front of id to disable recipe only.");
 			config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, "Disabling items/blocks only disables recipes.");
 			Field[] fields = AdditionalPipes.class.getFields();
 			for(Field field : fields){
