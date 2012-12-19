@@ -1,9 +1,13 @@
 package buildcraft.additionalpipes.pipes;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import net.minecraft.src.SaveHandler;
+import net.minecraft.src.World;
 
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.pipes.logic.PipeLogicTeleport;
@@ -12,11 +16,14 @@ public class TeleportManager {
 	public static final TeleportManager instance = new TeleportManager();
 
 	public final List<PipeTeleport> teleportPipes;
+
 	public final Map<Integer, Integer[]> phasedSignals;
+	public final Map<Integer, String> frequencyNames;
 
 	private TeleportManager(){
 		teleportPipes = new LinkedList<PipeTeleport>();
 		phasedSignals = new HashMap<Integer, Integer[]>();
+		frequencyNames = new HashMap<Integer, String>();
 	}
 
 	public void add(PipeTeleport pipe) {
@@ -38,6 +45,7 @@ public class TeleportManager {
 	public void reset() {
 		teleportPipes.clear();
 		phasedSignals.clear();
+		frequencyNames.clear();
 		AdditionalPipes.instance.logger.info("Reset teleport manager.");
 	}
 
@@ -67,6 +75,7 @@ public class TeleportManager {
 		return connected;
 	}
 
+	//FIXME unused
 	public List<PipeTeleport> getAllPipesInNetwork(PipeTeleport pipe) {
 		List<PipeTeleport> pipes = new LinkedList<PipeTeleport>();
 		PipeLogicTeleport logic = pipe.logic;
@@ -83,6 +92,19 @@ public class TeleportManager {
 			}
 		}
 		return pipes;
+	}
+
+	public String getFrequencyName(int frequency) {
+		String name = frequencyNames.get(frequency);
+		return name ==  null ? "" : name;
+	}
+
+	public void setFrequencyName(int frequency, String name) {
+		frequencyNames.put(frequency, name);
+	}
+
+	public File getWorldSave(World world) {
+		return world.getSaveHandler().getMapFileFromName("foo").getParentFile().getParentFile();
 	}
 
 }

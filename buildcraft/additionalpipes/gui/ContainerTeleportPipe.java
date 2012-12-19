@@ -53,8 +53,6 @@ public class ContainerTeleportPipe extends Container {
 			AdditionalPipes.instance.logger.info("Old connected:" + connectedPipesNew);
 			connectedPipesNew = TeleportManager.instance.getConnectedPipes(pipe, false).size();
 			AdditionalPipes.instance.logger.info("New connected:" + connectedPipesNew);
-
-
 		}
 		ticks++;
 		for (Object crafter : crafters) {

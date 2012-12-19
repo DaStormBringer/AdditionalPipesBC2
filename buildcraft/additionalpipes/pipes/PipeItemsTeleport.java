@@ -66,11 +66,11 @@ public class PipeItemsTeleport extends PipeTeleport implements IPipeTransportIte
 
 		ForgeDirection newOrientation = outputOrientations.get(rand.nextInt(outputOrientations.size()));
 		TileGenericPipe destination = (TileGenericPipe) otherPipe.container.getTile(newOrientation);
-		item.setContainer(destination);
+		//item.setContainer(destination);
 		item.setPosition(destination.xCoord + 0.5, destination.yCoord, destination.zCoord + 0.5);
+		//transport.scheduleRemoval(item);
 		destination.pipe.transport.entityEntering(item, newOrientation);
-		transport.scheduleRemoval(item);
-		AdditionalPipes.instance.logger.info("Teleported item from " + getPosition() + " to " + otherPipe.getPosition() + " with orientation" + newOrientation);
+		AdditionalPipes.instance.logger.info(item + " from " + getPosition() + " to " + otherPipe.getPosition() + " " + newOrientation);
 	}
 
 	@Override

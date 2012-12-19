@@ -11,22 +11,9 @@ public abstract class PipeTeleport extends APPipe {
 
 	public final PipeLogicTeleport logic;
 
-	private boolean[] phasedBroadcastSignal = {false, false, false, false};
-
 	public PipeTeleport(PipeTransport transport, PipeLogicTeleport logic, int itemID) {
 		super(transport, logic, itemID);
 		this.logic = logic;
-	}
-
-	@Override
-	public void updateEntity() {
-		for(int i = 0; i < broadcastSignal.length; i++) {
-			if(phasedBroadcastSignal[i] != broadcastSignal[i]) {
-				TeleportManager.instance.phasedSignals.get(logic.getFrequency())[i] += (broadcastSignal[i] ? 1 : -1);
-				phasedBroadcastSignal[i] = broadcastSignal[i];
-			}
-		}
-		super.updateEntity();
 	}
 
 	@Override

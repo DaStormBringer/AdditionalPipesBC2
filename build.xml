@@ -42,7 +42,7 @@
 			<fileset dir="${mcp.dir}/reobf/minecraft/buildcraft/additionalpipes" />
 		</copy>
 
-		<copy todir="${build.dir}" file="${src.dir}/mcmod.info">
+		<copy todir="${jar.dir}/buildcraft" file="${src.dir}/mcmod.info">
 			<filterset>
 				<filter token="VERSION" value="${version}" />
 			</filterset>
