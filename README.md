@@ -1,5 +1,7 @@
 ## Update of Additional Pipes for BC3 and Minecraft 1.4+
 
+### Testing builds: https://www.dropbox.com/sh/0hc1l4bn4dvjlni/t82-3--LmE ####
+
 ### Credits to Zeldo, DaStormBringer, and Kyprus for their work on the mod.
 
 1.2.5 Thread: http://www.minecraftforum.net/topic/856360-125bc2214-bc315rev213rev310-additional-pipes-for-buildcraft-teleport-pipes/
