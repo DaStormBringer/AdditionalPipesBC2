@@ -8,10 +8,10 @@
 
 package buildcraft.additionalpipes.gui;
 
-import net.minecraft.src.GuiButton;
-import net.minecraft.src.GuiContainer;
-import net.minecraft.src.IInventory;
-import net.minecraft.src.StatCollector;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 

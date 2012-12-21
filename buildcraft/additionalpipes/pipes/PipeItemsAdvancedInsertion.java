@@ -10,8 +10,8 @@ package buildcraft.additionalpipes.pipes;
 
 import java.util.LinkedList;
 
-import net.minecraft.src.IInventory;
-import net.minecraft.src.TileEntity;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import buildcraft.api.core.Position;
 import buildcraft.api.transport.IPipedItem;

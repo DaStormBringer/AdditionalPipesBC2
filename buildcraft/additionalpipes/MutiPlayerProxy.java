@@ -1,7 +1,7 @@
 package buildcraft.additionalpipes;
 
-import net.minecraft.src.Item;
-import net.minecraft.src.World;
+import net.minecraft.item.Item;
+import net.minecraft.world.World;
 
 public class MutiPlayerProxy {
 	public boolean isServer(World world) {

@@ -1,8 +1,8 @@
 package buildcraft.additionalpipes.gui;
 
-import net.minecraft.src.Container;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.ICrafting;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ICrafting;
 import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
 import buildcraft.transport.TileGenericPipe;
 

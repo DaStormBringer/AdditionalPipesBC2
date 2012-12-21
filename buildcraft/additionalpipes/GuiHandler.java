@@ -1,8 +1,8 @@
 package buildcraft.additionalpipes;
 
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.TileEntity;
-import net.minecraft.src.World;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import buildcraft.additionalpipes.gui.ContainerAdvancedWoodPipe;
 import buildcraft.additionalpipes.gui.ContainerDistributionPipe;
 import buildcraft.additionalpipes.gui.ContainerTeleportPipe;

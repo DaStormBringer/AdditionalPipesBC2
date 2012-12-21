@@ -2,7 +2,7 @@ package buildcraft.additionalpipes.network;
 
 import java.io.ByteArrayOutputStream;
 
-import net.minecraft.src.Packet250CustomPayload;
+import net.minecraft.network.packet.Packet250CustomPayload;
 import buildcraft.additionalpipes.AdditionalPipes;
 
 public class PacketAdditionalPipes {

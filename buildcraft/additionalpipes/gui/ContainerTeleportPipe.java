@@ -1,9 +1,9 @@
 package buildcraft.additionalpipes.gui;
 
-import net.minecraft.src.Container;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.ICrafting;
-import net.minecraft.src.NBTTagCompound;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ICrafting;
+import net.minecraft.nbt.NBTTagCompound;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.network.NetworkHandler;
 import buildcraft.additionalpipes.network.PacketNBTTagData;

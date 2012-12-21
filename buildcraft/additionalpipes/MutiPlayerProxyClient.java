@@ -1,7 +1,7 @@
 package buildcraft.additionalpipes;
 
-import net.minecraft.src.Item;
-import net.minecraft.src.KeyBinding;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
 import buildcraft.transport.TransportProxyClient;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;

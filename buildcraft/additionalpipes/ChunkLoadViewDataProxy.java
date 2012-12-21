@@ -4,9 +4,9 @@ import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.minecraft.src.ChunkCoordIntPair;
-import net.minecraft.src.EntityClientPlayerMP;
-import net.minecraft.src.EntityPlayerMP;
+import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import buildcraft.additionalpipes.network.NetworkHandler;

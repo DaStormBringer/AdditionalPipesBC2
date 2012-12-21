@@ -2,9 +2,9 @@ package buildcraft.additionalpipes.network;
 
 import java.io.IOException;
 
-import net.minecraft.src.CompressedStreamTools;
-import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.Packet250CustomPayload;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.packet.Packet250CustomPayload;
 
 //general purpose NBT class
 //send these packets using a unique channel so all packets can be decoded with getNBTFrom

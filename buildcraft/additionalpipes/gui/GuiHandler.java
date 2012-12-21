@@ -1,8 +1,8 @@
 package buildcraft.additionalpipes.gui;
 
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.TileEntity;
-import net.minecraft.src.World;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import buildcraft.additionalpipes.pipes.logic.PipeLogicAdvancedWood;
 import buildcraft.transport.TileGenericPipe;
 import cpw.mods.fml.common.network.IGuiHandler;

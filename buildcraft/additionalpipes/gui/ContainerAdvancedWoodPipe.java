@@ -8,10 +8,10 @@
 
 package buildcraft.additionalpipes.gui;
 
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.ICrafting;
-import net.minecraft.src.IInventory;
-import net.minecraft.src.Slot;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
 import buildcraft.additionalpipes.pipes.logic.PipeLogicAdvancedWood;
 import buildcraft.core.gui.BuildCraftContainer;
 

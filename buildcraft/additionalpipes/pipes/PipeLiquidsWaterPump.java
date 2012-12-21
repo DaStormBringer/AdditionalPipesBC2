@@ -1,6 +1,6 @@
 package buildcraft.additionalpipes.pipes;
 
-import net.minecraft.src.Block;
+import net.minecraft.block.Block;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.LiquidStack;
 import buildcraft.additionalpipes.AdditionalPipes;

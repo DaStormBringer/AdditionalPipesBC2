@@ -1,7 +1,7 @@
 package buildcraft.additionalpipes.gui;
 
-import net.minecraft.src.GuiButton;
-import net.minecraft.src.GuiContainer;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.GuiContainer;
 
 import org.lwjgl.opengl.GL11;
 
