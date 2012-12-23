@@ -121,44 +121,44 @@ public class AdditionalPipes {
 
 	//Redstone Liquid
 	public Item pipeLiquidsRedstone;
-	public @CfgId int pipeLiquidsRedstoneId = 4042;
+	public @CfgId int pipeLiquidsRedstoneId = 14042;
 	//Redstone
 	public Item pipeItemsRedStone;
-	public @CfgId int pipeItemsRedStoneId = 4043;
+	public @CfgId int pipeItemsRedStoneId = 14043;
 	//Advanced Insertion
 	public Item pipeItemsAdvancedInsertion;
-	public @CfgId int pipeItemsAdvancedInsertionId = 4044;
+	public @CfgId int pipeItemsAdvancedInsertionId = 14044;
 	//Advanced Wood
 	public Item pipeItemsAdvancedWood;
-	public @CfgId int pipeItemsAdvancedWoodId = 4045;
+	public @CfgId int pipeItemsAdvancedWoodId = 14045;
 	//Distributor
 	public Item pipeItemsDistributor;
-	public @CfgId int pipeItemsDistributorId = 4046;
+	public @CfgId int pipeItemsDistributorId = 14046;
 	//Item Teleport
 	public Item pipeItemsTeleport;
-	public @CfgId int pipeItemsTeleportId = 4047;
+	public @CfgId int pipeItemsTeleportId = 14047;
 	//Liquid Teleport
 	public Item pipeLiquidsTeleport;
-	public @CfgId int pipeLiquidsTeleportId = 4048;
+	public @CfgId int pipeLiquidsTeleportId = 14048;
 	//Power Teleport
 	public Item pipePowerTeleport;
-	public @CfgId int pipePowerTeleportId = 4049;
+	public @CfgId int pipePowerTeleportId = 14049;
 	//Items Closed
 	public Item pipeItemsClosed;
-	public @CfgId int pipeItemsClosedId = 4050;
+	public @CfgId int pipeItemsClosedId = 14050;
 	//Switch pipes
 	public Item pipePowerSwitch;
-	public @CfgId int pipePowerSwitchId = 4051;
+	public @CfgId int pipePowerSwitchId = 14051;
 	public Item pipeItemsSwitch;
-	public @CfgId int pipeItemsSwitchId = 4052;
+	public @CfgId int pipeItemsSwitchId = 14052;
 	public Item pipeLiquidsSwitch;
-	public @CfgId int pipeLiquidsSwitchId = 4053;
+	public @CfgId int pipeLiquidsSwitchId = 14053;
 	//water pump pipe
 	public Item pipeLiquidsWaterPump;
-	public @CfgId int pipeLiquidsWaterPumpId = 4054;
+	public @CfgId int pipeLiquidsWaterPumpId = 14054;
 	//chunk loader
 	public Block blockChunkLoader;
-	public @CfgId(block=true) int chunkLoaderId = 189;
+	public @CfgId(block=true) int chunkLoaderId = 1890;
 
 	public @CfgBool boolean enableTriggers = true;
 	public ITrigger triggerPipeClosed;
