@@ -402,6 +402,9 @@ public class AdditionalPipes {
 	private Item doCreatePipeAndRecipe(int id, int output, Class<? extends Pipe> clas, Object[] recipe) {
 		if(id == 0) return null;
 		Item pipe = createPipe(id > 0 ? id : -id, clas);
+		for(Object obj : recipe) {
+			if(obj == null) return pipe;
+		}
 		GameRegistry.addRecipe(new ItemStack(pipe, output), recipe);
 		return pipe;
 	}
