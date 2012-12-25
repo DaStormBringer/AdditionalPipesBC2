@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import net.minecraft.block.Block;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -237,7 +238,7 @@ public class AdditionalPipes {
 		if(chunkLoaderId != 0) {
 			blockChunkLoader = new BlockChunkLoader(chunkLoaderId > 0 ? chunkLoaderId : -chunkLoaderId, 32);
 			blockChunkLoader.setBlockName("TeleportTether");
-			GameRegistry.registerBlock(blockChunkLoader);
+			GameRegistry.registerBlock(blockChunkLoader, ItemBlock.class, "chunkLoader");
 			GameRegistry.registerTileEntity(TileChunkLoader.class, "TeleportTether");
 			if (chunkLoaderId > 0) {
 				GameRegistry.addRecipe(new ItemStack(blockChunkLoader), new Object[]{"iii", "iLi", "iii", 'i', Item.ingotIron, 'L', new ItemStack(Item.dyePowder, 1, 4)});
@@ -269,9 +270,19 @@ public class AdditionalPipes {
 					if(annotation != null) {
 						int id = field.getInt(this);
 						if(annotation.block()){
-							id = config.getBlock(field.getName(), id).getInt();
+							if(config.categories.get(Configuration.CATEGORY_BLOCK).containsKey(field.getName())) {
+								id = config.get(Configuration.CATEGORY_BLOCK, field.getName(), id).getInt(id);
+								if(id > 0) id = config.getBlock(field.getName(), id).getInt(id);
+							} else {
+								id = config.getBlock(field.getName(), id).getInt(id);
+							}
 						}else{
-							id = config.getItem(field.getName(), id).getInt();
+							if(config.categories.get(Configuration.CATEGORY_ITEM).containsKey(field.getName())) {
+								id = config.get(Configuration.CATEGORY_ITEM, field.getName(), id).getInt(id);
+								if(id > 0) id = config.getItem(field.getName(), id).getInt(id);
+							} else {
+								id = config.getItem(field.getName(), id).getInt(id);
+							}
 						}
 						field.setInt(this, id);
 					} else {
