@@ -1,6 +1,6 @@
 ## Update of Additional Pipes for BC3 and Minecraft 1.4+
 
-### Testing builds: http://www.mediafire.com/?12cla35kaab1u ####
+### Testing builds: http://www.mediafire.com/tcooc ####
 
 ### Credits to Zeldo, DaStormBringer, and Kyprus for their work on the mod.
 
