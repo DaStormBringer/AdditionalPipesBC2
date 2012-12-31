@@ -76,7 +76,7 @@ clientSideRequired=true, serverSideRequired=true, packetHandler=NetworkHandler.c
 public class AdditionalPipes {
 	public static final String MODID = "APUnofficial";
 	public static final String NAME = "Additional Pipes Unofficial";
-	public static final String VERSION = "@VERSION@";
+	public static final String VERSION = "2.1.3u37";
 	public static final String CHANNEL = MODID;
 	public static final String CHANNELNBT = CHANNEL + "NBT";
 
@@ -112,6 +112,7 @@ public class AdditionalPipes {
 	public ChunkLoadViewDataProxy chunkLoadViewer;
 	public @CfgBool boolean chunkSight = true;
 	public int chunkSightRange = 8; //config option
+	public @CfgBool boolean chunkSightAutorefresh = false;
 
 	//teleport scanner TODO
 	//public Item teleportScanner;

@@ -1,7 +1,10 @@
 package buildcraft.additionalpipes.chunkloader;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+
+import cpw.mods.fml.common.FMLCommonHandler;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -15,7 +18,6 @@ import buildcraft.additionalpipes.AdditionalPipes;
 public class TileChunkLoader extends TileEntity {
 
 	private Ticket chunkTicket;
-	private boolean uninitialized = true;
 	private int loadDistance = 1;
 
 	public List<ChunkCoordIntPair> getLoadArea() {
@@ -33,50 +35,52 @@ public class TileChunkLoader extends TileEntity {
 
 		return loadArea;
 	}
-
+	
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
-		if (!AdditionalPipes.proxy.isServer(worldObj))
-			return;
-		if (uninitialized && chunkTicket == null) {
-			chunkTicket = ForgeChunkManager.requestTicket(
+	public void validate() {
+		super.validate();
+		if (chunkTicket == null) {
+			Ticket ticket = ForgeChunkManager.requestTicket(
 					AdditionalPipes.instance, worldObj, Type.NORMAL);
-			if (chunkTicket != null) {
-				forceChunkLoading(chunkTicket);
+			if (ticket != null) {
+				forceChunkLoading(ticket);
 			}
-			uninitialized = false;
 		}
 	}
 
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		ForgeChunkManager.releaseTicket(chunkTicket);
+		stopChunkLoading();
 	}
-
+	
 	public void setLoadDistance(int dist) {
 		loadDistance = dist;
-		stopChunkLoading();
 		forceChunkLoading(chunkTicket);
 	}
 
 	public void forceChunkLoading(Ticket ticket) {
+		stopChunkLoading();
 		chunkTicket = ticket;
 		for (ChunkCoordIntPair coord : getLoadArea()) {
 			AdditionalPipes.instance.logger.info(
 					String.format("Force loading chunk %s in %s",
 							coord, worldObj.provider.getClass()));
-			ForgeChunkManager.forceChunk(ticket, coord);
+			ForgeChunkManager.forceChunk(chunkTicket, coord);
+		}
+	}
+	
+	public void unforceChunkLoading() {
+		for (Object obj : chunkTicket.getChunkList()) {
+			ChunkCoordIntPair coord = (ChunkCoordIntPair) obj;
+			ForgeChunkManager.unforceChunk(chunkTicket, coord);
 		}
 	}
 
 	public void stopChunkLoading() {
-		if (chunkTicket == null)
-			return;
-		for (Object obj : chunkTicket.getChunkList()) {
-			ChunkCoordIntPair coord = (ChunkCoordIntPair) obj;
-			ForgeChunkManager.unforceChunk(chunkTicket, coord);
+		if (chunkTicket != null) {
+			ForgeChunkManager.releaseTicket(chunkTicket);
+			chunkTicket = null;
 		}
 	}
 

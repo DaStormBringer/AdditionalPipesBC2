@@ -140,8 +140,8 @@ public class ChunkLoadViewDataProxy implements IScheduledTickHandler {
 
 	@Override
 	public void tickEnd(EnumSet<TickType> type, Object... tickData) {
-		if(lasersActive()) {
-			//requestPersistentChunks();
+		if(AdditionalPipes.instance.chunkSightAutorefresh && lasersActive()) {
+			requestPersistentChunks();
 		}
 	}
 
