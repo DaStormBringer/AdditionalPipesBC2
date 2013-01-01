@@ -20,20 +20,20 @@ public class ContainerPipeClosed extends Container {
 
 		for (var3 = 0; var3 < 3; ++var3) {
 			for (var4 = 0; var4 < 3; ++var4) {
-				this.addSlotToContainer(new Slot(this.pipe, var4
+				addSlotToContainer(new Slot(this.pipe, var4
 						+ var3 * 3, 62 + var4 * 18, 17 + var3 * 18));
 			}
 		}
 
 		for (var3 = 0; var3 < 3; ++var3) {
 			for (var4 = 0; var4 < 9; ++var4) {
-				this.addSlotToContainer(new Slot(inventory, var4 + var3
+				addSlotToContainer(new Slot(inventory, var4 + var3
 						* 9 + 9, 8 + var4 * 18, 84 + var3 * 18));
 			}
 		}
 
 		for (var3 = 0; var3 < 9; ++var3) {
-			this.addSlotToContainer(new Slot(inventory, var3,
+			addSlotToContainer(new Slot(inventory, var3,
 					8 + var3 * 18, 142));
 		}
 	}
@@ -50,17 +50,17 @@ public class ContainerPipeClosed extends Container {
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2) {
 		ItemStack var3 = null;
-		Slot var4 = (Slot) this.inventorySlots.get(par2);
+		Slot var4 = (Slot) inventorySlots.get(par2);
 
 		if (var4 != null && var4.getHasStack()) {
 			ItemStack var5 = var4.getStack();
 			var3 = var5.copy();
 
 			if (par2 < 9) {
-				if (!this.mergeItemStack(var5, 9, 45, true)) {
+				if (!mergeItemStack(var5, 9, 45, true)) {
 					return null;
 				}
-			} else if (!this.mergeItemStack(var5, 0, 9, false)) {
+			} else if (!mergeItemStack(var5, 0, 9, false)) {
 				return null;
 			}
 

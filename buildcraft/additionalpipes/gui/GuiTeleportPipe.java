@@ -12,7 +12,10 @@ import buildcraft.additionalpipes.network.PacketAdditionalPipes;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.transport.TileGenericPipe;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class GuiTeleportPipe extends GuiContainer {
 
 	private PipeTeleport pipe;

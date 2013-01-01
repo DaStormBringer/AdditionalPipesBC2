@@ -1,5 +1,7 @@
 package buildcraft.additionalpipes;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,8 +22,10 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.IScheduledTickHandler;
 import cpw.mods.fml.common.TickType;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
-public class ChunkLoadViewDataProxy implements IScheduledTickHandler {
+public class ChunkLoadViewDataProxy implements IScheduledTickHandler, Comparator<ChunkCoordIntPair> {
 	public static final int MAX_SIGHT_RANGE = 31;
 
 	//used by server
@@ -29,7 +33,7 @@ public class ChunkLoadViewDataProxy implements IScheduledTickHandler {
 
 	//used by client
 	private List<Box> lasers;
-	public ChunkCoordIntPair[] persistentChunks;
+	private ChunkCoordIntPair[] persistentChunks;
 	private boolean active = false;
 
 	public ChunkLoadViewDataProxy(int chunkSightRange) {
@@ -39,7 +43,9 @@ public class ChunkLoadViewDataProxy implements IScheduledTickHandler {
 		active = false;
 	}
 
-	//laser methods (client)
+	//laser methods
+
+	@SideOnly(Side.CLIENT)
 	public void toggleLasers(){
 		if(lasersActive()){
 			deactivateLasers();
@@ -48,26 +54,47 @@ public class ChunkLoadViewDataProxy implements IScheduledTickHandler {
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
 	public void activateLasers(){
 		deactivateLasers();
 		EntityClientPlayerMP player = FMLClientHandler.instance().getClient().thePlayer;
 		int playerY = (int) player.posY - 1;
 		for (ChunkCoordIntPair coords : persistentChunks) {
-			int chunkX = coords.chunkXPos * 16;
-			int chunkZ = coords.chunkZPos * 16;
+			int xCoord = coords.chunkXPos * 16;
+			int zCoord = coords.chunkZPos * 16;
+
 			Box outsideLaser = new Box();
-			outsideLaser.initialize(chunkX, playerY, chunkZ, chunkX + 16, playerY, chunkZ + 16);
+			outsideLaser.initialize(xCoord, playerY, zCoord, xCoord + 16, playerY, zCoord + 16);
+			outsideLaser.createLasers(player.worldObj, LaserKind.Blue);
+			lasers.add(outsideLaser);
+			outsideLaser = new Box();
+			outsideLaser.initialize(xCoord, playerY - 20, zCoord, xCoord + 16, playerY - 20, zCoord + 16);
+			outsideLaser.createLasers(player.worldObj, LaserKind.Blue);
+			lasers.add(outsideLaser);
+			outsideLaser = new Box();
+			outsideLaser.initialize(xCoord, playerY + 20, zCoord, xCoord + 16, playerY + 20, zCoord + 16);
 			outsideLaser.createLasers(player.worldObj, LaserKind.Blue);
 			lasers.add(outsideLaser);
 
+
 			Box insideLaser = new Box();
-			insideLaser.initialize(chunkX + 7, playerY, chunkZ + 7, chunkX + 9, playerY, chunkZ + 9);
+			insideLaser.initialize(xCoord + 7, playerY, zCoord + 7, xCoord + 9, playerY, zCoord + 9);
 			insideLaser.createLasers(player.worldObj, LaserKind.Red);
 			lasers.add(insideLaser);
+			insideLaser = new Box();
+			insideLaser.initialize(xCoord + 7, playerY - 20, zCoord + 7, xCoord + 9, playerY - 20, zCoord + 9);
+			insideLaser.createLasers(player.worldObj, LaserKind.Red);
+			lasers.add(insideLaser);
+			insideLaser = new Box();
+			insideLaser.initialize(xCoord + 7, playerY + 20, zCoord + 7, xCoord + 9, playerY + 20, zCoord + 9);
+			insideLaser.createLasers(player.worldObj, LaserKind.Red);
+			lasers.add(insideLaser);
+
 		}
 		active = true;
 	}
 
+	@SideOnly(Side.CLIENT)
 	public void deactivateLasers(){
 		for (Box laser : lasers) {
 			laser.deleteLasers();
@@ -76,14 +103,46 @@ public class ChunkLoadViewDataProxy implements IScheduledTickHandler {
 		active = false;
 	}
 
+	@SideOnly(Side.CLIENT)
 	public boolean lasersActive(){
 		return active;
 	}
 
 	//packet methods
 
+	@SideOnly(Side.CLIENT)
+	public void requestPersistentChunks() {
+		PacketAdditionalPipes packet = new PacketAdditionalPipes(NetworkHandler.CHUNKLOAD_REQUEST, false);
+		PacketDispatcher.sendPacketToServer(packet.makePacket());
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void receivePersistentChunks(ChunkCoordIntPair[] chunks) {
+		boolean changed = true;
+		//check if arrays have equal contents
+		//do this on the client since it's only rendering, and it reduces server load
+		if(persistentChunks.length == chunks.length) {
+			changed = false;
+			Arrays.sort(chunks, this);
+			Arrays.sort(persistentChunks, this);
+			for(int i = 0; i < chunks.length; i++) {
+				if(!chunks[i].equals(persistentChunks[i])) {
+					changed = true;
+					break;
+				}
+			}
+		}
+
+		if(changed) {
+			persistentChunks = chunks;
+			if(active) {
+				activateLasers();
+			}
+		}
+	}
+
 	//sets how far the server will search for chunkloaded chunks
-	//when sending data to the player (server)
+	//when sending data to the player
 	public void setSightRange(int range) {
 		sightRange = range;
 		if(sightRange > MAX_SIGHT_RANGE)
@@ -91,21 +150,6 @@ public class ChunkLoadViewDataProxy implements IScheduledTickHandler {
 
 	}
 
-	//client
-	public void requestPersistentChunks() {
-		PacketAdditionalPipes packet = new PacketAdditionalPipes(NetworkHandler.CHUNKLOAD_REQUEST, false);
-		PacketDispatcher.sendPacketToServer(packet.makePacket());
-	}
-
-	//client
-	public void receivePersistentChunks(ChunkCoordIntPair[] chunks) {
-		persistentChunks = chunks;
-		if(active) {
-			activateLasers();
-		}
-	}
-
-	//server
 	public void sendPersistentChunksToPlayer(EntityPlayerMP player) {
 		if(!AdditionalPipes.instance.chunkSight) { return;}
 		if(sightRange > MAX_SIGHT_RANGE) sightRange = MAX_SIGHT_RANGE;
@@ -139,6 +183,7 @@ public class ChunkLoadViewDataProxy implements IScheduledTickHandler {
 	public void tickStart(EnumSet<TickType> type, Object... tickData) {}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void tickEnd(EnumSet<TickType> type, Object... tickData) {
 		if(AdditionalPipes.instance.chunkSightAutorefresh && lasersActive()) {
 			requestPersistentChunks();
@@ -157,6 +202,16 @@ public class ChunkLoadViewDataProxy implements IScheduledTickHandler {
 
 	@Override
 	public int nextTickSpacing() {
-		return 20;
+		return 20 * 5;
+	}
+
+	//Comparator
+
+	//first - other
+	//assume non-null
+	@Override
+	public int compare(ChunkCoordIntPair first, ChunkCoordIntPair other) {
+		int dx = first.chunkXPos - other.chunkXPos;
+		return dx != 0 ? dx : first.chunkZPos - other.chunkZPos;
 	}
 }

@@ -21,7 +21,10 @@ import buildcraft.additionalpipes.network.PacketAdditionalPipes;
 import buildcraft.additionalpipes.pipes.logic.PipeLogicAdvancedWood;
 import buildcraft.transport.TileGenericPipe;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class GuiAdvancedWoodPipe extends GuiContainer {
 
 	int inventoryRows = 1;

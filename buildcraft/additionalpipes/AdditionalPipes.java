@@ -18,7 +18,6 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.Property;
 import buildcraft.BuildCraftCore;
-import buildcraft.BuildCraftFactory;
 import buildcraft.BuildCraftSilicon;
 import buildcraft.BuildCraftTransport;
 import buildcraft.additionalpipes.chunkloader.BlockChunkLoader;
@@ -67,6 +66,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @Mod(modid=AdditionalPipes.MODID, name=AdditionalPipes.NAME,
 dependencies="after:BuildCraft|Transport;after:BuildCraft|Silicon;after:BuildCraft|Transport;after:BuildCraft|Factory",
@@ -112,7 +112,7 @@ public class AdditionalPipes {
 	public ChunkLoadViewDataProxy chunkLoadViewer;
 	public @CfgBool boolean chunkSight = true;
 	public int chunkSightRange = 8; //config option
-	public @CfgBool boolean chunkSightAutorefresh = false;
+	public @CfgBool boolean chunkSightAutorefresh = true;
 
 	//teleport scanner TODO
 	//public Item teleportScanner;
@@ -422,6 +422,8 @@ public class AdditionalPipes {
 			super(i);
 		}
 
+		@Override
+		@SideOnly(Side.CLIENT)
 		public EnumRarity getRarity(ItemStack stack){
 			return EnumRarity.rare;
 		}

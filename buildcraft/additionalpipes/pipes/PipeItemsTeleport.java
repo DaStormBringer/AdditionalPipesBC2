@@ -41,7 +41,7 @@ public class PipeItemsTeleport extends PipeTeleport implements IPipeTransportIte
 
 	@Override
 	public void entityEntered(IPipedItem item, ForgeDirection orientation) {
-		if(!AdditionalPipes.proxy.isServer(this.worldObj)) {
+		if(!AdditionalPipes.proxy.isServer(worldObj)) {
 			return;
 		}
 		List<PipeTeleport> connectedTeleportPipes = TeleportManager.instance.getConnectedPipes(this, false);

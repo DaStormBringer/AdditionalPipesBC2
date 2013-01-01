@@ -5,7 +5,10 @@ import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
 import buildcraft.transport.TransportProxyClient;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class MutiPlayerProxyClient extends MutiPlayerProxy {
 
 	@Override

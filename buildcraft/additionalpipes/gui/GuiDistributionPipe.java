@@ -12,7 +12,10 @@ import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
 import buildcraft.additionalpipes.pipes.logic.PipeLogicDistributor;
 import buildcraft.transport.TileGenericPipe;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class GuiDistributionPipe extends GuiContainer {
 
 	protected int xSize;

@@ -4,8 +4,8 @@ import net.minecraft.block.Block;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.LiquidStack;
 import buildcraft.additionalpipes.AdditionalPipes;
+import buildcraft.additionalpipes.pipes.logic.PipeLogicWaterPump;
 import buildcraft.transport.PipeTransportLiquids;
-import buildcraft.transport.pipes.PipeLogic;
 
 public class PipeLiquidsWaterPump extends APPipe {
 	private static final Block water = Block.waterStill;
@@ -13,7 +13,7 @@ public class PipeLiquidsWaterPump extends APPipe {
 	private PipeTransportLiquids transport;
 
 	public PipeLiquidsWaterPump(int itemID) {
-		super(new PipeTransportLiquids(), new PipeLogic(), itemID);
+		super(new PipeTransportLiquids(), new PipeLogicWaterPump(), itemID);
 		transport = (PipeTransportLiquids) super.transport;
 		transport.flowRate = 80;
 		transport.travelDelay = 4;
