@@ -23,12 +23,10 @@ public class TileChunkLoader extends TileEntity {
 	public List<ChunkCoordIntPair> getLoadArea() {
 		List<ChunkCoordIntPair> loadArea = new LinkedList<ChunkCoordIntPair>();
 
-		Chunk centerChunk = worldObj.getChunkFromBlockCoords(xCoord, zCoord);
-
 		for (int x = -loadDistance; x < loadDistance + 1; x++) {
 			for (int z = -loadDistance; z < loadDistance + 1; z++) {
 				ChunkCoordIntPair chunkCoords = new ChunkCoordIntPair(
-						centerChunk.xPosition + x, centerChunk.zPosition + z);
+						(xCoord >> 16) + x, (zCoord >> 16) + z);
 				loadArea.add(chunkCoords);
 			}
 		}

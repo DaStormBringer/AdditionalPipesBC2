@@ -76,7 +76,7 @@ clientSideRequired=true, serverSideRequired=true, packetHandler=NetworkHandler.c
 public class AdditionalPipes {
 	public static final String MODID = "APUnofficial";
 	public static final String NAME = "Additional Pipes Unofficial";
-	public static final String VERSION = "2.1.3u37";
+	public static final String VERSION = "@VERSION@";
 	public static final String CHANNEL = MODID;
 	public static final String CHANNELNBT = CHANNEL + "NBT";
 
@@ -387,10 +387,9 @@ public class AdditionalPipes {
 
 		//water pump pipe
 		pipeLiquidsWaterPump = doCreatePipeAndRecipe(pipeLiquidsWaterPumpId, PipeLiquidsWaterPump.class,
-				new Object[]{"rPr", "iLi", "wWw",
+				new Object[]{" L ", "rPr", " W ",
 			'r', Item.redstone,
-			'P', BuildCraftFactory.pumpBlock,
-			'i', pipeItemsSwitch,
+			'P', BuildCraftCore.ironGearItem,
 			'L', BuildCraftTransport.pipeLiquidsGold,
 			'w', BuildCraftTransport.pipeWaterproof,
 			'W', BuildCraftTransport.pipeLiquidsWood});
