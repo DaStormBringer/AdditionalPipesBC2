@@ -32,7 +32,7 @@ Closed pipes also have a "closed" gate trigger which activates when the buffer h
 
 Just a pipe that fills with water if a source block is under it.
 
-##### Phased Signal Trigger #####
+##### Phased Signal Trigger (For Gates) #####
 
 This trigger only applies to phased pipes, and activates when any phased pipe with the same frequency *outputs* a pipe wire signal.
 
