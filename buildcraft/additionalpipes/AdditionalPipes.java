@@ -383,7 +383,7 @@ public class AdditionalPipes {
 		pipePowerSwitch = doCreatePipeAndRecipe(pipePowerSwitchId, PipeSwitchPower.class,
 				new Object[]{"r", "I", 'I', pipeItemsSwitch, 'r', Item.redstone});
 		pipeLiquidsSwitch = doCreatePipeAndRecipe(pipeLiquidsSwitchId, PipeSwitchLiquids.class,
-				new Object[]{"r", "I", 'I', pipeItemsSwitch, 'w', BuildCraftTransport.pipeWaterproof});
+				new Object[]{"w", "I", 'I', pipeItemsSwitch, 'w', BuildCraftTransport.pipeWaterproof});
 
 		//water pump pipe
 		pipeLiquidsWaterPump = doCreatePipeAndRecipe(pipeLiquidsWaterPumpId, PipeLiquidsWaterPump.class,
