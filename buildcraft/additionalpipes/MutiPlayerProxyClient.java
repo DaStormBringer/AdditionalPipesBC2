@@ -31,7 +31,7 @@ public class MutiPlayerProxyClient extends MutiPlayerProxy {
 
 	@Override
 	public void registerPipeRendering(Item res){
-		MinecraftForgeClient.registerItemRenderer(res.shiftedIndex, TransportProxyClient.pipeItemRenderer);
+		MinecraftForgeClient.registerItemRenderer(res.itemID, TransportProxyClient.pipeItemRenderer);
 	}
 
 }

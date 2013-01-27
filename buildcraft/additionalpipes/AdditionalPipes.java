@@ -434,7 +434,7 @@ public class AdditionalPipes {
 		item.setItemName(clas.getSimpleName());
 		proxy.registerPipeRendering(item);
 
-		BlockGenericPipe.pipes.put(item.shiftedIndex, clas);
+		BlockGenericPipe.pipes.put(item.itemID, clas);
 
 		try {
 			Pipe dummyPipe = clas.getConstructor(int.class).newInstance(id);
@@ -452,7 +452,7 @@ public class AdditionalPipes {
 
 	//legacy method
 	public static boolean isPipe(Item item) {
-		if (item != null && BlockGenericPipe.pipes.containsKey(item.shiftedIndex)) {
+		if (item != null && BlockGenericPipe.pipes.containsKey(item.itemID)) {
 			return true;
 		}
 		return false;

@@ -45,8 +45,8 @@ public class ContainerTeleportPipe extends Container {
 	}
 
 	@Override
-	public void updateCraftingResults() {
-		super.updateCraftingResults();
+	public void detectAndSendChanges() {
+		super.detectAndSendChanges();
 		int connectedPipesNew = connectedPipes;
 		if(ticks % 40 == 0) { //reduce lag
 			ticks = 0;
