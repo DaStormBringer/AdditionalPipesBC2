@@ -5,7 +5,7 @@
 	<property name="mcp.dir" value="build/forge/mcp" />
 	<property name="src.dir" value="../AdditionalPipes" />
 	<property name="jar.dir" value="bin/ap" />
-	<property name="build.dir" value="${jar.dir}" />
+	<property name="build.dir" value="build/ap" />
 
 	<target name="clean">
 		<delete dir="${jar.dir}"/>
@@ -39,23 +39,23 @@
 	</target>
 	
 	<target name="package" depends="clean, compile">
-		<mkdir dir="${build.dir}" />
-		<copy todir="${build.dir}">
+		<mkdir dir="${build.dir}/buildcraft/additionalpipes" />
+		<copy todir="${build.dir}/buildcraft/additionalpipes">
 			<fileset dir="${mcp.dir}/reobf/minecraft/buildcraft/additionalpipes" />
 		</copy>
 
-		<copy todir="${jar.dir}" file="${src.dir}/mcmod.info">
+		<copy todir="${build.dir}" file="${src.dir}/mcmod.info">
 			<filterset>
 				<filter token="VERSION" value="${version}" />
 			</filterset>
 		</copy>
-		<copy todir="${build.dir}/lang">
+		<copy todir="${build.dir}/buildcraft/additionalpipes/lang">
 			<fileset dir="${src.dir}/buildcraft/additionalpipes/lang" />
 		</copy>
-		<copy todir="${build.dir}/sprites">
+		<copy todir="${build.dir}/buildcraft/additionalpipes/sprites">
 			<fileset dir="${src.dir}/buildcraft/additionalpipes/sprites" />
 		</copy>
 
-		<jar destfile="${jar.dir}/AdditionalPipes${version}-BC${bc.version}-MC${mc.version}.jar" basedir="${jar.dir}" />
+		<jar destfile="${jar.dir}/AdditionalPipes${version}-BC${bc.version}-MC${mc.version}.jar" basedir="${build.dir}" />
 	</target>
 </project>
