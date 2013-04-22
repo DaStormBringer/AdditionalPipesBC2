@@ -9,6 +9,7 @@
 
 	<target name="clean">
 		<delete dir="${jar.dir}"/>
+		<delete dir="${build.dir}"/>
 	</target>
 	
 	<target name="copy-src">
@@ -31,10 +32,10 @@
 		</exec>
 		
 		<exec dir="${mcp.dir}" executable="cmd" osfamily="windows">
-			<arg line="/c reobfuscate.bat"/>
+			<arg line="/c reobfuscate_srg.bat"/>
 		</exec>
 		<exec dir="${mcp.dir}" executable="sh" osfamily="unix">
-			<arg value="reobfuscate.sh" />
+			<arg value="reobfuscate_srg.sh" />
 		</exec>	
 	</target>
 	
@@ -44,18 +45,14 @@
 			<fileset dir="${mcp.dir}/reobf/minecraft/buildcraft/additionalpipes" />
 		</copy>
 
-		<copy todir="${build.dir}" file="${src.dir}/mcmod.info">
-			<filterset>
-				<filter token="VERSION" value="${version}" />
-			</filterset>
-		</copy>
 		<copy todir="${build.dir}/buildcraft/additionalpipes/lang">
 			<fileset dir="${src.dir}/buildcraft/additionalpipes/lang" />
 		</copy>
 		<copy todir="${build.dir}">
 			<fileset dir="${src.dir}/ressources" />
 		</copy>
-
+		<replace file="${build.dir}/mcmod.info" token="@VERSION@" value="${version}"/>
+		
 		<jar destfile="${jar.dir}/AdditionalPipes${version}-BC${bc.version}-MC${mc.version}.jar" basedir="${build.dir}" />
 	</target>
 </project>
