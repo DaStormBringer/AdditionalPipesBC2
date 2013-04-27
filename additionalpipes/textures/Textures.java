@@ -1,10 +1,8 @@
-package buildcraft.additionalpipes;
+package buildcraft.additionalpipes.textures;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.util.Icon;
-import buildcraft.additionalpipes.textures.APActionTriggerIconProvider;
-import buildcraft.additionalpipes.textures.APPipeIconProvider;
 
 public class Textures {
 	public static APActionTriggerIconProvider actionIconProvider=new APActionTriggerIconProvider();

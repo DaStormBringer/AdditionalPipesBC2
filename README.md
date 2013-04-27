@@ -2,13 +2,12 @@
 
 ### Cloning and Compiling ###
 
-git clone https://github.com/tcooc/AdditionalPipesBC.git
+(optional) export AP_VERSION and BC_VERSION to set versions
 
-cd AdditionalPipesBC
+To Clone:
+    git clone https://github.com/tcooc/AdditionalPipesBC.git
 
-git submodule update --init
-
-ant
+Running build.sh will automatically download the BuildCraft soruce and compile.
 
 ### Builds (Download): https://www.dropbox.com/sh/tjzx65jqfrwvd73/jHuONV6I5t/AdditionalPipes2.1.4u52-BC3.5.0-MC1.5.1.jar ####
 To install, place in the standard minecraft/mods folder.

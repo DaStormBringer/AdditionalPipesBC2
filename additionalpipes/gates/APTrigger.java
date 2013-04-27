@@ -2,6 +2,7 @@ package buildcraft.additionalpipes.gates;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.api.core.IIconProvider;
 import buildcraft.api.gates.ActionManager;
 import buildcraft.api.gates.ITrigger;
@@ -9,7 +10,6 @@ import buildcraft.api.gates.ITriggerParameter;
 import buildcraft.api.gates.TriggerParameter;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import buildcraft.additionalpipes.Textures;
 public abstract class APTrigger implements ITrigger {
 
 	protected int id;

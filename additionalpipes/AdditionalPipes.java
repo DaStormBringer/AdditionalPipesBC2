@@ -11,7 +11,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -19,7 +18,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeChunkManager;
-import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Property;
 import net.minecraftforge.event.ForgeSubscribe;
@@ -48,6 +46,7 @@ import buildcraft.additionalpipes.pipes.PipeSwitchItems;
 import buildcraft.additionalpipes.pipes.PipeSwitchLiquids;
 import buildcraft.additionalpipes.pipes.PipeSwitchPower;
 import buildcraft.additionalpipes.pipes.TeleportManager;
+import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.api.gates.ActionManager;
 import buildcraft.api.gates.ITrigger;
 import buildcraft.api.recipes.AssemblyRecipe;
@@ -82,7 +81,7 @@ clientSideRequired=true, serverSideRequired=true, packetHandler=NetworkHandler.c
 public class AdditionalPipes {
 	public static final String MODID = "APUnofficial";
 	public static final String NAME = "Additional Pipes Unofficial";
-	public static final String VERSION = "@VERSION@";
+	public static final String VERSION = "2.2.0";
 	public static final String CHANNEL = MODID;
 	public static final String CHANNELNBT = CHANNEL + "NBT";
 
@@ -104,6 +103,7 @@ public class AdditionalPipes {
 	@Retention(RetentionPolicy.RUNTIME)
 	private static @interface CfgBool {}
 
+	public static final String LOC_PATH = "/buildcraft/additionalpipes";
 	//textures
 	public static final String BASE_PATH = "/mods/additionalpipes";
 	public static final String TEXTURE_PATH = BASE_PATH + "/textures";
@@ -189,10 +189,10 @@ public class AdditionalPipes {
 		loadConfigs(false);
 
 		Properties en_US = null;
-		Localization.addLocalization(BASE_PATH + "/lang/", "en_US");
+		Localization.addLocalization(LOC_PATH + "/lang/", "en_US");
 		try {
 			en_US = new Properties();
-			en_US.load(AdditionalPipes.class.getResourceAsStream((BASE_PATH + "/lang/en_US.properties")));
+			en_US.load(AdditionalPipes.class.getResourceAsStream((LOC_PATH + "/lang/en_US.properties")));
 			LanguageRegistry.instance().addStringLocalization(en_US);
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Failed to load default localization.", e);
@@ -438,21 +438,8 @@ public class AdditionalPipes {
 		ItemPipe item = new ItemPipeAP(id);
 		item.setUnlocalizedName(clas.getSimpleName());
 		proxy.registerPipeRendering(item);
-
 		BlockGenericPipe.pipes.put(item.itemID, clas);
-
-		try {
-			Pipe dummyPipe = clas.getConstructor(int.class).newInstance(id);
-			if (dummyPipe != null){
-				item.setPipesIcons(dummyPipe.getIconProvider());
-				//TODO look around
-				item.setPipeIconIndex(dummyPipe.getIconIndex(ForgeDirection.VALID_DIRECTIONS[0]));
-				//item.setTextureIndex(dummyPipe.getTextureIndexForItem());
-			}
-		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Error during special pipe creation.", e);
-			item = (ItemPipe) createPipe(id, clas);
-		}
+		proxy.createPipeSpecial(item, id, clas);
 
 		return item;
 	}

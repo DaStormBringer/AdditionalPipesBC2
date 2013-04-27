@@ -7,8 +7,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.additionalpipes.Textures;
+import buildcraft.additionalpipes.textures.Textures;
 
 public class BlockChunkLoader extends BlockContainer {
 

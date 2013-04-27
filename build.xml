@@ -1,8 +1,8 @@
 <project name="AdditionalPipes" basedir="." default="full">
-	<property name="version" value="2.2.0" />
-	<property name="bc.version" value="3.5.0" />
+	<property environment="env" />
 	<property name="src.dir" value="additionalpipes" />
 	<property name="bc.dir" value="BuildCraft" />
+	<property name="build.dir" value="${bc.dir}/build/ap" />
 	<property name="mcp.dir" value="${bc.dir}/build/forge/mcp" />
 	<property name="jar.dir" value="${bc.dir}/bin/ap" />
 	<property name="resources.dir" value="resources" />
@@ -13,15 +13,16 @@
 	</target>
 
 	<target name="clean">
-		<delete dir="${jar.dir}"/>
-		<delete dir="${mcp.dir}/src/minecraft/buildcraft"/>
+		<delete dir="${jar.dir}" />
+		<delete dir="${build.dir}" />
+		<delete dir="${mcp.dir}/src/minecraft/buildcraft" />
 	</target>
 
 	<target name="copy-src">
 		<ant antfile="BuildCraft/build.xml" useNativeBasedir="true" inheritAll="false" target="copy-src" />
 		<copy todir="${mcp.dir}/src/minecraft/buildcraft/additionalpipes">
 			<fileset dir="${src.dir}">
-				<!--exclude name="**/*.png"/-->
+				<!--exclude name="**/*.png" /-->
 			</fileset>
 			<filterset>
 				<filter token="VERSION" value="${version}" />
@@ -31,14 +32,14 @@
 
 	<target name="compile" depends="copy-src">
 		<exec dir="${mcp.dir}" executable="cmd" osfamily="windows">
-			<arg line="/c recompile.bat"/>
+			<arg line="/c recompile.bat" />
 		</exec>
 		<exec dir="${mcp.dir}" executable="sh" osfamily="unix">
 			<arg value="recompile.sh" />
 		</exec>
 
 		<exec dir="${mcp.dir}" executable="cmd" osfamily="windows">
-			<arg line="/c reobfuscate_srg.bat"/>
+			<arg line="/c reobfuscate_srg.bat" />
 		</exec>
 		<exec dir="${mcp.dir}" executable="sh" osfamily="unix">
 			<arg value="reobfuscate_srg.sh" />
@@ -52,14 +53,14 @@
 		</copy>
 
 		<copy todir="${build.dir}/buildcraft/additionalpipes/lang">
-			<fileset dir="${src.dir}/buildcraft/additionalpipes/lang" />
+			<fileset dir="${src.dir}/lang" />
 		</copy>
 		<copy todir="${build.dir}">
-			<fileset dir="${src.dir}/resources" />
+			<fileset dir="${resources.dir}" />
 		</copy>
-		<replace file="${build.dir}/mcmod.info" token="@VERSION@" value="${version}"/>
+		<replace file="${build.dir}/mcmod.info" token="@VERSION@" value="${env.AP_VERSION}" />
 
-		<jar destfile="${jar.dir}/${project.name}${version}-BC${bc.version}.jar" basedir="${build.dir}" />
+		<jar destfile="${jar.dir}/${ant.project.name}${env.AP_VERSION}-BC${env.BC_VERSION}.jar" basedir="${build.dir}" />
 	</target>
 
 	<target name="full" depends="buildcraft, package"></target>
