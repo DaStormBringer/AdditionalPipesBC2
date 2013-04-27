@@ -49,7 +49,7 @@
 			<fileset dir="${src.dir}/buildcraft/additionalpipes/lang" />
 		</copy>
 		<copy todir="${build.dir}">
-			<fileset dir="${src.dir}/ressources" />
+			<fileset dir="${src.dir}/resources" />
 		</copy>
 		<replace file="${build.dir}/mcmod.info" token="@VERSION@" value="${version}"/>
 		
