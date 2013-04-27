@@ -9,7 +9,7 @@
 
 Compiled binaries can be found in `BuildCraft/bin/ap`.
 
-### Builds (Download): https://www.dropbox.com/sh/tjzx65jqfrwvd73/jHuONV6I5t/AdditionalPipes2.1.4u52-BC3.5.0-MC1.5.1.jar ####
+### Builds (Download): http://www.mediafire.com/tcooc ####
 To install, place in the standard minecraft/mods folder.
 REQUIRE Forge 650+, BC 3.5.0, See also Logistics Pipes for 1.5.1
 ### Credits to Zeldo, DaStormBringer, Kyprus, tcooc, gejzer for their work on the mod.
