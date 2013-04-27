@@ -1,28 +1,34 @@
-<project name="AdditionalPipes" basedir="../" default="package">
-	<property name="version" value="2.1.4u52" />
-	<property name="mc.version" value="1.5.1" />
+<project name="AdditionalPipes" basedir="." default="full">
+	<property name="version" value="2.2.0" />
 	<property name="bc.version" value="3.5.0" />
-	<property name="mcp.dir" value="build/forge/mcp" />
-	<property name="src.dir" value="AdditionalPipesBC" />
-	<property name="jar.dir" value="bin/ap" />
-	<property name="build.dir" value="build/ap" />
+	<property name="src.dir" value="additionalpipes" />
+	<property name="bc.dir" value="BuildCraft" />
+	<property name="mcp.dir" value="${bc.dir}/build/forge/mcp" />
+	<property name="jar.dir" value="${bc.dir}/bin/ap" />
+	<property name="resources.dir" value="resources" />
+
+	<!-- build BuildCraft -->
+	<target name="buildcraft">
+		<ant antfile="BuildCraft/build.xml" useNativeBasedir="true" inheritAll="false" />
+	</target>
 
 	<target name="clean">
 		<delete dir="${jar.dir}"/>
-		<delete dir="${build.dir}"/>
+		<delete dir="${mcp.dir}/src/minecraft/buildcraft"/>
 	</target>
-	
+
 	<target name="copy-src">
-		<copy todir="${mcp.dir}/src/minecraft/buildcraft">
-			<fileset dir="${src.dir}/buildcraft">
+		<ant antfile="BuildCraft/build.xml" useNativeBasedir="true" inheritAll="false" target="copy-src" />
+		<copy todir="${mcp.dir}/src/minecraft/buildcraft/additionalpipes">
+			<fileset dir="${src.dir}">
 				<!--exclude name="**/*.png"/-->
 			</fileset>
-			<!--<filterset>
+			<filterset>
 				<filter token="VERSION" value="${version}" />
-			</filterset>-->
+			</filterset>
 		</copy>
 	</target>
-	
+
 	<target name="compile" depends="copy-src">
 		<exec dir="${mcp.dir}" executable="cmd" osfamily="windows">
 			<arg line="/c recompile.bat"/>
@@ -30,15 +36,15 @@
 		<exec dir="${mcp.dir}" executable="sh" osfamily="unix">
 			<arg value="recompile.sh" />
 		</exec>
-		
+
 		<exec dir="${mcp.dir}" executable="cmd" osfamily="windows">
 			<arg line="/c reobfuscate_srg.bat"/>
 		</exec>
 		<exec dir="${mcp.dir}" executable="sh" osfamily="unix">
 			<arg value="reobfuscate_srg.sh" />
-		</exec>	
+		</exec>
 	</target>
-	
+
 	<target name="package" depends="clean, compile">
 		<mkdir dir="${build.dir}/buildcraft/additionalpipes" />
 		<copy todir="${build.dir}/buildcraft/additionalpipes">
@@ -52,7 +58,9 @@
 			<fileset dir="${src.dir}/resources" />
 		</copy>
 		<replace file="${build.dir}/mcmod.info" token="@VERSION@" value="${version}"/>
-		
-		<jar destfile="${jar.dir}/AdditionalPipes${version}-BC${bc.version}-MC${mc.version}.jar" basedir="${build.dir}" />
+
+		<jar destfile="${jar.dir}/${project.name}${version}-BC${bc.version}.jar" basedir="${build.dir}" />
 	</target>
+
+	<target name="full" depends="buildcraft, package"></target>
 </project>
