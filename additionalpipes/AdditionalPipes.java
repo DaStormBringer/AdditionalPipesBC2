@@ -337,9 +337,9 @@ public class AdditionalPipes {
 				AssemblyRecipe.assemblyRecipes.add(
 						new AssemblyRecipe(new ItemStack[]{
 								new ItemStack(BuildCraftSilicon.redstoneChipset, 1 , 4),
-								new ItemStack(BuildCraftTransport.pipeItemsDiamond, 2),
+								new ItemStack(BuildCraftTransport.pipeItemsDiamond, 8),
 								new ItemStack(BuildCraftSilicon.redstoneChipset, 1, 3)},
-								10000, new ItemStack(pipeItemsTeleport, 2)));
+								1000, new ItemStack(pipeItemsTeleport, 8)));
 			}
 
 		}
