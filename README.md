@@ -4,17 +4,17 @@
 
 Windows
 
-    # (optional) SET AP_VERSION=... and BC_VERSION=... to set versions
+    REM (optional) SET AP_VERSION=... and BC_VERSION=... to set versions
     git clone https://github.com/tcooc/AdditionalPipesBC.git    
     cd AdditionalPipesBC
-    build.bat # will automatically download the BuildCraft source and compile.
+    build.bat
 
 Linux
 
     # (optional) export AP_VERSION=... and export BC_VERSION=... to set versions
     git clone https://github.com/tcooc/AdditionalPipesBC.git    
     cd AdditionalPipesBC
-    ./build.sh # will automatically download the BuildCraft source and compile.
+    ./build.sh
 
 Compiled binaries can be found in `BuildCraft/bin/ap`.
 
