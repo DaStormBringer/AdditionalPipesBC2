@@ -48,7 +48,7 @@ public class PipeLogicAdvancedWood extends PipeLogic implements IInventory {
 		}
 
 		if (newMeta != meta) {
-			worldObj.setBlock(xCoord, yCoord, zCoord, newMeta);
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, newMeta, 2);
 			container.scheduleRenderUpdate();
 			//worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
 		}
@@ -86,9 +86,8 @@ public class PipeLogicAdvancedWood extends PipeLogic implements IInventory {
 			pipe2 = ((TileGenericPipe) tile).pipe;
 		}
 
-		
-			return (pipe2 == null || (!(pipe2.logic instanceof PipeLogicWood) && !(pipe2.logic instanceof PipeLogicAdvancedWood))) && super.canPipeConnect(tile,side);
-		
+		return (pipe2 == null || (!(pipe2.logic instanceof PipeLogicWood) && !(pipe2.logic instanceof PipeLogicAdvancedWood))) && super.canPipeConnect(tile,side);
+
 	}
 
 	@Override
@@ -99,13 +98,10 @@ public class PipeLogicAdvancedWood extends PipeLogic implements IInventory {
 
 	private void switchSourceIfNeeded () {
 		int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-
-		if (meta > 5)
-			switchSource();
+		if (meta > 5) switchSource();
 		else {
 			TileEntity tile = container.getTile(ForgeDirection.VALID_DIRECTIONS[meta]);
-			if (!isInput(tile))
-				switchSource();
+			if (!isInput(tile)) switchSource();
 		}
 	}
 
@@ -148,8 +144,8 @@ public class PipeLogicAdvancedWood extends PipeLogic implements IInventory {
 	}
 
 	@Override
-	public ItemStack getStackInSlot(int var1) {
-		return items[var1];
+	public ItemStack getStackInSlot(int i) {
+		return items[i];
 	}
 
 	@Override
@@ -178,8 +174,8 @@ public class PipeLogicAdvancedWood extends PipeLogic implements IInventory {
 	}
 
 	@Override
-	public void setInventorySlotContents(int var1, ItemStack var2) {
-		items[var1] = var2;
+	public void setInventorySlotContents(int i, ItemStack var2) {
+		items[i] = var2;
 	}
 
 	@Override

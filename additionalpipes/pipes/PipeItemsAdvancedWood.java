@@ -15,6 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.ISidedInventory;
 import buildcraft.additionalpipes.pipes.logic.PipeLogicAdvancedWood;
 import buildcraft.api.core.Position;
 import buildcraft.api.power.IPowerProvider;
@@ -88,37 +89,34 @@ public class PipeItemsAdvancedWood extends APPipe implements IPowerReceptor {
 		}
 	}
 
-	/**
-	 * Return the itemstack that can be if something can be extracted from this
-	 * inventory, null if none. On certain cases, the extractable slot depends
-	 * on the position of the pipe.
-	 */
-	public ItemStack checkExtract(IInventory inventory, boolean doRemove,
-			ForgeDirection from) {
-		//		if (inventory instanceof ISpecialInventory) {
-		//			//At the moment we are going to let special inventorys handle there own. Might change if popular demand
-		//			return ((ISpecialInventory) inventory).extractItem(doRemove, from);
-		//		}
+	public ItemStack checkExtract(IInventory inventory, boolean doRemove, ForgeDirection from) {
 		IInventory inv = Utils.getInventory(inventory);
-		ItemStack result = checkExtractGeneric(inv, doRemove, from, 0, inv.getSizeInventory() - 1);
+		int first = 0;
+		int last = inv.getSizeInventory() - 1;
+		if (inventory instanceof ISidedInventory) {
+			ISidedInventory sidedInv = (ISidedInventory) inventory;
+			first = sidedInv.getStartInventorySide(from);
+			last = first + sidedInv.getSizeInventorySide(from) - 1;
+			inv = Utils.getInventory(inventory);
+		}
+		ItemStack result = checkExtractGeneric(inv, doRemove, from, first, last);
 		return result;
 	}
 
 	public ItemStack checkExtractGeneric(IInventory inventory, boolean doRemove, ForgeDirection from, int start, int stop) {
-		for (int k = start; k <= stop; ++k)
-			if (inventory.getStackInSlot(k) != null && inventory.getStackInSlot(k).stackSize > 0) {
+		for (int k = start; k <= stop; ++k) {
+			ItemStack slot = inventory.getStackInSlot(k);
 
-				ItemStack slot = inventory.getStackInSlot(k);
-
-				if (slot != null && slot.stackSize > 0 && canExtract(slot))
-					if (doRemove)
-						return inventory.decrStackSize(k, (int) powerProvider.useEnergy(1, slot.stackSize, true));
-					else
-						return slot;
+			if (slot != null && slot.stackSize > 0 && canExtract(slot)) {
+				if (doRemove) {
+					return inventory.decrStackSize(k, (int) powerProvider.useEnergy(1, slot.stackSize, true));
+				} else {
+					return slot;
+				}
 			}
+		}
 		return null;
 	}
-
 
 	public boolean canExtract(ItemStack item) {
 		PipeLogicAdvancedWood logic = (PipeLogicAdvancedWood) this.logic;
