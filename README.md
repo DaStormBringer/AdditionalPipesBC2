@@ -2,7 +2,16 @@
 
 ### Cloning and Compiling ###
 
-    # (optional) export AP_VERSION and BC_VERSION to set versions
+Windows
+
+    # (optional) SET AP_VERSION=... and BC_VERSION=... to set versions
+    git clone https://github.com/tcooc/AdditionalPipesBC.git    
+    cd AdditionalPipesBC
+    build.bat # will automatically download the BuildCraft source and compile.
+
+Linux
+
+    # (optional) export AP_VERSION=... and export BC_VERSION=... to set versions
     git clone https://github.com/tcooc/AdditionalPipesBC.git    
     cd AdditionalPipesBC
     ./build.sh # will automatically download the BuildCraft source and compile.
