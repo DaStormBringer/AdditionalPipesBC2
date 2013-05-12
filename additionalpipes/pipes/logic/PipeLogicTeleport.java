@@ -24,6 +24,7 @@ public class PipeLogicTeleport extends PipeLogic {
 	public boolean canReceive = false;
 	//public boolean canSend = true;
 	public String owner = "";
+	public int[] network = new int[0];
 	public boolean isPublic = false;
 
 	@Override

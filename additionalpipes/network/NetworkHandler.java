@@ -74,6 +74,7 @@ public class NetworkHandler implements IPacketHandler {
 				if(te instanceof TileGenericPipe) {
 					PipeTeleport pipe = (PipeTeleport) ((TileGenericPipe) te).pipe;
 					pipe.logic.owner = tag.getString("owner");
+					pipe.logic.network = tag.getIntArray("network");
 				}
 				break;
 			}

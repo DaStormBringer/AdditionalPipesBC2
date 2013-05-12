@@ -1,29 +1,88 @@
 package buildcraft.additionalpipes.gui;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 
 import org.lwjgl.opengl.GL11;
 
+import buildcraft.BuildCraftCore;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.network.NetworkHandler;
 import buildcraft.additionalpipes.network.PacketAdditionalPipes;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
+import buildcraft.core.CoreIconProvider;
+import buildcraft.core.gui.GuiBuildCraft;
 import buildcraft.transport.TileGenericPipe;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiTeleportPipe extends GuiContainer {
+public class GuiTeleportPipe extends GuiBuildCraft {
+
+	protected class TeleportPipeLedger extends Ledger {
+
+		GuiTeleportPipe gui;
+		int headerColour = 0xe1c92f;
+		int subheaderColour = 0xaaafb8;
+		int textColour = 0x000000;
+
+		public TeleportPipeLedger(GuiTeleportPipe gui) {
+			this.gui = gui;
+			maxHeight = 99;
+			overlayColor = 0xd46c1f;
+		}
+
+		@Override
+		public void draw(int x, int y) {
+
+			// Draw background
+			drawBackground(x, y);
+
+			// Draw icon
+			Minecraft.getMinecraft().renderEngine.bindTexture("/gui/items.png");
+			drawIcon(BuildCraftCore.iconProvider.getIcon(CoreIconProvider.ENERGY), x + 3, y + 4);
+
+			if (!isFullyOpened())
+				return;
+
+			fontRenderer.drawStringWithShadow("Teleport Pipe", x + 22, y + 8, headerColour);
+			fontRenderer.drawStringWithShadow("Owner:", x + 22, y + 20, subheaderColour);
+			fontRenderer.drawString(gui.pipe.logic.owner, x + 22, y + 32, textColour);
+			fontRenderer.drawStringWithShadow("Outputs: ", x + 22, y + 44, subheaderColour);
+			fontRenderer.drawString(String.valueOf(gui.container.connectedPipes), x + 66, y + 45, textColour);
+			int[] net = gui.pipe.logic.network;
+			if(net.length > 0) {
+				fontRenderer.drawString(
+					new StringBuilder("(").append(net[0]).append(", ").append(net[1]).append(", ").append(net[2]).append(")").toString(),
+					x + 22, y + 56, textColour);
+			}
+			if(net.length > 3) {
+				fontRenderer.drawString(
+					new StringBuilder("(").append(net[3]).append(", ").append(net[4]).append(", ").append(net[5]).append(")").toString(),
+					x + 22, y + 68, textColour);
+			}
+			if(net.length > 6) {
+				fontRenderer.drawString(
+					new StringBuilder("(").append(net[6]).append(", ").append(net[7]).append(", ").append(net[8]).append(")").toString(),
+					x + 22, y + 80, textColour);
+			}
+		}
+
+		@Override
+		public String getTooltip() {
+			return "Owner: " + gui.pipe.logic.owner;
+		}
+	}
 
 	private PipeTeleport pipe;
 	private ContainerTeleportPipe container;
 	private GuiButton[] buttons = new GuiButton[8];
 
 	public GuiTeleportPipe(EntityPlayer player, TileGenericPipe tile) {
-		super(new ContainerTeleportPipe(player, tile));
+		super(new ContainerTeleportPipe(player, tile), null);
 
 		container = (ContainerTeleportPipe) inventorySlots;
 		pipe = (PipeTeleport) tile.pipe;
@@ -35,23 +94,26 @@ public class GuiTeleportPipe extends GuiContainer {
 	@Override
 	public void initGui() {
 		super.initGui();
-		int x = (width - xSize) / 2, y = (height - ySize) / 2;
-		int bw = xSize - 22;
-		buttonList.add(buttons[0] = new GuiButton(1, x + 10,              y + 52, bw / 6, 20, "-100"));
-		buttonList.add(buttons[1] = new GuiButton(2, x + 12 + bw / 6,     y + 52, bw / 6, 20, "-10"));
-		buttonList.add(buttons[2] = new GuiButton(3, x + 12 + bw * 2 / 6, y + 52, bw / 6, 20, "-1"));
-		buttonList.add(buttons[3] = new GuiButton(4, x + 12 + bw * 3 / 6, y + 52, bw / 6, 20, "+1"));
-		buttonList.add(buttons[4] = new GuiButton(5, x + 12 + bw * 4 / 6, y + 52, bw / 6, 20, "+10"));
-		buttonList.add(buttons[5] = new GuiButton(6, x + 16 + bw * 5 / 6, y + 52, bw / 6, 20, "+100"));
-		buttonList.add(buttons[6] = new GuiButton(7, x + 10,              y + 15, bw / 2, 20, "Send Only"));
-		buttonList.add(buttons[7] = new GuiButton(8, x + 10 + bw * 3 / 6, y + 15, bw / 2, 20, "Private"));
+		int x = (width - xSize) / 2, y = (height - ySize) / 2 + 16;
+		int bw = xSize - 24;
+		buttonList.add(buttons[0] = new GuiButton(1, x + 12,              y + 32, bw / 6, 20, "-100"));
+		buttonList.add(buttons[1] = new GuiButton(2, x + 12 + bw / 6,     y + 32, bw / 6, 20, "-10"));
+		buttonList.add(buttons[2] = new GuiButton(3, x + 12 + bw * 2 / 6, y + 32, bw / 6, 20, "-1"));
+		buttonList.add(buttons[3] = new GuiButton(4, x + 12 + bw * 3 / 6, y + 32, bw / 6, 20, "+1"));
+		buttonList.add(buttons[4] = new GuiButton(5, x + 12 + bw * 4 / 6, y + 32, bw / 6, 20, "+10"));
+		buttonList.add(buttons[5] = new GuiButton(6, x + 12 + bw * 5 / 6, y + 32, bw / 6, 20, "+100"));
+
+		buttonList.add(buttons[6] = new GuiButton(7, x + 12,              y + 10, bw / 2, 20, "Send Only"));
+		buttonList.add(buttons[7] = new GuiButton(8, x + 12 + bw * 3 / 6, y + 10, bw / 2, 20, "Private"));
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int p1, int p2) {
-		fontRenderer.drawString("Frequency: " + pipe.logic.getFrequency(), 8, 40, 0x404040);
-		fontRenderer.drawString("Number of Outputs: " + container.connectedPipes, 100, 40, 0x404040);
-		fontRenderer.drawString("Owner: " + pipe.logic.owner, 8, 100, 0x404040);
+		super.drawGuiContainerForegroundLayer(p1, p2);
+		fontRenderer.drawString("Frequency: " + pipe.logic.getFrequency(), 16, 12, 0x404040);
+		fontRenderer.drawString(
+			new StringBuilder("(").append(pipe.xCoord).append(", ").append(pipe.yCoord).append(", ").append(pipe.zCoord).append(")").toString(),
+			128, 12, 0x404040);
 		if(pipe.logic.canReceive) {
 			buttons[6].displayString = "Send & Receive";
 		} else {
@@ -62,7 +124,6 @@ public class GuiTeleportPipe extends GuiContainer {
 		} else {
 			buttons[7].displayString = "Private";
 		}
-		//fontRenderer.drawString("Owner: " + pipe.logic.owner, 8, 75, 0x404040);
 	}
 	@Override
 	protected void actionPerformed(GuiButton guibutton) {
@@ -111,13 +172,16 @@ public class GuiTeleportPipe extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-		
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		mc.renderEngine.bindTexture(AdditionalPipes.TEXTURE_GUI_TELEPORT);
 		int j = (width - xSize) / 2;
 		int k = (height - ySize) / 2;
 		drawTexturedModalRect(j, k, 0, 0, xSize, ySize);
-
 	}
 
+	@Override
+	protected void initLedgers(IInventory inventory) {
+		super.initLedgers(inventory);
+		ledgerManager.add(new TeleportPipeLedger(this));
+	}
 }

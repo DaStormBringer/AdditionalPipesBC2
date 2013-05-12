@@ -1,7 +1,8 @@
 package buildcraft.additionalpipes.gui;
 
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.nbt.NBTTagCompound;
 import buildcraft.additionalpipes.AdditionalPipes;
@@ -9,14 +10,15 @@ import buildcraft.additionalpipes.network.NetworkHandler;
 import buildcraft.additionalpipes.network.PacketNBTTagData;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.additionalpipes.pipes.TeleportManager;
+import buildcraft.core.gui.BuildCraftContainer;
+import buildcraft.transport.Pipe;
 import buildcraft.transport.TileGenericPipe;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
-public class ContainerTeleportPipe extends Container {
+public class ContainerTeleportPipe extends BuildCraftContainer {
 
 	public int connectedPipes = 0;
-	public String owner = "";
 
 	private int ticks = 0;
 	private PipeTeleport pipe;
@@ -24,6 +26,7 @@ public class ContainerTeleportPipe extends Container {
 	private boolean canReceive, isPublic;
 
 	public ContainerTeleportPipe(EntityPlayer player, TileGenericPipe tile) {
+		super(0);
 		pipe = (PipeTeleport) tile.pipe;
 		canReceive = !pipe.logic.canReceive;
 		isPublic = !pipe.logic.isPublic;
@@ -35,6 +38,17 @@ public class ContainerTeleportPipe extends Container {
 		tag.setInteger("yCoord", pipe.yCoord);
 		tag.setInteger("zCoord", pipe.zCoord);
 		tag.setString("owner", pipe.logic.owner);
+
+		List<PipeTeleport> pipes = TeleportManager.instance.getConnectedPipes(pipe, pipe.logic.canReceive);
+		int[] locations = new int[pipes.size() * 3];
+		for(int i = 0; i < pipes.size() && i < 9; i++) {
+			Pipe pipe = pipes.get(i);
+			locations[3 * i] = pipe.xCoord;
+			locations[3 * i + 1] = pipe.yCoord;
+			locations[3 * i + 2] = pipe.zCoord;
+		}
+		tag.setIntArray("network", locations);
+
 		PacketNBTTagData packet = new PacketNBTTagData(AdditionalPipes.CHANNELNBT, NetworkHandler.TELE_PIPE_DATA, false, tag);
 		PacketDispatcher.sendPacketToPlayer(packet.getPacket(), (Player) player);
 	}
