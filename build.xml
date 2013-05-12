@@ -25,7 +25,7 @@
 				<!--exclude name="**/*.png" /-->
 			</fileset>
 			<filterset>
-				<filter token="VERSION" value="${version}" />
+				<filter token="AP_VERSION" value="${env.AP_VERSION}" />
 			</filterset>
 		</copy>
 	</target>
@@ -58,7 +58,7 @@
 		<copy todir="${build.dir}">
 			<fileset dir="${resources.dir}" />
 		</copy>
-		<replace file="${build.dir}/mcmod.info" token="@VERSION@" value="${env.AP_VERSION}" />
+		<replace file="${build.dir}/mcmod.info" token="@AP_VERSION@" value="${env.AP_VERSION}" />
 
 		<jar destfile="${jar.dir}/${ant.project.name}${env.AP_VERSION}-BC${env.BC_VERSION}.jar" basedir="${build.dir}" />
 	</target>

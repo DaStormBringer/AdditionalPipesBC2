@@ -1,7 +1,7 @@
 [{
   "modid": "APUnofficial",
   "name": "Additional Pipes",
-  "version": "@VERSION@",
+  "version": "@AP_VERSION@",
   "url": "https://github.com/gejzer/AdditionalPipesBC/",
   "updateUrl": "",
   "description": "Teleport, insertion, extraction, and many more new pipes.",
