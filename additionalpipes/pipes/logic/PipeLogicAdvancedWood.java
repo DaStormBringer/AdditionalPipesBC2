@@ -16,7 +16,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import buildcraft.BuildCraftTransport;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.api.tools.IToolWrench;

@@ -9,13 +9,13 @@
 package buildcraft.additionalpipes.pipes;
 
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.common.ISidedInventory;
 import buildcraft.additionalpipes.pipes.logic.PipeLogicAdvancedWood;
 import buildcraft.api.core.Position;
 import buildcraft.api.power.IPowerProvider;
@@ -93,11 +93,16 @@ public class PipeItemsAdvancedWood extends APPipe implements IPowerReceptor {
 		IInventory inv = Utils.getInventory(inventory);
 		int first = 0;
 		int last = inv.getSizeInventory() - 1;
-		if (inventory instanceof ISidedInventory) {
-			ISidedInventory sidedInv = (ISidedInventory) inventory;
+		if (inventory instanceof net.minecraftforge.common.ISidedInventory) {
+			net.minecraftforge.common.ISidedInventory sidedInv =
+				(net.minecraftforge.common.ISidedInventory) inventory;
 			first = sidedInv.getStartInventorySide(from);
 			last = first + sidedInv.getSizeInventorySide(from) - 1;
-			inv = Utils.getInventory(inventory);
+		} else if (inventory instanceof ISidedInventory) {
+			ISidedInventory sidedInv = (ISidedInventory) inventory;
+			int[] accessibleSlots = sidedInv.getAccessibleSlotsFromSide(from.ordinal());
+			ItemStack result = checkExtractGeneric(inv, doRemove, from, accessibleSlots);
+			return result;
 		}
 		ItemStack result = checkExtractGeneric(inv, doRemove, from, first, last);
 		return result;
@@ -110,6 +115,21 @@ public class PipeItemsAdvancedWood extends APPipe implements IPowerReceptor {
 			if (slot != null && slot.stackSize > 0 && canExtract(slot)) {
 				if (doRemove) {
 					return inventory.decrStackSize(k, (int) powerProvider.useEnergy(1, slot.stackSize, true));
+				} else {
+					return slot;
+				}
+			}
+		}
+		return null;
+	}
+
+	public ItemStack checkExtractGeneric(IInventory inventory, boolean doRemove, ForgeDirection from, int[] slots) {
+		for (int i : slots) {
+			ItemStack slot = inventory.getStackInSlot(i);
+
+			if (slot != null && slot.stackSize > 0 && canExtract(slot)) {
+				if (doRemove) {
+					return inventory.decrStackSize(i, (int) powerProvider.useEnergy(1, slot.stackSize, true));
 				} else {
 					return slot;
 				}

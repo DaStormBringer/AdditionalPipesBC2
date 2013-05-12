@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import buildcraft.BuildCraftTransport;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.additionalpipes.pipes.TeleportManager;
