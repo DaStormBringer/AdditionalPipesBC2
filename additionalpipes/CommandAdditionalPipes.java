@@ -41,7 +41,7 @@ public class CommandAdditionalPipes extends CommandBase {
 								sb.append('[');
 								sb.append(logic.container.pipe.getClass().getSimpleName());
 								sb.append(", Freq: ").append(logicTeleport.getFrequency());
-								sb.append(", Receive: ").append(logicTeleport.canReceive);
+								sb.append(", State: ").append(logicTeleport.state);
 								sb.append(", Owner: ").append(logicTeleport.owner);
 								sb.append(']');
 								sender.sendChatToPlayer(sb.toString());

@@ -22,15 +22,15 @@ public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportL
 
 	public PipeLiquidsTeleport(int itemID) {
 		super(new PipeTransportLiquids(), new PipeLogicTeleport(), itemID);
-		((PipeTransportLiquids) transport).flowRate = 80;
-		((PipeTransportLiquids) transport).travelDelay = 2;
+		((PipeTransportLiquids) transport).flowRate = 160;
+		((PipeTransportLiquids) transport).travelDelay = 4;
 	}
 
 	@Override
 	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill) {
 		List<PipeTeleport> pipeList = TeleportManager.instance.getConnectedPipes(this, false);
 
-		if (pipeList.size() == 0) {
+		if (pipeList.size() == 0 || (logic.state & 0x1) == 0) {
 			return 0;
 		}
 

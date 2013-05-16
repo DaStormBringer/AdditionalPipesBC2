@@ -114,10 +114,19 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 		fontRenderer.drawString(
 			new StringBuilder("(").append(pipe.xCoord).append(", ").append(pipe.yCoord).append(", ").append(pipe.zCoord).append(")").toString(),
 			128, 12, 0x404040);
-		if(pipe.logic.canReceive) {
-			buttons[6].displayString = "Send & Receive";
-		} else {
-			buttons[6].displayString = "Send Only";
+		switch(pipe.logic.state) {
+			case 3:
+				buttons[6].displayString = "Send & Receive";
+				break;
+			case 2:
+				buttons[6].displayString = "Receive Only";
+				break;
+			case 1:
+				buttons[6].displayString = "Send Only";
+				break;
+			default:
+				buttons[6].displayString = "Disabled";
+				break;
 		}
 		if(pipe.logic.isPublic) {
 			buttons[7].displayString = "Public";
@@ -128,7 +137,7 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 	@Override
 	protected void actionPerformed(GuiButton guibutton) {
 		int freq = pipe.logic.getFrequency();
-		boolean canReceive = pipe.logic.canReceive;
+		byte state = pipe.logic.state;
 		boolean isPublic = pipe.logic.isPublic;
 		switch(guibutton.id) {
 		case 1:
@@ -150,7 +159,7 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 			freq += 100;
 			break;
 		case 7:
-			canReceive = !canReceive;
+			state = (byte) ((state + 1) % 4);
 			break;
 		case 8:
 			isPublic = !isPublic;
@@ -165,7 +174,7 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 		packet.writeInt(pipe.yCoord);
 		packet.writeInt(pipe.zCoord);
 		packet.writeInt(freq);
-		packet.write((byte) (canReceive ? 1 : 0));
+		packet.write(state);
 		packet.write((byte) (isPublic ? 1 : 0));
 		PacketDispatcher.sendPacketToServer(packet.makePacket());
 	}

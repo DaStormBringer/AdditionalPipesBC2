@@ -128,7 +128,7 @@ public class NetworkHandler implements IPacketHandler {
 					frequency = 0;
 				}
 				pipe.logic.setFrequency(frequency);
-				pipe.logic.canReceive = (data.read() == 1);
+				pipe.logic.state = (byte) data.read();
 				pipe.logic.isPublic = (data.read() == 1);
 			}
 		} catch (IOException e) {

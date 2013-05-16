@@ -21,8 +21,9 @@ public class PipeLogicTeleport extends PipeLogic {
 	private boolean[] phasedBroadcastSignal = new boolean[4];
 
 	private int frequency = 0;
-	public boolean canReceive = false;
-	//public boolean canSend = true;
+	// 00 = none, 01 = send, 10 = receive, 11 = both
+	public byte state = 1;
+
 	public String owner = "";
 	public int[] network = new int[0];
 	public boolean isPublic = false;
@@ -94,17 +95,13 @@ public class PipeLogicTeleport extends PipeLogic {
 		if (tile instanceof TileGenericPipe) {
 			pipe = ((TileGenericPipe) tile).pipe;
 		}
-		
-			if(pipe != null && this.getClass().equals(pipe.logic.getClass())) {
-				return false;
-			}
-			return pipe != null;
-		
+		if(pipe != null && pipe.logic.getClass() == this.getClass()) return false;
+		return pipe != null;
 	}
 
 	@Override
 	public boolean outputOpen(ForgeDirection to) {
-		return canPipeConnect(container,to);
+		return container.isPipeConnected(to);
 	}
 
 	@Override
@@ -112,7 +109,7 @@ public class PipeLogicTeleport extends PipeLogic {
 		super.writeToNBT(nbttagcompound);
 
 		nbttagcompound.setInteger("freq", frequency);
-		nbttagcompound.setBoolean("canReceive", canReceive);
+		nbttagcompound.setByte("state", state);
 		nbttagcompound.setString("owner", owner);
 		nbttagcompound.setBoolean("isPublic", isPublic);
 	}
@@ -122,7 +119,14 @@ public class PipeLogicTeleport extends PipeLogic {
 		super.readFromNBT(nbttagcompound);
 
 		frequency = nbttagcompound.getInteger("freq");
-		canReceive = nbttagcompound.getBoolean("canReceive");
+
+		// Update code.
+		if(nbttagcompound.hasKey("canReceive")) {
+			state = (byte) (nbttagcompound.getBoolean("canReceive") ? 3 : 1);
+		} else {
+			state = nbttagcompound.getByte("state");
+		}
+
 		owner = nbttagcompound.getString("owner");
 		isPublic = nbttagcompound.getBoolean("isPublic");
 	}

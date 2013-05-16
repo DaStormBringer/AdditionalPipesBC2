@@ -23,12 +23,13 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 	private int ticks = 0;
 	private PipeTeleport pipe;
 	private int freq;
-	private boolean canReceive, isPublic;
+	private byte state;
+	private boolean isPublic;
 
 	public ContainerTeleportPipe(EntityPlayer player, TileGenericPipe tile) {
 		super(0);
 		pipe = (PipeTeleport) tile.pipe;
-		canReceive = !pipe.logic.canReceive;
+		state = pipe.logic.state;
 		isPublic = !pipe.logic.isPublic;
 		freq = -1;
 
@@ -39,7 +40,7 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 		tag.setInteger("zCoord", pipe.zCoord);
 		tag.setString("owner", pipe.logic.owner);
 
-		List<PipeTeleport> pipes = TeleportManager.instance.getConnectedPipes(pipe, pipe.logic.canReceive);
+		List<PipeTeleport> pipes = TeleportManager.instance.getConnectedPipes(pipe, false);
 		int[] locations = new int[pipes.size() * 3];
 		for(int i = 0; i < pipes.size() && i < 9; i++) {
 			Pipe pipe = pipes.get(i);
@@ -73,8 +74,8 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 			if(freq != pipe.logic.getFrequency()) {
 				((ICrafting) crafter).sendProgressBarUpdate(this, 0, pipe.logic.getFrequency());
 			}
-			if(canReceive != pipe.logic.canReceive) {
-				((ICrafting) crafter).sendProgressBarUpdate(this, 1, pipe.logic.canReceive ? 1 : 0);
+			if(state != pipe.logic.state) {
+				((ICrafting) crafter).sendProgressBarUpdate(this, 1, pipe.logic.state);
 			}
 			if(connectedPipesNew != connectedPipes) {
 				((ICrafting) crafter).sendProgressBarUpdate(this, 2, connectedPipesNew);
@@ -83,7 +84,7 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 				((ICrafting) crafter).sendProgressBarUpdate(this, 3, pipe.logic.isPublic ? 1 : 0);
 			}
 		}
-		canReceive = pipe.logic.canReceive;
+		state = pipe.logic.state;
 		freq = pipe.logic.getFrequency();
 		isPublic = pipe.logic.isPublic;
 		connectedPipes = connectedPipesNew;
@@ -96,7 +97,7 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 			pipe.logic.setFrequency(j);
 			break;
 		case 1:
-			pipe.logic.canReceive = (j == 1);
+			pipe.logic.state = (byte) j;
 			break;
 		case 2:
 			connectedPipes = j;

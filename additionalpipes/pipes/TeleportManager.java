@@ -65,7 +65,7 @@ public class TeleportManager {
 			//both public or same owner
 			if ((pipe.xCoord != other.xCoord || pipe.yCoord != other.yCoord || pipe.zCoord != other.zCoord ) &&
 					otherLogic.getFrequency() == logic.getFrequency() &&
-					(otherLogic.canReceive || forceReceive) &&
+					((otherLogic.state & 0x2) > 0 || forceReceive) &&
 					(logic.isPublic ? otherLogic.isPublic  : otherLogic.owner.equalsIgnoreCase(logic.owner) )) {
 				connected.add(other);
 			}

@@ -46,7 +46,7 @@ public class PipeItemsTeleport extends PipeTeleport implements IPipeTransportIte
 		}
 		List<PipeTeleport> connectedTeleportPipes = TeleportManager.instance.getConnectedPipes(this, false);
 		//no teleport pipes connected, use default
-		if (connectedTeleportPipes.size() <= 0) {
+		if (connectedTeleportPipes.size() <= 0 || (logic.state & 0x1) == 0) {
 			return;
 		}
 

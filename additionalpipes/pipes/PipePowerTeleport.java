@@ -39,7 +39,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 	public void requestEnergy(ForgeDirection from, int is) {
 		((PipeTransportPower)transport).step();
 
-		if (!logic.canReceive) { //No need to waste CPU
+		if ((logic.state & 0x2) == 0) { //No need to waste CPU
 			return;
 		}
 
@@ -69,7 +69,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 		List<PipeTeleport> sendingToList = new LinkedList<PipeTeleport>();
 
 		//no connected pipes, leave!
-		if (connectedPipes.size() <= 0) {
+		if (connectedPipes.size() <= 0 || (logic.state & 0x1) == 0) {
 			return;
 		}
 

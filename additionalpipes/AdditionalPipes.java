@@ -177,7 +177,7 @@ public class AdditionalPipes {
 	public int laserKeyCode = 64; //config option (& in options menu)
 	//misc
 	public @CfgBool boolean allowWRRemove = false;
-	public double powerLossCfg = .95; //config option
+	public double powerLossCfg = 0.90; //config option
 
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event) {
