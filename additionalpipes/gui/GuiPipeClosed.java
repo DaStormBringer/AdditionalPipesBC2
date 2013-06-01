@@ -19,12 +19,8 @@ public class GuiPipeClosed extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-		fontRenderer.drawString(
-				StatCollector.translateToLocal("Closed Pipe"), 60, 6,
-				4210752);
-		fontRenderer.drawString(
-				StatCollector.translateToLocal("container.inventory"), 8,
-				ySize - 96 + 2, 4210752);
+		fontRenderer.drawString(StatCollector.translateToLocal("Closed Pipe"), 60, 6, 4210752);
+		fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 4210752);
 	}
 
 	/**
@@ -32,9 +28,8 @@ public class GuiPipeClosed extends GuiContainer {
 	 * items)
 	 */
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float par1, int par2,
-			int par3) {
-	
+	protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
+
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		mc.renderEngine.bindTexture("/gui/trap.png");
 		int var5 = (width - xSize) / 2;

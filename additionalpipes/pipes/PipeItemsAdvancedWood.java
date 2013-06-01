@@ -52,37 +52,35 @@ public class PipeItemsAdvancedWood extends APPipe implements IPowerReceptor {
 
 	@Override
 	public void doWork() {
-		if (powerProvider.getEnergyStored() <= 0)
+		if(powerProvider.getEnergyStored() <= 0)
 			return;
 
 		World w = worldObj;
 
 		int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 
-		if (meta > 5)
+		if(meta > 5)
 			return;
 
-		Position pos = new Position(xCoord, yCoord, zCoord,	ForgeDirection.VALID_DIRECTIONS[meta]);
+		Position pos = new Position(xCoord, yCoord, zCoord, ForgeDirection.VALID_DIRECTIONS[meta]);
 		pos.moveForwards(1);
 		int blockId = w.getBlockId((int) pos.x, (int) pos.y, (int) pos.z);
 		TileEntity tile = w.getBlockTileEntity((int) pos.x, (int) pos.y, (int) pos.z);
 
-		if (tile instanceof IInventory) {
-			if (!PipeManager.canExtractItems(this, w, (int) pos.x, (int) pos.y, (int) pos.z))
+		if(tile instanceof IInventory) {
+			if(!PipeManager.canExtractItems(this, w, (int) pos.x, (int) pos.y, (int) pos.z))
 				return;
 
 			IInventory inventory = (IInventory) tile;
 
-			ItemStack extracted = checkExtract(inventory, true,
-					pos.orientation.getOpposite());
+			ItemStack extracted = checkExtract(inventory, true, pos.orientation.getOpposite());
 
-			if (extracted == null || extracted.stackSize == 0) {
+			if(extracted == null || extracted.stackSize == 0) {
 				powerProvider.useEnergy(1, 1, false);
 				return;
 			}
 
-			Position entityPos = new Position(pos.x + 0.5, pos.y + Utils.getPipeFloorOf(extracted), pos.z + 0.5,
-					pos.orientation.getOpposite());
+			Position entityPos = new Position(pos.x + 0.5, pos.y + Utils.getPipeFloorOf(extracted), pos.z + 0.5, pos.orientation.getOpposite());
 			entityPos.moveForwards(0.5);
 			IPipedItem entity = new EntityPassiveItem(w, entityPos.x, entityPos.y, entityPos.z, extracted);
 			((PipeTransportItems) transport).entityEntering(entity, entityPos.orientation);
@@ -93,12 +91,11 @@ public class PipeItemsAdvancedWood extends APPipe implements IPowerReceptor {
 		IInventory inv = Utils.getInventory(inventory);
 		int first = 0;
 		int last = inv.getSizeInventory() - 1;
-		if (inventory instanceof net.minecraftforge.common.ISidedInventory) {
-			net.minecraftforge.common.ISidedInventory sidedInv =
-				(net.minecraftforge.common.ISidedInventory) inventory;
+		if(inventory instanceof net.minecraftforge.common.ISidedInventory) {
+			net.minecraftforge.common.ISidedInventory sidedInv = (net.minecraftforge.common.ISidedInventory) inventory;
 			first = sidedInv.getStartInventorySide(from);
 			last = first + sidedInv.getSizeInventorySide(from) - 1;
-		} else if (inventory instanceof ISidedInventory) {
+		} else if(inventory instanceof ISidedInventory) {
 			ISidedInventory sidedInv = (ISidedInventory) inventory;
 			int[] accessibleSlots = sidedInv.getAccessibleSlotsFromSide(from.ordinal());
 			ItemStack result = checkExtractGeneric(inv, doRemove, from, accessibleSlots);
@@ -109,11 +106,11 @@ public class PipeItemsAdvancedWood extends APPipe implements IPowerReceptor {
 	}
 
 	public ItemStack checkExtractGeneric(IInventory inventory, boolean doRemove, ForgeDirection from, int start, int stop) {
-		for (int k = start; k <= stop; ++k) {
+		for(int k = start; k <= stop; ++k) {
 			ItemStack slot = inventory.getStackInSlot(k);
 
-			if (slot != null && slot.stackSize > 0 && canExtract(slot)) {
-				if (doRemove) {
+			if(slot != null && slot.stackSize > 0 && canExtract(slot)) {
+				if(doRemove) {
 					return inventory.decrStackSize(k, (int) powerProvider.useEnergy(1, slot.stackSize, true));
 				} else {
 					return slot;
@@ -124,11 +121,11 @@ public class PipeItemsAdvancedWood extends APPipe implements IPowerReceptor {
 	}
 
 	public ItemStack checkExtractGeneric(IInventory inventory, boolean doRemove, ForgeDirection from, int[] slots) {
-		for (int i : slots) {
+		for(int i : slots) {
 			ItemStack slot = inventory.getStackInSlot(i);
 
-			if (slot != null && slot.stackSize > 0 && canExtract(slot)) {
-				if (doRemove) {
+			if(slot != null && slot.stackSize > 0 && canExtract(slot)) {
+				if(doRemove) {
 					return inventory.decrStackSize(i, (int) powerProvider.useEnergy(1, slot.stackSize, true));
 				} else {
 					return slot;
@@ -140,13 +137,12 @@ public class PipeItemsAdvancedWood extends APPipe implements IPowerReceptor {
 
 	public boolean canExtract(ItemStack item) {
 		PipeLogicAdvancedWood logic = (PipeLogicAdvancedWood) this.logic;
-		for (int i = 0; i < logic.getSizeInventory(); i++) {
+		for(int i = 0; i < logic.getSizeInventory(); i++) {
 			ItemStack stack = logic.getStackInSlot(i);
-			if (stack != null && stack.itemID == item.itemID) {
-				if ((Item.itemsList[item.itemID].isDamageable())) {
+			if(stack != null && stack.itemID == item.itemID) {
+				if((Item.itemsList[item.itemID].isDamageable())) {
 					return !logic.exclude;
-				}
-				else if (stack.getItemDamage() == item.getItemDamage()) {
+				} else if(stack.getItemDamage() == item.getItemDamage()) {
 					return !logic.exclude;
 				}
 			}
@@ -171,11 +167,11 @@ public class PipeItemsAdvancedWood extends APPipe implements IPowerReceptor {
 
 	@Override
 	public int getIconIndex(ForgeDirection direction) {
-		if (direction == ForgeDirection.UNKNOWN)
+		if(direction == ForgeDirection.UNKNOWN)
 			return 6;
 		else {
 			int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-			if (metadata == direction.ordinal())
+			if(metadata == direction.ordinal())
 				return 7;
 			else
 				return 6;

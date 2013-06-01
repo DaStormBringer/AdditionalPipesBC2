@@ -28,42 +28,39 @@ import buildcraft.transport.pipes.PipeLogicWood;
 
 public class PipeLogicAdvancedWood extends PipeLogic implements IInventory {
 
-	public ItemStack [] items = new ItemStack [9];
+	public ItemStack[] items = new ItemStack[9];
 
 	public boolean exclude = false;
 
-	public void switchSource () {
+	public void switchSource() {
 		int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 		int newMeta = 6;
 
-		for (int i = meta + 1; i <= meta + 6; ++i) {
+		for(int i = meta + 1; i <= meta + 6; ++i) {
 			ForgeDirection o = ForgeDirection.VALID_DIRECTIONS[i % 6];
 			TileEntity tile = container.getTile(o);
-			if (isInput(tile))
-				if (PipeManager.canExtractItems(container.getPipe(), tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord)) {
+			if(isInput(tile))
+				if(PipeManager.canExtractItems(container.getPipe(), tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord)) {
 					newMeta = o.ordinal();
 					break;
 				}
 		}
 
-		if (newMeta != meta) {
+		if(newMeta != meta) {
 			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, newMeta, 2);
 			container.scheduleRenderUpdate();
-			//worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
+			// worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 
 	public boolean isInput(TileEntity tile) {
-		return !(tile instanceof TileGenericPipe) && tile instanceof IInventory
-				&& Utils.checkPipesConnections(container, tile);
+		return !(tile instanceof TileGenericPipe) && tile instanceof IInventory && Utils.checkPipesConnections(container, tile);
 	}
-
 
 	@Override
 	public boolean blockActivated(EntityPlayer entityplayer) {
 		Item equipped = entityplayer.getCurrentEquippedItem() != null ? entityplayer.getCurrentEquippedItem().getItem() : null;
-		if (equipped instanceof IToolWrench
-				&& ((IToolWrench) equipped).canWrench(entityplayer, xCoord, yCoord, zCoord)) {
+		if(equipped instanceof IToolWrench && ((IToolWrench) equipped).canWrench(entityplayer, xCoord, yCoord, zCoord)) {
 			switchSource();
 			((IToolWrench) equipped).wrenchUsed(entityplayer, xCoord, yCoord, zCoord);
 			return true;
@@ -72,8 +69,7 @@ public class PipeLogicAdvancedWood extends PipeLogic implements IInventory {
 			return false;
 		}
 
-		entityplayer.openGui(AdditionalPipes.instance, GuiHandler.PIPE_WOODEN_ADV,
-				container.worldObj, container.xCoord, container.yCoord, container.zCoord);
+		entityplayer.openGui(AdditionalPipes.instance, GuiHandler.PIPE_WOODEN_ADV, container.worldObj, container.xCoord, container.yCoord, container.zCoord);
 		return true;
 	}
 
@@ -81,26 +77,28 @@ public class PipeLogicAdvancedWood extends PipeLogic implements IInventory {
 	public boolean canPipeConnect(TileEntity tile, ForgeDirection side) {
 		Pipe pipe2 = null;
 
-		if (tile instanceof TileGenericPipe) {
+		if(tile instanceof TileGenericPipe) {
 			pipe2 = ((TileGenericPipe) tile).pipe;
 		}
 
-		return (pipe2 == null || (!(pipe2.logic instanceof PipeLogicWood) && !(pipe2.logic instanceof PipeLogicAdvancedWood))) && super.canPipeConnect(tile,side);
+		return (pipe2 == null || (!(pipe2.logic instanceof PipeLogicWood) && !(pipe2.logic instanceof PipeLogicAdvancedWood))) && super.canPipeConnect(tile, side);
 
 	}
 
 	@Override
-	public void initialize () {
+	public void initialize() {
 		super.initialize();
 		switchSourceIfNeeded();
 	}
 
-	private void switchSourceIfNeeded () {
+	private void switchSourceIfNeeded() {
 		int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-		if (meta > 5) switchSource();
+		if(meta > 5)
+			switchSource();
 		else {
 			TileEntity tile = container.getTile(ForgeDirection.VALID_DIRECTIONS[meta]);
-			if (!isInput(tile)) switchSource();
+			if(!isInput(tile))
+				switchSource();
 		}
 	}
 
@@ -111,10 +109,10 @@ public class PipeLogicAdvancedWood extends PipeLogic implements IInventory {
 
 		NBTTagList nbttaglist = nbttagcompound.getTagList("items");
 
-		for (int j = 0; j < nbttaglist.tagCount(); ++j) {
+		for(int j = 0; j < nbttaglist.tagCount(); ++j) {
 			NBTTagCompound nbttagcompound2 = (NBTTagCompound) nbttaglist.tagAt(j);
 			int index = nbttagcompound2.getInteger("index");
-			items [index] = ItemStack.loadItemStackFromNBT(nbttagcompound2);
+			items[index] = ItemStack.loadItemStackFromNBT(nbttagcompound2);
 		}
 	}
 
@@ -125,12 +123,12 @@ public class PipeLogicAdvancedWood extends PipeLogic implements IInventory {
 
 		NBTTagList nbttaglist = new NBTTagList();
 
-		for (int j = 0; j < items.length; ++j) {
-			if (items [j] != null && items [j].stackSize > 0) {
-				NBTTagCompound nbttagcompound2 = new NBTTagCompound ();
+		for(int j = 0; j < items.length; ++j) {
+			if(items[j] != null && items[j].stackSize > 0) {
+				NBTTagCompound nbttagcompound2 = new NBTTagCompound();
 				nbttaglist.appendTag(nbttagcompound2);
 				nbttagcompound2.setInteger("index", j);
-				items [j].writeToNBT(nbttagcompound2);
+				items[j].writeToNBT(nbttagcompound2);
 			}
 		}
 
@@ -150,12 +148,12 @@ public class PipeLogicAdvancedWood extends PipeLogic implements IInventory {
 	@Override
 	public ItemStack decrStackSize(int i, int amt) {
 		ItemStack stack = getStackInSlot(i);
-		if (stack != null) {
-			if (stack.stackSize <= amt) {
+		if(stack != null) {
+			if(stack.stackSize <= amt) {
 				setInventorySlotContents(i, null);
 			} else {
 				stack = stack.splitStack(amt);
-				if (stack.stackSize == 0) {
+				if(stack.stackSize == 0) {
 					setInventorySlotContents(i, null);
 				}
 			}
@@ -166,7 +164,7 @@ public class PipeLogicAdvancedWood extends PipeLogic implements IInventory {
 	@Override
 	public ItemStack getStackInSlotOnClosing(int i) {
 		ItemStack stack = getStackInSlot(i);
-		if (stack != null) {
+		if(stack != null) {
 			setInventorySlotContents(i, null);
 		}
 		return stack;

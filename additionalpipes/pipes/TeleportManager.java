@@ -18,26 +18,26 @@ public class TeleportManager {
 	public final Map<Integer, Integer[]> phasedSignals;
 	public final Map<Integer, String> frequencyNames;
 
-	private TeleportManager(){
+	private TeleportManager() {
 		teleportPipes = new LinkedList<PipeTeleport>();
 		phasedSignals = new HashMap<Integer, Integer[]>();
 		frequencyNames = new HashMap<Integer, String>();
 	}
 
 	public void add(PipeTeleport pipe) {
-		if(!AdditionalPipes.proxy.isServer(pipe.worldObj)) return;
+		if(!AdditionalPipes.proxy.isServer(pipe.worldObj))
+			return;
 		teleportPipes.add(pipe);
-		AdditionalPipes.instance.logger.info(
-				String.format("[TeleportManager] Pipe added: %s @ (%d, %d, %d), %d pipes in network",
-						pipe.getClass().getSimpleName(), pipe.xCoord, pipe.yCoord, pipe.zCoord, teleportPipes.size()));
+		AdditionalPipes.instance.logger.info(String.format("[TeleportManager] Pipe added: %s @ (%d, %d, %d), %d pipes in network", pipe.getClass().getSimpleName(), pipe.xCoord, pipe.yCoord,
+				pipe.zCoord, teleportPipes.size()));
 	}
 
-	public void remove(PipeTeleport pipe){
-		if(!AdditionalPipes.proxy.isServer(pipe.worldObj)) return;
+	public void remove(PipeTeleport pipe) {
+		if(!AdditionalPipes.proxy.isServer(pipe.worldObj))
+			return;
 		teleportPipes.remove(pipe);
-		AdditionalPipes.instance.logger.info(
-				String.format("[TeleportManager] Pipe removed: %s @ (%d, %d, %d), %d pipes in network",
-						pipe.getClass().getSimpleName(), pipe.xCoord, pipe.yCoord, pipe.zCoord, teleportPipes.size()));
+		AdditionalPipes.instance.logger.info(String.format("[TeleportManager] Pipe removed: %s @ (%d, %d, %d), %d pipes in network", pipe.getClass().getSimpleName(), pipe.xCoord, pipe.yCoord,
+				pipe.zCoord, teleportPipes.size()));
 	}
 
 	public void reset() {
@@ -47,45 +47,43 @@ public class TeleportManager {
 		AdditionalPipes.instance.logger.info("Reset teleport manager.");
 	}
 
-	//returns all other teleport pipes of the same type (class) and frequency
-	//if forceReceive is true. Otherwise, take away all pipes that aren't receiving
+	// returns all other teleport pipes of the same type (class) and frequency
+	// if forceReceive is true. Otherwise, take away all pipes that aren't
+	// receiving
 	public List<PipeTeleport> getConnectedPipes(PipeTeleport pipe, boolean forceReceive) {
 		List<PipeTeleport> connected = new LinkedList<PipeTeleport>();
 		PipeLogicTeleport logic = pipe.logic;
 
-		for (PipeTeleport other : teleportPipes) {
-			if (!pipe.getClass().equals(other.getClass()) || other.container.isInvalid()) {
+		for(PipeTeleport other : teleportPipes) {
+			if(!pipe.getClass().equals(other.getClass()) || other.container.isInvalid()) {
 				continue;
 			}
 			PipeLogicTeleport otherLogic = other.logic;
 
-			//not the same pipe &&
-			//same frequency &&
-			//pipe is open or forceReceive &&
-			//both public or same owner
-			if ((pipe.xCoord != other.xCoord || pipe.yCoord != other.yCoord || pipe.zCoord != other.zCoord ) &&
-					otherLogic.getFrequency() == logic.getFrequency() &&
-					((otherLogic.state & 0x2) > 0 || forceReceive) &&
-					(logic.isPublic ? otherLogic.isPublic  : otherLogic.owner.equalsIgnoreCase(logic.owner) )) {
+			// not the same pipe &&
+			// same frequency &&
+			// pipe is open or forceReceive &&
+			// both public or same owner
+			if((pipe.xCoord != other.xCoord || pipe.yCoord != other.yCoord || pipe.zCoord != other.zCoord) && otherLogic.getFrequency() == logic.getFrequency()
+					&& ((otherLogic.state & 0x2) > 0 || forceReceive) && (logic.isPublic ? otherLogic.isPublic : otherLogic.owner.equalsIgnoreCase(logic.owner))) {
 				connected.add(other);
 			}
 		}
 		return connected;
 	}
 
-	//FIXME unused
+	// FIXME unused
 	public List<PipeTeleport> getAllPipesInNetwork(PipeTeleport pipe) {
 		List<PipeTeleport> pipes = new LinkedList<PipeTeleport>();
 		PipeLogicTeleport logic = pipe.logic;
 
-		for (PipeTeleport other : teleportPipes) {
-			if (!pipe.getClass().equals(other.getClass()) || other.container.isInvalid()) {
+		for(PipeTeleport other : teleportPipes) {
+			if(!pipe.getClass().equals(other.getClass()) || other.container.isInvalid()) {
 				continue;
 			}
 			PipeLogicTeleport otherLogic = other.logic;
 
-			if (otherLogic.getFrequency() == logic.getFrequency() &&
-					(logic.isPublic ? otherLogic.isPublic  : otherLogic.owner.equalsIgnoreCase(logic.owner) )) {
+			if(otherLogic.getFrequency() == logic.getFrequency() && (logic.isPublic ? otherLogic.isPublic : otherLogic.owner.equalsIgnoreCase(logic.owner))) {
 				pipes.add(other);
 			}
 		}
@@ -94,7 +92,7 @@ public class TeleportManager {
 
 	public String getFrequencyName(int frequency) {
 		String name = frequencyNames.get(frequency);
-		return name ==  null ? "" : name;
+		return name == null ? "" : name;
 	}
 
 	public void setFrequencyName(int frequency, String name) {

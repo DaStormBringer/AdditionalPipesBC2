@@ -10,6 +10,7 @@ import buildcraft.api.gates.ITriggerParameter;
 import buildcraft.api.gates.TriggerParameter;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+
 public abstract class APTrigger implements ITrigger {
 
 	protected int id;
@@ -24,14 +25,14 @@ public abstract class APTrigger implements ITrigger {
 		return this.id;
 	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IIconProvider getIconProvider() {
-    	return Textures.actionIconProvider;
-    }
-    
-    @Override
-    public abstract int getIconIndex();
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IIconProvider getIconProvider() {
+		return Textures.actionIconProvider;
+	}
+
+	@Override
+	public abstract int getIconIndex();
 
 	@Override
 	public boolean hasParameter() {

@@ -30,19 +30,19 @@ public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportL
 	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill) {
 		List<PipeTeleport> pipeList = TeleportManager.instance.getConnectedPipes(this, false);
 
-		if (pipeList.size() == 0 || (logic.state & 0x1) == 0) {
+		if(pipeList.size() == 0 || (logic.state & 0x1) == 0) {
 			return 0;
 		}
 
 		int i = worldObj.rand.nextInt(pipeList.size());
 		List<ITankContainer> possibleMovements = getPossibleLiquidMovements(pipeList.get(i));
 
-		if (possibleMovements.size() <= 0) {
+		if(possibleMovements.size() <= 0) {
 			return 0;
 		}
 
 		int used = 0;
-		while (possibleMovements.size() > 0 && used <= 0) {
+		while(possibleMovements.size() > 0 && used <= 0) {
 			int a = rand.nextInt(possibleMovements.size());
 			used = possibleMovements.get(a).fill(ForgeDirection.UNKNOWN, resource, doFill);
 			possibleMovements.remove(a);
@@ -54,8 +54,8 @@ public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportL
 	private static List<ITankContainer> getPossibleLiquidMovements(PipeTeleport pipe) {
 		List<ITankContainer> result = new LinkedList<ITankContainer>();
 
-		for (ForgeDirection o : ForgeDirection.VALID_DIRECTIONS) {
-			if (pipe.logic.outputOpen(o)) {
+		for(ForgeDirection o : ForgeDirection.VALID_DIRECTIONS) {
+			if(pipe.logic.outputOpen(o)) {
 				ITankContainer te = (ITankContainer) pipe.container.getTile(o);
 				result.add(te);
 			}

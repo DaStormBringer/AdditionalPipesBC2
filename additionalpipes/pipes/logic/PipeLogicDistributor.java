@@ -19,7 +19,7 @@ import buildcraft.transport.pipes.PipeLogic;
 
 public class PipeLogicDistributor extends PipeLogic {
 
-	public int distData[] = {1, 1, 1, 1, 1, 1};
+	public int distData[] = { 1, 1, 1, 1, 1, 1 };
 	public int distSide = 0;
 	public int curTick = 0;
 
@@ -30,25 +30,24 @@ public class PipeLogicDistributor extends PipeLogic {
 		}
 
 		Item equipped = player.getCurrentEquippedItem() != null ? player.getCurrentEquippedItem().getItem() : null;
-		if (equipped != null) {
-			if (AdditionalPipes.isPipe(equipped)) {
+		if(equipped != null) {
+			if(AdditionalPipes.isPipe(equipped)) {
 				return false;
 			}
 		}
 
-		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_DIST,
-				container.worldObj, container.xCoord, container.yCoord, container.zCoord);
+		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_DIST, container.worldObj, container.xCoord, container.yCoord, container.zCoord);
 
 		return true;
 	}
 
 	private void sanityCheck() {
-		for (int d : distData) {
-			if (d > 0) {
+		for(int d : distData) {
+			if(d > 0) {
 				return;
 			}
 		}
-		for (int i = 0; i < distData.length; i++) {
+		for(int i = 0; i < distData.length; i++) {
 			Arrays.fill(distData, 1);
 		}
 	}
@@ -59,7 +58,7 @@ public class PipeLogicDistributor extends PipeLogic {
 
 		nbt.setInteger("curTick", curTick);
 		nbt.setInteger("distSide", distSide);
-		for (int i = 0; i < distData.length; i++) {
+		for(int i = 0; i < distData.length; i++) {
 			nbt.setInteger("distData" + i, distData[i]);
 		}
 	}
@@ -70,7 +69,7 @@ public class PipeLogicDistributor extends PipeLogic {
 
 		curTick = nbt.getInteger("curTick");
 		distSide = nbt.getInteger("distSide");
-		for (int i = 0; i < distData.length; i++) {
+		for(int i = 0; i < distData.length; i++) {
 			distData[i] = nbt.getInteger("distData" + i);
 		}
 		sanityCheck();

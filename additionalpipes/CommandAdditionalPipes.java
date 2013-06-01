@@ -25,7 +25,8 @@ public class CommandAdditionalPipes extends CommandBase {
 				if(args.length == 3) {
 					try {
 						int index = Integer.parseInt(args[2]);
-					} catch(Exception e) {}
+					} catch(Exception e) {
+					}
 
 				} else if(args.length == 5) {
 					try {
@@ -47,7 +48,8 @@ public class CommandAdditionalPipes extends CommandBase {
 								sender.sendChatToPlayer(sb.toString());
 							}
 						}
-					} catch(Exception e) {}
+					} catch(Exception e) {
+					}
 				}
 			} else {
 				StringBuffer sb = new StringBuffer();

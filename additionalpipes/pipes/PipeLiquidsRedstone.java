@@ -21,7 +21,8 @@ import buildcraft.transport.PipeTransportLiquids;
 import buildcraft.transport.pipes.PipeLogicGold;
 
 public class PipeLiquidsRedstone extends APPipe {
-	public @TileNetworkData boolean isPowering = false;
+	public @TileNetworkData
+	boolean isPowering = false;
 
 	public PipeLiquidsRedstone(int itemID) {
 		super(new PipeTransportLiquids(), new PipeLogicGold(), itemID);
@@ -36,10 +37,9 @@ public class PipeLiquidsRedstone extends APPipe {
 
 	@Override
 	public int isPoweringTo(int l) {
-		//System.out.println("RedStoneIsPoweringTo");
-		LiquidStack liquid = ((PipeTransportLiquids) transport)
-				.getTanks(ForgeDirection.UNKNOWN)[ForgeDirection.UNKNOWN.ordinal()].getLiquid();
-		if (liquid == null || liquid.amount == 0) {
+		// System.out.println("RedStoneIsPoweringTo");
+		LiquidStack liquid = ((PipeTransportLiquids) transport).getTanks(ForgeDirection.UNKNOWN)[ForgeDirection.UNKNOWN.ordinal()].getLiquid();
+		if(liquid == null || liquid.amount == 0) {
 			isPowering = false;
 			return 0;
 		}
@@ -63,7 +63,7 @@ public class PipeLiquidsRedstone extends APPipe {
 			return 0;
 		}
 
-		return (i1 != 2 || l != 4)?15:0;
+		return (i1 != 2 || l != 4) ? 15 : 0;
 	}
 
 	@Override
@@ -75,29 +75,29 @@ public class PipeLiquidsRedstone extends APPipe {
 	public void updateEntity() {
 		super.updateEntity();
 
-		//System.out.println("Quantity: " + (((PipeTransportLiquids)this.transport).getLiquidQuantity()) + " - Wanted: " + computeMaxLiquid() + " - Qua2: " + computeEnds()[1]);
-		//System.out.println("Quantity: " + ((PipeTransportLiquids)this.transport).getCenter());
-		LiquidStack liquid = ((PipeTransportLiquids) transport)
-				.getTanks(ForgeDirection.UNKNOWN)[ForgeDirection.UNKNOWN.ordinal()].getLiquid();
-		if (liquid == null || liquid.amount == 0 && isPowering) {
+		// System.out.println("Quantity: " +
+		// (((PipeTransportLiquids)this.transport).getLiquidQuantity()) +
+		// " - Wanted: " + computeMaxLiquid() + " - Qua2: " + computeEnds()[1]);
+		// System.out.println("Quantity: " +
+		// ((PipeTransportLiquids)this.transport).getCenter());
+		LiquidStack liquid = ((PipeTransportLiquids) transport).getTanks(ForgeDirection.UNKNOWN)[ForgeDirection.UNKNOWN.ordinal()].getLiquid();
+		if(liquid == null || liquid.amount == 0 && isPowering) {
 			isPowering = false;
 			UpdateTiles(container.xCoord, container.yCoord, container.zCoord);
-		}
-		else if (!isPowering) {
+		} else if(!isPowering) {
 			isPowering = true;
 			UpdateTiles(container.xCoord, container.yCoord, container.zCoord);
 		}
 	}
 
 	public boolean canRec(Position p) {
-		TileEntity entity = worldObj.getBlockTileEntity((int) p.x, (int) p.y,
-				(int) p.z);
+		TileEntity entity = worldObj.getBlockTileEntity((int) p.x, (int) p.y, (int) p.z);
 
-		if (!Utils.checkPipesConnections(entity, container)) {
+		if(!Utils.checkPipesConnections(entity, container)) {
 			return false;
 		}
 
-		if (entity instanceof IPipeEntry || entity instanceof ITankContainer) {
+		if(entity instanceof IPipeEntry || entity instanceof ITankContainer) {
 			return true;
 		}
 

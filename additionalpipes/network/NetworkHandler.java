@@ -23,18 +23,17 @@ import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
 
 public class NetworkHandler implements IPacketHandler {
-	//server to client
+	// server to client
 	public static final byte CHUNKLOAD_DATA = 15;
 	public static final byte TELE_PIPE_DATA = 16;
-	//client to server
+	// client to server
 	public static final byte ADV_WOOD_DATA = 62;
 	public static final byte DIST_PIPE_DATA = 63;
 	public static final byte TELE_PIPE_DATA_SET = 64;
 	public static final byte CHUNKLOAD_REQUEST = 65;
 
 	@Override
-	public void onPacketData(INetworkManager manager,
-			Packet250CustomPayload packet, Player player) {
+	public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player player) {
 		if(AdditionalPipes.CHANNEL.equals(packet.channel)) {
 			DataInputStream data = new DataInputStream(new ByteArrayInputStream(packet.data));
 			byte packetID = -1;
@@ -59,11 +58,10 @@ public class NetworkHandler implements IPacketHandler {
 					handleChunkLoadData(data);
 					break;
 				case CHUNKLOAD_REQUEST:
-					AdditionalPipes.instance.chunkLoadViewer
-					.sendPersistentChunksToPlayer((EntityPlayerMP) player);
+					AdditionalPipes.instance.chunkLoadViewer.sendPersistentChunksToPlayer((EntityPlayerMP) player);
 					break;
 				}
-			} catch (IOException e) {
+			} catch(IOException e) {
 				AdditionalPipes.instance.logger.log(Level.SEVERE, "Error handling packet " + packetID, e);
 			}
 		} else if(AdditionalPipes.CHANNELNBT.equals(packet.channel)) {
@@ -93,21 +91,21 @@ public class NetworkHandler implements IPacketHandler {
 					logic.distData[index] = newData;
 					boolean found = newData > 0;
 					if(!found) {
-						for (int i = 0; i < logic.distData.length; i++) {
-							if (logic.distData[i] > 0) {
+						for(int i = 0; i < logic.distData.length; i++) {
+							if(logic.distData[i] > 0) {
 								found = true;
 							}
 						}
 					}
-					if (!found) {
-						for (int i = 0; i < logic.distData.length; i++) {
+					if(!found) {
+						for(int i = 0; i < logic.distData.length; i++) {
 							logic.distData[i] = 1;
 						}
 					}
 
 				}
 			}
-		} catch (IOException e) {
+		} catch(IOException e) {
 			AdditionalPipes.instance.logger.log(Level.SEVERE, "Error handling distribution pipe packet.", e);
 		}
 	}
@@ -117,7 +115,7 @@ public class NetworkHandler implements IPacketHandler {
 			TileEntity te = getTileEntity(player, data);
 			if(te instanceof TileGenericPipe) {
 				PipeTeleport pipe = (PipeTeleport) ((TileGenericPipe) te).pipe;
-				//only allow the owner to change pipe state
+				// only allow the owner to change pipe state
 				EntityPlayerMP entityPlayer = (EntityPlayerMP) player;
 				if(!PipeLogicTeleport.canPlayerModifyPipe(entityPlayer, pipe.logic)) {
 					entityPlayer.sendChatToPlayer("You may not change pipe state.");
@@ -131,7 +129,7 @@ public class NetworkHandler implements IPacketHandler {
 				pipe.logic.state = (byte) data.read();
 				pipe.logic.isPublic = (data.read() == 1);
 			}
-		} catch (IOException e) {
+		} catch(IOException e) {
 			AdditionalPipes.instance.logger.log(Level.SEVERE, "Error handling teleport pipe packet.", e);
 		}
 	}
@@ -144,7 +142,7 @@ public class NetworkHandler implements IPacketHandler {
 				chunks[i] = new ChunkCoordIntPair(data.readInt(), data.readInt());
 			}
 			AdditionalPipes.instance.chunkLoadViewer.receivePersistentChunks(chunks);
-		} catch (IOException e) {
+		} catch(IOException e) {
 			AdditionalPipes.instance.logger.log(Level.SEVERE, "Error handling chunk load data.", e);
 		}
 	}
@@ -157,7 +155,7 @@ public class NetworkHandler implements IPacketHandler {
 			y = data.readInt();
 			z = data.readInt();
 			te = ((EntityPlayer) player).worldObj.getBlockTileEntity(x, y, z);
-		} catch (IOException e) {
+		} catch(IOException e) {
 			AdditionalPipes.instance.logger.log(Level.SEVERE, "Error getting tileentity position from packet.", e);
 		}
 		return te;

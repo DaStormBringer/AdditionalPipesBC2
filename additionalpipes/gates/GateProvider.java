@@ -15,7 +15,7 @@ public class GateProvider implements ITriggerProvider {
 
 	@Override
 	public LinkedList<ITrigger> getPipeTriggers(IPipe pipe) {
-		LinkedList <ITrigger> list = new LinkedList<ITrigger>();
+		LinkedList<ITrigger> list = new LinkedList<ITrigger>();
 		if(pipe instanceof PipeItemsClosed) {
 			list.add(AdditionalPipes.instance.triggerPipeClosed);
 		}

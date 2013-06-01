@@ -14,16 +14,15 @@ import buildcraft.transport.TileGenericPipe;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 public class GuiHandler implements IGuiHandler {
-	//Gui IDs
+	// Gui IDs
 	public static final int PIPE_TP = 1;
 	public static final int PIPE_DIST = 2;
 	public static final int PIPE_WOODEN_ADV = 3;
 
 	@Override
-	public Object getServerGuiElement(int ID, EntityPlayer player, World world,
-			int x, int y, int z) {
+	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		TileEntity tile = world.getBlockTileEntity(x, y, z);
-		if (tile == null) {
+		if(tile == null) {
 			return null;
 		}
 		switch(ID) {
@@ -39,10 +38,9 @@ public class GuiHandler implements IGuiHandler {
 	}
 
 	@Override
-	public Object getClientGuiElement(int ID, EntityPlayer player, World world,
-			int x, int y, int z) {
+	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		TileEntity tile = world.getBlockTileEntity(x, y, z);
-		if (tile == null) {
+		if(tile == null) {
 			return null;
 		}
 		switch(ID) {

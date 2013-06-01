@@ -1,13 +1,13 @@
 package buildcraft.additionalpipes.pipes;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraftforge.common.ForgeDirection;
 import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.api.core.IIconProvider;
 import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransport;
 import buildcraft.transport.pipes.PipeLogic;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class APPipe extends Pipe {
 
@@ -17,8 +17,7 @@ public abstract class APPipe extends Pipe {
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public IIconProvider getIconProvider()
-	{
+	public IIconProvider getIconProvider() {
 		return Textures.pipeIconProvider;
 	}
 

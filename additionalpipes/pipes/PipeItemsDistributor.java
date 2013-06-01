@@ -28,18 +28,18 @@ public class PipeItemsDistributor extends APPipe implements IPipeTransportItemsH
 
 	@Override
 	public int getIconIndex(ForgeDirection connection) {
-		switch (connection) {
-		case DOWN:    //-y
+		switch(connection) {
+		case DOWN: // -y
 			return 10;
-		case UP:      //+y
+		case UP: // +y
 			return 11;
-		case NORTH:   //-z
+		case NORTH: // -z
 			return 12;
-		case SOUTH:   //+z
+		case SOUTH: // +z
 			return 13;
-		case WEST:    //-x
+		case WEST: // -x
 			return 14;
-		case EAST:    //+x
+		case EAST: // +x
 		default:
 			return 9;
 		}
@@ -49,7 +49,7 @@ public class PipeItemsDistributor extends APPipe implements IPipeTransportItemsH
 	public LinkedList<ForgeDirection> filterPossibleMovements(LinkedList<ForgeDirection> possibleOrientations, Position pos, IPipedItem item) {
 		LinkedList<ForgeDirection> result = new LinkedList<ForgeDirection>();
 
-		if (logic.curTick >= logic.distData[logic.distSide]) {
+		if(logic.curTick >= logic.distData[logic.distSide]) {
 			toNextOpenSide();
 		}
 
@@ -60,14 +60,13 @@ public class PipeItemsDistributor extends APPipe implements IPipeTransportItemsH
 
 	private void toNextOpenSide() {
 		logic.curTick = 0;
-		for (int o = 0; o < logic.distData.length; ++o) {
+		for(int o = 0; o < logic.distData.length; ++o) {
 			logic.distSide = (logic.distSide + 1) % logic.distData.length;
-			if (logic.distData[logic.distSide] > 0 &&
-					container.isPipeConnected(ForgeDirection.VALID_DIRECTIONS[logic.distSide])) {
+			if(logic.distData[logic.distSide] > 0 && container.isPipeConnected(ForgeDirection.VALID_DIRECTIONS[logic.distSide])) {
 				break;
 			}
 		}
-		//no valid inventories found, do nothing
+		// no valid inventories found, do nothing
 	}
 
 	@Override

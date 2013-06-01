@@ -18,7 +18,7 @@ public class TriggerPhasedSignal extends APTrigger implements ITriggerPipe {
 
 	@Override
 	public String getDescription() {
-		switch (colour) {
+		switch(colour) {
 		case Red:
 			return "Red Phased Signal";
 		case Blue:
@@ -33,7 +33,7 @@ public class TriggerPhasedSignal extends APTrigger implements ITriggerPipe {
 
 	@Override
 	public int getIconIndex() {
-		switch (colour) {
+		switch(colour) {
 		case Red:
 			return 2;
 		case Blue:

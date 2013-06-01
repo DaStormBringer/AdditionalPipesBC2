@@ -22,8 +22,7 @@ public class PipeLiquidsWaterPump extends APPipe {
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		if(AdditionalPipes.proxy.isServer(worldObj) &&
-				worldObj.getBlockId(xCoord, yCoord - 1, zCoord) == water.blockID) {
+		if(AdditionalPipes.proxy.isServer(worldObj) && worldObj.getBlockId(xCoord, yCoord - 1, zCoord) == water.blockID) {
 			transport.fill(ForgeDirection.UNKNOWN, new LiquidStack(water, 100), true);
 		}
 	}

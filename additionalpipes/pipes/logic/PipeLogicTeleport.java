@@ -36,14 +36,16 @@ public class PipeLogicTeleport extends PipeLogic {
 
 	@Override
 	public boolean blockActivated(EntityPlayer player) {
-		if(!AdditionalPipes.proxy.isServer(player.worldObj)) return true;
-		if (owner == null || "".equalsIgnoreCase(owner)) {
+		if(!AdditionalPipes.proxy.isServer(player.worldObj))
+			return true;
+		if(owner == null || "".equalsIgnoreCase(owner)) {
 			owner = player.username;
 		}
 		ItemStack equippedItem = player.getCurrentEquippedItem();
-		/*if (equippedItem != null && AdditionalPipes.isPipe(equippedItem.getItem()))  {
-			return false;
-		}*/
+		/*
+		 * if (equippedItem != null &&
+		 * AdditionalPipes.isPipe(equippedItem.getItem())) { return false; }
+		 */
 		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_TP, worldObj, xCoord, yCoord, zCoord);
 		return true;
 	}
@@ -92,10 +94,11 @@ public class PipeLogicTeleport extends PipeLogic {
 	@Override
 	public boolean canPipeConnect(TileEntity tile, ForgeDirection side) {
 		Pipe pipe = null;
-		if (tile instanceof TileGenericPipe) {
+		if(tile instanceof TileGenericPipe) {
 			pipe = ((TileGenericPipe) tile).pipe;
 		}
-		if(pipe != null && pipe.logic.getClass() == this.getClass()) return false;
+		if(pipe != null && pipe.logic.getClass() == this.getClass())
+			return false;
 		return pipe != null;
 	}
 

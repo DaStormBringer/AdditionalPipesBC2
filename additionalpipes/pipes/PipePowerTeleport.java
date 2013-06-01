@@ -25,6 +25,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 	private static class PowerRequest {
 		public final TileGenericPipe tile;
 		public final ForgeDirection orientation;
+
 		public PowerRequest(TileGenericPipe te, ForgeDirection o) {
 			tile = te;
 			orientation = o;
@@ -37,23 +38,23 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 
 	@Override
 	public void requestEnergy(ForgeDirection from, int is) {
-		((PipeTransportPower)transport).step();
+		((PipeTransportPower) transport).step();
 
-		if ((logic.state & 0x2) == 0) { //No need to waste CPU
+		if((logic.state & 0x2) == 0) { // No need to waste CPU
 			return;
 		}
 
 		List<PipeTeleport> pipeList = TeleportManager.instance.getConnectedPipes(this, true);
 
-		if (pipeList.size() <= 0) {
+		if(pipeList.size() <= 0) {
 			return;
 		}
 
-		for (PipeTeleport pipe : pipeList) {
+		for(PipeTeleport pipe : pipeList) {
 			LinkedList<ForgeDirection> possibleMovements = getRealPossibleMovements(pipe);
-			for (ForgeDirection orientation : possibleMovements) {
+			for(ForgeDirection orientation : possibleMovements) {
 				TileEntity tile = pipe.container.getTile(orientation);
-				if (tile instanceof TileGenericPipe) {
+				if(tile instanceof TileGenericPipe) {
 					TileGenericPipe adjacentTile = (TileGenericPipe) tile;
 					PipeTransportPower nearbyTransport = (PipeTransportPower) adjacentTile.pipe.transport;
 					nearbyTransport.requestEnergy(orientation.getOpposite(), is);
@@ -64,39 +65,39 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 
 	@Override
 	public void receiveEnergy(ForgeDirection from, double val) {
-		((PipeTransportPower)transport).step();
+		((PipeTransportPower) transport).step();
 		List<PipeTeleport> connectedPipes = TeleportManager.instance.getConnectedPipes(this, false);
 		List<PipeTeleport> sendingToList = new LinkedList<PipeTeleport>();
 
-		//no connected pipes, leave!
-		if (connectedPipes.size() <= 0 || (logic.state & 0x1) == 0) {
+		// no connected pipes, leave!
+		if(connectedPipes.size() <= 0 || (logic.state & 0x1) == 0) {
 			return;
 		}
 
-		for (PipeTeleport pipe : connectedPipes) {
-			if (getPipesNeedsPower(pipe).size() > 0) {
+		for(PipeTeleport pipe : connectedPipes) {
+			if(getPipesNeedsPower(pipe).size() > 0) {
 				sendingToList.add(pipe);
 			}
 		}
 
-		//no pipes need energy, leave!
-		if (sendingToList.size() <= 0) {
+		// no pipes need energy, leave!
+		if(sendingToList.size() <= 0) {
 			return;
 		}
 
-		//TODO proportional power relay
+		// TODO proportional power relay
 		double powerToSend = AdditionalPipes.instance.powerLossCfg * val / sendingToList.size();
 
-		for (PipeTeleport receiver : sendingToList) {
+		for(PipeTeleport receiver : sendingToList) {
 			List<PowerRequest> needsPower = getPipesNeedsPower(receiver);
 
-			if (needsPower.size() <= 0) {
+			if(needsPower.size() <= 0) {
 				continue;
 			}
 
 			double dividedPowerToSend = powerToSend / needsPower.size();
 
-			for (PowerRequest powerEntry : needsPower) {
+			for(PowerRequest powerEntry : needsPower) {
 				PipeTransportPower nearbyTransport = (PipeTransportPower) powerEntry.tile.pipe.transport;
 				nearbyTransport.receiveEnergy(powerEntry.orientation, dividedPowerToSend);
 			}
@@ -104,15 +105,14 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 		}
 	}
 
-
 	private List<PowerRequest> getPipesNeedsPower(PipeTeleport pipe) {
 		LinkedList<ForgeDirection> possibleMovements = getRealPossibleMovements(pipe);
 		List<PowerRequest> needsPower = new LinkedList<PowerRequest>();
 
-		if (possibleMovements.size() > 0) {
-			for (ForgeDirection orientation : possibleMovements) {
+		if(possibleMovements.size() > 0) {
+			for(ForgeDirection orientation : possibleMovements) {
 				TileEntity tile = pipe.container.getTile(orientation);
-				if (tile instanceof TileGenericPipe){
+				if(tile instanceof TileGenericPipe) {
 					TileGenericPipe adjacentPipe = (TileGenericPipe) tile;
 					if(pipeNeedsPower(adjacentPipe)) {
 						needsPower.add(new PowerRequest(adjacentPipe, orientation.getOpposite()));
@@ -124,27 +124,26 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 		return needsPower;
 	}
 
-	//precondition: power pipe that isn't tp
+	// precondition: power pipe that isn't tp
 	private static boolean pipeNeedsPower(TileGenericPipe tile) {
-		if (tile instanceof TileGenericPipe) {
+		if(tile instanceof TileGenericPipe) {
 			PipeTransportPower ttb = (PipeTransportPower) tile.pipe.transport;
-			for (int i = 0; i < ttb.powerQuery.length; i++)
-				if (ttb.powerQuery[i] > 0) {
+			for(int i = 0; i < ttb.powerQuery.length; i++)
+				if(ttb.powerQuery[i] > 0) {
 					return true;
 				}
 		}
 		return false;
 	}
 
-	//returns all adjacent pipes
+	// returns all adjacent pipes
 	private static LinkedList<ForgeDirection> getRealPossibleMovements(PipeTeleport pipe) {
 		LinkedList<ForgeDirection> result = new LinkedList<ForgeDirection>();
 
-		for (ForgeDirection orientation : ForgeDirection.VALID_DIRECTIONS) {
-			if (pipe.outputOpen(orientation)) {
+		for(ForgeDirection orientation : ForgeDirection.VALID_DIRECTIONS) {
+			if(pipe.outputOpen(orientation)) {
 				TileEntity te = pipe.container.getTile(orientation);
-				if ((te instanceof TileGenericPipe) &&
-						Utils.checkPipesConnections(pipe.container, te)) {
+				if((te instanceof TileGenericPipe) && Utils.checkPipesConnections(pipe.container, te)) {
 					result.add(orientation);
 				}
 			}

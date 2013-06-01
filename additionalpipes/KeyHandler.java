@@ -20,9 +20,8 @@ public class KeyHandler extends KeyBindingRegistry.KeyHandler {
 	}
 
 	@Override
-	public void keyDown(EnumSet<TickType> types, KeyBinding kb,
-			boolean tickEnd, boolean isRepeat) {
-		if (tickEnd && kb.keyCode == laserKey.keyCode) {
+	public void keyDown(EnumSet<TickType> types, KeyBinding kb, boolean tickEnd, boolean isRepeat) {
+		if(tickEnd && kb.keyCode == laserKey.keyCode) {
 			ChunkLoadViewDataProxy viewer = AdditionalPipes.instance.chunkLoadViewer;
 			viewer.toggleLasers();
 			if(viewer.lasersActive()) {
@@ -32,7 +31,8 @@ public class KeyHandler extends KeyBindingRegistry.KeyHandler {
 	}
 
 	@Override
-	public void keyUp(EnumSet<TickType> types, KeyBinding kb, boolean tickEnd) {}
+	public void keyUp(EnumSet<TickType> types, KeyBinding kb, boolean tickEnd) {
+	}
 
 	@Override
 	public EnumSet<TickType> ticks() {

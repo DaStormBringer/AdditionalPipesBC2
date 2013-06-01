@@ -22,26 +22,26 @@ import buildcraft.transport.pipes.PipeLogicStone;
 
 public class PipeItemsRedstone extends APPipe implements IPipeTransportItemsHook {
 
-	public @TileNetworkData boolean isPowering = false;
+	public @TileNetworkData
+	boolean isPowering = false;
+
 	public PipeItemsRedstone(int itemID) {
 		super(new PipeTransportItems(), new PipeLogicStone(), itemID);
 	}
 
 	@Override
-	public void readjustSpeed (IPipedItem item) {
-		if (item.getSpeed() > Utils.pipeNormalSpeed) {
+	public void readjustSpeed(IPipedItem item) {
+		if(item.getSpeed() > Utils.pipeNormalSpeed) {
 			item.setSpeed(item.getSpeed() - Utils.pipeNormalSpeed / 2.0F);
 		}
 
-		if (item.getSpeed() < Utils.pipeNormalSpeed) {
+		if(item.getSpeed() < Utils.pipeNormalSpeed) {
 			item.setSpeed(Utils.pipeNormalSpeed);
 		}
 	}
 
 	@Override
-	public LinkedList<ForgeDirection> filterPossibleMovements(
-			LinkedList<ForgeDirection> possibleOrientations, Position pos,
-			IPipedItem item) {
+	public LinkedList<ForgeDirection> filterPossibleMovements(LinkedList<ForgeDirection> possibleOrientations, Position pos, IPipedItem item) {
 		return possibleOrientations;
 	}
 
@@ -49,11 +49,10 @@ public class PipeItemsRedstone extends APPipe implements IPipeTransportItemsHook
 	public void updateEntity() {
 		super.updateEntity();
 
-		if ( ((PipeTransportItems)transport).travelingEntities.size() == 0 && isPowering) {
+		if(((PipeTransportItems) transport).travelingEntities.size() == 0 && isPowering) {
 			isPowering = false;
 			UpdateTiles(container.xCoord, container.yCoord, container.zCoord);
-		}
-		else if ( ((PipeTransportItems)transport).travelingEntities.size() > 0 && !isPowering) {
+		} else if(((PipeTransportItems) transport).travelingEntities.size() > 0 && !isPowering) {
 			isPowering = true;
 			UpdateTiles(container.xCoord, container.yCoord, container.zCoord);
 		}
@@ -65,8 +64,8 @@ public class PipeItemsRedstone extends APPipe implements IPipeTransportItemsHook
 
 	@Override
 	public int isPoweringTo(int l) {
-		//System.out.println("RedStoneIsPoweringTo");
-		if (((PipeTransportItems)transport).travelingEntities.size() == 0) {
+		// System.out.println("RedStoneIsPoweringTo");
+		if(((PipeTransportItems) transport).travelingEntities.size() == 0) {
 			isPowering = false;
 			return 0;
 		}
@@ -90,7 +89,7 @@ public class PipeItemsRedstone extends APPipe implements IPipeTransportItemsHook
 			return 0;
 		}
 
-		return (i1 != 2 || l != 4)?15:0;
+		return (i1 != 2 || l != 4) ? 15 : 0;
 	}
 
 	@Override

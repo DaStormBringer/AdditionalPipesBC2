@@ -19,10 +19,9 @@ public class TileChunkLoader extends TileEntity {
 	public List<ChunkCoordIntPair> getLoadArea() {
 		List<ChunkCoordIntPair> loadArea = new LinkedList<ChunkCoordIntPair>();
 
-		for (int x = -loadDistance; x < loadDistance + 1; x++) {
-			for (int z = -loadDistance; z < loadDistance + 1; z++) {
-				ChunkCoordIntPair chunkCoords = new ChunkCoordIntPair(
-						(xCoord >> 4) + x, (zCoord >> 4) + z);
+		for(int x = -loadDistance; x < loadDistance + 1; x++) {
+			for(int z = -loadDistance; z < loadDistance + 1; z++) {
+				ChunkCoordIntPair chunkCoords = new ChunkCoordIntPair((xCoord >> 4) + x, (zCoord >> 4) + z);
 
 				loadArea.add(chunkCoords);
 			}
@@ -34,10 +33,9 @@ public class TileChunkLoader extends TileEntity {
 	@Override
 	public void validate() {
 		super.validate();
-		if (!worldObj.isRemote && chunkTicket == null) {
-			Ticket ticket = ForgeChunkManager.requestTicket(
-					AdditionalPipes.instance, worldObj, Type.NORMAL);
-			if (ticket != null) {
+		if(!worldObj.isRemote && chunkTicket == null) {
+			Ticket ticket = ForgeChunkManager.requestTicket(AdditionalPipes.instance, worldObj, Type.NORMAL);
+			if(ticket != null) {
 				forceChunkLoading(ticket);
 			}
 		}
@@ -57,23 +55,21 @@ public class TileChunkLoader extends TileEntity {
 	public void forceChunkLoading(Ticket ticket) {
 		stopChunkLoading();
 		chunkTicket = ticket;
-		for (ChunkCoordIntPair coord : getLoadArea()) {
-			AdditionalPipes.instance.logger.info(
-					String.format("Force loading chunk %s in %s",
-							coord, worldObj.provider.getClass()));
+		for(ChunkCoordIntPair coord : getLoadArea()) {
+			AdditionalPipes.instance.logger.info(String.format("Force loading chunk %s in %s", coord, worldObj.provider.getClass()));
 			ForgeChunkManager.forceChunk(chunkTicket, coord);
 		}
 	}
 
 	public void unforceChunkLoading() {
-		for (Object obj : chunkTicket.getChunkList()) {
+		for(Object obj : chunkTicket.getChunkList()) {
 			ChunkCoordIntPair coord = (ChunkCoordIntPair) obj;
 			ForgeChunkManager.unforceChunk(chunkTicket, coord);
 		}
 	}
 
 	public void stopChunkLoading() {
-		if (chunkTicket != null) {
+		if(chunkTicket != null) {
 			ForgeChunkManager.releaseTicket(chunkTicket);
 			chunkTicket = null;
 		}

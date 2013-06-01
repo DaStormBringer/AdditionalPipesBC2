@@ -22,7 +22,7 @@ import buildcraft.transport.TileGenericPipe;
 
 public class PipeItemsTeleport extends PipeTeleport implements IPipeTransportItemsHook {
 
-	private PipeTransportItems transport;
+	private final PipeTransportItems transport;
 
 	public PipeItemsTeleport(int itemID) {
 		super(new PipeTransportItems(), new PipeLogicTeleport(), itemID);
@@ -45,30 +45,34 @@ public class PipeItemsTeleport extends PipeTeleport implements IPipeTransportIte
 			return;
 		}
 		List<PipeTeleport> connectedTeleportPipes = TeleportManager.instance.getConnectedPipes(this, false);
-		//no teleport pipes connected, use default
-		if (connectedTeleportPipes.size() <= 0 || (logic.state & 0x1) == 0) {
+		// no teleport pipes connected, use default
+		if(connectedTeleportPipes.size() <= 0 || (logic.state & 0x1) == 0) {
 			return;
 		}
 
-		//output to random pipe
+		// output to random pipe
 		LinkedList<ForgeDirection> outputOrientations = new LinkedList<ForgeDirection>();
 		PipeTeleport otherPipe = connectedTeleportPipes.get(rand.nextInt(connectedTeleportPipes.size()));
 
-		//find possible output orientations
-		for (ForgeDirection o : ForgeDirection.VALID_DIRECTIONS) {
-			if (otherPipe.outputOpen(o))
+		// find possible output orientations
+		for(ForgeDirection o : ForgeDirection.VALID_DIRECTIONS) {
+			if(otherPipe.outputOpen(o))
 				outputOrientations.add(o);
 		}
-		//no outputs found, default behaviour
-		if (outputOrientations.size() <= 0) {
+		// no outputs found, default behaviour
+		if(outputOrientations.size() <= 0) {
 			return;
 		}
 
 		ForgeDirection newOrientation = outputOrientations.get(rand.nextInt(outputOrientations.size()));
 		TileGenericPipe destination = (TileGenericPipe) otherPipe.container.getTile(newOrientation);
-		//item.setContainer(destination);
+
+		if(destination == null) {
+			return;
+		}
+
 		item.setPosition(destination.xCoord + 0.5, destination.yCoord, destination.zCoord + 0.5);
-		//transport.scheduleRemoval(item);
+
 		destination.pipe.transport.entityEntering(item, newOrientation);
 		AdditionalPipes.instance.logger.info(item + " from " + getPosition() + " to " + otherPipe.getPosition() + " " + newOrientation);
 	}

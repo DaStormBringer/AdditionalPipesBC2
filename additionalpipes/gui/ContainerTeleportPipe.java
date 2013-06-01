@@ -63,14 +63,14 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
 		int connectedPipesNew = connectedPipes;
-		if(ticks % 40 == 0) { //reduce lag
+		if(ticks % 40 == 0) { // reduce lag
 			ticks = 0;
 			AdditionalPipes.instance.logger.info("Old connected:" + connectedPipesNew);
 			connectedPipesNew = TeleportManager.instance.getConnectedPipes(pipe, false).size();
 			AdditionalPipes.instance.logger.info("New connected:" + connectedPipesNew);
 		}
 		ticks++;
-		for (Object crafter : crafters) {
+		for(Object crafter : crafters) {
 			if(freq != pipe.logic.getFrequency()) {
 				((ICrafting) crafter).sendProgressBarUpdate(this, 0, pipe.logic.getFrequency());
 			}

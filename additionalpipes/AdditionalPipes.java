@@ -73,11 +73,8 @@ import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@Mod(modid=AdditionalPipes.MODID, name=AdditionalPipes.NAME,
-dependencies="after:BuildCraft|Transport;after:BuildCraft|Silicon;after:BuildCraft|Transport;after:BuildCraft|Factory",
-version=AdditionalPipes.VERSION)
-@NetworkMod(channels={AdditionalPipes.CHANNEL, AdditionalPipes.CHANNELNBT},
-clientSideRequired=true, serverSideRequired=true, packetHandler=NetworkHandler.class)
+@Mod(modid = AdditionalPipes.MODID, name = AdditionalPipes.NAME, dependencies = "after:BuildCraft|Transport;after:BuildCraft|Silicon;after:BuildCraft|Transport;after:BuildCraft|Factory", version = AdditionalPipes.VERSION)
+@NetworkMod(channels = { AdditionalPipes.CHANNEL, AdditionalPipes.CHANNELNBT }, clientSideRequired = true, serverSideRequired = true, packetHandler = NetworkHandler.class)
 public class AdditionalPipes {
 	public static final String MODID = "APUnofficial";
 	public static final String NAME = "Additional Pipes Unofficial";
@@ -88,8 +85,7 @@ public class AdditionalPipes {
 	@Instance(MODID)
 	public static AdditionalPipes instance;
 
-	@SidedProxy(clientSide = "buildcraft.additionalpipes.MutiPlayerProxyClient",
-			serverSide = "buildcraft.additionalpipes.MutiPlayerProxy")
+	@SidedProxy(clientSide = "buildcraft.additionalpipes.MutiPlayerProxyClient", serverSide = "buildcraft.additionalpipes.MutiPlayerProxy")
 	public static MutiPlayerProxy proxy;
 
 	public File configFile;
@@ -100,11 +96,13 @@ public class AdditionalPipes {
 	private static @interface CfgId {
 		public boolean block() default false;
 	}
+
 	@Retention(RetentionPolicy.RUNTIME)
-	private static @interface CfgBool {}
+	private static @interface CfgBool {
+	}
 
 	public static final String LOC_PATH = "/buildcraft/additionalpipes";
-	//textures
+	// textures
 	public static final String BASE_PATH = "/mods/additionalpipes";
 	public static final String TEXTURE_PATH = BASE_PATH + "/textures";
 
@@ -112,78 +110,96 @@ public class AdditionalPipes {
 	public static final String TEXTURE_GUI_ADVANCEDWOOD = TEXTURE_PATH + "/gui/advancedWoodGui.png";
 	public static final String TEXTURE_GUI_DISTRIBUTION = TEXTURE_PATH + "/gui/distributionGui.png";
 
-	//chunk load boundaries
+	// chunk load boundaries
 	public ChunkLoadViewDataProxy chunkLoadViewer;
-	public @CfgBool boolean chunkSight = true;
-	public int chunkSightRange = 8; //config option
-	public @CfgBool boolean chunkSightAutorefresh = true;
+	public @CfgBool
+	boolean chunkSight = true;
+	public int chunkSightRange = 8; // config option
+	public @CfgBool
+	boolean chunkSightAutorefresh = true;
 
-	//teleport scanner TODO
-	//public Item teleportScanner;
-	//public @CfgId int teleportScannerId = 14061;
-	//meter TODO
-	//public Item powerMeter;
-	//public @CfgId int powerMeterId = 14060;
+	// teleport scanner TODO
+	// public Item teleportScanner;
+	// public @CfgId int teleportScannerId = 14061;
+	// meter TODO
+	// public Item powerMeter;
+	// public @CfgId int powerMeterId = 14060;
 
-	//Redstone Liquid
+	// Redstone Liquid
 	public Item pipeLiquidsRedstone;
-	public @CfgId int pipeLiquidsRedstoneId = 14042;
-	//Redstone
+	public @CfgId
+	int pipeLiquidsRedstoneId = 14042;
+	// Redstone
 	public Item pipeItemsRedStone;
-	public @CfgId int pipeItemsRedStoneId = 14043;
-	//Advanced Insertion
+	public @CfgId
+	int pipeItemsRedStoneId = 14043;
+	// Advanced Insertion
 	public Item pipeItemsAdvancedInsertion;
-	public @CfgId int pipeItemsAdvancedInsertionId = 14044;
-	//Advanced Wood
+	public @CfgId
+	int pipeItemsAdvancedInsertionId = 14044;
+	// Advanced Wood
 	public Item pipeItemsAdvancedWood;
-	public @CfgId int pipeItemsAdvancedWoodId = 14045;
-	//Distributor
+	public @CfgId
+	int pipeItemsAdvancedWoodId = 14045;
+	// Distributor
 	public Item pipeItemsDistributor;
-	public @CfgId int pipeItemsDistributorId = 14046;
-	//Item Teleport
+	public @CfgId
+	int pipeItemsDistributorId = 14046;
+	// Item Teleport
 	public Item pipeItemsTeleport;
-	public @CfgId int pipeItemsTeleportId = 14047;
-	//Liquid Teleport
+	public @CfgId
+	int pipeItemsTeleportId = 14047;
+	// Liquid Teleport
 	public Item pipeLiquidsTeleport;
-	public @CfgId int pipeLiquidsTeleportId = 14048;
-	//Power Teleport
+	public @CfgId
+	int pipeLiquidsTeleportId = 14048;
+	// Power Teleport
 	public Item pipePowerTeleport;
-	public @CfgId int pipePowerTeleportId = 14049;
-	//Items Closed
+	public @CfgId
+	int pipePowerTeleportId = 14049;
+	// Items Closed
 	public Item pipeItemsClosed;
-	public @CfgId int pipeItemsClosedId = 14050;
-	//Switch pipes
+	public @CfgId
+	int pipeItemsClosedId = 14050;
+	// Switch pipes
 	public Item pipePowerSwitch;
-	public @CfgId int pipePowerSwitchId = 14051;
+	public @CfgId
+	int pipePowerSwitchId = 14051;
 	public Item pipeItemsSwitch;
-	public @CfgId int pipeItemsSwitchId = 14052;
+	public @CfgId
+	int pipeItemsSwitchId = 14052;
 	public Item pipeLiquidsSwitch;
-	public @CfgId int pipeLiquidsSwitchId = 14053;
-	//water pump pipe
+	public @CfgId
+	int pipeLiquidsSwitchId = 14053;
+	// water pump pipe
 	public Item pipeLiquidsWaterPump;
-	public @CfgId int pipeLiquidsWaterPumpId = 14054;
-	//chunk loader
+	public @CfgId
+	int pipeLiquidsWaterPumpId = 14054;
+	// chunk loader
 	public Block blockChunkLoader;
-	public @CfgId(block=true) int chunkLoaderId = 1890;
+	public @CfgId(block = true)
+	int chunkLoaderId = 1890;
 
-	public @CfgBool boolean enableTriggers = true;
+	public @CfgBool
+	boolean enableTriggers = true;
 	public ITrigger triggerPipeClosed;
 
 	public ITrigger triggerPhasedSignalRed;
 	public ITrigger triggerPhasedSignalBlue;
 	public ITrigger triggerPhasedSignalGreen;
 	public ITrigger triggerPhasedSignalYellow;
-	//keybinding
-	public int laserKeyCode = 64; //config option (& in options menu)
-	//misc
-	public @CfgBool boolean allowWRRemove = false;
-	public double powerLossCfg = 0.90; //config option
+	// keybinding
+	public int laserKeyCode = 64; // config option (& in options menu)
+	// misc
+	public @CfgBool
+	boolean allowWRRemove = false;
+	public double powerLossCfg = 0.90; // config option
 
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event) {
 		logger = Logger.getLogger(MODID);
 		logger.setParent(FMLLog.getLogger());
-		logger.setLevel(Level.WARNING); //DEBUG
+		logger.setLevel(Level.WARNING); // DEBUG
 
 		configFile = event.getSuggestedConfigurationFile();
 		loadConfigs(false);
@@ -194,7 +210,7 @@ public class AdditionalPipes {
 			en_US = new Properties();
 			en_US.load(AdditionalPipes.class.getResourceAsStream((LOC_PATH + "/lang/en_US.properties")));
 			LanguageRegistry.instance().addStringLocalization(en_US);
-		} catch (Exception e) {
+		} catch(Exception e) {
 			logger.log(Level.SEVERE, "Failed to load default localization.", e);
 		}
 		MinecraftForge.EVENT_BUS.register(this);
@@ -203,14 +219,15 @@ public class AdditionalPipes {
 	@Init
 	public void init(FMLInitializationEvent event) {
 		NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
-		ForgeChunkManager.setForcedChunkLoadingCallback(this,  new ChunkLoadingHandler());
+		ForgeChunkManager.setForcedChunkLoadingCallback(this, new ChunkLoadingHandler());
 		chunkLoadViewer = new ChunkLoadViewDataProxy(chunkSightRange);
 		TickRegistry.registerScheduledTickHandler(chunkLoadViewer, Side.CLIENT);
 		proxy.registerKeyHandler();
 		proxy.registerRendering();
 
-		//powerMeter = new ItemPowerMeter(powerMeterId).setItemName("powerMeter");
-		//LanguageRegistry.addName(powerMeter, "Power Meter");
+		// powerMeter = new
+		// ItemPowerMeter(powerMeterId).setItemName("powerMeter");
+		// LanguageRegistry.addName(powerMeter, "Power Meter");
 		loadConfigs(true);
 		loadPipes();
 
@@ -223,38 +240,38 @@ public class AdditionalPipes {
 			ActionManager.registerTriggerProvider(new GateProvider());
 		}
 
-		if (allowWRRemove) {
-			//Additional Pipes
-			GameRegistry.addRecipe(new ItemStack(pipeItemsTeleport), new Object[]{"A", 'A', pipePowerTeleport});
-			GameRegistry.addRecipe(new ItemStack(pipeItemsTeleport), new Object[]{"A", 'A', pipeLiquidsTeleport});
-			GameRegistry.addRecipe(new ItemStack(pipeItemsRedStone), new Object[]{"A", 'A', pipeLiquidsRedstone});
-			//BC Liquid
-			GameRegistry.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsCobblestone), new Object[]{"A", 'A', BuildCraftTransport.pipeLiquidsCobblestone});
-			GameRegistry.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsGold), new Object[]{"A", 'A', BuildCraftTransport.pipeLiquidsGold});
-			GameRegistry.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsIron), new Object[]{"A", 'A', BuildCraftTransport.pipeLiquidsIron});
-			GameRegistry.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsStone), new Object[]{"A", 'A', BuildCraftTransport.pipeLiquidsStone});
-			GameRegistry.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsWood), new Object[]{"A", 'A', BuildCraftTransport.pipeLiquidsWood});
-			//BC Power
-			GameRegistry.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsGold), new Object[]{"A", 'A', BuildCraftTransport.pipePowerGold});
-			GameRegistry.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsStone), new Object[]{"A", 'A', BuildCraftTransport.pipePowerStone});
-			GameRegistry.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsWood), new Object[]{"A", 'A', BuildCraftTransport.pipePowerWood});
+		if(allowWRRemove) {
+			// Additional Pipes
+			GameRegistry.addRecipe(new ItemStack(pipeItemsTeleport), new Object[] { "A", 'A', pipePowerTeleport });
+			GameRegistry.addRecipe(new ItemStack(pipeItemsTeleport), new Object[] { "A", 'A', pipeLiquidsTeleport });
+			GameRegistry.addRecipe(new ItemStack(pipeItemsRedStone), new Object[] { "A", 'A', pipeLiquidsRedstone });
+			// BC Liquid
+			GameRegistry.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsCobblestone), new Object[] { "A", 'A', BuildCraftTransport.pipeLiquidsCobblestone });
+			GameRegistry.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsGold), new Object[] { "A", 'A', BuildCraftTransport.pipeLiquidsGold });
+			GameRegistry.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsIron), new Object[] { "A", 'A', BuildCraftTransport.pipeLiquidsIron });
+			GameRegistry.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsStone), new Object[] { "A", 'A', BuildCraftTransport.pipeLiquidsStone });
+			GameRegistry.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsWood), new Object[] { "A", 'A', BuildCraftTransport.pipeLiquidsWood });
+			// BC Power
+			GameRegistry.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsGold), new Object[] { "A", 'A', BuildCraftTransport.pipePowerGold });
+			GameRegistry.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsStone), new Object[] { "A", 'A', BuildCraftTransport.pipePowerStone });
+			GameRegistry.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsWood), new Object[] { "A", 'A', BuildCraftTransport.pipePowerWood });
 		}
 
-		//ChunkLoader
+		// ChunkLoader
 		if(chunkLoaderId != 0) {
 			blockChunkLoader = new BlockChunkLoader(chunkLoaderId > 0 ? chunkLoaderId : -chunkLoaderId, 32);
 			blockChunkLoader.setUnlocalizedName("TeleportTether");
 			GameRegistry.registerBlock(blockChunkLoader, ItemBlock.class, "chunkLoader");
 			GameRegistry.registerTileEntity(TileChunkLoader.class, "TeleportTether");
-			if (chunkLoaderId > 0) {
-				GameRegistry.addRecipe(new ItemStack(blockChunkLoader), new Object[]{"iii", "iLi", "iii", 'i', Item.ingotIron, 'L', new ItemStack(Item.dyePowder, 1, 4)});
+			if(chunkLoaderId > 0) {
+				GameRegistry.addRecipe(new ItemStack(blockChunkLoader), new Object[] { "iii", "iLi", "iii", 'i', Item.ingotIron, 'L', new ItemStack(Item.dyePowder, 1, 4) });
 			}
 		}
 	}
 
 	@ServerStarting
 	public void onServerStart(FMLServerStartingEvent event) {
-		//event.registerServerCommand(new CommandAdditionalPipes());
+		// event.registerServerCommand(new CommandAdditionalPipes());
 		TeleportManager.instance.reset();
 	}
 
@@ -269,33 +286,34 @@ public class AdditionalPipes {
 			config.addCustomCategoryComment(Configuration.CATEGORY_ITEM, "Set id to 0 to disable loading the item, add - in front of id to disable recipe only.");
 			config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, "Disabling items/blocks only disables recipes.");
 			Field[] fields = AdditionalPipes.class.getFields();
-			for(Field field : fields){
+			for(Field field : fields) {
 				if(!Modifier.isStatic(field.getModifiers())) {
 
 					CfgId annotation = field.getAnnotation(CfgId.class);
 					if(annotation != null) {
 						int id = field.getInt(this);
-						if(annotation.block()){
+						if(annotation.block()) {
 							if(config.getCategory(Configuration.CATEGORY_BLOCK).containsKey(field.getName())) {
 								id = config.get(Configuration.CATEGORY_BLOCK, field.getName(), id).getInt(id);
-								if(id > 0) id = config.getBlock(field.getName(), id).getInt(id);
+								if(id > 0)
+									id = config.getBlock(field.getName(), id).getInt(id);
 							} else {
 								id = config.getBlock(field.getName(), id).getInt(id);
 							}
-						}else{
+						} else {
 							if(config.getCategory(Configuration.CATEGORY_ITEM).containsKey(field.getName())) {
 								id = config.get(Configuration.CATEGORY_ITEM, field.getName(), id).getInt(id);
-								if(id > 0) id = config.getItem(field.getName(), id).getInt(id);
+								if(id > 0)
+									id = config.getItem(field.getName(), id).getInt(id);
 							} else {
 								id = config.getItem(field.getName(), id).getInt(id);
 							}
 						}
 						field.setInt(this, id);
 					} else {
-						if(field.isAnnotationPresent(CfgBool.class)){
+						if(field.isAnnotationPresent(CfgBool.class)) {
 							boolean bool = field.getBoolean(this);
-							bool = config.get(Configuration.CATEGORY_GENERAL,
-									field.getName(), bool).getBoolean(bool);
+							bool = config.get(Configuration.CATEGORY_GENERAL, field.getName(), bool).getBoolean(bool);
 							field.setBoolean(this, bool);
 						}
 					}
@@ -303,8 +321,7 @@ public class AdditionalPipes {
 				}
 			}
 
-			Property powerLoss = config.get(Configuration.CATEGORY_GENERAL,
-					"powerLoss", (int) (powerLossCfg * 100));
+			Property powerLoss = config.get(Configuration.CATEGORY_GENERAL, "powerLoss", (int) (powerLossCfg * 100));
 			powerLoss.comment = "Percentage of power a power teleport pipe transmits. Between 0 and 100.";
 			powerLossCfg = powerLoss.getInt() / 100.0;
 			if(powerLossCfg > 1.00) {
@@ -313,33 +330,27 @@ public class AdditionalPipes {
 				powerLossCfg = 0.0;
 			}
 
-			Property chunkLoadSightRange = config.get(Configuration.CATEGORY_GENERAL,
-					"chunkSightRange", chunkSightRange);
+			Property chunkLoadSightRange = config.get(Configuration.CATEGORY_GENERAL, "chunkSightRange", chunkSightRange);
 			chunkLoadSightRange.comment = "Range of chunk load boundaries.";
 
-			Property laserKey = config.get(Configuration.CATEGORY_GENERAL,
-					"laserKeyChar", laserKeyCode);
+			Property laserKey = config.get(Configuration.CATEGORY_GENERAL, "laserKeyChar", laserKeyCode);
 			laserKey.comment = "Default key to toggle chunk load boundaries.";
 			laserKeyCode = laserKey.getInt();
-		} catch (Exception e) {
+		} catch(Exception e) {
 			logger.log(Level.SEVERE, "Error loading Additional Pipes configs.", e);
 		} finally {
 			config.save();
 		}
 	}
 
-	private void loadPipes(){
+	private void loadPipes() {
 		// Item Teleport Pipe
 		if(pipeItemsTeleportId != 0) {
 			pipeItemsTeleport = createPipeSpecial(pipeItemsTeleportId > 0 ? pipeItemsTeleportId : -pipeItemsTeleportId, PipeItemsTeleport.class);
-			if (pipeItemsTeleportId > 0) {
-				GameRegistry.addRecipe(new ItemStack(pipeItemsTeleport, 4), new Object[]{"dgd", 'd', BuildCraftCore.diamondGearItem, 'g', Block.glass});
-				AssemblyRecipe.assemblyRecipes.add(
-						new AssemblyRecipe(new ItemStack[]{
-								new ItemStack(BuildCraftSilicon.redstoneChipset, 1 , 4),
-								new ItemStack(BuildCraftTransport.pipeItemsDiamond, 8),
-								new ItemStack(BuildCraftSilicon.redstoneChipset, 1, 3)},
-								1000, new ItemStack(pipeItemsTeleport, 8)));
+			if(pipeItemsTeleportId > 0) {
+				GameRegistry.addRecipe(new ItemStack(pipeItemsTeleport, 4), new Object[] { "dgd", 'd', BuildCraftCore.diamondGearItem, 'g', Block.glass });
+				AssemblyRecipe.assemblyRecipes.add(new AssemblyRecipe(new ItemStack[] { new ItemStack(BuildCraftSilicon.redstoneChipset, 1, 4), new ItemStack(BuildCraftTransport.pipeItemsDiamond, 8),
+						new ItemStack(BuildCraftSilicon.redstoneChipset, 1, 3) }, 1000, new ItemStack(pipeItemsTeleport, 8)));
 			}
 
 		}
@@ -347,57 +358,44 @@ public class AdditionalPipes {
 		// Liquid Teleport Pipe
 		if(pipeLiquidsTeleportId != 0) {
 			pipeLiquidsTeleport = createPipeSpecial(pipeLiquidsTeleportId > 0 ? pipeLiquidsTeleportId : -pipeLiquidsTeleportId, PipeLiquidsTeleport.class);
-			if (pipeItemsTeleport != null && pipeLiquidsTeleportId > 0) {
-				GameRegistry.addRecipe(new ItemStack(pipeLiquidsTeleport), new Object[]{"w", "P", 'w', BuildCraftTransport.pipeWaterproof, 'P', pipeItemsTeleport});
+			if(pipeItemsTeleport != null && pipeLiquidsTeleportId > 0) {
+				GameRegistry.addRecipe(new ItemStack(pipeLiquidsTeleport), new Object[] { "w", "P", 'w', BuildCraftTransport.pipeWaterproof, 'P', pipeItemsTeleport });
 			}
 		}
 
 		// Power Teleport Pipe
 		if(pipePowerTeleportId != 0) {
 			pipePowerTeleport = createPipeSpecial(pipePowerTeleportId > 0 ? pipePowerTeleportId : -pipePowerTeleportId, PipePowerTeleport.class);
-			if (pipeItemsTeleport != null && pipePowerTeleportId > 0) {
-				GameRegistry.addRecipe(new ItemStack(pipePowerTeleport), new Object[]{"r", "P", 'r', Item.redstone, 'P', pipeItemsTeleport});
+			if(pipeItemsTeleport != null && pipePowerTeleportId > 0) {
+				GameRegistry.addRecipe(new ItemStack(pipePowerTeleport), new Object[] { "r", "P", 'r', Item.redstone, 'P', pipeItemsTeleport });
 			}
 		}
 
 		// Distributor Pipe
-		pipeItemsDistributor = doCreatePipeAndRecipe(pipeItemsDistributorId, PipeItemsDistributor.class,
-				new Object[]{" r ", "IgI", 'r', Item.redstone, 'I', Item.ingotIron, 'g', Block.glass});
+		pipeItemsDistributor = doCreatePipeAndRecipe(pipeItemsDistributorId, PipeItemsDistributor.class, new Object[] { " r ", "IgI", 'r', Item.redstone, 'I', Item.ingotIron, 'g', Block.glass });
 
 		// Advanced Wooded Pipe
-		pipeItemsAdvancedWood = doCreatePipeAndRecipe(pipeItemsAdvancedWoodId, 8, PipeItemsAdvancedWood.class,
-				new Object[]{"WgW", 'W', BuildCraftCore.woodenGearItem, 'g', Block.glass});
+		pipeItemsAdvancedWood = doCreatePipeAndRecipe(pipeItemsAdvancedWoodId, 8, PipeItemsAdvancedWood.class, new Object[] { "WgW", 'W', BuildCraftCore.woodenGearItem, 'g', Block.glass });
 
 		// Advanced Insertion Pipe
 		pipeItemsAdvancedInsertion = doCreatePipeAndRecipe(pipeItemsAdvancedInsertionId, 8, PipeItemsAdvancedInsertion.class,
-				new Object[]{"IgI", 'I', BuildCraftCore.ironGearItem, 'g', Block.glass});
+				new Object[] { "IgI", 'I', BuildCraftCore.ironGearItem, 'g', Block.glass });
 
 		// Redstone Pipe
-		pipeItemsRedStone = doCreatePipeAndRecipe(pipeItemsRedStoneId, 8, PipeItemsRedstone.class,
-				new Object[]{"RgR", 'R', Item.redstone, 'g', Block.glass});
+		pipeItemsRedStone = doCreatePipeAndRecipe(pipeItemsRedStoneId, 8, PipeItemsRedstone.class, new Object[] { "RgR", 'R', Item.redstone, 'g', Block.glass });
 		// Redstone Liquid Pipe
-		pipeLiquidsRedstone = doCreatePipeAndRecipe(pipeLiquidsRedstoneId, PipeLiquidsRedstone.class,
-				new Object[]{"w", "P", 'w', BuildCraftTransport.pipeWaterproof, 'P', pipeItemsRedStone});
+		pipeLiquidsRedstone = doCreatePipeAndRecipe(pipeLiquidsRedstoneId, PipeLiquidsRedstone.class, new Object[] { "w", "P", 'w', BuildCraftTransport.pipeWaterproof, 'P', pipeItemsRedStone });
 
 		// Closed Items Pipe
-		pipeItemsClosed = doCreatePipeAndRecipe(pipeItemsClosedId, PipeItemsClosed.class,
-				new Object[]{"r", "I", 'I', BuildCraftTransport.pipeItemsVoid, 'i', BuildCraftCore.ironGearItem});
-		//switch pipes
-		pipeItemsSwitch = doCreatePipeAndRecipe(pipeItemsSwitchId, 8, PipeSwitchItems.class,
-				new Object[]{"GgG", 'g', Block.glass, 'G', BuildCraftCore.goldGearItem});
-		pipePowerSwitch = doCreatePipeAndRecipe(pipePowerSwitchId, PipeSwitchPower.class,
-				new Object[]{"r", "I", 'I', pipeItemsSwitch, 'r', Item.redstone});
-		pipeLiquidsSwitch = doCreatePipeAndRecipe(pipeLiquidsSwitchId, PipeSwitchLiquids.class,
-				new Object[]{"w", "I", 'I', pipeItemsSwitch, 'w', BuildCraftTransport.pipeWaterproof});
+		pipeItemsClosed = doCreatePipeAndRecipe(pipeItemsClosedId, PipeItemsClosed.class, new Object[] { "r", "I", 'I', BuildCraftTransport.pipeItemsVoid, 'i', BuildCraftCore.ironGearItem });
+		// switch pipes
+		pipeItemsSwitch = doCreatePipeAndRecipe(pipeItemsSwitchId, 8, PipeSwitchItems.class, new Object[] { "GgG", 'g', Block.glass, 'G', BuildCraftCore.goldGearItem });
+		pipePowerSwitch = doCreatePipeAndRecipe(pipePowerSwitchId, PipeSwitchPower.class, new Object[] { "r", "I", 'I', pipeItemsSwitch, 'r', Item.redstone });
+		pipeLiquidsSwitch = doCreatePipeAndRecipe(pipeLiquidsSwitchId, PipeSwitchLiquids.class, new Object[] { "w", "I", 'I', pipeItemsSwitch, 'w', BuildCraftTransport.pipeWaterproof });
 
-		//water pump pipe
-		pipeLiquidsWaterPump = doCreatePipeAndRecipe(pipeLiquidsWaterPumpId, PipeLiquidsWaterPump.class,
-				new Object[]{" L ", "rPr", " W ",
-			'r', Item.redstone,
-			'P', BuildCraftCore.ironGearItem,
-			'L', BuildCraftTransport.pipeLiquidsGold,
-			'w', BuildCraftTransport.pipeWaterproof,
-			'W', BuildCraftTransport.pipeLiquidsWood});
+		// water pump pipe
+		pipeLiquidsWaterPump = doCreatePipeAndRecipe(pipeLiquidsWaterPumpId, PipeLiquidsWaterPump.class, new Object[] { " L ", "rPr", " W ", 'r', Item.redstone, 'P', BuildCraftCore.ironGearItem, 'L',
+				BuildCraftTransport.pipeLiquidsGold, 'w', BuildCraftTransport.pipeWaterproof, 'W', BuildCraftTransport.pipeLiquidsWood });
 	}
 
 	private Item doCreatePipeAndRecipe(int id, Class<? extends Pipe> clas, Object[] recipe) {
@@ -405,10 +403,12 @@ public class AdditionalPipes {
 	}
 
 	private Item doCreatePipeAndRecipe(int id, int output, Class<? extends Pipe> clas, Object[] recipe) {
-		if(id == 0) return null;
+		if(id == 0)
+			return null;
 		Item pipe = createPipe(id > 0 ? id : -id, clas);
 		for(Object obj : recipe) {
-			if(obj == null) return pipe;
+			if(obj == null)
+				return pipe;
 		}
 		GameRegistry.addRecipe(new ItemStack(pipe, output), recipe);
 		return pipe;
@@ -421,7 +421,7 @@ public class AdditionalPipes {
 		return res;
 	}
 
-	//special pipe code
+	// special pipe code
 	private static class ItemPipeAP extends ItemPipe {
 		protected ItemPipeAP(int i) {
 			super(i);
@@ -429,7 +429,7 @@ public class AdditionalPipes {
 
 		@Override
 		@SideOnly(Side.CLIENT)
-		public EnumRarity getRarity(ItemStack stack){
+		public EnumRarity getRarity(ItemStack stack) {
 			return EnumRarity.rare;
 		}
 	}
@@ -444,16 +444,17 @@ public class AdditionalPipes {
 		return item;
 	}
 
-	//legacy method
+	// legacy method
 	public static boolean isPipe(Item item) {
-		if (item != null && BlockGenericPipe.pipes.containsKey(item.itemID)) {
+		if(item != null && BlockGenericPipe.pipes.containsKey(item.itemID)) {
 			return true;
 		}
 		return false;
 	}
+
 	@ForgeSubscribe
 	@SideOnly(Side.CLIENT)
-	public void textureHook(TextureStitchEvent.Pre event) throws IOException{
+	public void textureHook(TextureStitchEvent.Pre event) throws IOException {
 		Textures.registerIcons(event.map);
 	}
 }

@@ -32,13 +32,13 @@ public class PipeItemsAdvancedInsertion extends APPipe implements IPipeTransport
 	public LinkedList<ForgeDirection> filterPossibleMovements(LinkedList<ForgeDirection> possibleOrientations, Position pos, IPipedItem item) {
 		LinkedList<ForgeDirection> newOris = new LinkedList<ForgeDirection>();
 
-		for (int o = 0; o < 6; ++o) {
+		for(int o = 0; o < 6; ++o) {
 			ForgeDirection orientation = ForgeDirection.VALID_DIRECTIONS[o];
-			if (orientation != pos.orientation.getOpposite()) {
+			if(orientation != pos.orientation.getOpposite()) {
 				TileEntity entity = container.getTile(orientation);
-				if (entity instanceof IInventory) {
-					if (item.getPosition().orientation == orientation.getOpposite()) {
-						//continue;
+				if(entity instanceof IInventory) {
+					if(item.getPosition().orientation == orientation.getOpposite()) {
+						// continue;
 					}
 					ITransactor transactor = Transactor.getTransactorFor(entity);
 					if(transactor.add(item.getItemStack(), orientation.getOpposite(), false).stackSize > 0) {
@@ -56,10 +56,10 @@ public class PipeItemsAdvancedInsertion extends APPipe implements IPipeTransport
 
 	@Override
 	public void readjustSpeed(IPipedItem item) {
-		if (item.getSpeed() > Utils.pipeNormalSpeed) {
+		if(item.getSpeed() > Utils.pipeNormalSpeed) {
 			item.setSpeed(item.getSpeed() - Utils.pipeNormalSpeed / 2.0F);
 		}
-		if (item.getSpeed() < Utils.pipeNormalSpeed) {
+		if(item.getSpeed() < Utils.pipeNormalSpeed) {
 			item.setSpeed(Utils.pipeNormalSpeed);
 		}
 	}

@@ -23,8 +23,8 @@ public class ContainerAdvancedWoodPipe extends BuildCraftContainer {
 
 	private boolean exclude;
 
-	public ContainerAdvancedWoodPipe (IInventory playerInventory, PipeLogicAdvancedWood filterInventory) {
-		super (filterInventory.getSizeInventory());
+	public ContainerAdvancedWoodPipe(IInventory playerInventory, PipeLogicAdvancedWood filterInventory) {
+		super(filterInventory.getSizeInventory());
 		logic = filterInventory;
 		exclude = !logic.exclude;
 		playerIInventory = playerInventory;
@@ -35,7 +35,6 @@ public class ContainerAdvancedWoodPipe extends BuildCraftContainer {
 		for(int j1 = 0; j1 < 9; j1++) {
 			addSlotToContainer(new Slot(filterInventory, j1 + k * 9, 8 + j1 * 18, 18 + k * 18));
 		}
-
 
 		for(int l = 0; l < 3; l++) {
 			for(int k1 = 0; k1 < 9; k1++) {
@@ -57,7 +56,7 @@ public class ContainerAdvancedWoodPipe extends BuildCraftContainer {
 	@Override
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
-		for (Object crafter : crafters) {
+		for(Object crafter : crafters) {
 			if(exclude != logic.exclude) {
 				((ICrafting) crafter).sendProgressBarUpdate(this, 0, logic.exclude ? 1 : 0);
 			}

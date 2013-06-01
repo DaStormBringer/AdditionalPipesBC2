@@ -26,7 +26,7 @@ public class ContainerDistributionPipe extends Container {
 	@Override
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
-		for (Object obj : crafters) {
+		for(Object obj : crafters) {
 			ICrafting crafter = (ICrafting) obj;
 			for(int i = 0; i < lastDistData.length; i++) {
 				if(lastDistData[i] != pipe.logic.distData[i]) {

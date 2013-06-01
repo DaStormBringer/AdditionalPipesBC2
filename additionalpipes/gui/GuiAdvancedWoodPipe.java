@@ -39,7 +39,7 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 		playerInventory = playerInventorys;
 		filterInventory = (PipeLogicAdvancedWood) container.pipe.logic;
 		this.container = container;
-		//container = theContainer;
+		// container = theContainer;
 		xSize = 175;
 		ySize = 156;
 
@@ -50,16 +50,15 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 		super.initGui();
 		int guiX = (width - xSize) / 2;
 		int guiY = (height - ySize) / 2;
-		buttons[0] =  new GuiButton(1, guiX + 8, guiY + 40, 140, 20, "These items are required");
+		buttons[0] = new GuiButton(1, guiX + 8, guiY + 40, 140, 20, "These items are required");
 		buttonList.add(buttons[0]);
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int p1, int p2) {
-		if (((PipeLogicAdvancedWood)container.pipe.logic).exclude) {
+		if(((PipeLogicAdvancedWood) container.pipe.logic).exclude) {
 			buttons[0].displayString = "These items are excluded";
-		}
-		else {
+		} else {
 			buttons[0].displayString = "These items are required";
 		}
 
@@ -69,7 +68,7 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 
 	@Override
 	protected void actionPerformed(GuiButton guibutton) {
-		if (guibutton.id == 1) {
+		if(guibutton.id == 1) {
 			PacketAdditionalPipes packet = new PacketAdditionalPipes(NetworkHandler.ADV_WOOD_DATA, false);
 			packet.writeInt(container.xCoord);
 			packet.writeInt(container.yCoord);
@@ -80,7 +79,7 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
-		
+
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		mc.renderEngine.bindTexture(AdditionalPipes.TEXTURE_GUI_ADVANCEDWOOD);
 		int j1 = (width - xSize) / 2;

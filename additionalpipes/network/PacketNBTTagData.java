@@ -13,8 +13,7 @@ public class PacketNBTTagData {
 	public final Packet250CustomPayload packet;
 	public final NBTTagCompound nbt;
 
-	public PacketNBTTagData(String channel, int id, boolean chunkPacket,
-			NBTTagCompound nbttagcompound) {
+	public PacketNBTTagData(String channel, int id, boolean chunkPacket, NBTTagCompound nbttagcompound) {
 		packet = new Packet250CustomPayload();
 		packet.channel = channel;
 		packet.isChunkDataPacket = chunkPacket;
@@ -26,8 +25,8 @@ public class PacketNBTTagData {
 			byte[] byteData = CompressedStreamTools.compress(nbt);
 			packet.length = byteData.length;
 			packet.data = byteData;
-		} catch (IOException e) {
-			//impossible?
+		} catch(IOException e) {
+			// impossible?
 		}
 		return packet;
 	}
@@ -36,8 +35,8 @@ public class PacketNBTTagData {
 		NBTTagCompound tag = new NBTTagCompound();
 		try {
 			tag = CompressedStreamTools.decompress(packet.data);
-		} catch (IOException e) {
-			//severe error reading packet data
+		} catch(IOException e) {
+			// severe error reading packet data
 		}
 		return tag;
 	}

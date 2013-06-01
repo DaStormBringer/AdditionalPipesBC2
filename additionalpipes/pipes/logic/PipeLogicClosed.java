@@ -10,7 +10,7 @@ public class PipeLogicClosed extends PipeLogic {
 	@Override
 	public boolean blockActivated(EntityPlayer player) {
 		ItemStack equippedItem = player.getCurrentEquippedItem();
-		if (equippedItem != null && AdditionalPipes.isPipe(equippedItem.getItem()))  {
+		if(equippedItem != null && AdditionalPipes.isPipe(equippedItem.getItem())) {
 			return false;
 		}
 		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_CLOSED, worldObj, xCoord, yCoord, zCoord);

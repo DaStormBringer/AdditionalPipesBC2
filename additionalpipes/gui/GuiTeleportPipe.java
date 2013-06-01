@@ -45,7 +45,7 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 			Minecraft.getMinecraft().renderEngine.bindTexture("/gui/items.png");
 			drawIcon(BuildCraftCore.iconProvider.getIcon(CoreIconProvider.ENERGY), x + 3, y + 4);
 
-			if (!isFullyOpened())
+			if(!isFullyOpened())
 				return;
 
 			fontRenderer.drawStringWithShadow("Teleport Pipe", x + 22, y + 8, headerColour);
@@ -55,19 +55,13 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 			fontRenderer.drawString(String.valueOf(gui.container.connectedPipes), x + 66, y + 45, textColour);
 			int[] net = gui.pipe.logic.network;
 			if(net.length > 0) {
-				fontRenderer.drawString(
-					new StringBuilder("(").append(net[0]).append(", ").append(net[1]).append(", ").append(net[2]).append(")").toString(),
-					x + 22, y + 56, textColour);
+				fontRenderer.drawString(new StringBuilder("(").append(net[0]).append(", ").append(net[1]).append(", ").append(net[2]).append(")").toString(), x + 22, y + 56, textColour);
 			}
 			if(net.length > 3) {
-				fontRenderer.drawString(
-					new StringBuilder("(").append(net[3]).append(", ").append(net[4]).append(", ").append(net[5]).append(")").toString(),
-					x + 22, y + 68, textColour);
+				fontRenderer.drawString(new StringBuilder("(").append(net[3]).append(", ").append(net[4]).append(", ").append(net[5]).append(")").toString(), x + 22, y + 68, textColour);
 			}
 			if(net.length > 6) {
-				fontRenderer.drawString(
-					new StringBuilder("(").append(net[6]).append(", ").append(net[7]).append(", ").append(net[8]).append(")").toString(),
-					x + 22, y + 80, textColour);
+				fontRenderer.drawString(new StringBuilder("(").append(net[6]).append(", ").append(net[7]).append(", ").append(net[8]).append(")").toString(), x + 22, y + 80, textColour);
 			}
 		}
 
@@ -96,14 +90,14 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 		super.initGui();
 		int x = (width - xSize) / 2, y = (height - ySize) / 2 + 16;
 		int bw = xSize - 24;
-		buttonList.add(buttons[0] = new GuiButton(1, x + 12,              y + 32, bw / 6, 20, "-100"));
-		buttonList.add(buttons[1] = new GuiButton(2, x + 12 + bw / 6,     y + 32, bw / 6, 20, "-10"));
+		buttonList.add(buttons[0] = new GuiButton(1, x + 12, y + 32, bw / 6, 20, "-100"));
+		buttonList.add(buttons[1] = new GuiButton(2, x + 12 + bw / 6, y + 32, bw / 6, 20, "-10"));
 		buttonList.add(buttons[2] = new GuiButton(3, x + 12 + bw * 2 / 6, y + 32, bw / 6, 20, "-1"));
 		buttonList.add(buttons[3] = new GuiButton(4, x + 12 + bw * 3 / 6, y + 32, bw / 6, 20, "+1"));
 		buttonList.add(buttons[4] = new GuiButton(5, x + 12 + bw * 4 / 6, y + 32, bw / 6, 20, "+10"));
 		buttonList.add(buttons[5] = new GuiButton(6, x + 12 + bw * 5 / 6, y + 32, bw / 6, 20, "+100"));
 
-		buttonList.add(buttons[6] = new GuiButton(7, x + 12,              y + 10, bw / 2, 20, "Send Only"));
+		buttonList.add(buttons[6] = new GuiButton(7, x + 12, y + 10, bw / 2, 20, "Send Only"));
 		buttonList.add(buttons[7] = new GuiButton(8, x + 12 + bw * 3 / 6, y + 10, bw / 2, 20, "Private"));
 	}
 
@@ -111,22 +105,20 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 	protected void drawGuiContainerForegroundLayer(int p1, int p2) {
 		super.drawGuiContainerForegroundLayer(p1, p2);
 		fontRenderer.drawString("Frequency: " + pipe.logic.getFrequency(), 16, 12, 0x404040);
-		fontRenderer.drawString(
-			new StringBuilder("(").append(pipe.xCoord).append(", ").append(pipe.yCoord).append(", ").append(pipe.zCoord).append(")").toString(),
-			128, 12, 0x404040);
+		fontRenderer.drawString(new StringBuilder("(").append(pipe.xCoord).append(", ").append(pipe.yCoord).append(", ").append(pipe.zCoord).append(")").toString(), 128, 12, 0x404040);
 		switch(pipe.logic.state) {
-			case 3:
-				buttons[6].displayString = "Send & Receive";
-				break;
-			case 2:
-				buttons[6].displayString = "Receive Only";
-				break;
-			case 1:
-				buttons[6].displayString = "Send Only";
-				break;
-			default:
-				buttons[6].displayString = "Disabled";
-				break;
+		case 3:
+			buttons[6].displayString = "Send & Receive";
+			break;
+		case 2:
+			buttons[6].displayString = "Receive Only";
+			break;
+		case 1:
+			buttons[6].displayString = "Send Only";
+			break;
+		default:
+			buttons[6].displayString = "Disabled";
+			break;
 		}
 		if(pipe.logic.isPublic) {
 			buttons[7].displayString = "Public";
@@ -134,6 +126,7 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 			buttons[7].displayString = "Private";
 		}
 	}
+
 	@Override
 	protected void actionPerformed(GuiButton guibutton) {
 		int freq = pipe.logic.getFrequency();
@@ -165,7 +158,7 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 			isPublic = !isPublic;
 			break;
 		}
-		if (freq < 0) {
+		if(freq < 0) {
 			freq = 0;
 		}
 

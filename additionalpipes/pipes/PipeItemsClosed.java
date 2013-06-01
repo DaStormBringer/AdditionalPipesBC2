@@ -35,8 +35,7 @@ public class PipeItemsClosed extends APPipe implements IInventory, IItemTravelin
 	}
 
 	@Override
-	public void endReached(PipeTransportItems pipe, EntityData data,
-			TileEntity tile) {
+	public void endReached(PipeTransportItems pipe, EntityData data, TileEntity tile) {
 	}
 
 	@Override
@@ -53,13 +52,12 @@ public class PipeItemsClosed extends APPipe implements IInventory, IItemTravelin
 		container.scheduleRenderUpdate();
 	}
 
-
 	@Override
 	public void writeToNBT(NBTTagCompound nbttagcompound) {
 		super.writeToNBT(nbttagcompound);
 		NBTTagList list = new NBTTagList();
 
-		for (ItemStack stack : inventory) {
+		for(ItemStack stack : inventory) {
 			if(stack != null) {
 				NBTTagCompound stackTag = new NBTTagCompound();
 				stack.writeToNBT(stackTag);
@@ -74,7 +72,7 @@ public class PipeItemsClosed extends APPipe implements IInventory, IItemTravelin
 	public void readFromNBT(NBTTagCompound nbttagcompound) {
 		super.readFromNBT(nbttagcompound);
 		NBTTagList list = nbttagcompound.getTagList("closedInventory");
-		for (int i = 0; i < list.tagCount() && i < inventory.length; i++) {
+		for(int i = 0; i < list.tagCount() && i < inventory.length; i++) {
 			NBTTagCompound stackTag = (NBTTagCompound) list.tagAt(i);
 			inventory[i] = ItemStack.loadItemStackFromNBT(stackTag);
 		}
@@ -99,7 +97,7 @@ public class PipeItemsClosed extends APPipe implements IInventory, IItemTravelin
 	@Override
 	public ItemStack decrStackSize(int i, int amt) {
 		ItemStack stack = inventory[i].splitStack(amt);
-		if (inventory[i].stackSize == 0) {
+		if(inventory[i].stackSize == 0) {
 			inventory[i] = null;
 		}
 		return stack;
