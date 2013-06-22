@@ -64,14 +64,14 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 	}
 
 	@Override
-	public void receiveEnergy(ForgeDirection from, double val) {
+	public double receiveEnergy(ForgeDirection from, double energy) {
 		((PipeTransportPower) transport).step();
 		List<PipeTeleport> connectedPipes = TeleportManager.instance.getConnectedPipes(this, false);
 		List<PipeTeleport> sendingToList = new LinkedList<PipeTeleport>();
 
 		// no connected pipes, leave!
 		if(connectedPipes.size() <= 0 || (logic.state & 0x1) == 0) {
-			return;
+			return 0;
 		}
 
 		for(PipeTeleport pipe : connectedPipes) {
@@ -82,11 +82,11 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 
 		// no pipes need energy, leave!
 		if(sendingToList.size() <= 0) {
-			return;
+			return 0;
 		}
 
 		// TODO proportional power relay
-		double powerToSend = AdditionalPipes.instance.powerLossCfg * val / sendingToList.size();
+		double powerToSend = AdditionalPipes.instance.powerLossCfg * energy / sendingToList.size();
 
 		for(PipeTeleport receiver : sendingToList) {
 			List<PowerRequest> needsPower = getPipesNeedsPower(receiver);
@@ -101,8 +101,8 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 				PipeTransportPower nearbyTransport = (PipeTransportPower) powerEntry.tile.pipe.transport;
 				nearbyTransport.receiveEnergy(powerEntry.orientation, dividedPowerToSend);
 			}
-
 		}
+		return energy;
 	}
 
 	private List<PowerRequest> getPipesNeedsPower(PipeTeleport pipe) {
