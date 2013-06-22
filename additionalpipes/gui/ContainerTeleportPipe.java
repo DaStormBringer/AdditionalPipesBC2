@@ -29,7 +29,7 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 	public ContainerTeleportPipe(EntityPlayer player, TileGenericPipe tile) {
 		super(0);
 		pipe = (PipeTeleport) tile.pipe;
-		state = pipe.logic.state;
+		state = -1;
 		isPublic = !pipe.logic.isPublic;
 		freq = -1;
 
