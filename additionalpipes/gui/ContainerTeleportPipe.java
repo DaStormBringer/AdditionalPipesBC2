@@ -26,27 +26,26 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 	private byte state;
 	private boolean isPublic;
 
-	public ContainerTeleportPipe(EntityPlayer player, TileGenericPipe tile) {
+	public ContainerTeleportPipe(EntityPlayer player, PipeTeleport pipe) {
 		super(0);
-		pipe = (PipeTeleport) tile.pipe;
 		state = -1;
-		isPublic = !pipe.logic.isPublic;
+		isPublic = !pipe.isPublic;
 		freq = -1;
 
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setInteger("id", NetworkHandler.TELE_PIPE_DATA);
-		tag.setInteger("xCoord", pipe.xCoord);
-		tag.setInteger("yCoord", pipe.yCoord);
-		tag.setInteger("zCoord", pipe.zCoord);
-		tag.setString("owner", pipe.logic.owner);
+		tag.setInteger("xCoord", pipe.container.xCoord);
+		tag.setInteger("yCoord", pipe.container.yCoord);
+		tag.setInteger("zCoord", pipe.container.zCoord);
+		tag.setString("owner", pipe.owner);
 
-		List<PipeTeleport> pipes = TeleportManager.instance.getConnectedPipes(pipe, false);
-		int[] locations = new int[pipes.size() * 3];
-		for(int i = 0; i < pipes.size() && i < 9; i++) {
-			Pipe pipe = pipes.get(i);
-			locations[3 * i] = pipe.xCoord;
-			locations[3 * i + 1] = pipe.yCoord;
-			locations[3 * i + 2] = pipe.zCoord;
+		List<PipeTeleport> connectedPipes = TeleportManager.instance.getConnectedPipes(pipe, false);
+		int[] locations = new int[connectedPipes.size() * 3];
+		for(int i = 0; i < connectedPipes.size() && i < 9; i++) {
+			Pipe connectedPipe = connectedPipes.get(i);
+			locations[3 * i] = connectedPipe.container.xCoord;
+			locations[3 * i + 1] = connectedPipe.container.yCoord;
+			locations[3 * i + 2] = connectedPipe.container.zCoord;
 		}
 		tag.setIntArray("network", locations);
 
@@ -71,22 +70,22 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 		}
 		ticks++;
 		for(Object crafter : crafters) {
-			if(freq != pipe.logic.getFrequency()) {
-				((ICrafting) crafter).sendProgressBarUpdate(this, 0, pipe.logic.getFrequency());
+			if(freq != pipe.getFrequency()) {
+				((ICrafting) crafter).sendProgressBarUpdate(this, 0, pipe.getFrequency());
 			}
-			if(state != pipe.logic.state) {
-				((ICrafting) crafter).sendProgressBarUpdate(this, 1, pipe.logic.state);
+			if(state != pipe.state) {
+				((ICrafting) crafter).sendProgressBarUpdate(this, 1, pipe.state);
 			}
 			if(connectedPipesNew != connectedPipes) {
 				((ICrafting) crafter).sendProgressBarUpdate(this, 2, connectedPipesNew);
 			}
-			if(isPublic != pipe.logic.isPublic) {
-				((ICrafting) crafter).sendProgressBarUpdate(this, 3, pipe.logic.isPublic ? 1 : 0);
+			if(isPublic != pipe.isPublic) {
+				((ICrafting) crafter).sendProgressBarUpdate(this, 3, pipe.isPublic ? 1 : 0);
 			}
 		}
-		state = pipe.logic.state;
-		freq = pipe.logic.getFrequency();
-		isPublic = pipe.logic.isPublic;
+		state = pipe.state;
+		freq = pipe.getFrequency();
+		isPublic = pipe.isPublic;
 		connectedPipes = connectedPipesNew;
 	}
 
@@ -94,16 +93,16 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 	public void updateProgressBar(int i, int j) {
 		switch(i) {
 		case 0:
-			pipe.logic.setFrequency(j);
+			pipe.setFrequency(j);
 			break;
 		case 1:
-			pipe.logic.state = (byte) j;
+			pipe.state = (byte) j;
 			break;
 		case 2:
 			connectedPipes = j;
 			break;
 		case 3:
-			pipe.logic.isPublic = (j == 1);
+			pipe.isPublic = (j == 1);
 			break;
 		}
 	}

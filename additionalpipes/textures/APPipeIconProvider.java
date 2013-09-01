@@ -26,8 +26,6 @@ public class APPipeIconProvider implements IIconProvider {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister) {
-		if(iconRegister != Minecraft.getMinecraft().renderEngine.textureMapBlocks)
-			return;
 		for(int i = 0; i < iconCount; i++) {
 			icons[i] = iconRegister.registerIcon("additionalpipes:pipes/" + i);
 		}

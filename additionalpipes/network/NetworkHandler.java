@@ -11,14 +11,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.world.ChunkCoordIntPair;
 import buildcraft.additionalpipes.AdditionalPipes;
+import buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
+import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
-import buildcraft.additionalpipes.pipes.logic.PipeLogicAdvancedWood;
-import buildcraft.additionalpipes.pipes.logic.PipeLogicDistributor;
-import buildcraft.additionalpipes.pipes.logic.PipeLogicTeleport;
 import buildcraft.transport.TileGenericPipe;
-import buildcraft.transport.pipes.PipeLogic;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
 
@@ -43,9 +42,8 @@ public class NetworkHandler implements IPacketHandler {
 				case ADV_WOOD_DATA:
 					TileEntity te = getTileEntity(player, data);
 					if(te instanceof TileGenericPipe) {
-						PipeLogic logic = ((TileGenericPipe) te).pipe.logic;
-						PipeLogicAdvancedWood advLogic = (PipeLogicAdvancedWood) logic;
-						advLogic.exclude = !advLogic.exclude;
+						PipeItemsAdvancedWood pipe = (PipeItemsAdvancedWood) ((TileGenericPipe) te).pipe;
+						pipe.transport.exclude = !pipe.transport.exclude;
 					}
 					break;
 				case DIST_PIPE_DATA:
@@ -71,8 +69,8 @@ public class NetworkHandler implements IPacketHandler {
 				TileEntity te = ((EntityPlayer) player).worldObj.getBlockTileEntity(tag.getInteger("xCoord"), tag.getInteger("yCoord"), tag.getInteger("zCoord"));
 				if(te instanceof TileGenericPipe) {
 					PipeTeleport pipe = (PipeTeleport) ((TileGenericPipe) te).pipe;
-					pipe.logic.owner = tag.getString("owner");
-					pipe.logic.network = tag.getIntArray("network");
+					pipe.owner = tag.getString("owner");
+					pipe.network = tag.getIntArray("network");
 				}
 				break;
 			}
@@ -85,21 +83,21 @@ public class NetworkHandler implements IPacketHandler {
 			if(te instanceof TileGenericPipe) {
 				int index = data.read();
 				int newData = data.readInt();
-				PipeLogicDistributor logic = (PipeLogicDistributor) ((TileGenericPipe) te).pipe.logic;
+				PipeItemsDistributor pipe = (PipeItemsDistributor) ((TileGenericPipe) te).pipe;
 
-				if(newData >= 0 && index >= 0 && index < logic.distData.length) {
-					logic.distData[index] = newData;
+				if(newData >= 0 && index >= 0 && index < pipe.distData.length) {
+					pipe.distData[index] = newData;
 					boolean found = newData > 0;
 					if(!found) {
-						for(int i = 0; i < logic.distData.length; i++) {
-							if(logic.distData[i] > 0) {
+						for(int i = 0; i < pipe.distData.length; i++) {
+							if(pipe.distData[i] > 0) {
 								found = true;
 							}
 						}
 					}
 					if(!found) {
-						for(int i = 0; i < logic.distData.length; i++) {
-							logic.distData[i] = 1;
+						for(int i = 0; i < pipe.distData.length; i++) {
+							pipe.distData[i] = 1;
 						}
 					}
 
@@ -117,17 +115,17 @@ public class NetworkHandler implements IPacketHandler {
 				PipeTeleport pipe = (PipeTeleport) ((TileGenericPipe) te).pipe;
 				// only allow the owner to change pipe state
 				EntityPlayerMP entityPlayer = (EntityPlayerMP) player;
-				if(!PipeLogicTeleport.canPlayerModifyPipe(entityPlayer, pipe.logic)) {
-					entityPlayer.sendChatToPlayer("You may not change pipe state.");
+				if(!PipeTeleport.canPlayerModifyPipe(entityPlayer, pipe)) {
+					entityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("You may not change pipe state."));
 					return;
 				}
 				int frequency = data.readInt();
 				if(frequency < 0) {
 					frequency = 0;
 				}
-				pipe.logic.setFrequency(frequency);
-				pipe.logic.state = (byte) data.read();
-				pipe.logic.isPublic = (data.read() == 1);
+				pipe.setFrequency(frequency);
+				pipe.state = (byte) data.read();
+				pipe.isPublic = (data.read() == 1);
 			}
 		} catch(IOException e) {
 			AdditionalPipes.instance.logger.log(Level.SEVERE, "Error handling teleport pipe packet.", e);

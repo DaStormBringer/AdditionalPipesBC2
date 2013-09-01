@@ -4,11 +4,9 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatMessageComponent;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.additionalpipes.pipes.TeleportManager;
-import buildcraft.additionalpipes.pipes.logic.PipeLogicTeleport;
-import buildcraft.transport.TileGenericPipe;
-import buildcraft.transport.pipes.PipeLogic;
 
 public class CommandAdditionalPipes extends CommandBase {
 
@@ -34,9 +32,9 @@ public class CommandAdditionalPipes extends CommandBase {
 						int y = Integer.parseInt(args[3]);
 						int z = Integer.parseInt(args[4]);
 						TileEntity te = ((EntityPlayer) sender).worldObj.getBlockTileEntity(x, y, z);
-						if(te instanceof TileGenericPipe) {
-							PipeLogic logic = ((TileGenericPipe) te).pipe.logic;
-							if(logic instanceof PipeLogicTeleport) {
+						/*if(te instanceof TileGenericPipe) {
+							Pipe pipe = ((TileGenericPipe) te).pipe;
+							ifpipe instanceof PipeTeleport) {
 								PipeLogicTeleport logicTeleport = (PipeLogicTeleport) logic;
 								StringBuffer sb = new StringBuffer();
 								sb.append('[');
@@ -45,9 +43,9 @@ public class CommandAdditionalPipes extends CommandBase {
 								sb.append(", State: ").append(logicTeleport.state);
 								sb.append(", Owner: ").append(logicTeleport.owner);
 								sb.append(']');
-								sender.sendChatToPlayer(sb.toString());
+								sender.sendChatToPlayer(ChatMessageComponent.func_111066_d(sb.toString()));
 							}
-						}
+						}*/
 					} catch(Exception e) {
 					}
 				}
@@ -57,14 +55,19 @@ public class CommandAdditionalPipes extends CommandBase {
 				for(PipeTeleport pipe : TeleportManager.instance.teleportPipes) {
 					sb.append('[');
 					sb.append(pipe.getClass().getSimpleName()).append(',');
-					sb.append(pipe.xCoord).append(',');
-					sb.append(pipe.yCoord).append(',');
-					sb.append(pipe.zCoord).append(']');
+					sb.append(pipe.getPosition().x).append(',');
+					sb.append(pipe.getPosition().y).append(',');
+					sb.append(pipe.getPosition().z).append(']');
 				}
-				sender.sendChatToPlayer(sb.toString());
+				sender.sendChatToPlayer(ChatMessageComponent.func_111066_d(sb.toString()));
 			}
 
 		}
+	}
+
+	@Override
+	public String getCommandUsage(ICommandSender icommandsender) {
+		return "";
 	}
 
 }

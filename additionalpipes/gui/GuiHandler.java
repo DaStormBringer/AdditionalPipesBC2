@@ -3,7 +3,8 @@ package buildcraft.additionalpipes.gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import buildcraft.additionalpipes.pipes.logic.PipeLogicAdvancedWood;
+import buildcraft.additionalpipes.pipes.PipeTeleport;
+import buildcraft.additionalpipes.pipes.PipeTransportAdvancedWood;
 import buildcraft.transport.TileGenericPipe;
 import cpw.mods.fml.common.network.IGuiHandler;
 
@@ -22,11 +23,11 @@ public class GuiHandler implements IGuiHandler {
 		}
 		switch(ID) {
 		case PIPE_TP:
-			return new ContainerTeleportPipe(player, (TileGenericPipe) tile);
+			return new ContainerTeleportPipe(player, (PipeTeleport) ((TileGenericPipe) tile).pipe);
 		case PIPE_DIST:
 			return new ContainerDistributionPipe((TileGenericPipe) tile);
 		case PIPE_WOODEN_ADV:
-			return new ContainerAdvancedWoodPipe(player.inventory, (PipeLogicAdvancedWood) ((TileGenericPipe) tile).pipe.logic);
+			return new ContainerAdvancedWoodPipe(player.inventory, (PipeTransportAdvancedWood) ((TileGenericPipe) tile).pipe.transport);
 		case PIPE_CLOSED:
 			return new ContainerPipeClosed(player.inventory, ((TileGenericPipe) tile).pipe);
 		default:
@@ -42,7 +43,7 @@ public class GuiHandler implements IGuiHandler {
 		}
 		switch(ID) {
 		case PIPE_TP:
-			return new GuiTeleportPipe(player, (TileGenericPipe) tile);
+			return new GuiTeleportPipe(player, (PipeTeleport) ((TileGenericPipe) tile).pipe);
 		case PIPE_DIST:
 			return new GuiDistributionPipe((TileGenericPipe) tile);
 		case PIPE_WOODEN_ADV:

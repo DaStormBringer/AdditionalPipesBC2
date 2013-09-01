@@ -14,54 +14,18 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import buildcraft.api.core.Position;
-import buildcraft.api.transport.IPipedItem;
 import buildcraft.core.inventory.ITransactor;
 import buildcraft.core.inventory.Transactor;
 import buildcraft.core.utils.Utils;
 import buildcraft.transport.IPipeTransportItemsHook;
 import buildcraft.transport.PipeTransportItems;
-import buildcraft.transport.pipes.PipeLogicStone;
+import buildcraft.transport.TravelingItem;
 
-public class PipeItemsAdvancedInsertion extends APPipe implements IPipeTransportItemsHook {
+public class PipeItemsAdvancedInsertion extends APPipe implements
+		IPipeTransportItemsHook {
 
 	public PipeItemsAdvancedInsertion(int itemID) {
-		super(new PipeTransportItems(), new PipeLogicStone(), itemID);
-	}
-
-	@Override
-	public LinkedList<ForgeDirection> filterPossibleMovements(LinkedList<ForgeDirection> possibleOrientations, Position pos, IPipedItem item) {
-		LinkedList<ForgeDirection> newOris = new LinkedList<ForgeDirection>();
-
-		for(int o = 0; o < 6; ++o) {
-			ForgeDirection orientation = ForgeDirection.VALID_DIRECTIONS[o];
-			if(orientation != pos.orientation.getOpposite()) {
-				TileEntity entity = container.getTile(orientation);
-				if(entity instanceof IInventory) {
-					if(item.getPosition().orientation == orientation.getOpposite()) {
-						// continue;
-					}
-					ITransactor transactor = Transactor.getTransactorFor(entity);
-					if(transactor.add(item.getItemStack(), orientation.getOpposite(), false).stackSize > 0) {
-						newOris.add(orientation);
-					}
-				}
-			}
-		}
-		if(newOris.size() > 0) {
-			return newOris;
-		}
-
-		return possibleOrientations;
-	}
-
-	@Override
-	public void readjustSpeed(IPipedItem item) {
-		if(item.getSpeed() > Utils.pipeNormalSpeed) {
-			item.setSpeed(item.getSpeed() - Utils.pipeNormalSpeed / 2.0F);
-		}
-		if(item.getSpeed() < Utils.pipeNormalSpeed) {
-			item.setSpeed(Utils.pipeNormalSpeed);
-		}
+		super(new PipeTransportItems(), itemID);
 	}
 
 	@Override
@@ -70,7 +34,48 @@ public class PipeItemsAdvancedInsertion extends APPipe implements IPipeTransport
 	}
 
 	@Override
-	public void entityEntered(IPipedItem item, ForgeDirection orientation) {
+	public LinkedList<ForgeDirection> filterPossibleMovements(
+			LinkedList<ForgeDirection> possibleOrientations, Position pos,
+			TravelingItem item) {
+		LinkedList<ForgeDirection> newOris = new LinkedList<ForgeDirection>();
+
+		for (int o = 0; o < 6; ++o) {
+			ForgeDirection orientation = ForgeDirection.VALID_DIRECTIONS[o];
+			if (orientation != pos.orientation.getOpposite()) {
+				TileEntity entity = container.getTile(orientation);
+				if (entity instanceof IInventory) {
+					if (item.output == orientation
+							.getOpposite()) {
+						// continue;
+					}
+					ITransactor transactor = Transactor
+							.getTransactorFor(entity);
+					if (transactor.add(item.getItemStack(),
+							orientation.getOpposite(), false).stackSize > 0) {
+						newOris.add(orientation);
+					}
+				}
+			}
+		}
+		if (newOris.size() > 0) {
+			return newOris;
+		}
+
+		return possibleOrientations;
+	}
+
+	@Override
+	public void entityEntered(TravelingItem item, ForgeDirection orientation) {
+	}
+
+	@Override
+	public void readjustSpeed(TravelingItem item) {
+		if (item.getSpeed() > Utils.pipeNormalSpeed) {
+			item.setSpeed(item.getSpeed() - Utils.pipeNormalSpeed / 2.0F);
+		}
+		if (item.getSpeed() < Utils.pipeNormalSpeed) {
+			item.setSpeed(Utils.pipeNormalSpeed);
+		}
 	}
 
 }

@@ -13,40 +13,39 @@ import java.util.List;
 
 import net.minecraftforge.common.ForgeDirection;
 import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.additionalpipes.pipes.logic.PipeLogicTeleport;
 import buildcraft.api.core.Position;
-import buildcraft.api.transport.IPipedItem;
 import buildcraft.transport.IPipeTransportItemsHook;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.TileGenericPipe;
+import buildcraft.transport.TravelingItem;
 
 public class PipeItemsTeleport extends PipeTeleport implements IPipeTransportItemsHook {
 
 	private final PipeTransportItems transport;
 
 	public PipeItemsTeleport(int itemID) {
-		super(new PipeTransportItems(), new PipeLogicTeleport(), itemID);
+		super(new PipeTransportItems(), itemID);
 		transport = (PipeTransportItems) super.transport;
 	}
 
 	@Override
-	public void readjustSpeed(IPipedItem item) {
+	public void readjustSpeed(TravelingItem item) {
 		transport.defaultReajustSpeed(item);
 	}
 
 	@Override
-	public LinkedList<ForgeDirection> filterPossibleMovements(LinkedList<ForgeDirection> possibleOrientations, Position pos, IPipedItem item) {
+	public LinkedList<ForgeDirection> filterPossibleMovements(LinkedList<ForgeDirection> possibleOrientations, Position pos, TravelingItem item) {
 		return possibleOrientations;
 	}
 
 	@Override
-	public void entityEntered(IPipedItem item, ForgeDirection orientation) {
-		if(!AdditionalPipes.proxy.isServer(worldObj)) {
+	public void entityEntered(TravelingItem item, ForgeDirection orientation) {
+		if(!AdditionalPipes.proxy.isServer(getWorld())) {
 			return;
 		}
 		List<PipeTeleport> connectedTeleportPipes = TeleportManager.instance.getConnectedPipes(this, false);
 		// no teleport pipes connected, use default
-		if(connectedTeleportPipes.size() <= 0 || (logic.state & 0x1) == 0) {
+		if(connectedTeleportPipes.size() <= 0 || (state & 0x1) == 0) {
 			return;
 		}
 
@@ -73,7 +72,7 @@ public class PipeItemsTeleport extends PipeTeleport implements IPipeTransportIte
 
 		item.setPosition(destination.xCoord + 0.5, destination.yCoord, destination.zCoord + 0.5);
 
-		destination.pipe.transport.entityEntering(item, newOrientation);
+		((PipeTransportItems) destination.pipe.transport).injectItem(item, newOrientation);
 		AdditionalPipes.instance.logger.info(item + " from " + getPosition() + " to " + otherPipe.getPosition() + " " + newOrientation);
 	}
 

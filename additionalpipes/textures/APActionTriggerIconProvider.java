@@ -33,8 +33,6 @@ public class APActionTriggerIconProvider implements IIconProvider {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister) {
-		if(iconRegister != Minecraft.getMinecraft().renderEngine.textureMapItems)
-			return;
 		for(int i = 0; i < iconCount; i++) {
 			icons[i] = iconRegister.registerIcon("additionalpipes:triggers/" + i);
 		}

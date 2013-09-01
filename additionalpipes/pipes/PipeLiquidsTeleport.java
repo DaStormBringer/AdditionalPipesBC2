@@ -12,30 +12,30 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ITankContainer;
-import net.minecraftforge.liquids.LiquidStack;
-import buildcraft.additionalpipes.pipes.logic.PipeLogicTeleport;
-import buildcraft.transport.IPipeTransportLiquidsHook;
-import buildcraft.transport.PipeTransportLiquids;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.IFluidTank;
+import buildcraft.transport.IPipeTransportFluidsHook;
+import buildcraft.transport.PipeTransportFluids;
 
-public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportLiquidsHook {
+public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportFluidsHook {
 
 	public PipeLiquidsTeleport(int itemID) {
-		super(new PipeTransportLiquids(), new PipeLogicTeleport(), itemID);
-		((PipeTransportLiquids) transport).flowRate = 160;
-		((PipeTransportLiquids) transport).travelDelay = 4;
+		super(new PipeTransportFluids(), itemID);
+		((PipeTransportFluids) transport).flowRate = 160;
+		((PipeTransportFluids) transport).travelDelay = 4;
 	}
 
 	@Override
-	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill) {
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
 		List<PipeTeleport> pipeList = TeleportManager.instance.getConnectedPipes(this, false);
 
-		if(pipeList.size() == 0 || (logic.state & 0x1) == 0) {
+		if(pipeList.size() == 0 || (state & 0x1) == 0) {
 			return 0;
 		}
 
-		int i = worldObj.rand.nextInt(pipeList.size());
-		List<ITankContainer> possibleMovements = getPossibleLiquidMovements(pipeList.get(i));
+		int i = getWorld().rand.nextInt(pipeList.size());
+		List<IFluidHandler> possibleMovements = getPossibleLiquidMovements(pipeList.get(i));
 
 		if(possibleMovements.size() <= 0) {
 			return 0;
@@ -51,12 +51,12 @@ public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportL
 		return used;
 	}
 
-	private static List<ITankContainer> getPossibleLiquidMovements(PipeTeleport pipe) {
-		List<ITankContainer> result = new LinkedList<ITankContainer>();
+	private static List<IFluidHandler> getPossibleLiquidMovements(PipeTeleport pipe) {
+		List<IFluidHandler> result = new LinkedList<IFluidHandler>();
 
 		for(ForgeDirection o : ForgeDirection.VALID_DIRECTIONS) {
-			if(pipe.logic.outputOpen(o)) {
-				ITankContainer te = (ITankContainer) pipe.container.getTile(o);
+			if(pipe.outputOpen(o)) {
+				IFluidHandler te = (IFluidHandler) pipe.container.getTile(o);
 				result.add(te);
 			}
 		}

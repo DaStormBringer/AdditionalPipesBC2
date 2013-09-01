@@ -1,6 +1,8 @@
 package buildcraft.additionalpipes.gates;
 
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Icon;
 import net.minecraftforge.common.ForgeDirection;
 import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.api.core.IIconProvider;
@@ -13,26 +15,37 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class APTrigger implements ITrigger {
 
-	protected int id;
+	private int oldid;
+	protected String id;
 
-	public APTrigger(int id) {
+	public APTrigger(int oldid, String id) {
+		this.oldid = oldid;
 		this.id = id;
-		ActionManager.triggers[id] = this;
+		ActionManager.registerTrigger(this);
 	}
 
 	@Override
-	public int getId() {
+	public String getUniqueTag() {
 		return this.id;
 	}
 
 	@Override
+	public int getLegacyId() {
+		return oldid;
+	}
+	
+	protected abstract int getIconIndex();
+
+	@Override
 	@SideOnly(Side.CLIENT)
-	public IIconProvider getIconProvider() {
-		return Textures.actionIconProvider;
+	public Icon getIcon() {
+		return Textures.actionIconProvider.getIcon(getIconIndex());
 	}
 
 	@Override
-	public abstract int getIconIndex();
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IconRegister iconRegister) {
+	}
 
 	@Override
 	public boolean hasParameter() {

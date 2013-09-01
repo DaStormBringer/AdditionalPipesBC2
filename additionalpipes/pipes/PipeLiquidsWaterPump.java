@@ -2,19 +2,19 @@ package buildcraft.additionalpipes.pipes;
 
 import net.minecraft.block.Block;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.LiquidStack;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.additionalpipes.pipes.logic.PipeLogicWaterPump;
-import buildcraft.transport.PipeTransportLiquids;
+import buildcraft.transport.PipeTransportFluids;
 
 public class PipeLiquidsWaterPump extends APPipe {
 	private static final Block water = Block.waterStill;
 
-	private PipeTransportLiquids transport;
+	private PipeTransportFluids transport;
 
 	public PipeLiquidsWaterPump(int itemID) {
-		super(new PipeTransportLiquids(), new PipeLogicWaterPump(), itemID);
-		transport = (PipeTransportLiquids) super.transport;
+		super(new PipeTransportFluids(), itemID);
+		transport = (PipeTransportFluids) super.transport;
 		transport.flowRate = 80;
 		transport.travelDelay = 4;
 	}
@@ -22,8 +22,8 @@ public class PipeLiquidsWaterPump extends APPipe {
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		if(AdditionalPipes.proxy.isServer(worldObj) && worldObj.getBlockId(xCoord, yCoord - 1, zCoord) == water.blockID) {
-			transport.fill(ForgeDirection.UNKNOWN, new LiquidStack(water, 100), true);
+		if(AdditionalPipes.proxy.isServer(getWorld()) && getWorld().getBlockId(container.xCoord, container.yCoord - 1, container.zCoord) == water.blockID) {
+			transport.fill(ForgeDirection.UNKNOWN, new FluidStack(FluidRegistry.WATER, 100), true);
 		}
 	}
 

@@ -12,7 +12,7 @@ public class ContainerDistributionPipe extends Container {
 
 	public ContainerDistributionPipe(TileGenericPipe container) {
 		pipe = (PipeItemsDistributor) container.pipe;
-		lastDistData = new int[pipe.logic.distData.length];
+		lastDistData = new int[pipe.distData.length];
 		for(int i = 0; i < lastDistData.length; i++) {
 			lastDistData[i] = -1;
 		}
@@ -29,20 +29,20 @@ public class ContainerDistributionPipe extends Container {
 		for(Object obj : crafters) {
 			ICrafting crafter = (ICrafting) obj;
 			for(int i = 0; i < lastDistData.length; i++) {
-				if(lastDistData[i] != pipe.logic.distData[i]) {
-					crafter.sendProgressBarUpdate(this, i, pipe.logic.distData[i]);
+				if(lastDistData[i] != pipe.distData[i]) {
+					crafter.sendProgressBarUpdate(this, i, pipe.distData[i]);
 				}
 			}
 		}
 		for(int i = 0; i < lastDistData.length; i++) {
-			lastDistData[i] = pipe.logic.distData[i];
+			lastDistData[i] = pipe.distData[i];
 		}
 	}
 
 	@Override
 	public void updateProgressBar(int i, int j) {
-		if(i >= 0 && i < pipe.logic.distData.length) {
-			pipe.logic.distData[i] = j;
+		if(i >= 0 && i < pipe.distData.length) {
+			pipe.distData[i] = j;
 		}
 	}
 }

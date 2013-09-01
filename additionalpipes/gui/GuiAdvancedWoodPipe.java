@@ -18,7 +18,8 @@ import org.lwjgl.opengl.GL11;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.network.NetworkHandler;
 import buildcraft.additionalpipes.network.PacketAdditionalPipes;
-import buildcraft.additionalpipes.pipes.logic.PipeLogicAdvancedWood;
+import buildcraft.additionalpipes.pipes.PipeTransportAdvancedWood;
+import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.transport.TileGenericPipe;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
@@ -34,10 +35,9 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 	private GuiButton[] buttons = new GuiButton[1];
 
 	public GuiAdvancedWoodPipe(IInventory playerInventorys, TileGenericPipe container) {
-
-		super(new ContainerAdvancedWoodPipe(playerInventorys, (PipeLogicAdvancedWood) container.pipe.logic));
+		super(new ContainerAdvancedWoodPipe(playerInventorys, (PipeTransportAdvancedWood) container.pipe.transport));
 		playerInventory = playerInventorys;
-		filterInventory = (PipeLogicAdvancedWood) container.pipe.logic;
+		filterInventory = (PipeTransportAdvancedWood) container.pipe.transport;
 		this.container = container;
 		// container = theContainer;
 		xSize = 175;
@@ -56,7 +56,7 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int p1, int p2) {
-		if(((PipeLogicAdvancedWood) container.pipe.logic).exclude) {
+		if(((PipeTransportAdvancedWood) container.pipe.transport).exclude) {
 			buttons[0].displayString = "These items are excluded";
 		} else {
 			buttons[0].displayString = "These items are required";
@@ -81,7 +81,7 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		mc.renderEngine.bindTexture(AdditionalPipes.TEXTURE_GUI_ADVANCEDWOOD);
+		mc.renderEngine.func_110577_a(Textures.GUI_ADVANCEDWOOD);
 		int j1 = (width - xSize) / 2;
 		int k = (height - ySize) / 2;
 		drawTexturedModalRect(j1, k, 0, 0, xSize, ySize);

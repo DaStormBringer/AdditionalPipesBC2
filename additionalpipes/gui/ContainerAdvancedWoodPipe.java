@@ -12,18 +12,18 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
-import buildcraft.additionalpipes.pipes.logic.PipeLogicAdvancedWood;
+import buildcraft.additionalpipes.pipes.PipeTransportAdvancedWood;
 import buildcraft.core.gui.BuildCraftContainer;
 
 public class ContainerAdvancedWoodPipe extends BuildCraftContainer {
 
-	private PipeLogicAdvancedWood logic;
+	private PipeTransportAdvancedWood logic;
 	private IInventory playerIInventory;
 	private IInventory filterIInventory;
 
 	private boolean exclude;
 
-	public ContainerAdvancedWoodPipe(IInventory playerInventory, PipeLogicAdvancedWood filterInventory) {
+	public ContainerAdvancedWoodPipe(IInventory playerInventory, PipeTransportAdvancedWood filterInventory) {
 		super(filterInventory.getSizeInventory());
 		logic = filterInventory;
 		exclude = !logic.exclude;

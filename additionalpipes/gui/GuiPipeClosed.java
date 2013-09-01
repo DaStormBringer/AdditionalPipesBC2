@@ -6,6 +6,7 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
+import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.transport.Pipe;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -31,7 +32,7 @@ public class GuiPipeClosed extends GuiContainer {
 	protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
 
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		mc.renderEngine.bindTexture("/gui/trap.png");
+		mc.renderEngine.func_110577_a(Textures.DISPENSER);
 		int var5 = (width - xSize) / 2;
 		int var6 = (height - ySize) / 2;
 		drawTexturedModalRect(var5, var6, 0, 0, xSize, ySize);

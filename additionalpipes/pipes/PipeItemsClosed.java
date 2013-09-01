@@ -7,49 +7,62 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import buildcraft.additionalpipes.pipes.logic.PipeLogicClosed;
+import buildcraft.additionalpipes.AdditionalPipes;
+import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.core.inventory.Transactor;
 import buildcraft.core.inventory.TransactorSimple;
 import buildcraft.core.utils.Utils;
-import buildcraft.transport.EntityData;
 import buildcraft.transport.IItemTravelingHook;
 import buildcraft.transport.PipeTransportItems;
+import buildcraft.transport.TravelingItem;
 
 public class PipeItemsClosed extends APPipe implements IInventory, IItemTravelingHook {
 
 	private ItemStack[] inventory = new ItemStack[10];
 
 	public PipeItemsClosed(int itemID) {
-		super(new PipeTransportItems(), new PipeLogicClosed(), itemID);
+		super(new PipeTransportItems(), itemID);
 		((PipeTransportItems) transport).travelHook = this;
+	}
+
+	@Override
+	public boolean blockActivated(EntityPlayer player) {
+		ItemStack equippedItem = player.getCurrentEquippedItem();
+		if(equippedItem != null && AdditionalPipes.isPipe(equippedItem.getItem())) {
+			return false;
+		}
+		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_CLOSED, getWorld(), container.xCoord, container.yCoord, container.zCoord);
+		return true;
 	}
 
 	@Override
 	public void dropContents() {
 		super.dropContents();
-		Utils.dropItems(worldObj, this, xCoord, yCoord, zCoord);
+		Utils.preDestroyBlock(getWorld(), container.xCoord, container.yCoord, container.zCoord);
 	}
 
 	@Override
-	public void centerReached(PipeTransportItems pipe, EntityData data) {
-	}
-
-	@Override
-	public void endReached(PipeTransportItems pipe, EntityData data, TileEntity tile) {
-	}
-
-	@Override
-	public void drop(PipeTransportItems pipe, EntityData data) {
+	public void drop(PipeTransportItems transport, TravelingItem item) {
 		Transactor transactor = new TransactorSimple(this);
-		transactor.add(data.item.getItemStack().copy(), ForgeDirection.UNKNOWN, true);
+		transactor.add(item.getItemStack().copy(), ForgeDirection.UNKNOWN, true);
 		if(inventory[inventory.length - 1] != null) {
 			for(int i = 1; i < inventory.length; i++) {
 				inventory[i - 1] = inventory[i];
 			}
 		}
 		inventory[inventory.length - 1] = null;
-		data.item.getItemStack().stackSize = 0;
+		item.getItemStack().stackSize = 0;
 		container.scheduleRenderUpdate();
+	}
+
+	@Override
+	public void centerReached(PipeTransportItems transport, TravelingItem item) {
+	}
+
+	@Override
+	public boolean endReached(PipeTransportItems transport, TravelingItem item,
+			TileEntity tile) {
+		return false;
 	}
 
 	@Override
@@ -144,12 +157,11 @@ public class PipeItemsClosed extends APPipe implements IInventory, IItemTravelin
 
 	@Override
 	public boolean isInvNameLocalized() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean isStackValidForSlot(int i, ItemStack itemstack) {
+	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
 		return true;
 	}
 

@@ -5,11 +5,10 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 
 import org.lwjgl.opengl.GL11;
 
-import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.network.NetworkHandler;
 import buildcraft.additionalpipes.network.PacketAdditionalPipes;
 import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
-import buildcraft.additionalpipes.pipes.logic.PipeLogicDistributor;
+import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.transport.TileGenericPipe;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
@@ -23,17 +22,13 @@ public class GuiDistributionPipe extends GuiContainer {
 	private GuiButton[] buttons = new GuiButton[18];
 	public int guiX = 0;
 	public int guiY = 0;
-	TileGenericPipe a;
-	PipeItemsDistributor pipe;
+	private final PipeItemsDistributor pipe;
 
 	public GuiDistributionPipe(TileGenericPipe container) {
 		super(new ContainerDistributionPipe(container));
-
-		a = container;
 		pipe = (PipeItemsDistributor) container.pipe;
 		xSize = 175;
 		ySize = 130;
-
 	}
 
 	@Override
@@ -71,20 +66,18 @@ public class GuiDistributionPipe extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int p1, int p2) {
-		PipeLogicDistributor pipeLogic = pipe.logic;
-		buttons[1].displayString = "" + pipeLogic.distData[0];
-		buttons[4].displayString = "" + pipeLogic.distData[1];
-		buttons[7].displayString = "" + pipeLogic.distData[2];
-		buttons[10].displayString = "" + pipeLogic.distData[3];
-		buttons[13].displayString = "" + pipeLogic.distData[4];
-		buttons[16].displayString = "" + pipeLogic.distData[5];
+		buttons[1].displayString = "" + pipe.distData[0];
+		buttons[4].displayString = "" + pipe.distData[1];
+		buttons[7].displayString = "" + pipe.distData[2];
+		buttons[10].displayString = "" + pipe.distData[3];
+		buttons[13].displayString = "" + pipe.distData[4];
+		buttons[16].displayString = "" + pipe.distData[5];
 	}
 
 	@Override
 	protected void actionPerformed(GuiButton guibutton) {
-		PipeLogicDistributor pipeLogic = pipe.logic;
 		int index = (guibutton.id - 1) / 3;
-		int newData = pipeLogic.distData[index];
+		int newData = pipe.distData[index];
 		if((guibutton.id - 1) % 3 == 0) {
 			newData--;
 		} else {
@@ -107,9 +100,9 @@ public class GuiDistributionPipe extends GuiContainer {
 			return;
 
 		PacketAdditionalPipes packet = new PacketAdditionalPipes(NetworkHandler.DIST_PIPE_DATA, true);
-		packet.writeInt(pipe.xCoord);
-		packet.writeInt(pipe.yCoord);
-		packet.writeInt(pipe.zCoord);
+		packet.writeInt(pipe.container.xCoord);
+		packet.writeInt(pipe.container.yCoord);
+		packet.writeInt(pipe.container.zCoord);
 		packet.write((byte) index);
 		packet.writeInt(newData);
 		PacketDispatcher.sendPacketToServer(packet.makePacket());
@@ -119,7 +112,7 @@ public class GuiDistributionPipe extends GuiContainer {
 	protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
 
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		mc.renderEngine.bindTexture(AdditionalPipes.TEXTURE_GUI_DISTRIBUTION);
+		mc.renderEngine.func_110577_a(Textures.GUI_DISTRIBUTION);
 		int j = (width - xSize) / 2;
 		int k = (height - ySize) / 2;
 		drawTexturedModalRect(j, k, 0, 0, xSize, ySize);

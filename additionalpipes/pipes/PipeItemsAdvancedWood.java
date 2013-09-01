@@ -8,6 +8,7 @@
 
 package buildcraft.additionalpipes.pipes;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
@@ -16,53 +17,50 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import buildcraft.additionalpipes.pipes.logic.PipeLogicAdvancedWood;
+import buildcraft.additionalpipes.AdditionalPipes;
+import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.api.core.Position;
-import buildcraft.api.power.IPowerProvider;
 import buildcraft.api.power.IPowerReceptor;
-import buildcraft.api.power.PowerFramework;
-import buildcraft.api.transport.IPipedItem;
+import buildcraft.api.power.PowerHandler;
+import buildcraft.api.power.PowerHandler.PowerReceiver;
+import buildcraft.api.power.PowerHandler.Type;
+import buildcraft.api.tools.IToolWrench;
 import buildcraft.api.transport.PipeManager;
-import buildcraft.core.EntityPassiveItem;
 import buildcraft.core.utils.Utils;
 import buildcraft.transport.PipeTransportItems;
+import buildcraft.transport.TravelingItem;
 
 public class PipeItemsAdvancedWood extends APPipe implements IPowerReceptor {
 
-	private IPowerProvider powerProvider;
+	private final PowerHandler powerProvider;
+	public final PipeTransportAdvancedWood transport;
 
 	public PipeItemsAdvancedWood(int itemID) {
+		super(new PipeTransportAdvancedWood(), itemID);
+		transport = (PipeTransportAdvancedWood) super.transport;
 
-		super(new PipeTransportItems(), new PipeLogicAdvancedWood(), itemID);
-
-		powerProvider = PowerFramework.currentFramework.createPowerProvider();
-		powerProvider.configure(50, 1, 64, 1, 64);
+		powerProvider = new PowerHandler(this, Type.MACHINE);
 		powerProvider.configurePowerPerdition(64, 1);
 	}
 
 	@Override
-	public void setPowerProvider(IPowerProvider provider) {
-		provider = powerProvider;
+	public PowerReceiver getPowerReceiver(ForgeDirection side) {
+		return powerProvider.getPowerReceiver();
 	}
 
 	@Override
-	public IPowerProvider getPowerProvider() {
-		return powerProvider;
-	}
-
-	@Override
-	public void doWork() {
+	public void doWork(PowerHandler workProvider) {
 		if(powerProvider.getEnergyStored() <= 0)
 			return;
 
-		World w = worldObj;
+		World w = getWorld();
 
-		int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+		int meta = w.getBlockMetadata(container.xCoord, container.yCoord, container.zCoord);
 
 		if(meta > 5)
 			return;
 
-		Position pos = new Position(xCoord, yCoord, zCoord, ForgeDirection.VALID_DIRECTIONS[meta]);
+		Position pos = new Position(container.xCoord, container.yCoord, container.zCoord, ForgeDirection.VALID_DIRECTIONS[meta]);
 		pos.moveForwards(1);
 		int blockId = w.getBlockId((int) pos.x, (int) pos.y, (int) pos.z);
 		TileEntity tile = w.getBlockTileEntity((int) pos.x, (int) pos.y, (int) pos.z);
@@ -82,8 +80,8 @@ public class PipeItemsAdvancedWood extends APPipe implements IPowerReceptor {
 
 			Position entityPos = new Position(pos.x + 0.5, pos.y + Utils.getPipeFloorOf(extracted), pos.z + 0.5, pos.orientation.getOpposite());
 			entityPos.moveForwards(0.5);
-			IPipedItem entity = new EntityPassiveItem(w, entityPos.x, entityPos.y, entityPos.z, extracted);
-			((PipeTransportItems) transport).entityEntering(entity, entityPos.orientation);
+			TravelingItem entity = new TravelingItem(entityPos.x, entityPos.y, entityPos.z, extracted);
+			((PipeTransportItems) transport).injectItem(entity, entityPos.orientation);
 		}
 	}
 
@@ -91,11 +89,7 @@ public class PipeItemsAdvancedWood extends APPipe implements IPowerReceptor {
 		IInventory inv = Utils.getInventory(inventory);
 		int first = 0;
 		int last = inv.getSizeInventory() - 1;
-		if(inventory instanceof net.minecraftforge.common.ISidedInventory) {
-			net.minecraftforge.common.ISidedInventory sidedInv = (net.minecraftforge.common.ISidedInventory) inventory;
-			first = sidedInv.getStartInventorySide(from);
-			last = first + sidedInv.getSizeInventorySide(from) - 1;
-		} else if(inventory instanceof ISidedInventory) {
+		if(inventory instanceof ISidedInventory) {
 			ISidedInventory sidedInv = (ISidedInventory) inventory;
 			int[] accessibleSlots = sidedInv.getAccessibleSlotsFromSide(from.ordinal());
 			ItemStack result = checkExtractGeneric(inv, doRemove, from, accessibleSlots);
@@ -136,24 +130,19 @@ public class PipeItemsAdvancedWood extends APPipe implements IPowerReceptor {
 	}
 
 	public boolean canExtract(ItemStack item) {
-		PipeLogicAdvancedWood logic = (PipeLogicAdvancedWood) this.logic;
-		for(int i = 0; i < logic.getSizeInventory(); i++) {
-			ItemStack stack = logic.getStackInSlot(i);
+		for(int i = 0; i < transport.getSizeInventory(); i++) {
+			ItemStack stack = transport.getStackInSlot(i);
 			if(stack != null && stack.itemID == item.itemID) {
 				if((Item.itemsList[item.itemID].isDamageable())) {
-					return !logic.exclude;
+					return !transport.exclude;
 				} else if(stack.getItemDamage() == item.getItemDamage()) {
-					return !logic.exclude;
+					return !transport.exclude;
 				}
 			}
 		}
-		return logic.exclude;
+		return transport.exclude;
 	}
 
-	@Override
-	public int powerRequest(ForgeDirection from) {
-		return getPowerProvider().getMaxEnergyReceived();
-	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbttagcompound) {
@@ -170,11 +159,33 @@ public class PipeItemsAdvancedWood extends APPipe implements IPowerReceptor {
 		if(direction == ForgeDirection.UNKNOWN)
 			return 6;
 		else {
-			int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+			int metadata = container.getBlockMetadata();
 			if(metadata == direction.ordinal())
 				return 7;
 			else
 				return 6;
 		}
+	}
+	
+	@Override
+	public boolean blockActivated(EntityPlayer entityplayer) {
+		Item equipped = entityplayer.getCurrentEquippedItem() != null ? entityplayer.getCurrentEquippedItem().getItem() : null;
+		if(equipped instanceof IToolWrench && ((IToolWrench) equipped).canWrench(entityplayer, container.xCoord, container.yCoord, container.zCoord)) {
+			((PipeTransportAdvancedWood) transport).switchSource();
+			((IToolWrench) equipped).wrenchUsed(entityplayer, container.xCoord, container.yCoord, container.zCoord);
+			return true;
+		}
+		if(AdditionalPipes.isPipe(equipped)) {
+			return false;
+		}
+
+		entityplayer.openGui(AdditionalPipes.instance, GuiHandler.PIPE_WOODEN_ADV, container.worldObj, container.xCoord, container.yCoord, container.zCoord);
+		return true;
+	}
+
+	@Override
+	public boolean doDrop() {
+		Utils.preDestroyBlock(getWorld(), container.xCoord, container.yCoord, container.zCoord);
+		return true;
 	}
 }

@@ -1,5 +1,9 @@
 package buildcraft.additionalpipes.gates;
 
+import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.util.Icon;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import buildcraft.additionalpipes.pipes.PipeItemsClosed;
 import buildcraft.api.gates.ITriggerParameter;
 import buildcraft.transport.ITriggerPipe;
@@ -7,8 +11,8 @@ import buildcraft.transport.Pipe;
 
 public class TriggerPipeClosed extends APTrigger implements ITriggerPipe {
 
-	public TriggerPipeClosed(int id) {
-		super(id);
+	public TriggerPipeClosed(int oldid, String id) {
+		super(oldid, id);
 	}
 
 	@Override
@@ -29,7 +33,6 @@ public class TriggerPipeClosed extends APTrigger implements ITriggerPipe {
 
 	@Override
 	public int getIconIndex() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
