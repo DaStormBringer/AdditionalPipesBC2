@@ -1,11 +1,11 @@
 package buildcraft.additionalpipes.pipes;
 
-import buildcraft.transport.PipeTransportLiquids;
+import buildcraft.transport.PipeTransportFluids;
 
 public class PipeSwitchLiquids extends PipeSwitch {
 
 	public PipeSwitchLiquids(int itemID) {
-		super(new PipeTransportLiquids(), itemID, 22);
+		super(new PipeTransportFluids(), itemID, 22);
 	}
 
 }
