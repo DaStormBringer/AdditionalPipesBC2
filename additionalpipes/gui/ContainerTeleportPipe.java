@@ -28,6 +28,8 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 
 	public ContainerTeleportPipe(EntityPlayer player, PipeTeleport pipe) {
 		super(0);
+		this.pipe = pipe;
+
 		state = -1;
 		isPublic = !pipe.isPublic;
 		freq = -1;

@@ -1,6 +1,5 @@
 package buildcraft.additionalpipes.textures;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;
@@ -17,13 +16,12 @@ public class Textures {
 	}
 	
 	// textures
-	public static final ResourceLocation ITEMS = new ResourceLocation("/gui/items.png");
-	public static final ResourceLocation DISPENSER = new ResourceLocation("gui/trap.png");
+	public static final ResourceLocation ITEMS = new ResourceLocation("textures/atlas/items.png");
+	public static final ResourceLocation DISPENSER = new ResourceLocation("textures/gui/container/dispenser.png");
 	
-	public static final String BASE_PATH = "/mods/additionalpipes";
-	public static final String TEXTURE_PATH = BASE_PATH + "/textures";
+	public static final String TEXTURE_PATH = "/textures";
 
-	public static final ResourceLocation GUI_TELEPORT = new ResourceLocation(TEXTURE_PATH + "/gui/blankSmallGui.png");
-	public static final ResourceLocation GUI_ADVANCEDWOOD = new ResourceLocation(TEXTURE_PATH + "/gui/advancedWoodGui.png");
-	public static final ResourceLocation GUI_DISTRIBUTION = new ResourceLocation(TEXTURE_PATH + "/gui/distributionGui.png");
+	public static final ResourceLocation GUI_TELEPORT = new ResourceLocation("additionalpipes", TEXTURE_PATH + "/gui/blankSmallGui.png");
+	public static final ResourceLocation GUI_ADVANCEDWOOD = new ResourceLocation("additionalpipes", TEXTURE_PATH + "/gui/advancedWoodGui.png");
+	public static final ResourceLocation GUI_DISTRIBUTION = new ResourceLocation("additionalpipes", TEXTURE_PATH + "/gui/distributionGui.png");
 }

@@ -102,7 +102,10 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 	protected void drawGuiContainerForegroundLayer(int p1, int p2) {
 		super.drawGuiContainerForegroundLayer(p1, p2);
 		fontRenderer.drawString("Frequency: " + pipe.getFrequency(), 16, 12, 0x404040);
-		fontRenderer.drawString(new StringBuilder("(").append(tile.xCoord).append(", ").append(tile.yCoord).append(", ").append(tile.zCoord).append(")").toString(), 128, 12, 0x404040);
+		fontRenderer.drawString(new StringBuilder("(")
+			.append(pipe.container.xCoord).append(", ")
+			.append(pipe.container.yCoord).append(", ")
+			.append(pipe.container.zCoord).append(")").toString(), 128, 12, 0x404040);
 		switch(pipe.state) {
 		case 3:
 			buttons[6].displayString = "Send & Receive";
@@ -160,9 +163,9 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 		}
 
 		PacketAdditionalPipes packet = new PacketAdditionalPipes(NetworkHandler.TELE_PIPE_DATA_SET, false);
-		packet.writeInt(tile.xCoord);
-		packet.writeInt(tile.yCoord);
-		packet.writeInt(tile.zCoord);
+		packet.writeInt(pipe.container.xCoord);
+		packet.writeInt(pipe.container.yCoord);
+		packet.writeInt(pipe.container.zCoord);
 		packet.writeInt(freq);
 		packet.write(state);
 		packet.write((byte) (isPublic ? 1 : 0));
