@@ -98,6 +98,7 @@ public class AdditionalPipes {
 	}
 
 	public static final String LOC_PATH = "/buildcraft/additionalpipes";
+	public static final String[] LOCALIZATIONS = {"en_US", "ru_RU"};
 
 	// chunk load boundaries
 	public ChunkLoadViewDataProxy chunkLoadViewer;
@@ -190,15 +191,17 @@ public class AdditionalPipes {
 		configFile = event.getSuggestedConfigurationFile();
 		loadConfigs(false);
 
-		Properties en_US = null;
-		Localization.addLocalization(LOC_PATH + "/lang/", "en_US");
-		try {
-			en_US = new Properties();
-			en_US.load(AdditionalPipes.class.getResourceAsStream((LOC_PATH + "/lang/en_US.properties")));
-			LanguageRegistry.instance().addStringLocalization(en_US);
-		} catch(Exception e) {
-			logger.log(Level.SEVERE, "Failed to load default localization.", e);
+		for(String lang : LOCALIZATIONS) {
+			try {
+				Localization.addLocalization(LOC_PATH + "/lang/", lang);
+				Properties localization = new Properties();
+				localization.load(AdditionalPipes.class.getResourceAsStream((LOC_PATH + "/lang/" + lang + ".properties")));
+				LanguageRegistry.instance().addStringLocalization(localization);
+			} catch(Exception e) {
+				logger.log(Level.SEVERE, "Failed to load localization.", e);
+			}
 		}
+
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
