@@ -98,7 +98,7 @@ public class AdditionalPipes {
 	}
 
 	public static final String LOC_PATH = "/buildcraft/additionalpipes";
-	public static final String[] LOCALIZATIONS = {"en_US", "ru_RU"};
+	public static final String[] LOCALIZATIONS = {"en_US", "ru_RU", "de_DE"};
 
 	// chunk load boundaries
 	public ChunkLoadViewDataProxy chunkLoadViewer;
