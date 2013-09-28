@@ -18,7 +18,7 @@ Linux
 
 Compiled binaries can be found in `BuildCraft/bin/ap`.
 
-### Builds (Download): [here](https://www.dropbox.com/sh/0hc1l4bn4dvjlni/t82-3--LmE) ([alternate](http://www.mediafire.com/tcooc)) ####
+### Download: [latest releases](https://github.com/tcooc/AdditionalPipesBC/releases), ([BuildCraft 4.0.2 and earlier](https://www.dropbox.com/sh/0hc1l4bn4dvjlni/t82-3--LmE)) ####
 To install, place in the standard minecraft/mods folder.
 REQUIRE Forge 650+, BC 3.5.0, See also Logistics Pipes for 1.5.1
 ### Credits to Zeldo, DaStormBringer, Kyprus, tcooc, gejzer for their work on the mod.
