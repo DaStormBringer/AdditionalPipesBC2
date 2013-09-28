@@ -59,7 +59,7 @@ public class CommandAdditionalPipes extends CommandBase {
 					sb.append(pipe.getPosition().y).append(',');
 					sb.append(pipe.getPosition().z).append(']');
 				}
-				sender.sendChatToPlayer(ChatMessageComponent.func_111066_d(sb.toString()));
+				sender.sendChatToPlayer(ChatMessageComponent.createFromText(sb.toString()));
 			}
 
 		}

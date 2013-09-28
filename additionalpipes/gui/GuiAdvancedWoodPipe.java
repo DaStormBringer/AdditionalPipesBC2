@@ -81,7 +81,7 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		mc.renderEngine.func_110577_a(Textures.GUI_ADVANCEDWOOD);
+		mc.renderEngine.bindTexture(Textures.GUI_ADVANCEDWOOD);
 		int j1 = (width - xSize) / 2;
 		int k = (height - ySize) / 2;
 		drawTexturedModalRect(j1, k, 0, 0, xSize, ySize);

@@ -41,7 +41,7 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 			drawBackground(x, y);
 
 			// Draw icon
-			Minecraft.getMinecraft().renderEngine.func_110577_a(Textures.ITEMS);
+			Minecraft.getMinecraft().renderEngine.bindTexture(Textures.ITEMS);
 			drawIcon(BuildCraftCore.iconProvider.getIcon(CoreIconProvider.ENERGY), x + 3, y + 4);
 
 			if(!isFullyOpened())
@@ -175,7 +175,7 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		mc.renderEngine.func_110577_a(Textures.GUI_TELEPORT);
+		mc.renderEngine.bindTexture(Textures.GUI_TELEPORT);
 		int j = (width - xSize) / 2;
 		int k = (height - ySize) / 2;
 		drawTexturedModalRect(j, k, 0, 0, xSize, ySize);
