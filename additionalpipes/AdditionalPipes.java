@@ -73,7 +73,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @NetworkMod(channels = { AdditionalPipes.CHANNEL, AdditionalPipes.CHANNELNBT }, clientSideRequired = true, serverSideRequired = true, packetHandler = NetworkHandler.class)
 public class AdditionalPipes {
 	public static final String MODID = "APUnofficial";
-	public static final String NAME = "Additional Pipes Unofficial";
+	public static final String NAME = "Additional Pipes";
 	public static final String VERSION = "@AP_VERSION@";
 	public static final String CHANNEL = MODID;
 	public static final String CHANNELNBT = CHANNEL + "NBT";
@@ -189,7 +189,8 @@ public class AdditionalPipes {
 		logger.setLevel(Level.WARNING); // DEBUG
 
 		configFile = event.getSuggestedConfigurationFile();
-		loadConfigs(false);
+		loadConfigs();
+		loadPipes();
 
 		for(String lang : LOCALIZATIONS) {
 			try {
@@ -213,12 +214,6 @@ public class AdditionalPipes {
 		TickRegistry.registerScheduledTickHandler(chunkLoadViewer, Side.CLIENT);
 		proxy.registerKeyHandler();
 		proxy.registerRendering();
-
-		// powerMeter = new
-		// ItemPowerMeter(powerMeterId).setItemName("powerMeter");
-		// LanguageRegistry.addName(powerMeter, "Power Meter");
-		loadConfigs(true);
-		loadPipes();
 
 		triggerPipeClosed = new TriggerPipeClosed(212, "APClosed");
 		ActionManager.registerTriggerProvider(new GateProvider());
@@ -258,10 +253,7 @@ public class AdditionalPipes {
 		TeleportManager.instance.reset();
 	}
 
-	private void loadConfigs(boolean postInit) {
-		if((!configFile.exists() && !postInit) || (configFile.exists() && postInit)) {
-			return;
-		}
+	private void loadConfigs() {
 		Configuration config = new Configuration(configFile);
 		try {
 			config.load();
