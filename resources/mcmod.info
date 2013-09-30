@@ -2,9 +2,9 @@
   "modid": "APUnofficial",
   "name": "Additional Pipes",
   "version": "@AP_VERSION@",
-  "url": "https://github.com/gejzer/AdditionalPipesBC/",
+  "url": "https://github.com/tcooc/AdditionalPipesBC/",
   "updateUrl": "",
-  "description": "Teleport, insertion, extraction, and many more new pipes.",
-  "credits": "Credits to Zeldo, DaStormBringer, Kyprus and gejzer for their work on the mod.",
-  "authors": [ "Zeldo", "DaStormBringer", "Kyprus", "gejzer" ]
+  "description": "Teleport, insertion, extraction, and other pipes.",
+  "credits": "Credits to Zeldo, DaStormBringer, and Kyprus.",
+  "authors": [ "Zeldo", "DaStormBringer", "Kyprus", "gejzer", "tcooc", "Additional Pipes Contributors" ]
 }]
