@@ -27,7 +27,7 @@ public class APPipeIconProvider implements IIconProvider {
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister) {
 		for(int i = 0; i < iconCount; i++) {
-			icons[i] = iconRegister.registerIcon("additionalpipes:pipes/" + i);
+			icons[i] = iconRegister.registerIcon("additionalpipes:" + i);
 		}
 	}
 
