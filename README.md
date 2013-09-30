@@ -1,4 +1,4 @@
-## Update of Additional Pipes for BC3 and Minecraft 1.5+
+## Update of Additional Pipes for BC3+ and Minecraft 1.5+
 
 ### Cloning and Compiling ###
 
@@ -50,13 +50,3 @@ Closed pipes also have a "closed" gate trigger which activates when the buffer h
 ##### Water Pump Pipe #####
 
 Just a pipe that fills with water if a source block is under it.
-
-##### Phased Signal Trigger (For Gates) #####
-
-This trigger only applies to phased pipes, and activates when any phased pipe with the same frequency *outputs* a pipe wire signal.
-
-Note #1: The other phased pipe has to *output* a pipe signal, not just receive one.
-
-Note #2: Phased signals do not take into account the owner of the pipe, whether the pipe is public/private, or whether the pipe is send/receive.
-
-Note #3: A phased pipe can send a phased signal to itself. Be careful.
