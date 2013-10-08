@@ -25,8 +25,6 @@ REQUIRE Forge 650+, BC 3.5.0, See also Logistics Pipes for 1.5.1
 
 1.2.5 Thread: http://www.minecraftforum.net/topic/856360-125bc2214-bc315rev213rev310-additional-pipes-for-buildcraft-teleport-pipes/
 
-Original Wiki: https://bitbucket.org/Kyprus/additionalpipes/wiki/Crafting
-
 Pipes still generally do the same thing. Some GUIs and recipes have changed (check NEI for recipes).
 
 #### Experimental Pipes & Gate Features ####
