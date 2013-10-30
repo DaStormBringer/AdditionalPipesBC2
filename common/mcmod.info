@@ -1,0 +1,10 @@
+[{
+  "modid": "APUnofficial",
+  "name": "Additional Pipes",
+  "version": "@AP_VERSION@",
+  "url": "https://github.com/tcooc/AdditionalPipesBC/",
+  "updateUrl": "",
+  "description": "Teleport, insertion, extraction, and other pipes.",
+  "credits": "Credits to Zeldo, DaStormBringer, and Kyprus.",
+  "authors": [ "Zeldo", "DaStormBringer", "Kyprus", "gejzer", "tcooc", "Additional Pipes Contributors", "PontiacFirebird" ]
+}]

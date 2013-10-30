@@ -20,7 +20,7 @@
 
 	<target name="copy-src">
 		<ant antfile="BuildCraft/build.xml" useNativeBasedir="true" inheritAll="false" target="copy-src" />
-		<copy todir="${mcp.dir}/src/minecraft/buildcraft/additionalpipes">
+		<copy todir="${mcp.dir}/src/minecraft/additionalpipes">
 			<fileset dir="${src.dir}">
 				<!--exclude name="**/*.png" /-->
 			</fileset>
@@ -47,12 +47,12 @@
 	</target>
 
 	<target name="package" depends="clean, compile">
-		<mkdir dir="${build.dir}/buildcraft/additionalpipes" />
-		<copy todir="${build.dir}/buildcraft/additionalpipes">
-			<fileset dir="${mcp.dir}/reobf/minecraft/buildcraft/additionalpipes" />
+		<mkdir dir="${build.dir}/additionalpipes" />
+		<copy todir="${build.dir}/additionalpipes">
+			<fileset dir="${mcp.dir}/reobf/minecraft/additionalpipes" />
 		</copy>
 
-		<copy todir="${build.dir}/buildcraft/additionalpipes/lang">
+		<copy todir="${build.dir}/additionalpipes/lang">
 			<fileset dir="${src.dir}/lang" />
 		</copy>
 		<copy todir="${build.dir}">
