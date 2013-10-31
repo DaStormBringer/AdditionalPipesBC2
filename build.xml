@@ -1,6 +1,6 @@
 <project name="AdditionalPipes" basedir="." default="full">
 	<property environment="env" />
-	<property name="src.dir" value="common" />
+	<property name="src.dir" value="common/additionalpipes" />
 	<property name="bc.dir" value="BuildCraft" />
 	<property name="build.dir" value="${bc.dir}/build/ap" />
 	<property name="mcp.dir" value="${bc.dir}/build/forge/mcp" />
