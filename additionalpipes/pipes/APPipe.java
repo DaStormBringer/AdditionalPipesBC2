@@ -8,7 +8,7 @@ import buildcraft.transport.PipeTransport;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public abstract class APPipe extends Pipe {
+public abstract class APPipe extends Pipe<PipeTransport> {
 
 	public APPipe(PipeTransport transport, int itemID) {
 		super(transport, itemID);

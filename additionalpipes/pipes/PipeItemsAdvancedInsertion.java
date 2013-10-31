@@ -23,6 +23,7 @@ import buildcraft.transport.TravelingItem;
 
 public class PipeItemsAdvancedInsertion extends APPipe implements
 		IPipeTransportItemsHook {
+	private static final int ICON = 8;
 
 	public PipeItemsAdvancedInsertion(int itemID) {
 		super(new PipeTransportItems(), itemID);
@@ -30,7 +31,7 @@ public class PipeItemsAdvancedInsertion extends APPipe implements
 
 	@Override
 	public int getIconIndex(ForgeDirection direction) {
-		return 8;
+		return ICON;
 	}
 
 	@Override

@@ -18,8 +18,10 @@ import buildcraft.core.utils.Utils;
 import buildcraft.transport.IPipeTransportPowerHook;
 import buildcraft.transport.PipeTransportPower;
 import buildcraft.transport.TileGenericPipe;
+import buildcraft.transport.pipes.PipePowerDiamond;
 
 public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPowerHook {
+	private static final int ICON = 3;
 
 	private static class PowerRequest {
 		public final TileGenericPipe tile;
@@ -33,6 +35,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 
 	public PipePowerTeleport(int itemID) {
 		super(new PipeTransportPower(), itemID);
+		((PipeTransportPower) transport).initFromPipe(PipePowerDiamond.class);
 	}
 
 	@Override
@@ -155,7 +158,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 
 	@Override
 	public int getIconIndex(ForgeDirection direction) {
-		return 3;
+		return ICON;
 	}
 
 }

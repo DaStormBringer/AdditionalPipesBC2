@@ -9,10 +9,13 @@ public class Textures {
 	public static final APPipeIconProvider pipeIconProvider = new APPipeIconProvider();
 	public static Icon tetherTexture;
 
-	public static void registerIcons(IconRegister iconRegister) {
-		actionIconProvider.registerIcons(iconRegister);
-		pipeIconProvider.registerIcons(iconRegister);
-		tetherTexture = iconRegister.registerIcon("additionalpipes:tether");
+	public static void registerIcons(IconRegister iconRegister, int textureType) {
+		if(textureType == 0) {
+			tetherTexture = iconRegister.registerIcon("additionalpipes:tether");
+		} else {
+			actionIconProvider.registerIcons(iconRegister);
+			pipeIconProvider.registerIcons(iconRegister);
+		}
 	}
 	
 	// textures

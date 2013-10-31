@@ -433,6 +433,6 @@ public class AdditionalPipes {
 	@ForgeSubscribe
 	@SideOnly(Side.CLIENT)
 	public void textureHook(TextureStitchEvent.Pre event) throws IOException {
-		Textures.registerIcons(event.map);
+		Textures.registerIcons(event.map, event.map.textureType);
 	}
 }
