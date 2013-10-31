@@ -21,6 +21,7 @@ import buildcraft.transport.TravelingItem;
 
 public class PipeItemsTeleport extends PipeTeleport implements IPipeTransportItemsHook
 {
+	private static final int ICON = 0;
 
 	private final PipeTransportItems transport;
 
@@ -79,7 +80,7 @@ public class PipeItemsTeleport extends PipeTeleport implements IPipeTransportIte
 	@Override
 	public int getIconIndex(ForgeDirection direction)
 	{
-		return 0;
+		return ICON;
 	}
 
 }

@@ -9,6 +9,7 @@ import buildcraft.transport.PipeTransportFluids;
 
 public class PipeLiquidsWaterPump extends APPipe
 {
+	private static final int ICON = 24;
 	private static final Block water = Block.waterStill;
 
 	private final PipeTransportFluids transport;
@@ -34,7 +35,7 @@ public class PipeLiquidsWaterPump extends APPipe
 	@Override
 	public int getIconIndex(ForgeDirection direction)
 	{
-		return 24;
+		return ICON;
 	}
 
 }

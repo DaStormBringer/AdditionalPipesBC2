@@ -19,7 +19,8 @@ import buildcraft.transport.PipeTransportFluids;
 
 public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportFluidsHook
 {
-
+	private static final int ICON = 2;
+	
 	public PipeLiquidsTeleport(int itemID)
 	{
 		super(new PipeTransportFluids(), itemID);
@@ -69,7 +70,7 @@ public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportF
 	@Override
 	public int getIconIndex(ForgeDirection direction)
 	{
-		return 2;
+		return ICON;
 	}
 
 }

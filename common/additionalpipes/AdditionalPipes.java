@@ -97,7 +97,7 @@ public class AdditionalPipes {
 	}
 
 	public static final String LOC_PATH = "/additionalpipes";
-	public static final String[] LOCALIZATIONS = {"ru_RU", "de_DE", "en_US"};
+	public static final String[] LOCALIZATIONS = {"es_ES","ru_RU", "de_DE", "en_US"};
 
 	// chunk load boundaries
 	public ChunkLoadViewDataProxy chunkLoadViewer;
@@ -188,8 +188,7 @@ public class AdditionalPipes {
 		logger.setLevel(Level.WARNING); // DEBUG
 
 		configFile = event.getSuggestedConfigurationFile();
-		loadConfigs();
-		loadPipes();
+		loadConfigs(false);
 
 		for(String lang : LOCALIZATIONS) {
 			try {
@@ -213,6 +212,12 @@ public class AdditionalPipes {
 		TickRegistry.registerScheduledTickHandler(chunkLoadViewer, Side.CLIENT);
 		proxy.registerKeyHandler();
 		proxy.registerRendering();
+
+		// powerMeter = new
+		// ItemPowerMeter(powerMeterId).setItemName("powerMeter");
+		// LanguageRegistry.addName(powerMeter, "Power Meter");
+		loadConfigs(true);
+		loadPipes();
 
 		triggerPipeClosed = new TriggerPipeClosed(212, "APClosed");
 		ActionManager.registerTriggerProvider(new GateProvider());
@@ -252,7 +257,10 @@ public class AdditionalPipes {
 		TeleportManager.instance.reset();
 	}
 
-	private void loadConfigs() {
+	private void loadConfigs(boolean postInit) {
+		if((!configFile.exists() && !postInit) || (configFile.exists() && postInit)) {
+			return;
+		}
 		Configuration config = new Configuration(configFile);
 		try {
 			config.load();
@@ -424,6 +432,6 @@ public class AdditionalPipes {
 	@ForgeSubscribe
 	@SideOnly(Side.CLIENT)
 	public void textureHook(TextureStitchEvent.Pre event) throws IOException {
-		Textures.registerIcons(event.map);
+		Textures.registerIcons(event.map, event.map.textureType);
 	}
 }
