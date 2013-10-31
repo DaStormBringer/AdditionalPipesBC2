@@ -189,8 +189,7 @@ public class AdditionalPipes {
 		logger.setLevel(Level.WARNING); // DEBUG
 
 		configFile = event.getSuggestedConfigurationFile();
-		loadConfigs();
-		loadPipes();
+		loadConfigs(false);
 
 		for(String lang : LOCALIZATIONS) {
 			try {
@@ -214,6 +213,12 @@ public class AdditionalPipes {
 		TickRegistry.registerScheduledTickHandler(chunkLoadViewer, Side.CLIENT);
 		proxy.registerKeyHandler();
 		proxy.registerRendering();
+
+		// powerMeter = new
+		// ItemPowerMeter(powerMeterId).setItemName("powerMeter");
+		// LanguageRegistry.addName(powerMeter, "Power Meter");
+		loadConfigs(true);
+		loadPipes();
 
 		triggerPipeClosed = new TriggerPipeClosed(212, "APClosed");
 		ActionManager.registerTriggerProvider(new GateProvider());
@@ -253,7 +258,10 @@ public class AdditionalPipes {
 		TeleportManager.instance.reset();
 	}
 
-	private void loadConfigs() {
+	private void loadConfigs(boolean postInit) {
+		if((!configFile.exists() && !postInit) || (configFile.exists() && postInit)) {
+			return;
+		}
 		Configuration config = new Configuration(configFile);
 		try {
 			config.load();
