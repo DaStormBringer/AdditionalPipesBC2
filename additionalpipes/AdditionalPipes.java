@@ -53,10 +53,8 @@ import buildcraft.transport.ItemPipe;
 import buildcraft.transport.Pipe;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.Init;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.Mod.PreInit;
-import cpw.mods.fml.common.Mod.ServerStarting;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -182,7 +180,7 @@ public class AdditionalPipes {
 	boolean allowWRRemove = false;
 	public float powerLossCfg = 0.90f; // config option
 
-	@PreInit
+	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		logger = Logger.getLogger(MODID);
 		logger.setParent(FMLLog.getLogger());
@@ -205,7 +203,7 @@ public class AdditionalPipes {
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
-	@Init
+	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
 		ForgeChunkManager.setForcedChunkLoadingCallback(this, new ChunkLoadingHandler());
@@ -252,7 +250,7 @@ public class AdditionalPipes {
 		}
 	}
 
-	@ServerStarting
+	@EventHandler
 	public void onServerStart(FMLServerStartingEvent event) {
 		// event.registerServerCommand(new CommandAdditionalPipes());
 		TeleportManager.instance.reset();

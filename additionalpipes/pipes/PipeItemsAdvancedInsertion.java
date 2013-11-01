@@ -19,6 +19,7 @@ import buildcraft.core.inventory.Transactor;
 import buildcraft.core.utils.Utils;
 import buildcraft.transport.IPipeTransportItemsHook;
 import buildcraft.transport.PipeTransportItems;
+import buildcraft.transport.TransportConstants;
 import buildcraft.transport.TravelingItem;
 
 public class PipeItemsAdvancedInsertion extends APPipe implements
@@ -71,11 +72,11 @@ public class PipeItemsAdvancedInsertion extends APPipe implements
 
 	@Override
 	public void readjustSpeed(TravelingItem item) {
-		if (item.getSpeed() > Utils.pipeNormalSpeed) {
-			item.setSpeed(item.getSpeed() - Utils.pipeNormalSpeed / 2.0F);
+		if (item.getSpeed() > TransportConstants.PIPE_NORMAL_SPEED) {
+			item.setSpeed(item.getSpeed() - TransportConstants.PIPE_NORMAL_SPEED / 2.0F);
 		}
-		if (item.getSpeed() < Utils.pipeNormalSpeed) {
-			item.setSpeed(Utils.pipeNormalSpeed);
+		if (item.getSpeed() < TransportConstants.PIPE_NORMAL_SPEED) {
+			item.setSpeed(TransportConstants.PIPE_NORMAL_SPEED);
 		}
 	}
 
