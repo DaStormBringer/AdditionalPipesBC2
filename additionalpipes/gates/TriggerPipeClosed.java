@@ -36,4 +36,8 @@ public class TriggerPipeClosed extends APTrigger implements ITriggerPipe {
 		return 0;
 	}
 
+	@Override
+	public boolean requiresParameter() {
+		return false;
+	}
 }
