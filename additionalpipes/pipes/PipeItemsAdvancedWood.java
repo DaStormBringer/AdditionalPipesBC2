@@ -26,6 +26,7 @@ import buildcraft.api.power.PowerHandler.PowerReceiver;
 import buildcraft.api.power.PowerHandler.Type;
 import buildcraft.api.tools.IToolWrench;
 import buildcraft.api.transport.PipeManager;
+import buildcraft.core.CoreConstants;
 import buildcraft.core.utils.Utils;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.TravelingItem;
@@ -78,7 +79,7 @@ public class PipeItemsAdvancedWood extends APPipe implements IPowerReceptor {
 				return;
 			}
 
-			Position entityPos = new Position(pos.x + 0.5, pos.y + Utils.getPipeFloorOf(extracted), pos.z + 0.5, pos.orientation.getOpposite());
+			Position entityPos = new Position(pos.x + 0.5, pos.y + CoreConstants.PIPE_MIN_POS, pos.z + 0.5, pos.orientation.getOpposite());
 			entityPos.moveForwards(0.5);
 			TravelingItem entity = new TravelingItem(entityPos.x, entityPos.y, entityPos.z, extracted);
 			((PipeTransportItems) transport).injectItem(entity, entityPos.orientation);
