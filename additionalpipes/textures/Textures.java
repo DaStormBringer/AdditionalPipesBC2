@@ -11,10 +11,10 @@ public class Textures {
 
 	public static void registerIcons(IconRegister iconRegister, int textureType) {
 		if(textureType == 0) {
-			tetherTexture = iconRegister.registerIcon("additionalpipes:tether");
-		} else {
-			actionIconProvider.registerIcons(iconRegister);
 			pipeIconProvider.registerIcons(iconRegister);
+			tetherTexture = iconRegister.registerIcon("additionalpipes:tether");
+		} else if(textureType == 1) {
+			actionIconProvider.registerIcons(iconRegister);
 		}
 	}
 	
