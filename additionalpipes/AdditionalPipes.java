@@ -6,11 +6,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -407,6 +409,16 @@ public class AdditionalPipes {
 		@SideOnly(Side.CLIENT)
 		public EnumRarity getRarity(ItemStack stack) {
 			return EnumRarity.rare;
+		}
+
+		@Override
+		@SideOnly(Side.CLIENT)
+		public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean advanced) {
+			super.addInformation(stack, player, list, advanced);
+			String key = "tip." + stack.getItem().getClass().getSimpleName();
+			if(Localization.hasKey(key)) {
+				list.add(Localization.get(key));
+			}
 		}
 	}
 

@@ -18,6 +18,7 @@ import buildcraft.transport.IPipeTransportItemsHook;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.TileGenericPipe;
 import buildcraft.transport.TravelingItem;
+import buildcraft.transport.utils.TransportUtils;
 
 public class PipeItemsTeleport extends PipeTeleport implements IPipeTransportItemsHook {
 	private static final int ICON = 0;
@@ -71,9 +72,9 @@ public class PipeItemsTeleport extends PipeTeleport implements IPipeTransportIte
 			return;
 		}
 
-		item.setPosition(destination.xCoord + 0.5, destination.yCoord, destination.zCoord + 0.5);
-
+		item.setPosition(container.xCoord + 0.5, container.yCoord + TransportUtils.getPipeFloorOf(item.getItemStack()), container.zCoord + 0.5);
 		((PipeTransportItems) destination.pipe.transport).injectItem(item, newOrientation);
+
 		AdditionalPipes.instance.logger.info(item + " from " + getPosition() + " to " + otherPipe.getPosition() + " " + newOrientation);
 	}
 

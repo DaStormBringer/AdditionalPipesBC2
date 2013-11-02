@@ -41,7 +41,8 @@ public class PipeItemsAdvancedWood extends APPipe implements IPowerReceptor {
 		transport = (PipeTransportAdvancedWood) super.transport;
 
 		powerProvider = new PowerHandler(this, Type.MACHINE);
-		powerProvider.configurePowerPerdition(64, 1);
+		powerProvider.configure(1, 64.1f, 1, 64.1f);
+		powerProvider.configurePowerPerdition(0, 0);
 	}
 
 	@Override
