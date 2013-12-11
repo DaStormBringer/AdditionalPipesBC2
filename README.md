@@ -1,4 +1,6 @@
-## Update of Additional Pipes for BC3+ and Minecraft 1.5+
+[This fork current release](https://dl.dropboxusercontent.com/u/40891839/AdditionalPipes-dev.jar)
+
+## Update of Additional Pipes for BC4.2.1+ and Minecraft 1.6.4
 
 ### Cloning and Compiling ###
 
