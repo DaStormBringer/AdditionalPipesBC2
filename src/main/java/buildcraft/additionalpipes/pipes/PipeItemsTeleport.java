@@ -23,11 +23,8 @@ import buildcraft.transport.utils.TransportUtils;
 public class PipeItemsTeleport extends PipeTeleport {
 	private static final int ICON = 0;
 
-	private final PipeTransportItems transport;
-
 	public PipeItemsTeleport(Item items) {
 		super(new PipeTransportItems(), items);
-		transport = (PipeTransportItems) super.transport;
 	}
 	
 	public void eventHandler(PipeEventItem.Entered event)

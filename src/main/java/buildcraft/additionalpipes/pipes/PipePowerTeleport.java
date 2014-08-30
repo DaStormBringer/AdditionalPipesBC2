@@ -40,7 +40,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 	}
 
 	@Override
-	public double requestEnergy(ForgeDirection from, float is) {
+	public double requestEnergy(ForgeDirection from, double is) {
 		double requested = 0;
 
 		if((state & 0x2) == 0) { // No need to waste CPU

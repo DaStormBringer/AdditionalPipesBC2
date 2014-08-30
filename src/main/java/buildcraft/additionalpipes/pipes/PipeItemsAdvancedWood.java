@@ -8,7 +8,6 @@
 
 package buildcraft.additionalpipes.pipes;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -66,7 +65,7 @@ public class PipeItemsAdvancedWood extends APPipe implements IPowerReceptor {
 
 		Position pos = new Position(container.xCoord, container.yCoord, container.zCoord, ForgeDirection.VALID_DIRECTIONS[meta]);
 		pos.moveForwards(1);
-		Block block = w.getBlock((int) pos.x, (int) pos.y, (int) pos.z);
+		w.getBlock((int) pos.x, (int) pos.y, (int) pos.z);
 		TileEntity tile = w.getTileEntity((int) pos.x, (int) pos.y, (int) pos.z);
 
 		if(tile instanceof IInventory) {
