@@ -2,4 +2,11 @@
 .classpath
 **.class
 release.sh
+CREDITS-fml.txt
+forge-*.txt
+/LICENSE-fml.txt
+MinecraftForge-*.txt
 /bin
+/eclipse
+/src/main/java/buildcraft/*
+!/src/main/java/buildcraft/additionalpipes
