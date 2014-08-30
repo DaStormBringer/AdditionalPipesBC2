@@ -63,6 +63,7 @@ public class PipeItemsAdvancedInsertion extends APPipe {
 		return possibleOrientations;
 	}
 	
+	@Override
 	public void readjustSpeed(TravelingItem item) {
 		if (item.getSpeed() > TransportConstants.PIPE_NORMAL_SPEED) {
 			item.setSpeed(item.getSpeed() - TransportConstants.PIPE_NORMAL_SPEED / 2.0F);

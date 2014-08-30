@@ -1,6 +1,7 @@
 package buildcraft.additionalpipes.pipes;
 
 import net.minecraft.item.Item;
+import net.minecraftforge.common.util.ForgeDirection;
 import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.api.core.IIconProvider;
 import buildcraft.transport.Pipe;
@@ -22,5 +23,5 @@ public abstract class APPipe extends Pipe<PipeTransport> {
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public abstract int getIconIndex(net.minecraftforge.common.util.ForgeDirection direction);
+	public abstract int getIconIndex(ForgeDirection direction);
 }

@@ -31,6 +31,7 @@ import buildcraft.additionalpipes.chunkloader.TileChunkLoader;
 import buildcraft.additionalpipes.gates.GateProvider;
 import buildcraft.additionalpipes.gates.TriggerPipeClosed;
 import buildcraft.additionalpipes.gui.GuiHandler;
+import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.pipes.PipeItemsAdvancedInsertion;
 import buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
 import buildcraft.additionalpipes.pipes.PipeItemsClosed;
@@ -85,9 +86,6 @@ public class AdditionalPipes {
 	private static @interface CfgBool {
 	}
 
-	public static final String LOC_PATH = "/buildcraft/additionalpipes";
-	public static final String[] LOCALIZATIONS = {"es_ES", "ru_RU", "de_DE", "en_US"};
-
 	// chunk load boundaries
 	public ChunkLoadViewDataProxy chunkLoadViewer;
 	public @CfgBool
@@ -135,7 +133,7 @@ public class AdditionalPipes {
 	public ITrigger triggerPhasedSignalGreen;
 	public ITrigger triggerPhasedSignalYellow;
 	// keybinding
-	public static int laserKeyCode = 64; // config option (& in options menu)
+	public static int laserKeyCode = 68; // config option (& in options menu)
 	// misc
 	public @CfgBool
 	boolean allowWRRemove = false;
@@ -146,6 +144,8 @@ public class AdditionalPipes {
 		logger = Logger.getLogger(MODID);
 		//logger.setParent(FMLLog.getLogger());
 		logger.setLevel(Level.INFO); // DEBUG
+		
+		PacketHandler.init();
 
 		configFile = event.getSuggestedConfigurationFile();
 		loadConfigs(false);
