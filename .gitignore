@@ -8,11 +8,4 @@ forge-*.txt
 MinecraftForge-*.txt
 /bin
 /eclipse
-/src/main/java/buildcraft/builders
-/src/main/java/buildcraft/commander
-/src/main/java/buildcraft/core
-/src/main/java/buildcraft/energy
-/src/main/java/buildcraft/factory
-/src/main/java/buildcraft/silicon
-/src/main/java/buildcraft/transport
-/src/main/java/buildcraft/BuildCraft*.java
+
