@@ -15,13 +15,11 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
-import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.additionalpipes.network.NetworkHandler;
-import buildcraft.additionalpipes.network.PacketAdditionalPipes;
+import buildcraft.additionalpipes.network.PacketHandler;
+import buildcraft.additionalpipes.network.message.MessageAdvWoodPipe;
 import buildcraft.additionalpipes.pipes.PipeTransportAdvancedWood;
 import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.transport.TileGenericPipe;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -45,6 +43,7 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 		super.initGui();
@@ -62,18 +61,15 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 			buttons[0].displayString = "These items are required";
 		}
 
-		fontRenderer.drawString(StatCollector.translateToLocal(filterInventory.getInvName()), 8, 6, 0x404040);
-		fontRenderer.drawString(StatCollector.translateToLocal(playerInventory.getInvName()), 8, 66, 0x404040);
+		fontRendererObj.drawString(StatCollector.translateToLocal(filterInventory.getInventoryName()), 8, 6, 0x404040);
+		fontRendererObj.drawString(StatCollector.translateToLocal(playerInventory.getInventoryName()), 8, 66, 0x404040);
 	}
 
 	@Override
 	protected void actionPerformed(GuiButton guibutton) {
 		if(guibutton.id == 1) {
-			PacketAdditionalPipes packet = new PacketAdditionalPipes(NetworkHandler.ADV_WOOD_DATA, false);
-			packet.writeInt(container.xCoord);
-			packet.writeInt(container.yCoord);
-			packet.writeInt(container.zCoord);
-			PacketDispatcher.sendPacketToServer(packet.makePacket());
+			MessageAdvWoodPipe packet = new MessageAdvWoodPipe(container.xCoord, container.yCoord, container.zCoord);
+			PacketHandler.INSTANCE.sendToServer(packet);
 		}
 	}
 

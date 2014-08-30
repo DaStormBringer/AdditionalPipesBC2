@@ -18,18 +18,12 @@ import buildcraft.core.gui.BuildCraftContainer;
 public class ContainerAdvancedWoodPipe extends BuildCraftContainer {
 
 	private PipeTransportAdvancedWood logic;
-	private IInventory playerIInventory;
-	private IInventory filterIInventory;
-
 	private boolean exclude;
 
 	public ContainerAdvancedWoodPipe(IInventory playerInventory, PipeTransportAdvancedWood filterInventory) {
 		super(filterInventory.getSizeInventory());
 		logic = filterInventory;
 		exclude = !logic.exclude;
-		playerIInventory = playerInventory;
-		filterIInventory = filterInventory;
-
 		int k = 0;
 
 		for(int j1 = 0; j1 < 9; j1++) {

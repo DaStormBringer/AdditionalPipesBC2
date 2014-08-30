@@ -12,7 +12,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 /**
- * Message that sets the given EEREExtebdedPlayer as the player data for the client it's sent to
+ * Message that sets the properties of a Distribution Pipe from the GUI
  *
  */
 public class MessageDistPipe implements IMessage, IMessageHandler<MessageDistPipe, IMessage>
@@ -90,6 +90,6 @@ public class MessageDistPipe implements IMessage, IMessageHandler<MessageDistPip
     @Override
     public String toString()
     {
-        return "EERExtendedPlayerUpdate";
+        return "MessageDistPipe";
     }
 }

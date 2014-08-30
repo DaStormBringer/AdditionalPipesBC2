@@ -13,7 +13,7 @@ public class ContainerPipeClosed extends Container {
 
 	private PipeItemsClosed pipe;
 
-	public ContainerPipeClosed(InventoryPlayer inventory, Pipe pipe) {
+	public ContainerPipeClosed(InventoryPlayer inventory, Pipe<?> pipe) {
 		this.pipe = (PipeItemsClosed) pipe;
 		int var3;
 		int var4;

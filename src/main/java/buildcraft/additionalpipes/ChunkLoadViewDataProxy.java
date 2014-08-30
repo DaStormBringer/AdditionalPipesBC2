@@ -3,7 +3,6 @@ package buildcraft.additionalpipes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,23 +11,18 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
-import buildcraft.additionalpipes.network.NetworkHandler;
-import buildcraft.additionalpipes.network.PacketAdditionalPipes;
-import buildcraft.api.core.LaserKind;
-import buildcraft.core.Box;
+import buildcraft.additionalpipes.network.PacketHandler;
+import buildcraft.additionalpipes.network.message.MessageChunkloadData;
+import buildcraft.additionalpipes.network.message.MessageChunkloadRequest;
 import buildcraft.core.EntityBlock;
 import buildcraft.core.utils.Utils;
 
 import com.google.common.collect.SetMultimap;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.IScheduledTickHandler;
-import cpw.mods.fml.common.TickType;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -109,8 +103,9 @@ public class ChunkLoadViewDataProxy implements Comparator<ChunkCoordIntPair> {
 
 	@SideOnly(Side.CLIENT)
 	public void requestPersistentChunks() {
-		PacketAdditionalPipes packet = new PacketAdditionalPipes(NetworkHandler.CHUNKLOAD_REQUEST, false);
-		PacketDispatcher.sendPacketToServer(packet.makePacket());
+		
+		MessageChunkloadRequest message = new MessageChunkloadRequest();
+		PacketHandler.INSTANCE.sendToServer(message);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -167,14 +162,11 @@ public class ChunkLoadViewDataProxy implements Comparator<ChunkCoordIntPair> {
 				}
 			}
 		}
-
-		PacketAdditionalPipes packet = new PacketAdditionalPipes(NetworkHandler.CHUNKLOAD_DATA, false);
-		packet.writeInt(chunksInRange.size());
-		for(ChunkCoordIntPair coords : chunksInRange) {
-			packet.writeInt(coords.chunkXPos);
-			packet.writeInt(coords.chunkZPos);
-		}
-		player.playerNetServerHandler.sendPacketToPlayer(packet.makePacket());
+		
+		MessageChunkloadData message = new MessageChunkloadData(chunksInRange);
+		
+		PacketHandler.INSTANCE.sendTo(message, player);
+		
 		AdditionalPipes.instance.logger.info("[ChunkLoadViewDataProxy] Sent chunks within " + sightRange + " of player.");
 	}
 

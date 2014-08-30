@@ -14,14 +14,14 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiPipeClosed extends GuiContainer {
 
-	public GuiPipeClosed(InventoryPlayer inventory, Pipe pipe) {
+	public GuiPipeClosed(InventoryPlayer inventory, Pipe<?> pipe) {
 		super(new ContainerPipeClosed(inventory, pipe));
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-		fontRenderer.drawString(StatCollector.translateToLocal("Closed Pipe"), 60, 6, 4210752);
-		fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 4210752);
+		fontRendererObj.drawString(StatCollector.translateToLocal("Closed Pipe"), 60, 6, 4210752);
+		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 4210752);
 	}
 
 	/**

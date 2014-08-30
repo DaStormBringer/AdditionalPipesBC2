@@ -4,23 +4,28 @@
 
 Windows
 
-    REM (optional) SET AP_VERSION=... and BC_VERSION=... to set versions
     git clone https://github.com/tcooc/AdditionalPipesBC.git
     cd AdditionalPipesBC
-    build.bat
+    init-buildcraft
+	gradlew setupDecompWorkspace
+	gradlew build
 
 Linux
 
     # (optional) export AP_VERSION=... and export BC_VERSION=... to set versions
     git clone https://github.com/tcooc/AdditionalPipesBC.git
     cd AdditionalPipesBC
-    ./build.sh
+	chmod +x init-buildcraft.sh
+	chmod +x gradlew
+    ./init-buildcraft.sh
+	./gradlew setupDecompWorkspace
+	./gradlew build
 
-Compiled binaries can be found in `BuildCraft/bin/ap`.
+Compiled binaries can be found in `build/libs`.
 
 ### Download: [latest releases](https://github.com/tcooc/AdditionalPipesBC/releases) ####
 To install, place in the standard minecraft/mods folder.
-REQUIRE Forge 650+, BC 3.5.0, See also Logistics Pipes for 1.5.1
+REQUIRE Forge 1199+, BC 6.1.0, See also Logistics Pipes for 1.7.10
 ### Credits to Zeldo, DaStormBringer and [Additional Pipes Contributors](https://github.com/tcooc/AdditionalPipesBC/graphs/contributors) for their work on the mod.
 
 1.2.5 Thread: http://www.minecraftforum.net/topic/856360-125bc2214-bc315rev213rev310-additional-pipes-for-buildcraft-teleport-pipes/

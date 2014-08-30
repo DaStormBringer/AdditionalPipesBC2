@@ -69,9 +69,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class AdditionalPipes {
 	public static final String MODID = "additionalpipes";
 	public static final String NAME = "Additional Pipes";
-	public static final String VERSION = "@AP_VERSION@";
-	public static final String CHANNEL = MODID;
-	public static final String CHANNELNBT = CHANNEL + "NBT";
+	public static final String VERSION = "${version}";
 
 	@Instance(MODID)
 	public static AdditionalPipes instance;
@@ -82,11 +80,6 @@ public class AdditionalPipes {
 	public File configFile;
 
 	public Logger logger;
-
-	@Retention(RetentionPolicy.RUNTIME)
-	private static @interface CfgId {
-		public boolean block() default false;
-	}
 
 	@Retention(RetentionPolicy.RUNTIME)
 	private static @interface CfgBool {
@@ -105,7 +98,6 @@ public class AdditionalPipes {
 
 	// teleport scanner TODO
 	// public Item teleportScanner;
-	// public @CfgId int teleportScannerId = 14061;
 
 	// Redstone Liquid
 	public Item pipeLiquidsRedstone;
@@ -143,7 +135,7 @@ public class AdditionalPipes {
 	public ITrigger triggerPhasedSignalGreen;
 	public ITrigger triggerPhasedSignalYellow;
 	// keybinding
-	public int laserKeyCode = 64; // config option (& in options menu)
+	public static int laserKeyCode = 64; // config option (& in options menu)
 	// misc
 	public @CfgBool
 	boolean allowWRRemove = false;
@@ -157,7 +149,6 @@ public class AdditionalPipes {
 
 		configFile = event.getSuggestedConfigurationFile();
 		loadConfigs(false);
-
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
@@ -210,8 +201,8 @@ public class AdditionalPipes {
 		TeleportManager.instance.reset();
 	}
 
-	private void loadConfigs(boolean postInit) {
-		if((!configFile.exists() && !postInit) || (configFile.exists() && postInit)) {
+	private void loadConfigs(boolean init) {
+		if((!configFile.exists() && !init) || (configFile.exists() && init)) {
 			return;
 		}
 		Configuration config = new Configuration(configFile);
@@ -235,6 +226,8 @@ public class AdditionalPipes {
 			Property laserKey = config.get(Configuration.CATEGORY_GENERAL, "laserKeyChar", laserKeyCode);
 			laserKey.comment = "Default key to toggle chunk load boundaries.";
 			laserKeyCode = laserKey.getInt();
+			
+			
 		} catch(Exception e) {
 			logger.log(Level.SEVERE, "Error loading Additional Pipes configs.", e);
 		} finally {

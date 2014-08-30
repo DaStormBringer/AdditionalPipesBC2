@@ -3,18 +3,14 @@ package buildcraft.additionalpipes.gui;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ICrafting;
-import net.minecraft.nbt.NBTTagCompound;
 import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.additionalpipes.network.NetworkHandler;
-import buildcraft.additionalpipes.network.PacketNBTTagData;
+import buildcraft.additionalpipes.network.PacketHandler;
+import buildcraft.additionalpipes.network.message.MessageTelePipeData;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.additionalpipes.pipes.TeleportManager;
 import buildcraft.core.gui.BuildCraftContainer;
-import buildcraft.transport.Pipe;
-import buildcraft.transport.TileGenericPipe;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
 
 public class ContainerTeleportPipe extends BuildCraftContainer {
 
@@ -33,26 +29,18 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 		state = -1;
 		isPublic = !pipe.isPublic;
 		freq = -1;
-
-		NBTTagCompound tag = new NBTTagCompound();
-		tag.setInteger("id", NetworkHandler.TELE_PIPE_DATA);
-		tag.setInteger("xCoord", pipe.container.xCoord);
-		tag.setInteger("yCoord", pipe.container.yCoord);
-		tag.setInteger("zCoord", pipe.container.zCoord);
-		tag.setString("owner", pipe.owner);
-
+		
 		List<PipeTeleport> connectedPipes = TeleportManager.instance.getConnectedPipes(pipe, false);
 		int[] locations = new int[connectedPipes.size() * 3];
 		for(int i = 0; i < connectedPipes.size() && i < 9; i++) {
-			Pipe connectedPipe = connectedPipes.get(i);
+			PipeTeleport connectedPipe = connectedPipes.get(i);
 			locations[3 * i] = connectedPipe.container.xCoord;
 			locations[3 * i + 1] = connectedPipe.container.yCoord;
 			locations[3 * i + 2] = connectedPipe.container.zCoord;
 		}
-		tag.setIntArray("network", locations);
-
-		PacketNBTTagData packet = new PacketNBTTagData(AdditionalPipes.CHANNELNBT, NetworkHandler.TELE_PIPE_DATA, false, tag);
-		PacketDispatcher.sendPacketToPlayer(packet.getPacket(), (Player) player);
+		
+		MessageTelePipeData message = new MessageTelePipeData(pipe.container.xCoord, pipe.container.yCoord, pipe.container.zCoord, locations, pipe.owner);
+		PacketHandler.INSTANCE.sendTo(message, (EntityPlayerMP) player);
 	}
 
 	@Override

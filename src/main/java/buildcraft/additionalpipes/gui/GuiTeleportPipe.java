@@ -4,19 +4,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-
-import org.lwjgl.opengl.GL11;
-
 import buildcraft.BuildCraftCore;
-import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.additionalpipes.network.NetworkHandler;
-import buildcraft.additionalpipes.network.PacketAdditionalPipes;
+import buildcraft.additionalpipes.network.PacketHandler;
+import buildcraft.additionalpipes.network.message.MessageTelePipe;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.core.CoreIconProvider;
 import buildcraft.core.gui.GuiBuildCraft;
-import buildcraft.transport.TileGenericPipe;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -47,20 +41,20 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 			if(!isFullyOpened())
 				return;
 
-			fontRenderer.drawStringWithShadow("Teleport Pipe", x + 22, y + 8, headerColour);
-			fontRenderer.drawStringWithShadow("Owner:", x + 22, y + 20, subheaderColour);
-			fontRenderer.drawString(pipe.owner, x + 22, y + 32, textColour);
-			fontRenderer.drawStringWithShadow("Outputs: ", x + 22, y + 44, subheaderColour);
-			fontRenderer.drawString(String.valueOf(container.connectedPipes), x + 66, y + 45, textColour);
+			fontRendererObj.drawStringWithShadow("Teleport Pipe", x + 22, y + 8, headerColour);
+			fontRendererObj.drawStringWithShadow("Owner:", x + 22, y + 20, subheaderColour);
+			fontRendererObj.drawString(pipe.owner, x + 22, y + 32, textColour);
+			fontRendererObj.drawStringWithShadow("Outputs: ", x + 22, y + 44, subheaderColour);
+			fontRendererObj.drawString(String.valueOf(container.connectedPipes), x + 66, y + 45, textColour);
 			int[] net = pipe.network;
 			if(net.length > 0) {
-				fontRenderer.drawString(new StringBuilder("(").append(net[0]).append(", ").append(net[1]).append(", ").append(net[2]).append(")").toString(), x + 22, y + 56, textColour);
+				fontRendererObj.drawString(new StringBuilder("(").append(net[0]).append(", ").append(net[1]).append(", ").append(net[2]).append(")").toString(), x + 22, y + 56, textColour);
 			}
 			if(net.length > 3) {
-				fontRenderer.drawString(new StringBuilder("(").append(net[3]).append(", ").append(net[4]).append(", ").append(net[5]).append(")").toString(), x + 22, y + 68, textColour);
+				fontRendererObj.drawString(new StringBuilder("(").append(net[3]).append(", ").append(net[4]).append(", ").append(net[5]).append(")").toString(), x + 22, y + 68, textColour);
 			}
 			if(net.length > 6) {
-				fontRenderer.drawString(new StringBuilder("(").append(net[6]).append(", ").append(net[7]).append(", ").append(net[8]).append(")").toString(), x + 22, y + 80, textColour);
+				fontRendererObj.drawString(new StringBuilder("(").append(net[6]).append(", ").append(net[7]).append(", ").append(net[8]).append(")").toString(), x + 22, y + 80, textColour);
 			}
 		}
 
@@ -82,6 +76,7 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 		ySize = 117;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 		super.initGui();
@@ -101,8 +96,8 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int p1, int p2) {
 		super.drawGuiContainerForegroundLayer(p1, p2);
-		fontRenderer.drawString("Frequency: " + pipe.getFrequency(), 16, 12, 0x404040);
-		fontRenderer.drawString(new StringBuilder("(")
+		fontRendererObj.drawString("Frequency: " + pipe.getFrequency(), 16, 12, 0x404040);
+		fontRendererObj.drawString(new StringBuilder("(")
 			.append(pipe.container.xCoord).append(", ")
 			.append(pipe.container.yCoord).append(", ")
 			.append(pipe.container.zCoord).append(")").toString(), 128, 12, 0x404040);
@@ -162,14 +157,8 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 			freq = 0;
 		}
 
-		PacketAdditionalPipes packet = new PacketAdditionalPipes(NetworkHandler.TELE_PIPE_DATA_SET, false);
-		packet.writeInt(pipe.container.xCoord);
-		packet.writeInt(pipe.container.yCoord);
-		packet.writeInt(pipe.container.zCoord);
-		packet.writeInt(freq);
-		packet.write(state);
-		packet.write((byte) (isPublic ? 1 : 0));
-		PacketDispatcher.sendPacketToServer(packet.makePacket());
+		MessageTelePipe packet = new MessageTelePipe(pipe.container.xCoord, pipe.container.yCoord, pipe.container.zCoord, freq, isPublic, state);
+		PacketHandler.INSTANCE.sendToServer(packet);
 	}
 
 	@Override

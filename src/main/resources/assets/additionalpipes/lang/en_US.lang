@@ -12,3 +12,5 @@ item.PipeSwitchPower=Switch Kinesis Pipe
 item.PipeSwitchFluids=Switch Waterproof Pipe
 item.PipeSwitchItems=Switch Transport Pipe
 item.PipeLiquidsWaterPump=Water Pump Pipe
+
+key.lasers=Toggle chunk loading boundries
