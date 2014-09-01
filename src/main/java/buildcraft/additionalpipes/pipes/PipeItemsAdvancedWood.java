@@ -15,15 +15,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.api.core.Position;
-import buildcraft.api.power.IPowerReceptor;
-import buildcraft.api.power.PowerHandler;
-import buildcraft.api.power.PowerHandler.PowerReceiver;
-import buildcraft.api.power.PowerHandler.Type;
+import buildcraft.api.mj.MjBattery;
 import buildcraft.api.tools.IToolWrench;
 import buildcraft.api.transport.PipeManager;
 import buildcraft.core.CoreConstants;
@@ -32,80 +30,66 @@ import buildcraft.core.utils.Utils;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.TravelingItem;
 
-public class PipeItemsAdvancedWood extends APPipe implements IPowerReceptor {
-
-	private final PowerHandler powerProvider;
-	public final PipeTransportAdvancedWood transport;
+public class PipeItemsAdvancedWood extends APPipe {
 	
+	@MjBattery (maxCapacity = 64, maxReceivedPerCycle = 64, minimumConsumption = 0)
 	public double mjStored = 0;
+	
+	public final PipeTransportAdvancedWood transport;
 
 	public PipeItemsAdvancedWood(Item item) {
 		super(new PipeTransportAdvancedWood(), item);
 		transport = (PipeTransportAdvancedWood) super.transport;
-
-		powerProvider = new PowerHandler(this, Type.MACHINE);
-		powerProvider.configure(1, 64.1f, 1, 64.1f);
-		powerProvider.configurePowerPerdition(0, 0);
 	}
 	
-//	@Override
-//	public void updateEntity()
-//	{
-//		super.updateEntity();
-//
-//		if(container.getWorldObj().isRemote)
-//		{
-//			return;
-//		}
-//
-//		if (mjStored > 0) {
-//			if (transport.getNumberOfStacks() < PipeTransportItems.MAX_PIPE_STACKS) {
-//				extractItems();
-//			}
-//
-//			mjStored = 0;
-//		}
-//	}
-
 	@Override
-	public PowerReceiver getPowerReceiver(ForgeDirection side) {
-		return powerProvider.getPowerReceiver();
-	}
+	public void updateEntity()
+	{
+		super.updateEntity();
 
-	@Override
-	public void doWork(PowerHandler workProvider) {
-		if(powerProvider.getEnergyStored() <= 0)
+		if(container.getWorldObj().isRemote)
+		{
 			return;
+		}
 
-		World w = getWorld();
+		if (mjStored > 0)
+		{
+			World w = getWorld();
 
-		int meta = w.getBlockMetadata(container.xCoord, container.yCoord, container.zCoord);
+			int meta = w.getBlockMetadata(container.xCoord, container.yCoord, container.zCoord);
 
-		if(meta > 5)
-			return;
-
-		Position pos = new Position(container.xCoord, container.yCoord, container.zCoord, ForgeDirection.VALID_DIRECTIONS[meta]);
-		pos.moveForwards(1);
-		w.getBlock((int) pos.x, (int) pos.y, (int) pos.z);
-		TileEntity tile = w.getTileEntity((int) pos.x, (int) pos.y, (int) pos.z);
-
-		if(tile instanceof IInventory) {
-			if(!PipeManager.canExtractItems(this, w, (int) pos.x, (int) pos.y, (int) pos.z))
-				return;
-
-			IInventory inventory = (IInventory) tile;
-
-			ItemStack extracted = checkExtract(inventory, true, pos.orientation.getOpposite());
-
-			if(extracted == null || extracted.stackSize == 0) {
-				powerProvider.useEnergy(1, 1, false);
+			if(meta > 5)
+			{
 				return;
 			}
+				
+			Position pos = new Position(container.xCoord, container.yCoord, container.zCoord, ForgeDirection.VALID_DIRECTIONS[meta]);
+			pos.moveForwards(1);
+			w.getBlock((int) pos.x, (int) pos.y, (int) pos.z);
+			TileEntity tile = w.getTileEntity((int) pos.x, (int) pos.y, (int) pos.z);
 
-			Position entityPos = new Position(pos.x + 0.5, pos.y + CoreConstants.PIPE_MIN_POS, pos.z + 0.5, pos.orientation.getOpposite());
-			entityPos.moveForwards(0.5);
-			TravelingItem entity = TravelingItem.make(entityPos.x, entityPos.y, entityPos.z, extracted);
-			((PipeTransportItems) transport).injectItem(entity, entityPos.orientation);
+			if(tile instanceof IInventory)
+			{
+				if(!PipeManager.canExtractItems(this, w, (int) pos.x, (int) pos.y, (int) pos.z))
+				{
+					return;
+				}
+					
+				IInventory inventory = (IInventory) tile;
+
+				ItemStack extracted = checkExtract(inventory, true, pos.orientation.getOpposite());
+
+				if(extracted == null || extracted.stackSize == 0) {
+					return;
+				}
+
+				Position entityPos = new Position(pos.x + 0.5, pos.y + CoreConstants.PIPE_MIN_POS, pos.z + 0.5, pos.orientation.getOpposite());
+				entityPos.moveForwards(0.5);
+				TravelingItem entity = TravelingItem.make(entityPos.x, entityPos.y, entityPos.z, extracted);
+				((PipeTransportItems) transport).injectItem(entity, entityPos.orientation);
+			}
+
+			mjStored = 0;
 		}
 	}
 
@@ -128,9 +112,16 @@ public class PipeItemsAdvancedWood extends APPipe implements IPowerReceptor {
 			ItemStack slot = inventory.getStackInSlot(k);
 
 			if(slot != null && slot.stackSize > 0 && canExtract(slot)) {
-				if(doRemove) {
-					return inventory.decrStackSize(k, (int) powerProvider.useEnergy(1, slot.stackSize, true));
-				} else {
+				if(doRemove)
+				{
+					int itemsExtracted = mjStored >= slot.stackSize ? slot.stackSize : MathHelper.floor_double(mjStored);
+					
+					mjStored -= itemsExtracted;
+					
+					return inventory.decrStackSize(k, (int) itemsExtracted);
+				}
+				else 
+				{
 					return slot;
 				}
 			}
@@ -139,13 +130,21 @@ public class PipeItemsAdvancedWood extends APPipe implements IPowerReceptor {
 	}
 
 	public ItemStack checkExtractGeneric(IInventory inventory, boolean doRemove, ForgeDirection from, int[] slots) {
-		for(int i : slots) {
+		for(int i : slots)
+		{
 			ItemStack slot = inventory.getStackInSlot(i);
 
 			if(slot != null && slot.stackSize > 0 && canExtract(slot)) {
-				if(doRemove) {
-					return inventory.decrStackSize(i, (int) powerProvider.useEnergy(1, slot.stackSize, true));
-				} else {
+				if(doRemove)
+				{
+					int itemsExtracted = mjStored >= slot.stackSize ? slot.stackSize : MathHelper.floor_double(mjStored);
+					
+					mjStored -= itemsExtracted;
+					
+					return inventory.decrStackSize(i, (int) itemsExtracted);
+				}
+				else
+				{
 					return slot;
 				}
 			}
