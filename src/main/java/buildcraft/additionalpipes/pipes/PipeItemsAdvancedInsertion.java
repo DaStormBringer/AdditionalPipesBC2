@@ -14,12 +14,12 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-import buildcraft.api.core.Position;
 import buildcraft.core.inventory.ITransactor;
 import buildcraft.core.inventory.Transactor;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.TransportConstants;
 import buildcraft.transport.TravelingItem;
+import buildcraft.transport.pipes.events.PipeEventItem;
 
 public class PipeItemsAdvancedInsertion extends APPipe {
 	private static final int ICON = 8;
@@ -32,38 +32,45 @@ public class PipeItemsAdvancedInsertion extends APPipe {
 	public int getIconIndex(ForgeDirection direction) {
 		return ICON;
 	}
-
-	public LinkedList<ForgeDirection> filterPossibleMovements(
-			LinkedList<ForgeDirection> possibleOrientations, Position pos,
-			TravelingItem item) {
+	
+	public void eventHandler(PipeEventItem.FindDest event)
+	{
 		LinkedList<ForgeDirection> newOris = new LinkedList<ForgeDirection>();
 
 		for (int o = 0; o < 6; ++o) {
 			ForgeDirection orientation = ForgeDirection.VALID_DIRECTIONS[o];
-			if (orientation != pos.orientation.getOpposite()) {
+			
+			//commented out during port from BC 4.2 to 6.1
+			//I don't know what the equivalent to the Position argument to filterPossibleMovements() is in the new eventHandler system
+			//if(orientation != pos.orientation.getOpposite())
+			{
 				TileEntity entity = container.getTile(orientation);
-				if (entity instanceof IInventory) {
-					if (item.output == orientation
-							.getOpposite()) {
+				if (entity instanceof IInventory)
+				{
+					if (event.item.output == orientation.getOpposite())
+					{
 						// continue;
 					}
-					ITransactor transactor = Transactor
-							.getTransactorFor(entity);
-					if (transactor.add(item.getItemStack(),
-							orientation.getOpposite(), false).stackSize > 0) {
+					ITransactor transactor = Transactor.getTransactorFor(entity);
+					if (transactor.add(event.item.getItemStack(), orientation.getOpposite(), false).stackSize > 0)
+					{
 						newOris.add(orientation);
 					}
 				}
 			}
 		}
-		if (newOris.size() > 0) {
-			return newOris;
-		}
 
-		return possibleOrientations;
+		if (!newOris.isEmpty())
+		{
+			event.destinations.clear();
+			event.destinations.addAll(newOris);
+		} 
+		else 
+		{
+			
+		}
 	}
 	
-	@Override
 	public void readjustSpeed(TravelingItem item) {
 		if (item.getSpeed() > TransportConstants.PIPE_NORMAL_SPEED) {
 			item.setSpeed(item.getSpeed() - TransportConstants.PIPE_NORMAL_SPEED / 2.0F);

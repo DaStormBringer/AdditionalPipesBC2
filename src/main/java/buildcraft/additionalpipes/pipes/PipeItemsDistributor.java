@@ -17,9 +17,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
-import buildcraft.api.core.Position;
 import buildcraft.transport.PipeTransportItems;
-import buildcraft.transport.TravelingItem;
+import buildcraft.transport.pipes.events.PipeEventItem;
 
 public class PipeItemsDistributor extends APPipe {
 
@@ -49,9 +48,9 @@ public class PipeItemsDistributor extends APPipe {
 			return 9;
 		}
 	}
-
 	
-	public LinkedList<ForgeDirection> filterPossibleMovements(LinkedList<ForgeDirection> possibleOrientations, Position pos, TravelingItem item) {
+	public void eventHandler(PipeEventItem.FindDest event)
+	{
 		LinkedList<ForgeDirection> result = new LinkedList<ForgeDirection>();
 
 		if(curTick >= distData[distSide]) {
@@ -59,8 +58,10 @@ public class PipeItemsDistributor extends APPipe {
 		}
 
 		result.add(ForgeDirection.VALID_DIRECTIONS[distSide]);
-		curTick += item.getItemStack().stackSize;
-		return result;
+		curTick += event.item.getItemStack().stackSize;
+
+		event.destinations.clear();
+		event.destinations.addAll(result);
 	}
 
 	private void toNextOpenSide() {

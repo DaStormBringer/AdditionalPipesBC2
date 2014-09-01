@@ -36,6 +36,8 @@ public class PipeItemsAdvancedWood extends APPipe implements IPowerReceptor {
 
 	private final PowerHandler powerProvider;
 	public final PipeTransportAdvancedWood transport;
+	
+	public double mjStored = 0;
 
 	public PipeItemsAdvancedWood(Item item) {
 		super(new PipeTransportAdvancedWood(), item);
@@ -45,6 +47,25 @@ public class PipeItemsAdvancedWood extends APPipe implements IPowerReceptor {
 		powerProvider.configure(1, 64.1f, 1, 64.1f);
 		powerProvider.configurePowerPerdition(0, 0);
 	}
+	
+//	@Override
+//	public void updateEntity()
+//	{
+//		super.updateEntity();
+//
+//		if(container.getWorldObj().isRemote)
+//		{
+//			return;
+//		}
+//
+//		if (mjStored > 0) {
+//			if (transport.getNumberOfStacks() < PipeTransportItems.MAX_PIPE_STACKS) {
+//				extractItems();
+//			}
+//
+//			mjStored = 0;
+//		}
+//	}
 
 	@Override
 	public PowerReceiver getPowerReceiver(ForgeDirection side) {
