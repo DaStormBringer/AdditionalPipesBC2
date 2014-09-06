@@ -191,14 +191,16 @@ public class PipeItemsAdvancedWood extends APPipe {
 	}
 	
 	@Override
-	public boolean blockActivated(EntityPlayer entityplayer) {
+	public boolean blockActivated(EntityPlayer entityplayer)
+	{
 		Item equipped = entityplayer.getCurrentEquippedItem() != null ? entityplayer.getCurrentEquippedItem().getItem() : null;
 		if(equipped instanceof IToolWrench && ((IToolWrench) equipped).canWrench(entityplayer, container.xCoord, container.yCoord, container.zCoord)) {
 			((PipeTransportAdvancedWood) transport).switchSource();
 			((IToolWrench) equipped).wrenchUsed(entityplayer, container.xCoord, container.yCoord, container.zCoord);
 			return true;
 		}
-		if(AdditionalPipes.isPipe(equipped)) {
+		if(AdditionalPipes.instance.filterRightclicks && AdditionalPipes.isPipe(equipped))
+		{
 			return false;
 		}
 

@@ -1,11 +1,12 @@
 package buildcraft.additionalpipes.network.message;
 
+import io.netty.buffer.ByteBuf;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.world.ChunkCoordIntPair;
-import io.netty.buffer.ByteBuf;
 import buildcraft.additionalpipes.AdditionalPipes;
+import net.minecraft.world.ChunkCoordIntPair;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -26,7 +27,7 @@ public class MessageChunkloadData implements IMessage, IMessageHandler<MessageCh
     @Override
     public IMessage onMessage(MessageChunkloadData message, MessageContext ctx)
     {
-    	AdditionalPipes.instance.chunkLoadViewer.sendPersistentChunksToPlayer(ctx.getServerHandler().playerEntity);
+    	AdditionalPipes.instance.chunkLoadViewer.receivePersistentChunks(message._chunksInRange);
     	
     	return null;
     }

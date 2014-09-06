@@ -1,7 +1,7 @@
 package buildcraft.additionalpipes;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,13 +34,13 @@ public class ChunkLoadViewDataProxy implements Comparator<ChunkCoordIntPair> {
 
 	// used by client
 	private List<EntityBlock> lasers;
-	private ChunkCoordIntPair[] persistentChunks;
+	private List<ChunkCoordIntPair> persistentChunks;
 	private boolean active = false;
 
 	public ChunkLoadViewDataProxy(int chunkSightRange) {
 		setSightRange(chunkSightRange);
 		lasers = new ArrayList<EntityBlock>();
-		persistentChunks = new ChunkCoordIntPair[0];
+		persistentChunks = new ArrayList<ChunkCoordIntPair>();
 		active = false;
 	}
 	
@@ -109,17 +109,20 @@ public class ChunkLoadViewDataProxy implements Comparator<ChunkCoordIntPair> {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void receivePersistentChunks(ChunkCoordIntPair[] chunks) {
+	public void receivePersistentChunks(List<ChunkCoordIntPair> chunks)
+	{
 		boolean changed = true;
 		// check if arrays have equal contents
 		// do this on the client since it's only rendering, and it reduces
 		// server load
-		if(persistentChunks.length == chunks.length) {
+		if(persistentChunks.size() == chunks.size()) {
 			changed = false;
-			Arrays.sort(chunks, this);
-			Arrays.sort(persistentChunks, this);
-			for(int i = 0; i < chunks.length; i++) {
-				if(!chunks[i].equals(persistentChunks[i])) {
+			Collections.sort(chunks, this);
+			Collections.sort(persistentChunks, this);
+			for(int i = 0; i < chunks.size(); i++)
+			{
+				if(!chunks.get(i).equals(persistentChunks.get(i)))
+				{
 					changed = true;
 					break;
 				}

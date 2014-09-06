@@ -4,6 +4,7 @@ import java.util.Random;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -54,11 +55,17 @@ public abstract class PipeTeleport extends APPipe {
 		if(owner == null || "".equalsIgnoreCase(owner)) {
 			owner = player.getCommandSenderName();
 		}
-		//ItemStack equippedItem = player.getCurrentEquippedItem();
-		/*
-		 * if (equippedItem != null &&
-		 * AdditionalPipes.isPipe(equippedItem.getItem())) { return false; }
-		 */
+		
+		if(AdditionalPipes.instance.filterRightclicks)
+		{
+			ItemStack equippedItem = player.getCurrentEquippedItem();
+			
+			if (equippedItem != null && AdditionalPipes.isPipe(equippedItem.getItem()))
+			{
+				return false;
+			}
+		}
+		
 		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_TP, getWorld(), container.xCoord, container.yCoord, container.zCoord);
 		return true;
 	}

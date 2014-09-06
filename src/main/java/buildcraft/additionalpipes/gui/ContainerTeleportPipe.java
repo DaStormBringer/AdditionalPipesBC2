@@ -11,6 +11,8 @@ import buildcraft.additionalpipes.network.message.MessageTelePipeData;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.additionalpipes.pipes.TeleportManager;
 import buildcraft.core.gui.BuildCraftContainer;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 
 public class ContainerTeleportPipe extends BuildCraftContainer {
 
@@ -30,17 +32,20 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 		isPublic = !pipe.isPublic;
 		freq = -1;
 		
-		List<PipeTeleport> connectedPipes = TeleportManager.instance.getConnectedPipes(pipe, false);
-		int[] locations = new int[connectedPipes.size() * 3];
-		for(int i = 0; i < connectedPipes.size() && i < 9; i++) {
-			PipeTeleport connectedPipe = connectedPipes.get(i);
-			locations[3 * i] = connectedPipe.container.xCoord;
-			locations[3 * i + 1] = connectedPipe.container.yCoord;
-			locations[3 * i + 2] = connectedPipe.container.zCoord;
+		if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+		{
+			List<PipeTeleport> connectedPipes = TeleportManager.instance.getConnectedPipes(pipe, false);
+			int[] locations = new int[connectedPipes.size() * 3];
+			for(int i = 0; i < connectedPipes.size() && i < 9; i++) {
+				PipeTeleport connectedPipe = connectedPipes.get(i);
+				locations[3 * i] = connectedPipe.container.xCoord;
+				locations[3 * i + 1] = connectedPipe.container.yCoord;
+				locations[3 * i + 2] = connectedPipe.container.zCoord;
+			}
+			
+			MessageTelePipeData message = new MessageTelePipeData(pipe.container.xCoord, pipe.container.yCoord, pipe.container.zCoord, locations, pipe.owner);
+			PacketHandler.INSTANCE.sendTo(message, (EntityPlayerMP) player);
 		}
-		
-		MessageTelePipeData message = new MessageTelePipeData(pipe.container.xCoord, pipe.container.yCoord, pipe.container.zCoord, locations, pipe.owner);
-		PacketHandler.INSTANCE.sendTo(message, (EntityPlayerMP) player);
 	}
 
 	@Override

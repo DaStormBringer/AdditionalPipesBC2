@@ -7,7 +7,7 @@ import net.minecraft.world.World;
 import buildcraft.transport.ItemPipe;
 import buildcraft.transport.Pipe;
 
-public class MutiPlayerProxy {
+public class MultiPlayerProxy {
 	public boolean isServer(World world) {
 		return FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER;
 	}

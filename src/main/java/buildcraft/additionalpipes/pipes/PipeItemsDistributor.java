@@ -83,7 +83,7 @@ public class PipeItemsDistributor extends APPipe {
 
 		Item equipped = player.getCurrentEquippedItem() != null ? player.getCurrentEquippedItem().getItem() : null;
 		if(equipped != null) {
-			if(AdditionalPipes.isPipe(equipped)) {
+			if(AdditionalPipes.instance.filterRightclicks && AdditionalPipes.isPipe(equipped)) {
 				return false;
 			}
 		}

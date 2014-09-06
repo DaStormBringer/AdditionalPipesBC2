@@ -42,6 +42,8 @@ public class MessageTelePipe implements IMessage, IMessageHandler<MessageTelePip
         x = buf.readInt();
         y = buf.readInt();
         z = buf.readInt();
+        _freq = buf.readInt();
+        _isPublic = buf.readBoolean();
         _state = buf.readByte();
     }
 

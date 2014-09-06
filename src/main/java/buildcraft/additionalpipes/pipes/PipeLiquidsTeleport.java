@@ -23,8 +23,8 @@ public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportF
 
 	public PipeLiquidsTeleport(Item item) {
 		super(new PipeTransportFluids(), item);
-		((PipeTransportFluids) transport).flowRate = 160;
-		((PipeTransportFluids) transport).travelDelay = 4;
+		((PipeTransportFluids) transport).flowRate = 220;
+		((PipeTransportFluids) transport).travelDelay = 3;
 	}
 
 	@Override

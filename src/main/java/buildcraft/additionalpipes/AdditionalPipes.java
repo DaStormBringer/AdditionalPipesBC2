@@ -76,7 +76,7 @@ public class AdditionalPipes {
 	public static AdditionalPipes instance;
 
 	@SidedProxy(clientSide = "buildcraft.additionalpipes.MutiPlayerProxyClient", serverSide = "buildcraft.additionalpipes.MutiPlayerProxy")
-	public static MutiPlayerProxy proxy;
+	public static MultiPlayerProxy proxy;
 
 	public File configFile;
 
@@ -126,6 +126,10 @@ public class AdditionalPipes {
 
 	public @CfgBool
 	boolean enableTriggers = true;
+	
+	//set from config
+	public boolean filterRightclicks = false;
+	
 	public ITrigger triggerPipeClosed;
 
 	public ITrigger triggerPhasedSignalRed;
@@ -143,7 +147,7 @@ public class AdditionalPipes {
 	public void preInit(FMLPreInitializationEvent event) {
 		logger = Logger.getLogger(MODID);
 		//logger.setParent(FMLLog.getLogger());
-		logger.setLevel(Level.INFO); // DEBUG
+		logger.setLevel(Level.SEVERE); // DEBUG
 		
 		PacketHandler.init();
 
@@ -153,18 +157,22 @@ public class AdditionalPipes {
 	}
 
 	@EventHandler
-	public void init(FMLInitializationEvent event) {
+	public void init(FMLInitializationEvent event)
+	{
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
+	
+		logger.info("Registering chunk load handler");
 		ForgeChunkManager.setForcedChunkLoadingCallback(this, new ChunkLoadingHandler());
 		chunkLoadViewer = new ChunkLoadViewDataProxy(chunkSightRange);
 		FMLCommonHandler.instance().bus().register(chunkLoadViewer);
+		
 		proxy.registerKeyHandler();
+		
 		proxy.registerRendering();
 
-		// powerMeter = new
-		// ItemPowerMeter(powerMeterId).setItemName("powerMeter");
-		// LanguageRegistry.addName(powerMeter, "Power Meter");
 		loadConfigs(true);
+		
+		logger.info("Registering pipes");
 		loadPipes();
 
 		triggerPipeClosed = new TriggerPipeClosed("APClosed");
@@ -188,7 +196,7 @@ public class AdditionalPipes {
 		}
 
 		// ChunkLoader
-		blockChunkLoader = new BlockChunkLoader(32);
+		blockChunkLoader = new BlockChunkLoader();
 		blockChunkLoader.setBlockName("TeleportTether");
 		GameRegistry.registerBlock(blockChunkLoader, ItemBlock.class, "chunkLoader");
 		GameRegistry.registerTileEntity(TileChunkLoader.class, "TeleportTether");
@@ -208,9 +216,7 @@ public class AdditionalPipes {
 		Configuration config = new Configuration(configFile);
 		try {
 			config.load();
-			
-			config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, "Disabling items/blocks only disables recipes.");
-			
+						
 			Property powerLoss = config.get(Configuration.CATEGORY_GENERAL, "powerLoss", (int) (powerLossCfg * 100));
 			powerLoss.comment = "Percentage of power a power teleport pipe transmits. Between 0 and 100.";
 			powerLossCfg = powerLoss.getInt() / 100.0f;
@@ -226,6 +232,10 @@ public class AdditionalPipes {
 			Property laserKey = config.get(Configuration.CATEGORY_GENERAL, "laserKeyChar", laserKeyCode);
 			laserKey.comment = "Default key to toggle chunk load boundaries.";
 			laserKeyCode = laserKey.getInt();
+			
+			Property filterRightclicksProperty = config.get(Configuration.CATEGORY_GENERAL, "filterRightclicks", false);
+			filterRightclicksProperty.comment = "When right clicking on something with a gui, do not show the gui if you have a pipe in your hand";
+			filterRightclicks = filterRightclicksProperty.getBoolean();
 			
 			
 		} catch(Exception e) {
@@ -304,7 +314,8 @@ public class AdditionalPipes {
 	}
 
 	// special pipe code
-	private static class ItemPipeAP extends ItemPipe {
+	private static class ItemPipeAP extends ItemPipe
+	{
 		protected ItemPipeAP() {
 			super(CreativeTabBuildCraft.PIPES);
 		}
@@ -332,6 +343,9 @@ public class AdditionalPipes {
 		item.setUnlocalizedName(clas.getSimpleName());
 		proxy.registerPipeRendering(item);
 		BlockGenericPipe.pipes.put(item, clas);
+		
+		GameRegistry.registerItem(item, item.getUnlocalizedName());
+		
 		proxy.createPipeSpecial(item, clas);
 
 		return item;
