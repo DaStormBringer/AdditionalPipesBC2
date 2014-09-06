@@ -9,27 +9,13 @@ MinecraftForge-*.txt
 /bin
 /eclipse
 
-/config/additionalpipes.cfg
-/config/buildcraft/main.conf
-/config/forge.cfg
-/config/forgeChunkLoading.cfg
-/logs/2014-08-30-1.log.gz
-/logs/fml-client-1.log
-/logs/fml-client-latest.log
-/logs/fml-junk-earlystartup.log
-/logs/latest.log
+/config/*
+/logs/*
 /options.txt
-/saves/Test 7_0_1/DIM-1/data/villages.dat
-/saves/Test 7_0_1/DIM-1/forcedchunks.dat
-/saves/Test 7_0_1/DIM1/data/villages.dat
-/saves/Test 7_0_1/DIM1/forcedchunks.dat
-/saves/Test 7_0_1/data/Mineshaft.dat
-/saves/Test 7_0_1/data/villages.dat
-/saves/Test 7_0_1/forcedchunks.dat
-/saves/Test 7_0_1/level.dat
-/saves/Test 7_0_1/level.dat_mcr
-/saves/Test 7_0_1/level.dat_old
-/saves/Test 7_0_1/playerdata/058869be-af43-3150-8380-41ab8f08f129.dat
-/saves/Test 7_0_1/region/r.0.-1.mca
-/saves/Test 7_0_1/session.lock
-/saves/Test 7_0_1/stats/058869be-af43-3150-8380-41ab8f08f129.json
+/saves/*
+/resourcepacks
+/crash-reports
+/mods
+/build
+/.settings
+/.gradle
