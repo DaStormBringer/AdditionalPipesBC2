@@ -75,7 +75,7 @@ public class AdditionalPipes {
 	@Instance(MODID)
 	public static AdditionalPipes instance;
 
-	@SidedProxy(clientSide = "buildcraft.additionalpipes.MutiPlayerProxyClient", serverSide = "buildcraft.additionalpipes.MutiPlayerProxy")
+	@SidedProxy(clientSide = "buildcraft.additionalpipes.MutiPlayerProxyClient", serverSide = "buildcraft.additionalpipes.MultiPlayerProxy")
 	public static MultiPlayerProxy proxy;
 
 	public File configFile;
