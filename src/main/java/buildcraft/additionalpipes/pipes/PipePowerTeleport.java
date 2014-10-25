@@ -11,6 +11,7 @@ package buildcraft.additionalpipes.pipes;
 import java.util.LinkedList;
 import java.util.List;
 
+import cofh.lib.util.helpers.MathHelper;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -40,8 +41,8 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 	}
 
 	@Override
-	public double requestEnergy(ForgeDirection from, double is) {
-		double requested = 0;
+	public int requestEnergy(ForgeDirection from, int value ) {
+		int requested = 0;
 
 		if((state & 0x2) == 0) { // No need to waste CPU
 			return requested;
@@ -60,7 +61,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 				if(tile instanceof TileGenericPipe) {
 					TileGenericPipe adjacentTile = (TileGenericPipe) tile;
 					PipeTransportPower nearbyTransport = (PipeTransportPower) adjacentTile.pipe.transport;
-					nearbyTransport.requestEnergy(orientation.getOpposite(), is);
+					nearbyTransport.requestEnergy(orientation.getOpposite(), value);
 					//TODO does this work??
 					requested += nearbyTransport.nextPowerQuery[orientation.getOpposite().ordinal()];
 				}
@@ -70,7 +71,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 	}
 
 	@Override
-	public double receiveEnergy(ForgeDirection from, double energy) {
+	public int receiveEnergy(ForgeDirection from, int energy) {
 		List<PipeTeleport> connectedPipes = TeleportManager.instance.getConnectedPipes(this, false);
 		List<PipeTeleport> sendingToList = new LinkedList<PipeTeleport>();
 
@@ -100,7 +101,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 				continue;
 			}
 
-			double dividedPowerToSend = powerToSend / needsPower.size();
+			int dividedPowerToSend = MathHelper.ceil(powerToSend / needsPower.size());
 
 			for(PowerRequest powerEntry : needsPower) {
 				PipeTransportPower nearbyTransport = (PipeTransportPower) powerEntry.tile.pipe.transport;
