@@ -11,9 +11,9 @@ package buildcraft.additionalpipes.pipes;
 import java.util.LinkedList;
 import java.util.List;
 
-import cofh.lib.util.helpers.MathHelper;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.ForgeDirection;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.core.utils.Utils;
@@ -101,7 +101,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 				continue;
 			}
 
-			int dividedPowerToSend = MathHelper.ceil(powerToSend / needsPower.size());
+			int dividedPowerToSend = MathHelper.ceiling_double_int(powerToSend / needsPower.size());
 
 			for(PowerRequest powerEntry : needsPower) {
 				PipeTransportPower nearbyTransport = (PipeTransportPower) powerEntry.tile.pipe.transport;

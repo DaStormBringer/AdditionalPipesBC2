@@ -19,3 +19,4 @@ MinecraftForge-*.txt
 /build
 /.settings
 /.gradle
+/source.bak

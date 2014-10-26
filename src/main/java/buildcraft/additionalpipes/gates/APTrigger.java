@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.IIcon;
 import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.api.gates.ITriggerProvider;
-import buildcraft.api.gates.StatementManager;
+import buildcraft.api.gates.ActionManager;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -15,7 +15,7 @@ public abstract class APTrigger implements ITriggerProvider {
 	public APTrigger(String id)
 	{
 		this.id = id;
-		StatementManager.registerTriggerProvider(this);
+		ActionManager.registerTriggerProvider(this);
 	}
 
 	protected abstract int getIconIndex();
