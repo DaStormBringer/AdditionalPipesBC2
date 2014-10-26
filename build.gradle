@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "3.0"
+version = "3.1"
 group= "com.buildcraft.additionalpipes" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "additionalpipes"
 
@@ -27,7 +27,7 @@ minecraft {
 }
 
 dependencies {
-
+		compile files('lib/CoFHCore-[1.7.10]3.0.0B6-dev-32.jar')
 }
 
 processResources
