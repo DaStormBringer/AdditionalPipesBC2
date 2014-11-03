@@ -8,6 +8,7 @@ forge-*.txt
 MinecraftForge-*.txt
 /bin
 /eclipse
+usernamecache.json
 
 /config/*
 /logs/*
@@ -20,3 +21,6 @@ MinecraftForge-*.txt
 /.settings
 /.gradle
 /source.bak
+/src/main/java/buildcraft/*
+
+!/src/main/java/buildcraft/additionalpipes
