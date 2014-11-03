@@ -45,8 +45,8 @@ import buildcraft.additionalpipes.pipes.PipeSwitchItems;
 import buildcraft.additionalpipes.pipes.PipeSwitchPower;
 import buildcraft.additionalpipes.pipes.TeleportManager;
 import buildcraft.additionalpipes.textures.Textures;
-import buildcraft.api.gates.ITrigger;
-import buildcraft.api.gates.StatementManager;
+import buildcraft.api.statements.ITriggerInternal;
+import buildcraft.api.statements.StatementManager;
 import buildcraft.core.CreativeTabBuildCraft;
 import buildcraft.core.recipes.AssemblyRecipeManager;
 import buildcraft.transport.BlockGenericPipe;
@@ -70,7 +70,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class AdditionalPipes {
 	public static final String MODID = "additionalpipes";
 	public static final String NAME = "Additional Pipes";
-	public static final String VERSION = "${version}";
+	public static final String VERSION = "3.2";
 
 	@Instance(MODID)
 	public static AdditionalPipes instance;
@@ -130,12 +130,12 @@ public class AdditionalPipes {
 	//set from config
 	public boolean filterRightclicks = false;
 	
-	public ITrigger triggerPipeClosed;
+	public ITriggerInternal triggerPipeClosed;
 
-	public ITrigger triggerPhasedSignalRed;
-	public ITrigger triggerPhasedSignalBlue;
-	public ITrigger triggerPhasedSignalGreen;
-	public ITrigger triggerPhasedSignalYellow;
+	public ITriggerInternal triggerPhasedSignalRed;
+	public ITriggerInternal triggerPhasedSignalBlue;
+	public ITriggerInternal triggerPhasedSignalGreen;
+	public ITriggerInternal triggerPhasedSignalYellow;
 	// keybinding
 	public static int laserKeyCode = 68; // config option (& in options menu)
 	// misc

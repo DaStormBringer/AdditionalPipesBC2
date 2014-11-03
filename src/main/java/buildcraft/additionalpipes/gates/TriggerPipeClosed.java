@@ -2,17 +2,17 @@ package buildcraft.additionalpipes.gates;
 
 import java.util.Collection;
 
-import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
 import buildcraft.additionalpipes.pipes.PipeItemsClosed;
-import buildcraft.api.gates.IGate;
-import buildcraft.api.gates.IStatement;
-import buildcraft.api.gates.IStatementParameter;
-import buildcraft.api.gates.ITrigger;
-import buildcraft.api.gates.ITriggerParameter;
-import buildcraft.api.transport.IPipeTile;
+import buildcraft.api.statements.IStatement;
+import buildcraft.api.statements.IStatementContainer;
+import buildcraft.api.statements.IStatementParameter;
+import buildcraft.api.statements.ITriggerExternal;
+import buildcraft.api.statements.ITriggerInternal;
+import buildcraft.transport.TileGenericPipe;
 
-public class TriggerPipeClosed extends APTrigger implements ITrigger {
+public class TriggerPipeClosed extends APTrigger implements ITriggerInternal {
 
 	public TriggerPipeClosed(String id) {
 		super(id);
@@ -24,8 +24,8 @@ public class TriggerPipeClosed extends APTrigger implements ITrigger {
 	}
 
 	@Override
-	public boolean isTriggerActive(IGate gate, ITriggerParameter[] parameters) {
-		PipeItemsClosed closedPipe = (PipeItemsClosed) gate.getPipe();
+	public boolean isTriggerActive(IStatementContainer gate, IStatementParameter[] parameters) {
+		PipeItemsClosed closedPipe = (PipeItemsClosed) ((TileGenericPipe)gate.getTile()).pipe;
 		for(int i = 0; i < closedPipe.getSizeInventory(); i++) {
 			if(closedPipe.getStackInSlot(i) != null) {
 				return true;
@@ -34,50 +34,45 @@ public class TriggerPipeClosed extends APTrigger implements ITrigger {
 		return false;
 	}
 
+	/**
+	 * MultipleMonomials here.  These functions below were added at some point between BC 4 and 6, and there's
+	 * almost zero documentation, so I have no idea what most of them do. Help on implementing them correctly
+	 * would be very much appreciated.
+	 */
+	
 	@Override
 	public int getIconIndex() {
 		return 0;
 	}
 
 	@Override
-	public String getUniqueTag() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getUniqueTag() 
+	{
+		return "additionalpipes: trigger.pipeclosed";
 	}
 
 	@Override
-	public int maxParameters() {
-		// TODO Auto-generated method stub
+	public int maxParameters() 
+	{
 		return 0;
 	}
 
 	@Override
-	public int minParameters() {
-		// TODO Auto-generated method stub
+	public int minParameters() 
+	{
 		return 0;
 	}
 
 	@Override
-	public IStatementParameter createParameter(int index) {
-		// TODO Auto-generated method stub
+	public IStatementParameter createParameter(int index) 
+	{
 		return null;
 	}
 
 	@Override
-	public IStatement rotateLeft() {
-		// TODO Auto-generated method stub
-		return null;
+	public IStatement rotateLeft() 
+	{
+		return this;
 	}
 
-	@Override
-	public Collection<ITrigger> getPipeTriggers(IPipeTile pipe) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Collection<ITrigger> getNeighborTriggers(Block block, TileEntity tile) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

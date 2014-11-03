@@ -21,10 +21,10 @@ import net.minecraftforge.common.util.ForgeDirection;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.api.core.Position;
-import buildcraft.api.mj.MjBattery;
 import buildcraft.api.tools.IToolWrench;
 import buildcraft.api.transport.PipeManager;
 import buildcraft.core.CoreConstants;
+import buildcraft.core.RFBattery;
 import buildcraft.core.inventory.InvUtils;
 import buildcraft.core.utils.Utils;
 import buildcraft.transport.PipeTransportItems;
@@ -32,8 +32,7 @@ import buildcraft.transport.TravelingItem;
 
 public class PipeItemsAdvancedWood extends APPipe {
 	
-	@MjBattery (maxCapacity = 64, maxReceivedPerCycle = 64, minimumConsumption = 0)
-	public double mjStored = 0;
+	protected RFBattery battery = new RFBattery(640, 640, 0);
 	
 	public final PipeTransportAdvancedWood transport;
 
@@ -52,7 +51,7 @@ public class PipeItemsAdvancedWood extends APPipe {
 			return;
 		}
 
-		if (mjStored > 0)
+		if (battery.getEnergyStored() > 0)
 		{
 			World w = getWorld();
 
@@ -89,7 +88,7 @@ public class PipeItemsAdvancedWood extends APPipe {
 				((PipeTransportItems) transport).injectItem(entity, entityPos.orientation);
 			}
 
-			mjStored = 0;
+			battery.setEnergy(0);
 		}
 	}
 
@@ -114,9 +113,9 @@ public class PipeItemsAdvancedWood extends APPipe {
 			if(slot != null && slot.stackSize > 0 && canExtract(slot)) {
 				if(doRemove)
 				{
-					int itemsExtracted = mjStored >= slot.stackSize ? slot.stackSize : MathHelper.floor_double(mjStored);
+					int itemsExtracted = battery.getEnergyStored() / 10 >= slot.stackSize ? slot.stackSize : MathHelper.floor_double(battery.getEnergyStored() / 10);
 					
-					mjStored -= itemsExtracted;
+					battery.extractEnergy(itemsExtracted * 10, false);
 					
 					return inventory.decrStackSize(k, (int) itemsExtracted);
 				}
@@ -137,9 +136,9 @@ public class PipeItemsAdvancedWood extends APPipe {
 			if(slot != null && slot.stackSize > 0 && canExtract(slot)) {
 				if(doRemove)
 				{
-					int itemsExtracted = mjStored >= slot.stackSize ? slot.stackSize : MathHelper.floor_double(mjStored);
+					int itemsExtracted = battery.getEnergyStored() / 10 >= slot.stackSize ? slot.stackSize : MathHelper.floor_double(battery.getEnergyStored() / 10);
 					
-					mjStored -= itemsExtracted;
+					battery.extractEnergy(itemsExtracted * 10, false);
 					
 					return inventory.decrStackSize(i, (int) itemsExtracted);
 				}
