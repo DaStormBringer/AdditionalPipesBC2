@@ -5,11 +5,14 @@ rem ==============================================
 
 git submodule update --init --remote
 
+rem remove files that were in the previous version but were removed
+git submodule foreach git reset --hard
+
 rem copy the sourcecode out
 xcopy /E /Y /Q /I src\main\java\buildcraft\additionalpipes source.bak
 
 rem remove the entire codebase
-del /Q src\main\java\buildcraft
+rmdir /Q /S src\main\java\buildcraft
 
 rem copy the sourcecode back
 xcopy /E /Y /Q /I source.bak src\main\java\buildcraft\additionalpipes

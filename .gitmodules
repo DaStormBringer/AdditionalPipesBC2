@@ -1,4 +1,4 @@
 [submodule "BuildCraft"]
 	path = BuildCraft
 	url = https://github.com/BuildCraft/BuildCraft.git
-	branch = 6.1.x
+	tag = 6.1.5
