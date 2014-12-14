@@ -1,16 +1,16 @@
 
 tile.TeleportTether.name=Телепорт тизер
-item.PipeLiquidsRedstone=Красная жидкостная труба
-item.PipeItemsRedstone=Красная транспортная труба
-item.PipeItemsAdvancedInsertion=Вводящая труба
-item.PipeItemsAdvancedWood=Продвинутая деревянная труба
-item.PipeItemsDistributor=Распределяющая транспортная труба
-item.PipeItemsClosed=Закрытая транспортная труба
-item.PipeItemsTeleport=Фазовая транспортная труба
-item.PipeLiquidsTeleport=Фазовая жидкостная труба
-item.PipePowerTeleport=Фазовая проводящая труба
-item.PipeSwitchPower=Переключающая проводящая труба
-item.PipeSwitchFluids=Переключающая жидкостная труба
-item.PipeSwitchItems=Переключающая транспортная труба
-item.PipeLiquidsWaterPump=Водяная помповая труба
+item.PipeLiquidsRedstone.name=Красная жидкостная труба
+item.PipeItemsRedstone.name=Красная транспортная труба
+item.PipeItemsAdvancedInsertion.name=Вводящая труба
+item.PipeItemsAdvancedWood.name=Продвинутая деревянная труба
+item.PipeItemsDistributor.name=Распределяющая транспортная труба
+item.PipeItemsClosed.name=Закрытая транспортная труба
+item.PipeItemsTeleport.name=Фазовая транспортная труба
+item.PipeLiquidsTeleport.name=Фазовая жидкостная труба
+item.PipePowerTeleport.name=Фазовая проводящая труба
+item.PipeSwitchPower.name=Переключающая проводящая труба
+item.PipeSwitchFluids.name=Переключающая жидкостная труба
+item.PipeSwitchItems.name=Переключающая транспортная труба
+item.PipeLiquidsWaterPump.name=Водяная помповая труба
 
