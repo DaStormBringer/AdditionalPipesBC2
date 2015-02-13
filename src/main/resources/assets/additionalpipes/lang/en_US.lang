@@ -1,0 +1,18 @@
+tile.TeleportTether.name=Teleport Tether
+item.PipeLiquidsRedstone.name=Redstone Fluid Pipe
+item.PipeItemsRedstone.name=Redstone Transport Pipe
+item.PipeItemsAdvancedInsertion.name=Insertion Transport Pipe
+item.PipeItemsAdvancedWood.name=Adv. Wooden Transport Pipe
+item.PipeItemsDistributor.name=Distribution Transport Pipe
+item.PipeItemsClosed.name=Closed Transport Pipe [WIP]
+item.PipeItemsTeleport.name=Phased Transport Pipe
+item.PipeLiquidsTeleport.name=Phased Fluid Pipe
+item.PipePowerTeleport.name=Phased Kinesis Pipe
+item.PipeSwitchPower.name=Switch Kinesis Pipe
+item.PipeSwitchFluids.name=Switch Fluid Pipe
+item.PipeSwitchItems.name=Switch Transport Pipe
+item.PipeLiquidsWaterPump.name=Water Pump Pipe
+
+key.lasers=Toggle chunk loading boundaries display
+
+tip.ItemPipeAP=Transports your stuff with no need for a long pipeline

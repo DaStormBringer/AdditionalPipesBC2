@@ -1,0 +1,18 @@
+tile.TeleportTether.name=Телепорт тизер
+item.PipeLiquidsRedstone.name=Красная жидкостная труба
+item.PipeItemsRedstone.name=Красная транспортная труба
+item.PipeItemsAdvancedInsertion.name=Вводящая транспортная труба
+item.PipeItemsAdvancedWood.name=Продвинутая деревянная транспортная труба
+item.PipeItemsDistributor.name=Распределяющая транспортная труба
+item.PipeItemsClosed.name=Закрытая транспортная труба [WIP]
+item.PipeItemsTeleport.name=Фазовая транспортная труба
+item.PipeLiquidsTeleport.name=Фазовая жидкостная труба
+item.PipePowerTeleport.name=Фазовая энергетическая труба
+item.PipeSwitchPower.name=Переключающая энергетическая труба
+item.PipeSwitchFluids.name=Переключающая жидкостная труба
+item.PipeSwitchItems.name=Переключающая транспортная труба
+item.PipeLiquidsWaterPump.name=Водяная помповая труба
+
+key.lasers=Переключает отображение загрузки границ чанков
+
+tip.ItemPipeAP=Переносит Ваши вещи без длинного трубопровода

@@ -1,0 +1,16 @@
+tile.TeleportTether.name=テレポートの絆
+item.PipeItemsAdvancedInsertion.name=そうにゅうの輸送パイプ
+item.PipeItemsAdvancedWood.name=ハイテクの木の輸送パイプ
+item.PipeItemsDistributor.name=はいふの輸送パイプ
+item.PipeItemsClosed.name=閉めた輸送パイプ [WIP]
+item.PipeItemsTeleport.name=テレポートの輸送パイプ
+item.PipeLiquidsTeleport.name=テレポートの防水パイプ
+item.PipePowerTeleport.name=テレポートの伝道パイプ
+item.PipeSwitchPower.name=スイッチの伝道パイプ
+item.PipeSwitchFluids.name=スイッチの防水パイプ
+item.PipeSwitchItems.name=スイッチの輸送パイプ
+item.PipeLiquidsWaterPump.name=水ポンプパイプ
+
+key.lasers=Toggle chunk loading boundaries display
+
+tip.ItemPipeAP=Transports your stuff with no need for a long pipeline
