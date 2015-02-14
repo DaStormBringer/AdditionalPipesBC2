@@ -37,7 +37,8 @@ public class PipeItemsAdvancedInsertion extends APPipe {
 	{
 		LinkedList<ForgeDirection> newOris = new LinkedList<ForgeDirection>();
 
-		for (int o = 0; o < 6; ++o) {
+		for (int o = 0; o < 6; ++o) 
+		{
 			ForgeDirection orientation = ForgeDirection.VALID_DIRECTIONS[o];
 			
 			//commented out during port from BC 4.2 to 6.1
@@ -71,7 +72,8 @@ public class PipeItemsAdvancedInsertion extends APPipe {
 		}
 	}
 	
-	public void readjustSpeed(TravelingItem item) {
+	public void readjustSpeed(TravelingItem item) 
+	{
 		if (item.getSpeed() > TransportConstants.PIPE_NORMAL_SPEED) {
 			item.setSpeed(item.getSpeed() - TransportConstants.PIPE_NORMAL_SPEED / 2.0F);
 		}

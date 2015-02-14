@@ -13,7 +13,7 @@ import buildcraft.core.inventory.Transactor;
 import buildcraft.core.inventory.TransactorSimple;
 import buildcraft.core.utils.Utils;
 import buildcraft.transport.PipeTransportItems;
-import buildcraft.transport.TravelingItem;
+import buildcraft.transport.pipes.events.PipeEventItem;
 
 public class PipeItemsClosed extends APPipe implements IInventory {
 
@@ -39,18 +39,23 @@ public class PipeItemsClosed extends APPipe implements IInventory {
 		super.dropContents();
 		Utils.preDestroyBlock(getWorld(), container.xCoord, container.yCoord, container.zCoord);
 	}
-
-	public void drop(PipeTransportItems transport, TravelingItem item) {
+	
+	public void eventHandler(PipeEventItem.DropItem event)
+	{
 		Transactor transactor = new TransactorSimple(this);
-		transactor.add(item.getItemStack().copy(), ForgeDirection.UNKNOWN, true);
-		if(inventory[inventory.length - 1] != null) {
-			for(int i = 1; i < inventory.length; i++) {
+		transactor.add(event.item.getItemStack().copy(), ForgeDirection.UNKNOWN, true);
+		if(inventory[inventory.length - 1] != null)
+		{
+			for(int i = 1; i < inventory.length; i++)
+			{
 				inventory[i - 1] = inventory[i];
 			}
 		}
+		
 		inventory[inventory.length - 1] = null;
-		item.getItemStack().stackSize = 0;
+		event.item.getItemStack().stackSize = 0;
 		container.scheduleRenderUpdate();
+		event.entity = null;
 	}
 
 	@Override
@@ -128,11 +133,12 @@ public class PipeItemsClosed extends APPipe implements IInventory {
 
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer var1) {
-		return false;
+		return true;
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
+	public boolean isItemValidForSlot(int i, ItemStack itemstack) 
+	{
 		return true;
 	}
 
@@ -148,12 +154,14 @@ public class PipeItemsClosed extends APPipe implements IInventory {
 	}
 
 	@Override
-	public void openInventory() {
+	public void openInventory() 
+	{
 		
 	}
 
 	@Override
-	public void closeInventory() {
+	public void closeInventory()
+	{
 		
 	}
 

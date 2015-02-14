@@ -28,12 +28,6 @@ public class TriggerPipeClosed extends APTrigger implements ITriggerInternal {
 		}
 		return false;
 	}
-
-	/**
-	 * MultipleMonomials here.  These functions below were added at some point between BC 4 and 6, and there's
-	 * almost zero documentation, so I have no idea what most of them do. Help on implementing them correctly
-	 * would be very much appreciated.
-	 */
 	
 	@Override
 	public int getIconIndex() {

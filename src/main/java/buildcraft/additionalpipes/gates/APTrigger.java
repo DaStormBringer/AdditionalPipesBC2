@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.IIcon;
 import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.api.statements.IStatement;
+import buildcraft.api.statements.StatementManager;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -14,6 +15,7 @@ public abstract class APTrigger implements IStatement {
 	public APTrigger(String id)
 	{
 		this.id = id;
+		StatementManager.statements.put(id, this);
 	}
 
 	protected abstract int getIconIndex();
@@ -24,6 +26,7 @@ public abstract class APTrigger implements IStatement {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister iconRegister) {
+	public void registerIcons(IIconRegister iconRegister)
+	{
 	}
 }

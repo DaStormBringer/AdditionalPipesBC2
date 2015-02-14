@@ -18,7 +18,8 @@ import buildcraft.transport.TileGenericPipe;
 public class GateProvider implements ITriggerProvider {
 
 	@Override
-	public LinkedList<ITriggerInternal> getInternalTriggers(IStatementContainer container) {
+	public LinkedList<ITriggerInternal> getInternalTriggers(IStatementContainer container)
+	{
 		
 		Pipe<?> pipe = ((TileGenericPipe)container.getTile()).pipe;
 		

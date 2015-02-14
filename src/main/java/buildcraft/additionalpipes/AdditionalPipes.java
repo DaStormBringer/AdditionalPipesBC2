@@ -114,11 +114,11 @@ public class AdditionalPipes {
 	// Power Teleport
 	public Item pipePowerTeleport;
 	// Items Closed
-	public Item pipeItemsClosed;;
+	public Item pipeItemsClosed;
 	// Switch pipes
 	public Item pipePowerSwitch;
 	public Item pipeItemsSwitch;
-	public Item pipeLiquidsSwitch;;
+	public Item pipeLiquidsSwitch;
 	// water pump pipe
 	public Item pipeLiquidsWaterPump;
 	// chunk loader
