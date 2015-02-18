@@ -22,7 +22,6 @@ import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.api.core.Position;
 import buildcraft.api.tools.IToolWrench;
-import buildcraft.api.transport.PipeManager;
 import buildcraft.core.CoreConstants;
 import buildcraft.core.RFBattery;
 import buildcraft.core.inventory.InvUtils;
@@ -37,10 +36,20 @@ public class PipeItemsAdvancedWood extends APPipe implements IEnergyHandler
 	protected RFBattery battery = new RFBattery(640, 640, 0);
 	
 	public final PipeTransportAdvancedWood transport;
+	
+	private int ticksSincePull = 0;
 
 	public PipeItemsAdvancedWood(Item item) {
 		super(new PipeTransportAdvancedWood(), item);
 		transport = (PipeTransportAdvancedWood) super.transport;
+	}
+	
+	private boolean shouldTick() {
+		if (battery.getEnergyStored() >= 64 * 10) {
+			return true;
+		} else {
+			return ticksSincePull >= 16 && battery.getEnergyStored() >= 10;
+		}
 	}
 	
 	@Override
@@ -52,12 +61,15 @@ public class PipeItemsAdvancedWood extends APPipe implements IEnergyHandler
 		{
 			return;
 		}
+		
+		ticksSincePull++;
 
-		if (battery.getEnergyStored() > 0)
+		if(shouldTick())
 		{
+			
 			World w = getWorld();
 
-			int meta = w.getBlockMetadata(container.xCoord, container.yCoord, container.zCoord);
+			int meta = container.getBlockMetadata();
 
 			if(meta > 5)
 			{
@@ -68,13 +80,11 @@ public class PipeItemsAdvancedWood extends APPipe implements IEnergyHandler
 			pos.moveForwards(1);
 			w.getBlock((int) pos.x, (int) pos.y, (int) pos.z);
 			TileEntity tile = w.getTileEntity((int) pos.x, (int) pos.y, (int) pos.z);
+			
+			ticksSincePull = 0;
 
 			if(tile instanceof IInventory)
 			{
-				if(!PipeManager.canExtractItems(this, w, (int) pos.x, (int) pos.y, (int) pos.z))
-				{
-					return;
-				}
 					
 				IInventory inventory = (IInventory) tile;
 

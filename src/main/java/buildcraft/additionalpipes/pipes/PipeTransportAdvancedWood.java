@@ -15,7 +15,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-import buildcraft.api.transport.PipeManager;
 import buildcraft.core.utils.Utils;
 import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransportItems;
@@ -36,10 +35,10 @@ public class PipeTransportAdvancedWood extends PipeTransportItems implements IIn
 			ForgeDirection o = ForgeDirection.VALID_DIRECTIONS[i % 6];
 			TileEntity tile = container.getTile(o);
 			if(isInput(tile))
-				if(PipeManager.canExtractItems(container.getPipeType(), tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord)) {
-					newMeta = o.ordinal();
-					break;
-				}
+			{
+				newMeta = o.ordinal();
+				break;
+			}
 		}
 
 		if(newMeta != meta) {
@@ -157,7 +156,7 @@ public class PipeTransportAdvancedWood extends PipeTransportItems implements IIn
 
 	@Override
 	public String getInventoryName() {
-		return "item.PipeItemsAdvancedWood";
+		return "gui.PipeItemsAdvancedWood";
 	}
 
 	@Override
