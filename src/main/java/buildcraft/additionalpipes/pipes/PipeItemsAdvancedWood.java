@@ -29,8 +29,10 @@ import buildcraft.core.inventory.InvUtils;
 import buildcraft.core.utils.Utils;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.TravelingItem;
+import cofh.api.energy.IEnergyHandler;
 
-public class PipeItemsAdvancedWood extends APPipe {
+public class PipeItemsAdvancedWood extends APPipe implements IEnergyHandler
+{
 	
 	protected RFBattery battery = new RFBattery(640, 640, 0);
 	
@@ -211,5 +213,33 @@ public class PipeItemsAdvancedWood extends APPipe {
 	public boolean doDrop() {
 		Utils.preDestroyBlock(getWorld(), container.xCoord, container.yCoord, container.zCoord);
 		return true;
+	}
+
+	@Override
+	public boolean canConnectEnergy(ForgeDirection dir)
+	{
+		return true;
+	}
+
+	@Override
+	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
+		return battery.receiveEnergy(maxReceive, simulate);
+	}
+
+	@Override
+	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
+		return 0;
+	}
+
+	@Override
+	public int getEnergyStored(ForgeDirection from)
+	{
+		return battery.getEnergyStored();
+	}
+
+	@Override
+	public int getMaxEnergyStored(ForgeDirection from)
+	{
+		return battery.getMaxEnergyStored();
 	}
 }
