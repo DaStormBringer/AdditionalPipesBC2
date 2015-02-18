@@ -280,7 +280,7 @@ public class AdditionalPipes {
 		// Closed Items Pipe
 		pipeItemsClosed = doCreatePipeAndRecipe(PipeItemsClosed.class, new Object[] { "r", "I", 'I', BuildCraftTransport.pipeItemsVoid, 'i', BuildCraftCore.ironGearItem });
 		// switch pipes
-		pipeItemsSwitch = doCreatePipeAndRecipe(8, PipeSwitchItems.class, new Object[] { "GgG", 'g', Blocks.glass, 'G', BuildCraftCore.goldGearItem });
+		pipeItemsSwitch = doCreatePipeAndRecipe(8, PipeSwitchItems.class, new Object[] { "GgI", 'g', Blocks.glass, 'G', BuildCraftCore.goldGearItem, 'I', BuildCraftCore.ironGearItem});
 		pipePowerSwitch = doCreatePipeAndRecipe(PipeSwitchPower.class, new Object[] { "r", "I", 'I', pipeItemsSwitch, 'r', Items.redstone });
 		pipeLiquidsSwitch = doCreatePipeAndRecipe(PipeSwitchFluids.class, new Object[] { "w", "I", 'I', pipeItemsSwitch, 'w', BuildCraftTransport.pipeWaterproof });
 
