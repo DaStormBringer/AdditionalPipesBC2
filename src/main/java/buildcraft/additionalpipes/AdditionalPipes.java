@@ -4,19 +4,15 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
@@ -31,6 +27,7 @@ import buildcraft.additionalpipes.chunkloader.TileChunkLoader;
 import buildcraft.additionalpipes.gates.GateProvider;
 import buildcraft.additionalpipes.gates.TriggerPipeClosed;
 import buildcraft.additionalpipes.gui.GuiHandler;
+import buildcraft.additionalpipes.item.ItemPipeAP;
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.pipes.PipeItemsAdvancedInsertion;
 import buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
@@ -311,30 +308,6 @@ public class AdditionalPipes {
 		res.setUnlocalizedName(clas.getSimpleName());
 		proxy.registerPipeRendering(res);
 		return res;
-	}
-
-	// special pipe code
-	private static class ItemPipeAP extends ItemPipe
-	{
-		protected ItemPipeAP() {
-			super(CreativeTabBuildCraft.PIPES);
-		}
-
-		@Override
-		@SideOnly(Side.CLIENT)
-		public EnumRarity getRarity(ItemStack stack) {
-			return EnumRarity.rare;
-		}
-
-		@SuppressWarnings({ "unchecked", "rawtypes" })
-		@Override
-		@SideOnly(Side.CLIENT)
-		public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean advanced) {
-			super.addInformation(stack, player, list, advanced);
-			String key = "tip." + stack.getItem().getClass().getSimpleName();
-			
-			list.add(StatCollector.translateToLocal(key));
-		}
 	}
 
 	private Item createPipeSpecial(Class<? extends Pipe<?>> clas)
