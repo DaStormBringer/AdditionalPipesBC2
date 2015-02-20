@@ -19,7 +19,7 @@ public class CommandAdditionalPipes extends CommandBase {
 		{
 			StringBuffer sb = new StringBuffer();
 			sb.append("Teleport pipes: ");
-			for(PipeTeleport pipe : TeleportManager.instance.teleportPipes) {
+			for(PipeTeleport<?> pipe : TeleportManager.instance.teleportPipes) {
 				sb.append('[');
 				sb.append(pipe.getClass().getSimpleName()).append(',');
 				sb.append(pipe.getPosition().x).append(',');

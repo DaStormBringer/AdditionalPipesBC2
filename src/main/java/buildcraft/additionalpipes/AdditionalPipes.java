@@ -29,6 +29,7 @@ import buildcraft.additionalpipes.gates.TriggerPipeClosed;
 import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.additionalpipes.item.ItemPipeAP;
 import buildcraft.additionalpipes.network.PacketHandler;
+import buildcraft.additionalpipes.pipes.APPipe;
 import buildcraft.additionalpipes.pipes.PipeItemsAdvancedInsertion;
 import buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
 import buildcraft.additionalpipes.pipes.PipeItemsClosed;
@@ -244,7 +245,7 @@ public class AdditionalPipes {
 
 	private void loadPipes() {
 		// Item Teleport Pipe
-		pipeItemsTeleport = createPipeSpecial(PipeItemsTeleport.class);
+		pipeItemsTeleport = createPipeSpecial((Class<? extends APPipe<?>>) PipeItemsTeleport.class);
 		
 		GameRegistry.addRecipe(new ItemStack(pipeItemsTeleport, 4), new Object[] { "dgd", 'd', BuildCraftCore.diamondGearItem, 'g', Blocks.glass });
 		AssemblyRecipeManager.INSTANCE.addRecipe("teleportPipe", 1000, new ItemStack(pipeItemsTeleport, 8), new Object[] { new ItemStack(BuildCraftSilicon.redstoneChipset, 1, 4), new ItemStack(BuildCraftTransport.pipeItemsDiamond, 8),
@@ -252,14 +253,14 @@ public class AdditionalPipes {
 
 
 		// Liquid Teleport Pipe
-		pipeLiquidsTeleport = createPipeSpecial(PipeLiquidsTeleport.class);
+		pipeLiquidsTeleport = createPipeSpecial((Class<? extends APPipe<?>>) PipeLiquidsTeleport.class);
 		if(pipeItemsTeleport != null) {
 			GameRegistry.addRecipe(new ItemStack(pipeLiquidsTeleport), new Object[] { "w", "P", 'w', BuildCraftTransport.pipeWaterproof, 'P', pipeItemsTeleport });
 		}
 
 		// Power Teleport Pipe
 		
-		pipePowerTeleport = createPipeSpecial(PipePowerTeleport.class);
+		pipePowerTeleport = createPipeSpecial((Class<? extends APPipe<?>>) PipePowerTeleport.class);
 		if(pipeItemsTeleport != null) {
 			GameRegistry.addRecipe(new ItemStack(pipePowerTeleport), new Object[] { "r", "P", 'r', Items.redstone, 'P', pipeItemsTeleport });
 		}
@@ -310,7 +311,7 @@ public class AdditionalPipes {
 		return res;
 	}
 
-	private Item createPipeSpecial(Class<? extends Pipe<?>> clas)
+	private Item createPipeSpecial(Class<? extends APPipe<?>> clas)
 	{
 		ItemPipe item = new ItemPipeAP();
 		item.setUnlocalizedName(clas.getSimpleName());

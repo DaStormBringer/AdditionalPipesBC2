@@ -19,12 +19,12 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 	public int connectedPipes = 0;
 
 	private int ticks = 0;
-	private PipeTeleport pipe;
+	private PipeTeleport<?> pipe;
 	private int freq;
 	private byte state;
 	private boolean isPublic;
 
-	public ContainerTeleportPipe(EntityPlayer player, PipeTeleport pipe) {
+	public ContainerTeleportPipe(EntityPlayer player, PipeTeleport<?> pipe) {
 		super(0);
 		this.pipe = pipe;
 
@@ -34,10 +34,10 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 		
 		if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 		{
-			List<PipeTeleport> connectedPipes = TeleportManager.instance.getConnectedPipes(pipe, false);
+			List<PipeTeleport<?>> connectedPipes = TeleportManager.instance.getConnectedPipes(pipe, false);
 			int[] locations = new int[connectedPipes.size() * 3];
 			for(int i = 0; i < connectedPipes.size() && i < 9; i++) {
-				PipeTeleport connectedPipe = connectedPipes.get(i);
+				PipeTeleport<?> connectedPipe = connectedPipes.get(i);
 				locations[3 * i] = connectedPipe.container.xCoord;
 				locations[3 * i + 1] = connectedPipe.container.yCoord;
 				locations[3 * i + 2] = connectedPipe.container.zCoord;

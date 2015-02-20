@@ -20,7 +20,7 @@ import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.pipes.events.PipeEventItem;
 
-public class PipeItemsDistributor extends APPipe {
+public class PipeItemsDistributor extends APPipe<PipeTransportItems> {
 
 	public int distData[] = { 1, 1, 1, 1, 1, 1 };
 	public int distSide = 0;

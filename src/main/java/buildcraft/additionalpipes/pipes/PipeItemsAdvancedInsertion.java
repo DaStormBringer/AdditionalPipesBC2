@@ -21,7 +21,7 @@ import buildcraft.transport.TransportConstants;
 import buildcraft.transport.TravelingItem;
 import buildcraft.transport.pipes.events.PipeEventItem;
 
-public class PipeItemsAdvancedInsertion extends APPipe {
+public class PipeItemsAdvancedInsertion extends APPipe<PipeTransportItems> {
 	private static final int ICON = 8;
 
 	public PipeItemsAdvancedInsertion(Item item) {

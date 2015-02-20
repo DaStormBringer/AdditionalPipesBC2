@@ -64,11 +64,11 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 		}
 	}
 
-	private final PipeTeleport pipe;
+	private final PipeTeleport<?> pipe;
 	private final ContainerTeleportPipe container;
 	private final GuiButton[] buttons = new GuiButton[8];
 
-	public GuiTeleportPipe(EntityPlayer player, PipeTeleport pipe) {
+	public GuiTeleportPipe(EntityPlayer player, PipeTeleport<?> pipe) {
 		super(new ContainerTeleportPipe(player, pipe), null, Textures.GUI_TELEPORT);
 		this.pipe = pipe;
 		container = (ContainerTeleportPipe) inventorySlots;

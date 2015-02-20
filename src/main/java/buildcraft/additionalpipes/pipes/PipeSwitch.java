@@ -7,11 +7,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 import buildcraft.transport.PipeTransport;
 import buildcraft.transport.TileGenericPipe;
 
-public class PipeSwitch extends APPipe {
+public class PipeSwitch<pipeType extends PipeTransport> extends APPipe<pipeType> {
 
 	private final int textureIndex;
 
-	public PipeSwitch(PipeTransport transport, Item item, int textureIndex) {
+	public PipeSwitch(pipeType transport, Item item, int textureIndex) {
 		super(transport, item);
 		this.textureIndex = textureIndex;
 	}

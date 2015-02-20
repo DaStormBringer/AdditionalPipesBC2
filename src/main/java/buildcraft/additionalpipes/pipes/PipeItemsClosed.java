@@ -15,7 +15,7 @@ import buildcraft.core.utils.Utils;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.pipes.events.PipeEventItem;
 
-public class PipeItemsClosed extends APPipe implements IInventory {
+public class PipeItemsClosed extends APPipe<PipeTransportItems> implements IInventory {
 
 	private ItemStack[] inventory = new ItemStack[10];
 

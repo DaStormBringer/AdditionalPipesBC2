@@ -12,16 +12,16 @@ import buildcraft.additionalpipes.AdditionalPipes;
 public class TeleportManager {
 	public static final TeleportManager instance = new TeleportManager();
 
-	public final List<PipeTeleport> teleportPipes;
+	public final List<PipeTeleport<?>> teleportPipes;
 
 	public final Map<Integer, String> frequencyNames;
 
 	private TeleportManager() {
-		teleportPipes = new LinkedList<PipeTeleport>();
+		teleportPipes = new LinkedList<PipeTeleport<?>>();
 		frequencyNames = new HashMap<Integer, String>();
 	}
 
-	public void add(PipeTeleport pipe) {
+	public void add(PipeTeleport<?> pipe) {
 		if(!AdditionalPipes.proxy.isServer(pipe.getWorld()))
 			return;
 		teleportPipes.add(pipe);
@@ -29,7 +29,7 @@ public class TeleportManager {
 				pipe.container.zCoord, teleportPipes.size()));
 	}
 
-	public void remove(PipeTeleport pipe) {
+	public void remove(PipeTeleport<?> pipe) {
 		if(!AdditionalPipes.proxy.isServer(pipe.getWorld()))
 			return;
 		teleportPipes.remove(pipe);
@@ -46,10 +46,10 @@ public class TeleportManager {
 	// returns all other teleport pipes of the same type (class) and frequency
 	// if forceReceive is true. Otherwise, take away all pipes that aren't
 	// receiving
-	public List<PipeTeleport> getConnectedPipes(PipeTeleport pipe, boolean forceReceive) {
-		List<PipeTeleport> connected = new LinkedList<PipeTeleport>();
+	public List<PipeTeleport<?>> getConnectedPipes(PipeTeleport<?> pipe, boolean forceReceive) {
+		List<PipeTeleport<?>> connected = new LinkedList<PipeTeleport<?>>();
 
-		for(PipeTeleport other : teleportPipes) {
+		for(PipeTeleport<?> other : teleportPipes) {
 			if(!pipe.getClass().equals(other.getClass()) || other.container.isInvalid()) {
 				continue;
 			}
@@ -67,10 +67,10 @@ public class TeleportManager {
 	}
 
 	// FIXME unused
-	public List<PipeTeleport> getAllPipesInNetwork(PipeTeleport pipe) {
-		List<PipeTeleport> pipes = new LinkedList<PipeTeleport>();
+	public List<PipeTeleport<?>> getAllPipesInNetwork(PipeTeleport<?> pipe) {
+		List<PipeTeleport<?>> pipes = new LinkedList<PipeTeleport<?>>();
 
-		for(PipeTeleport other : teleportPipes) {
+		for(PipeTeleport<?> other : teleportPipes) {
 			if(!pipe.getClass().equals(other.getClass()) || other.container.isInvalid()) {
 				continue;
 			}

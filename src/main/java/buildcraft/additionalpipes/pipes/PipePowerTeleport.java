@@ -22,7 +22,7 @@ import buildcraft.transport.PipeTransportPower;
 import buildcraft.transport.TileGenericPipe;
 import buildcraft.transport.pipes.PipePowerDiamond;
 
-public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPowerHook {
+public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implements IPipeTransportPowerHook {
 	private static final int ICON = 3;
 
 	private static class PowerRequest {
@@ -48,13 +48,13 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 			return requested;
 		}
 
-		List<PipeTeleport> pipeList = TeleportManager.instance.getConnectedPipes(this, true);
+		List<PipeTeleport<?>> pipeList = TeleportManager.instance.getConnectedPipes(this, true);
 
 		if(pipeList.size() <= 0) {
 			return requested;
 		}
 
-		for(PipeTeleport pipe : pipeList) {
+		for(PipeTeleport<?> pipe : pipeList) {
 			LinkedList<ForgeDirection> possibleMovements = getRealPossibleMovements(pipe);
 			for(ForgeDirection orientation : possibleMovements) {
 				TileEntity tile = pipe.container.getTile(orientation);
@@ -72,15 +72,15 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 
 	@Override
 	public int receiveEnergy(ForgeDirection from, int energy) {
-		List<PipeTeleport> connectedPipes = TeleportManager.instance.getConnectedPipes(this, false);
-		List<PipeTeleport> sendingToList = new LinkedList<PipeTeleport>();
+		List<PipeTeleport<?>> connectedPipes = TeleportManager.instance.getConnectedPipes(this, false);
+		List<PipeTeleport<?>> sendingToList = new LinkedList<PipeTeleport<?>>();
 
 		// no connected pipes, leave!
 		if(connectedPipes.size() <= 0 || (state & 0x1) == 0) {
 			return 0;
 		}
 
-		for(PipeTeleport pipe : connectedPipes) {
+		for(PipeTeleport<?> pipe : connectedPipes) {
 			if(getPipesNeedsPower(pipe).size() > 0) {
 				sendingToList.add(pipe);
 			}
@@ -94,7 +94,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 		// TODO proportional power relay
 		double powerToSend = AdditionalPipes.instance.powerLossCfg * energy / sendingToList.size();
 
-		for(PipeTeleport receiver : sendingToList) {
+		for(PipeTeleport<?> receiver : sendingToList) {
 			List<PowerRequest> needsPower = getPipesNeedsPower(receiver);
 
 			if(needsPower.size() <= 0) {
@@ -111,7 +111,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 		return energy;
 	}
 
-	private List<PowerRequest> getPipesNeedsPower(PipeTeleport pipe) {
+	private List<PowerRequest> getPipesNeedsPower(PipeTeleport<?> pipe) {
 		LinkedList<ForgeDirection> possibleMovements = getRealPossibleMovements(pipe);
 		List<PowerRequest> needsPower = new LinkedList<PowerRequest>();
 
@@ -143,7 +143,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 	}
 
 	// returns all adjacent pipes
-	private static LinkedList<ForgeDirection> getRealPossibleMovements(PipeTeleport pipe) {
+	private static LinkedList<ForgeDirection> getRealPossibleMovements(PipeTeleport<?> pipe) {
 		LinkedList<ForgeDirection> result = new LinkedList<ForgeDirection>();
 
 		for(ForgeDirection orientation : ForgeDirection.VALID_DIRECTIONS) {

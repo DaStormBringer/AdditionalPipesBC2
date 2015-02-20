@@ -30,7 +30,7 @@ import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.TravelingItem;
 import cofh.api.energy.IEnergyHandler;
 
-public class PipeItemsAdvancedWood extends APPipe implements IEnergyHandler
+public class PipeItemsAdvancedWood extends APPipe<PipeTransportItems> implements IEnergyHandler
 {
 	
 	protected RFBattery battery = new RFBattery(640, 640, 0);

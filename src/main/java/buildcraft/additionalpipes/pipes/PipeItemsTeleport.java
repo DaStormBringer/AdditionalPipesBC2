@@ -20,7 +20,7 @@ import buildcraft.transport.TileGenericPipe;
 import buildcraft.transport.pipes.events.PipeEventItem;
 import buildcraft.transport.utils.TransportUtils;
 
-public class PipeItemsTeleport extends PipeTeleport {
+public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 	private static final int ICON = 0;
 
 	public PipeItemsTeleport(Item items) {
@@ -33,7 +33,7 @@ public class PipeItemsTeleport extends PipeTeleport {
 			return;
 		}*/
 		
-		List<PipeTeleport> connectedTeleportPipes = TeleportManager.instance.getConnectedPipes(this, false);
+		List<PipeTeleport<?>> connectedTeleportPipes = TeleportManager.instance.getConnectedPipes(this, false);
 		// no teleport pipes connected, use default
 		if(connectedTeleportPipes.size() <= 0 || (state & 0x1) == 0) {
 			return;
@@ -41,7 +41,7 @@ public class PipeItemsTeleport extends PipeTeleport {
 
 		// output to random pipe
 		LinkedList<ForgeDirection> outputOrientations = new LinkedList<ForgeDirection>();
-		PipeTeleport otherPipe = connectedTeleportPipes.get(rand.nextInt(connectedTeleportPipes.size()));
+		PipeTeleport<?> otherPipe = connectedTeleportPipes.get(rand.nextInt(connectedTeleportPipes.size()));
 
 		// find possible output orientations
 		for(ForgeDirection o : ForgeDirection.VALID_DIRECTIONS) {

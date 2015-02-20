@@ -13,7 +13,7 @@ item.PipeSwitchFluids.name=Switch Fluid Pipe
 item.PipeSwitchItems.name=Switch Transport Pipe
 item.PipeLiquidsWaterPump.name=Water Pump Pipe
 
-gui.PipeItemsAdvancedWood.name=Advanced Wooden Pipe
+gui.PipeItemsAdvancedWood=Advanced Wooden Pipe
 
 key.lasers=Toggle chunk loading boundaries display
 

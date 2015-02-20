@@ -67,7 +67,7 @@ public class MessageTelePipeData implements IMessage, IMessageHandler<MessageTel
     {
         TileEntity te = FMLClientHandler.instance().getClient().theWorld.getTileEntity(message.x, message.y, message.z);
 
-        PipeTeleport pipe = (PipeTeleport) ((TileGenericPipe) te).pipe;
+        PipeTeleport<?> pipe = (PipeTeleport<?>) ((TileGenericPipe) te).pipe;
 		pipe.owner = message.owner;
 		pipe.network = message.locations;
 

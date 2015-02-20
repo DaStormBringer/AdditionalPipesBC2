@@ -63,7 +63,7 @@ public class MessageTelePipe implements IMessage, IMessageHandler<MessageTelePip
     {
     	TileEntity te = ctx.getServerHandler().playerEntity.worldObj.getTileEntity(message.x, message.y, message.z);
     	if(te instanceof TileGenericPipe) {
-			PipeTeleport pipe = (PipeTeleport) ((TileGenericPipe) te).pipe;
+			PipeTeleport<?> pipe = (PipeTeleport<?>) ((TileGenericPipe) te).pipe;
 			// only allow the owner to change pipe state
 			EntityPlayerMP entityPlayer = (EntityPlayerMP) ctx.getServerHandler().playerEntity;
 			if(!PipeTeleport.canPlayerModifyPipe(entityPlayer, pipe)) {

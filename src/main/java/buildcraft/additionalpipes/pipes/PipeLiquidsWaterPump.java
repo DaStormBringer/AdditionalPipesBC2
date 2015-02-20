@@ -9,7 +9,7 @@ import net.minecraftforge.fluids.FluidStack;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.transport.PipeTransportFluids;
 
-public class PipeLiquidsWaterPump extends APPipe {
+public class PipeLiquidsWaterPump extends APPipe<PipeTransportFluids> {
 	private static final int ICON = 24;
 	private static final Block water = Blocks.water;
 

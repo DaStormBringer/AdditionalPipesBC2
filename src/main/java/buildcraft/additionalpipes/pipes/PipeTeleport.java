@@ -15,7 +15,7 @@ import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransport;
 import buildcraft.transport.TileGenericPipe;
 
-public abstract class PipeTeleport extends APPipe {
+public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPipe<pipeType> {
 	protected static final Random rand = new Random();
 
 	private int frequency = 0;
@@ -26,7 +26,7 @@ public abstract class PipeTeleport extends APPipe {
 	public int[] network = new int[0];
 	public boolean isPublic = false;
 
-	public PipeTeleport(PipeTransport transport, Item item) {
+	public PipeTeleport(pipeType transport, Item item) {
 		super(transport, item);
 	}
 
@@ -117,7 +117,7 @@ public abstract class PipeTeleport extends APPipe {
 		isPublic = nbttagcompound.getBoolean("isPublic");
 	}
 
-	public static boolean canPlayerModifyPipe(EntityPlayer player, PipeTeleport pipe) {
+	public static boolean canPlayerModifyPipe(EntityPlayer player, PipeTeleport<?> pipe) {
 		if(pipe.isPublic || pipe.owner.equals(player.getCommandSenderName()) || player.capabilities.isCreativeMode)
 			return true;
 		return false;

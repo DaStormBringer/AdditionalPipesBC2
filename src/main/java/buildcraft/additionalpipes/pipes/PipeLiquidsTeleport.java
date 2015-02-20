@@ -18,18 +18,18 @@ import net.minecraftforge.fluids.IFluidHandler;
 import buildcraft.transport.IPipeTransportFluidsHook;
 import buildcraft.transport.PipeTransportFluids;
 
-public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportFluidsHook {
+public class PipeLiquidsTeleport extends PipeTeleport<PipeTransportFluids> implements IPipeTransportFluidsHook {
 	private static final int ICON = 2;
 
 	public PipeLiquidsTeleport(Item item) {
 		super(new PipeTransportFluids(), item);
-		((PipeTransportFluids) transport).flowRate = 220;
-		((PipeTransportFluids) transport).travelDelay = 3;
+		transport.flowRate = 220;
+		transport.travelDelay = 3;
 	}
 
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
-		List<PipeTeleport> pipeList = TeleportManager.instance.getConnectedPipes(this, false);
+		List<PipeTeleport<?>> pipeList = TeleportManager.instance.getConnectedPipes(this, false);
 
 		if(pipeList.size() == 0 || (state & 0x1) == 0) {
 			return 0;
@@ -52,7 +52,7 @@ public class PipeLiquidsTeleport extends PipeTeleport implements IPipeTransportF
 		return used;
 	}
 
-	private static List<IFluidHandler> getPossibleLiquidMovements(PipeTeleport pipe) {
+	private static List<IFluidHandler> getPossibleLiquidMovements(PipeTeleport<?> pipe) {
 		List<IFluidHandler> result = new LinkedList<IFluidHandler>();
 
 		for(ForgeDirection o : ForgeDirection.VALID_DIRECTIONS) {
