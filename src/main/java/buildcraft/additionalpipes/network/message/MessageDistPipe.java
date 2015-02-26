@@ -8,8 +8,6 @@ import buildcraft.transport.TileGenericPipe;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * Message that sets the properties of a Distribution Pipe from the GUI
@@ -54,7 +52,6 @@ public class MessageDistPipe implements IMessage, IMessageHandler<MessageDistPip
         buf.writeInt(_newData);
     }
 
-    @SideOnly(Side.CLIENT)
     @Override
     public IMessage onMessage(MessageDistPipe message, MessageContext ctx)
     {
