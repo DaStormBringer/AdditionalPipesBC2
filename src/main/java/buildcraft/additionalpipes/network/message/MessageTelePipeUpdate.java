@@ -14,7 +14,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
  * Message that sets the properties of a Teleport Pipe from the GUI
  *
  */
-public class MessageTelePipe implements IMessage, IMessageHandler<MessageTelePipe, IMessage>
+public class MessageTelePipeUpdate implements IMessage, IMessageHandler<MessageTelePipeUpdate, IMessage>
 {
 	public int x, y, z;
 	int _freq;
@@ -22,11 +22,11 @@ public class MessageTelePipe implements IMessage, IMessageHandler<MessageTelePip
 	byte _state;
 	int _newData;
 	
-    public MessageTelePipe()
+    public MessageTelePipeUpdate()
     {
     }
 
-    public MessageTelePipe(int x, int y,int z, int freq, boolean isPublic, byte index)
+    public MessageTelePipeUpdate(int x, int y,int z, int freq, boolean isPublic, byte index)
     {
     	this.x = x;
     	this.y = y;
@@ -59,7 +59,7 @@ public class MessageTelePipe implements IMessage, IMessageHandler<MessageTelePip
     }
 
     @Override
-    public IMessage onMessage(MessageTelePipe message, MessageContext ctx)
+    public IMessage onMessage(MessageTelePipeUpdate message, MessageContext ctx)
     {
     	TileEntity te = ctx.getServerHandler().playerEntity.worldObj.getTileEntity(message.x, message.y, message.z);
     	if(te instanceof TileGenericPipe) {

@@ -37,7 +37,7 @@ public class TriggerPipeClosed extends APTrigger implements ITriggerInternal {
 	@Override
 	public String getUniqueTag() 
 	{
-		return "additionalpipes: trigger.pipeclosed";
+		return "additionalpipes:trigger.pipeclosed";
 	}
 
 	@Override

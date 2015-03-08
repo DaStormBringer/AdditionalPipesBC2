@@ -43,7 +43,7 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 				locations[3 * i + 2] = connectedPipe.container.zCoord;
 			}
 			
-			MessageTelePipeData message = new MessageTelePipeData(pipe.container.xCoord, pipe.container.yCoord, pipe.container.zCoord, locations, pipe.owner);
+			MessageTelePipeData message = new MessageTelePipeData(pipe.container.xCoord, pipe.container.yCoord, pipe.container.zCoord, locations, pipe.ownerUUID, pipe.ownerName);
 			PacketHandler.INSTANCE.sendTo(message, (EntityPlayerMP) player);
 		}
 	}

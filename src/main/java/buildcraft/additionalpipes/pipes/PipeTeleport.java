@@ -1,6 +1,7 @@
 package buildcraft.additionalpipes.pipes;
 
 import java.util.Random;
+import java.util.UUID;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -10,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
+import buildcraft.additionalpipes.utils.PlayerUtils;
 import buildcraft.api.core.Position;
 import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransport;
@@ -22,7 +24,9 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 	// 00 = none, 01 = send, 10 = receive, 11 = both
 	public byte state = 1;
 
-	public String owner = "";
+	public UUID ownerUUID;
+	public String ownerName;
+	
 	public int[] network = new int[0];
 	public boolean isPublic = false;
 
@@ -52,8 +56,20 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 	public boolean blockActivated(EntityPlayer player) {
 		if(!AdditionalPipes.proxy.isServer(player.worldObj))
 			return true;
-		if(owner == null || "".equalsIgnoreCase(owner)) {
-			owner = player.getCommandSenderName();
+		if(ownerUUID == null)
+		{
+			//                   getUUIDFromProfile()
+			ownerUUID = PlayerUtils.getUUID(player);
+			ownerName = player.getCommandSenderName();
+		}
+		
+		//test for player name change
+		if(PlayerUtils.getUUID(player).equals(ownerUUID))
+		{
+			if(!player.getCommandSenderName().equals(ownerName))
+			{
+				ownerName = player.getCommandSenderName();
+			}
 		}
 		
 		if(AdditionalPipes.instance.filterRightclicks)
@@ -104,7 +120,11 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 		super.writeToNBT(nbttagcompound);
 		nbttagcompound.setInteger("freq", frequency);
 		nbttagcompound.setByte("state", state);
-		nbttagcompound.setString("owner", owner);
+		if(ownerUUID != null)
+		{
+			nbttagcompound.setString("ownerUUID", ownerUUID.toString());
+			nbttagcompound.setString("ownerName", ownerName);
+		}
 		nbttagcompound.setBoolean("isPublic", isPublic);
 	}
 
@@ -113,12 +133,16 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 		super.readFromNBT(nbttagcompound);
 		frequency = nbttagcompound.getInteger("freq");
 		state = nbttagcompound.getByte("state");
-		owner = nbttagcompound.getString("owner");
+		if(nbttagcompound.hasKey("ownerUUID"))
+		{
+			ownerUUID = UUID.fromString(nbttagcompound.getString("ownerUUID"));
+			ownerName = nbttagcompound.getString("ownerName");
+		}
 		isPublic = nbttagcompound.getBoolean("isPublic");
 	}
 
 	public static boolean canPlayerModifyPipe(EntityPlayer player, PipeTeleport<?> pipe) {
-		if(pipe.isPublic || pipe.owner.equals(player.getCommandSenderName()) || player.capabilities.isCreativeMode)
+		if(pipe.isPublic || pipe.ownerUUID.equals(PlayerUtils.getUUID(player)) || player.capabilities.isCreativeMode)
 			return true;
 		return false;
 	}

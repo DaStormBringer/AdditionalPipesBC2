@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import buildcraft.BuildCraftCore;
 import buildcraft.additionalpipes.network.PacketHandler;
-import buildcraft.additionalpipes.network.message.MessageTelePipe;
+import buildcraft.additionalpipes.network.message.MessageTelePipeUpdate;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.core.CoreIconProvider;
@@ -43,7 +43,7 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 
 			fontRendererObj.drawStringWithShadow("Teleport Pipe", x + 22, y + 8, headerColour);
 			fontRendererObj.drawStringWithShadow("Owner:", x + 22, y + 20, subheaderColour);
-			fontRendererObj.drawString(pipe.owner, x + 22, y + 32, textColour);
+			fontRendererObj.drawString(pipe.ownerName, x + 22, y + 32, textColour);
 			fontRendererObj.drawStringWithShadow("Outputs: ", x + 22, y + 44, subheaderColour);
 			fontRendererObj.drawString(String.valueOf(container.connectedPipes), x + 66, y + 45, textColour);
 			int[] net = pipe.network;
@@ -60,7 +60,7 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 
 		@Override
 		public String getTooltip() {
-			return "Owner: " + pipe.owner;
+			return "Owner: " + pipe.ownerName;
 		}
 	}
 
@@ -157,7 +157,7 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 			freq = 0;
 		}
 
-		MessageTelePipe packet = new MessageTelePipe(pipe.container.xCoord, pipe.container.yCoord, pipe.container.zCoord, freq, isPublic, state);
+		MessageTelePipeUpdate packet = new MessageTelePipeUpdate(pipe.container.xCoord, pipe.container.yCoord, pipe.container.zCoord, freq, isPublic, state);
 		PacketHandler.INSTANCE.sendToServer(packet);
 	}
 
