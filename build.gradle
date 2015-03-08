@@ -22,13 +22,13 @@ group= "com.buildcraft.additionalpipes" // http://maven.apache.org/guides/mini/g
 archivesBaseName = "additionalpipes"
 
 minecraft {
-    version = "1.7.10-10.13.2.1230"
+    version = "1.7.10-10.13.2.1236"
     runDir = "eclipse/assets"
 }
 
 dependencies {
 		compile files('lib/CoFHLib-1.7.10-R3.0.0-DEV-CUSTOM_BUILD.jar')
-		compile files('lib/buildcraft-6.3.4-dev.jar')
+		compile files('lib/buildcraft-6.4.2-dev.jar')
 }
 
 processResources

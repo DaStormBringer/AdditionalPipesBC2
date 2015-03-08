@@ -1,5 +1,5 @@
 
-set BCBRANCH=6.3.6
+set BCBRANCH=6.4.2
 git clone --branch %BCBRANCH% --depth 1 https://github.com/BuildCraft/BuildCraft.git
 
 cd BuildCraft
