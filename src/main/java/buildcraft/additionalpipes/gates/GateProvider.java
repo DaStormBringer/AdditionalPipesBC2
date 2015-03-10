@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.pipes.PipeItemsClosed;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
@@ -41,8 +41,7 @@ public class GateProvider implements ITriggerProvider {
 	}
 
 	@Override
-	public Collection<ITriggerExternal> getExternalTriggers(
-			ForgeDirection side, TileEntity tile) {
+	public Collection<ITriggerExternal> getExternalTriggers(EnumFacing side, TileEntity tile) {
 		return null;
 	}
 

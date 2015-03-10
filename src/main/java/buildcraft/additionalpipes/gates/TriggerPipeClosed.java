@@ -1,6 +1,7 @@
 package buildcraft.additionalpipes.gates;
 
 import buildcraft.additionalpipes.pipes.PipeItemsClosed;
+import buildcraft.api.core.SheetIcon;
 import buildcraft.api.statements.IStatement;
 import buildcraft.api.statements.IStatementContainer;
 import buildcraft.api.statements.IStatementParameter;
@@ -62,6 +63,13 @@ public class TriggerPipeClosed extends APTrigger implements ITriggerInternal {
 	public IStatement rotateLeft() 
 	{
 		return this;
+	}
+
+	@Override
+	public SheetIcon getIcon()
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

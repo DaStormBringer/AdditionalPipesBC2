@@ -13,7 +13,7 @@ import java.util.LinkedList;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import buildcraft.core.inventory.ITransactor;
 import buildcraft.core.inventory.Transactor;
 import buildcraft.transport.PipeTransportItems;
@@ -27,19 +27,14 @@ public class PipeItemsAdvancedInsertion extends APPipe<PipeTransportItems> {
 	public PipeItemsAdvancedInsertion(Item item) {
 		super(new PipeTransportItems(), item);
 	}
-
-	@Override
-	public int getIconIndex(ForgeDirection direction) {
-		return ICON;
-	}
 	
 	public void eventHandler(PipeEventItem.FindDest event)
 	{
-		LinkedList<ForgeDirection> newOris = new LinkedList<ForgeDirection>();
+		LinkedList<EnumFacing> newOris = new LinkedList<EnumFacing>();
 
 		for (int o = 0; o < 6; ++o) 
 		{
-			ForgeDirection orientation = ForgeDirection.VALID_DIRECTIONS[o];
+			EnumFacing orientation = EnumFacing.values()[o];
 			
 			//commented out during port from BC 4.2 to 6.1
 			//I don't know what the equivalent to the Position argument to filterPossibleMovements() is in the new eventHandler system
@@ -80,6 +75,12 @@ public class PipeItemsAdvancedInsertion extends APPipe<PipeTransportItems> {
 		if (item.getSpeed() < TransportConstants.PIPE_NORMAL_SPEED) {
 			item.setSpeed(TransportConstants.PIPE_NORMAL_SPEED);
 		}
+	}
+
+	@Override
+	public int getIconIndex(EnumFacing direction)
+	{
+		return 8;
 	}
 
 }

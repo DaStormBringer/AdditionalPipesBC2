@@ -2,12 +2,14 @@ package buildcraft.additionalpipes.network.message;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
+import buildcraft.additionalpipes.utils.DataUtils;
 import buildcraft.transport.TileGenericPipe;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 /**
  * Message that signals an AdvWoodenPipe to switch its state
@@ -15,40 +17,34 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
  */
 public class MessageAdvWoodPipe implements IMessage, IMessageHandler<MessageAdvWoodPipe, IMessage>
 {
-	public int x, y, z;
+	public BlockPos position;
 	
     public MessageAdvWoodPipe()
     {
     }
 
-    public MessageAdvWoodPipe(int x, int y,int z)
+    public MessageAdvWoodPipe(BlockPos position)
     {
-    	this.x = x;
-    	this.y = y;
-    	this.z = z;
+    	this.position = position;
     }
 
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        x = buf.readInt();
-        y = buf.readInt();
-        z = buf.readInt();
+        position = DataUtils.readPosition(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
-        buf.writeInt(x);
-        buf.writeInt(y);
-        buf.writeInt(z);
+        DataUtils.writePosition(position, buf);
     }
 
     @Override
     public IMessage onMessage(MessageAdvWoodPipe message, MessageContext ctx)
     {
     	World world = ctx.getServerHandler().playerEntity.worldObj;
-    	TileEntity te = world.getTileEntity(message.x, message.y, message.z);
+    	TileEntity te = world.getTileEntity(message.position);
     	if(te instanceof TileGenericPipe) {
 			PipeItemsAdvancedWood pipe = (PipeItemsAdvancedWood) ((TileGenericPipe) te).pipe;
 			pipe.transport.exclude = !pipe.transport.exclude;

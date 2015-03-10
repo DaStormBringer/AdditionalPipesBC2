@@ -21,7 +21,7 @@ public class TileChunkLoader extends TileEntity {
 
 		for(int x = -loadDistance; x < loadDistance + 1; x++) {
 			for(int z = -loadDistance; z < loadDistance + 1; z++) {
-				ChunkCoordIntPair chunkCoords = new ChunkCoordIntPair((xCoord >> 4) + x, (zCoord >> 4) + z);
+				ChunkCoordIntPair chunkCoords = new ChunkCoordIntPair((pos.getX() >> 4) + x, (pos.getZ() >> 4) + z);
 
 				loadArea.add(chunkCoords);
 			}

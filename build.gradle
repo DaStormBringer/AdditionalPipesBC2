@@ -17,18 +17,17 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "4.2.0"
+version = "5.0.0"
 group= "com.buildcraft.additionalpipes" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "additionalpipes"
 
 minecraft {
-    version = "1.7.10-10.13.2.1236"
+    version = "1.8-11.14.0.1274-1.8"
     runDir = "eclipse/assets"
 }
 
 dependencies {
-		compile files('lib/CoFHLib-1.7.10-R3.0.0-DEV-CUSTOM_BUILD.jar')
-		compile files('lib/buildcraft-6.4.2-dev.jar')
+		compile files('lib/buildcraft-7.0.0-dev.jar')
 }
 
 processResources

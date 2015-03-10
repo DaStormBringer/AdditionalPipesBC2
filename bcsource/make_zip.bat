@@ -1,11 +1,13 @@
 
-set BCBRANCH=6.4.2
-git clone --branch %BCBRANCH% --depth 1 https://github.com/BuildCraft/BuildCraft.git
+set BCBRANCH=mc1.8
+git clone --branch %BCBRANCH% https://github.com/BuildCraft/BuildCraft.git
 
 cd BuildCraft
 
-7z a ..\buildcraft-%BCBRANCH%-src.zip api 1>nul
+7z a ..\buildcraft-%BCBRANCH%-src.zip/buildcraft api 1>nul
 
 cd common
 
 7z a -r ..\..\buildcraft-%BCBRANCH%-src.zip . 1>nul
+
+//rmdir /Q /S BuildCraft
