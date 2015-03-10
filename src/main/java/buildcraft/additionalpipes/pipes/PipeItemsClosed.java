@@ -6,7 +6,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IChatComponent;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.core.inventory.Transactor;
@@ -25,25 +26,27 @@ public class PipeItemsClosed extends APPipe<PipeTransportItems> implements IInve
 	}
 
 	@Override
-	public boolean blockActivated(EntityPlayer player) {
+	public boolean blockActivated(EntityPlayer player)
+	{
 		ItemStack equippedItem = player.getCurrentEquippedItem();
-		if(equippedItem != null && AdditionalPipes.isPipe(equippedItem.getItem())) {
+		if(equippedItem != null && AdditionalPipes.isPipe(equippedItem.getItem()))
+		{
 			return false;
 		}
-		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_CLOSED, getWorld(), container.xCoord, container.yCoord, container.zCoord);
+		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_CLOSED, getWorld(), container.getPos().getX(), container.getPos().getY(), container.getPos().getZ());
 		return true;
 	}
 
 	@Override
 	public void dropContents() {
 		super.dropContents();
-		Utils.preDestroyBlock(getWorld(), container.xCoord, container.yCoord, container.zCoord);
+		Utils.preDestroyBlock(getWorld(), container.getPos(), container.getWorld().getBlockState(container.getPos()));
 	}
 	
 	public void eventHandler(PipeEventItem.DropItem event)
 	{
 		Transactor transactor = new TransactorSimple(this);
-		transactor.add(event.item.getItemStack().copy(), ForgeDirection.UNKNOWN, true);
+		transactor.add(event.item.getItemStack().copy(), event.direction, true);
 		if(inventory[inventory.length - 1] != null)
 		{
 			for(int i = 1; i < inventory.length; i++)
@@ -86,7 +89,7 @@ public class PipeItemsClosed extends APPipe<PipeTransportItems> implements IInve
 	}
 
 	@Override
-	public int getIconIndex(ForgeDirection direction) {
+	public int getIconIndex(EnumFacing direction) {
 		return 18 + (getStackInSlot(0) == null ? 0 : 1);
 	}
 
@@ -122,7 +125,7 @@ public class PipeItemsClosed extends APPipe<PipeTransportItems> implements IInve
 	}
 
 	@Override
-	public String getInventoryName() {
+	public String getName() {
 		return "pipeItemsClosed";
 	}
 
@@ -143,7 +146,8 @@ public class PipeItemsClosed extends APPipe<PipeTransportItems> implements IInve
 	}
 
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomName()
+	{
 		return false;
 	}
 
@@ -154,15 +158,45 @@ public class PipeItemsClosed extends APPipe<PipeTransportItems> implements IInve
 	}
 
 	@Override
-	public void openInventory() 
+	public IChatComponent getDisplayName()
+	{
+		return null;
+	}
+
+	@Override
+	public void openInventory(EntityPlayer playerIn)
+	{
+
+	}
+
+	@Override
+	public void closeInventory(EntityPlayer playerIn)
+	{
+
+	}
+
+	@Override
+	public int getField(int id)
+	{
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value)
 	{
 		
 	}
 
 	@Override
-	public void closeInventory()
+	public int getFieldCount()
 	{
-		
+		return 0;
+	}
+
+	@Override
+	public void clear()
+	{
+
 	}
 
 }

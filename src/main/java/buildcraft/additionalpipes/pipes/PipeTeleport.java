@@ -8,7 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.additionalpipes.utils.PlayerUtils;
@@ -60,15 +60,15 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 		{
 			//                   getUUIDFromProfile()
 			ownerUUID = PlayerUtils.getUUID(player);
-			ownerName = player.getCommandSenderName();
+			ownerName = player.getName();
 		}
 		
 		//test for player name change
 		if(PlayerUtils.getUUID(player).equals(ownerUUID))
 		{
-			if(!player.getCommandSenderName().equals(ownerName))
+			if(!player.getName().equals(ownerName))
 			{
-				ownerName = player.getCommandSenderName();
+				ownerName = player.getName();
 			}
 		}
 		
@@ -82,7 +82,7 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 			}
 		}
 		
-		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_TP, getWorld(), container.xCoord, container.yCoord, container.zCoord);
+		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_TP, getWorld(), container.getPos().getX(), container.getPos().getY(), container.getPos().getZ());
 		return true;
 	}
 
@@ -100,7 +100,7 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 	}
 
 	@Override
-	public boolean canPipeConnect(TileEntity tile, ForgeDirection side) {
+	public boolean canPipeConnect(TileEntity tile, EnumFacing side) {
 		Pipe<?> pipe = null;
 		if(tile instanceof TileGenericPipe) {
 			pipe = ((TileGenericPipe) tile).pipe;
@@ -111,7 +111,7 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 	}
 
 	@Override
-	public boolean outputOpen(ForgeDirection to) {
+	public boolean outputOpen(EnumFacing to) {
 		return container.isPipeConnected(to);
 	}
 
@@ -148,6 +148,6 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 	}
 
 	public Position getPosition() {
-		return new Position(container.xCoord, container.yCoord, container.zCoord);
+		return new Position(container.getPos().getX(), container.getPos().getY(), container.getPos().getZ());
 	}
 }

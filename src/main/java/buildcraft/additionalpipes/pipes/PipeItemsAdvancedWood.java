@@ -15,9 +15,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.api.core.Position;
@@ -57,7 +58,7 @@ public class PipeItemsAdvancedWood extends APPipe<PipeTransportItems> implements
 	{
 		super.updateEntity();
 
-		if(container.getWorldObj().isRemote)
+		if(container.getWorld().isRemote)
 		{
 			return;
 		}
@@ -76,10 +77,8 @@ public class PipeItemsAdvancedWood extends APPipe<PipeTransportItems> implements
 				return;
 			}
 				
-			Position pos = new Position(container.xCoord, container.yCoord, container.zCoord, ForgeDirection.VALID_DIRECTIONS[meta]);
-			pos.moveForwards(1);
-			w.getBlock((int) pos.x, (int) pos.y, (int) pos.z);
-			TileEntity tile = w.getTileEntity((int) pos.x, (int) pos.y, (int) pos.z);
+			BlockPos tileBlock = container.getPos().offset(EnumFacing.values()[meta]);
+			TileEntity tile = w.getTileEntity(tileBlock);
 			
 			ticksSincePull = 0;
 
@@ -88,13 +87,13 @@ public class PipeItemsAdvancedWood extends APPipe<PipeTransportItems> implements
 					
 				IInventory inventory = (IInventory) tile;
 
-				ItemStack extracted = checkExtract(inventory, true, pos.orientation.getOpposite());
+				ItemStack extracted = checkExtract(inventory, true, EnumFacing.values()[meta].getOpposite());
 
 				if(extracted == null || extracted.stackSize == 0) {
 					return;
 				}
 
-				Position entityPos = new Position(pos.x + 0.5, pos.y + CoreConstants.PIPE_MIN_POS, pos.z + 0.5, pos.orientation.getOpposite());
+				Position entityPos = new Position(tileBlock.getX() + 0.5, tileBlock.getY() + CoreConstants.PIPE_MIN_POS, tileBlock.getZ() + 0.5, EnumFacing.values()[meta].getOpposite());
 				entityPos.moveForwards(0.5);
 				TravelingItem entity = TravelingItem.make(entityPos.x, entityPos.y, entityPos.z, extracted);
 				((PipeTransportItems) transport).injectItem(entity, entityPos.orientation);
@@ -104,21 +103,21 @@ public class PipeItemsAdvancedWood extends APPipe<PipeTransportItems> implements
 		}
 	}
 
-	public ItemStack checkExtract(IInventory inventory, boolean doRemove, ForgeDirection from) {
+	public ItemStack checkExtract(IInventory inventory, boolean doRemove, EnumFacing from) {
 		IInventory inv = InvUtils.getInventory(inventory);
 		int first = 0;
 		int last = inv.getSizeInventory() - 1;
 		if(inventory instanceof ISidedInventory) {
 			ISidedInventory sidedInv = (ISidedInventory) inventory;
-			int[] accessibleSlots = sidedInv.getAccessibleSlotsFromSide(from.ordinal());
-			ItemStack result = checkExtractGeneric(inv, doRemove, from, accessibleSlots);
+			int[] accessibleSlots = sidedInv.getSlotsForFace(from);
+			ItemStack result = checkExtractGeneric(inv, doRemove, accessibleSlots);
 			return result;
 		}
-		ItemStack result = checkExtractGeneric(inv, doRemove, from, first, last);
+		ItemStack result = checkExtractGeneric(inv, doRemove, first, last);
 		return result;
 	}
 
-	public ItemStack checkExtractGeneric(IInventory inventory, boolean doRemove, ForgeDirection from, int start, int stop) {
+	public ItemStack checkExtractGeneric(IInventory inventory, boolean doRemove, int start, int stop) {
 		for(int k = start; k <= stop; ++k) {
 			ItemStack slot = inventory.getStackInSlot(k);
 
@@ -140,7 +139,7 @@ public class PipeItemsAdvancedWood extends APPipe<PipeTransportItems> implements
 		return null;
 	}
 
-	public ItemStack checkExtractGeneric(IInventory inventory, boolean doRemove, ForgeDirection from, int[] slots) {
+	public ItemStack checkExtractGeneric(IInventory inventory, boolean doRemove, int[] slots) {
 		for(int i : slots)
 		{
 			ItemStack slot = inventory.getStackInSlot(i);
@@ -189,10 +188,8 @@ public class PipeItemsAdvancedWood extends APPipe<PipeTransportItems> implements
 	}
 
 	@Override
-	public int getIconIndex(ForgeDirection direction) {
-		if(direction == ForgeDirection.UNKNOWN)
-			return 6;
-		else {
+	public int getIconIndex(EnumFacing direction) {
+		{
 			int metadata = container.getBlockMetadata();
 			if(metadata == direction.ordinal())
 				return 7;
@@ -205,9 +202,9 @@ public class PipeItemsAdvancedWood extends APPipe<PipeTransportItems> implements
 	public boolean blockActivated(EntityPlayer entityplayer)
 	{
 		Item equipped = entityplayer.getCurrentEquippedItem() != null ? entityplayer.getCurrentEquippedItem().getItem() : null;
-		if(equipped instanceof IToolWrench && ((IToolWrench) equipped).canWrench(entityplayer, container.xCoord, container.yCoord, container.zCoord)) {
+		if(equipped instanceof IToolWrench && ((IToolWrench) equipped).canWrench(entityplayer, container.getPos())) {
 			((PipeTransportAdvancedWood) transport).switchSource();
-			((IToolWrench) equipped).wrenchUsed(entityplayer, container.xCoord, container.yCoord, container.zCoord);
+			((IToolWrench) equipped).wrenchUsed(entityplayer, container.getPos());
 			return true;
 		}
 		if(AdditionalPipes.instance.filterRightclicks && AdditionalPipes.isPipe(equipped))
@@ -215,40 +212,41 @@ public class PipeItemsAdvancedWood extends APPipe<PipeTransportItems> implements
 			return false;
 		}
 
-		entityplayer.openGui(AdditionalPipes.instance, GuiHandler.PIPE_WOODEN_ADV, container.getWorldObj(), container.xCoord, container.yCoord, container.zCoord);
+		entityplayer.openGui(AdditionalPipes.instance, GuiHandler.PIPE_WOODEN_ADV, container.getWorld(), container.getPos().getX(), container.getPos().getY(), container.getPos().getZ());
 		return true;
 	}
 
 	@Override
-	public boolean doDrop() {
-		Utils.preDestroyBlock(getWorld(), container.xCoord, container.yCoord, container.zCoord);
+	public boolean doDrop()
+	{
+		Utils.preDestroyBlock(getWorld(), container.getPos(), container.getWorld().getBlockState(container.getPos()));
 		return true;
 	}
 
 	@Override
-	public boolean canConnectEnergy(ForgeDirection dir)
+	public boolean canConnectEnergy(EnumFacing dir)
 	{
 		return true;
 	}
 
 	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
+	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
 		return battery.receiveEnergy(maxReceive, simulate);
 	}
 
 	@Override
-	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
+	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
 		return 0;
 	}
 
 	@Override
-	public int getEnergyStored(ForgeDirection from)
+	public int getEnergyStored(EnumFacing from)
 	{
 		return battery.getEnergyStored();
 	}
 
 	@Override
-	public int getMaxEnergyStored(ForgeDirection from)
+	public int getMaxEnergyStored(EnumFacing from)
 	{
 		return battery.getMaxEnergyStored();
 	}

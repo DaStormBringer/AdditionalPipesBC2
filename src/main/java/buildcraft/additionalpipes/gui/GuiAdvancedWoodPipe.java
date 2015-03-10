@@ -11,7 +11,8 @@ package buildcraft.additionalpipes.gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.util.StatCollector;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.opengl.GL11;
 
@@ -20,8 +21,6 @@ import buildcraft.additionalpipes.network.message.MessageAdvWoodPipe;
 import buildcraft.additionalpipes.pipes.PipeTransportAdvancedWood;
 import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.transport.TileGenericPipe;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiAdvancedWoodPipe extends GuiContainer {
@@ -61,14 +60,14 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 			buttons[0].displayString = "These items are required";
 		}
 
-		fontRendererObj.drawString(StatCollector.translateToLocal(filterInventory.getInventoryName()), 8, 6, 0x404040);
-		fontRendererObj.drawString(StatCollector.translateToLocal(playerInventory.getInventoryName()), 8, 66, 0x404040);
+		//fontRendererObj.drawString(StatCollector.translateToLocal(filterInventory.getInventoryName()), 8, 6, 0x404040);
+		//fontRendererObj.drawString(StatCollector.translateToLocal(playerInventory.getInventoryName()), 8, 66, 0x404040);
 	}
 
 	@Override
 	protected void actionPerformed(GuiButton guibutton) {
 		if(guibutton.id == 1) {
-			MessageAdvWoodPipe packet = new MessageAdvWoodPipe(container.xCoord, container.yCoord, container.zCoord);
+			MessageAdvWoodPipe packet = new MessageAdvWoodPipe(container.getPos());
 			PacketHandler.INSTANCE.sendToServer(packet);
 		}
 	}

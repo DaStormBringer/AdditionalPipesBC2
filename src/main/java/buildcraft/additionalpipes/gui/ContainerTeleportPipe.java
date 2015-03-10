@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ICrafting;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessageTelePipeData;
@@ -38,12 +39,12 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 			int[] locations = new int[connectedPipes.size() * 3];
 			for(int i = 0; i < connectedPipes.size() && i < 9; i++) {
 				PipeTeleport<?> connectedPipe = connectedPipes.get(i);
-				locations[3 * i] = connectedPipe.container.xCoord;
-				locations[3 * i + 1] = connectedPipe.container.yCoord;
-				locations[3 * i + 2] = connectedPipe.container.zCoord;
+				locations[3 * i] = connectedPipe.container.getPos().getX();
+				locations[3 * i + 1] = connectedPipe.container.getPos().getY();
+				locations[3 * i + 2] = connectedPipe.container.getPos().getZ();
 			}
 			
-			MessageTelePipeData message = new MessageTelePipeData(pipe.container.xCoord, pipe.container.yCoord, pipe.container.zCoord, locations, pipe.ownerUUID, pipe.ownerName);
+			MessageTelePipeData message = new MessageTelePipeData(pipe.container.getPos(), locations, pipe.ownerUUID, pipe.ownerName);
 			PacketHandler.INSTANCE.sendTo(message, (EntityPlayerMP) player);
 		}
 	}

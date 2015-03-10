@@ -2,6 +2,8 @@ package buildcraft.additionalpipes.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.opengl.GL11;
 
@@ -10,8 +12,6 @@ import buildcraft.additionalpipes.network.message.MessageDistPipe;
 import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
 import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.transport.TileGenericPipe;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiDistributionPipe extends GuiContainer {
@@ -99,7 +99,7 @@ public class GuiDistributionPipe extends GuiContainer {
 		if(newData < 0)
 			return;
 
-		MessageDistPipe message = new MessageDistPipe(pipe.container.xCoord, pipe.container.yCoord, pipe.container.zCoord, (byte) index, newData);
+		MessageDistPipe message = new MessageDistPipe(pipe.container.getPos(), (byte) index, newData);
 		PacketHandler.INSTANCE.sendToServer(message);	
 	}
 

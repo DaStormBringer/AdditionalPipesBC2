@@ -4,15 +4,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import buildcraft.BuildCraftCore;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessageTelePipeUpdate;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.additionalpipes.textures.Textures;
-import buildcraft.core.CoreIconProvider;
+import buildcraft.api.core.SheetIcon;
 import buildcraft.core.gui.GuiBuildCraft;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiTeleportPipe extends GuiBuildCraft {
@@ -36,15 +35,15 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 
 			// Draw icon
 			Minecraft.getMinecraft().renderEngine.bindTexture(Textures.ITEMS);
-			drawIcon(BuildCraftCore.iconProvider.getIcon(CoreIconProvider.ENERGY), x + 3, y + 4);
+			drawIcon(new SheetIcon(ICONS_TEXTURE, 0, 0), x + 3, y + 4);
 
 			if(!isFullyOpened())
 				return;
 
-			fontRendererObj.drawStringWithShadow("Teleport Pipe", x + 22, y + 8, headerColour);
-			fontRendererObj.drawStringWithShadow("Owner:", x + 22, y + 20, subheaderColour);
+			fontRendererObj.drawString("Teleport Pipe", x + 22, y + 8, headerColour);
+			fontRendererObj.drawString("Owner:", x + 22, y + 20, subheaderColour);
 			fontRendererObj.drawString(pipe.ownerName, x + 22, y + 32, textColour);
-			fontRendererObj.drawStringWithShadow("Outputs: ", x + 22, y + 44, subheaderColour);
+			fontRendererObj.drawString("Outputs: ", x + 22, y + 44, subheaderColour);
 			fontRendererObj.drawString(String.valueOf(container.connectedPipes), x + 66, y + 45, textColour);
 			int[] net = pipe.network;
 			if(net.length > 0) {
@@ -98,9 +97,9 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 		super.drawGuiContainerForegroundLayer(p1, p2);
 		fontRendererObj.drawString("Frequency: " + pipe.getFrequency(), 16, 12, 0x404040);
 		fontRendererObj.drawString(new StringBuilder("(")
-			.append(pipe.container.xCoord).append(", ")
-			.append(pipe.container.yCoord).append(", ")
-			.append(pipe.container.zCoord).append(")").toString(), 128, 12, 0x404040);
+			.append(pipe.container.getPos().getX()).append(", ")
+			.append(pipe.container.getPos().getY()).append(", ")
+			.append(pipe.container.getPos().getZ()).append(")").toString(), 128, 12, 0x404040);
 		switch(pipe.state) {
 		case 3:
 			buttons[6].displayString = "Send & Receive";
@@ -157,7 +156,7 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 			freq = 0;
 		}
 
-		MessageTelePipeUpdate packet = new MessageTelePipeUpdate(pipe.container.xCoord, pipe.container.yCoord, pipe.container.zCoord, freq, isPublic, state);
+		MessageTelePipeUpdate packet = new MessageTelePipeUpdate(pipe.container.getPos(), freq, isPublic, state);
 		PacketHandler.INSTANCE.sendToServer(packet);
 	}
 
