@@ -80,7 +80,7 @@ public class PipeItemsAdvancedInsertion extends APPipe<PipeTransportItems> {
 	@Override
 	public int getIconIndex(EnumFacing direction)
 	{
-		return 8;
+		return ICON;
 	}
 
 }

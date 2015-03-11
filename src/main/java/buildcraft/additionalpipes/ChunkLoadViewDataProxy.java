@@ -6,11 +6,17 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessageChunkloadData;
 import buildcraft.additionalpipes.network.message.MessageChunkloadRequest;
@@ -18,13 +24,6 @@ import buildcraft.core.EntityBlock;
 import buildcraft.core.utils.Utils;
 
 import com.google.common.collect.SetMultimap;
-
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class ChunkLoadViewDataProxy implements Comparator<ChunkCoordIntPair> {
 	public static final int MAX_SIGHT_RANGE = 31;
@@ -66,7 +65,7 @@ public class ChunkLoadViewDataProxy implements Comparator<ChunkCoordIntPair> {
 	@SideOnly(Side.CLIENT)
 	public void activateLasers() {
 		deactivateLasers();
-		EntityClientPlayerMP player = FMLClientHandler.instance().getClient().thePlayer;
+		EntityPlayerSP player = FMLClientHandler.instance().getClient().thePlayer;
 		int playerY = (int) player.posY - 1;
 		for(ChunkCoordIntPair coords : persistentChunks) {
 			int xCoord = coords.chunkXPos * 16;

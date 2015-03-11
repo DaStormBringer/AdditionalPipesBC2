@@ -8,13 +8,17 @@
 
 package buildcraft.additionalpipes.pipes;
 
+import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IChatComponent;
 import buildcraft.core.utils.Utils;
 import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransportItems;
@@ -23,12 +27,16 @@ import buildcraft.transport.pipes.PipeItemsWood;
 
 public class PipeTransportAdvancedWood extends PipeTransportItems implements IInventory {
 
+    public static final PropertyDirection FACING = PropertyDirection.create("facing");
+	
 	public ItemStack[] items = new ItemStack[9];
 
 	public boolean exclude = false;
 
-	public void switchSource() {
-		int meta = container.getBlockMetadata();
+	public void switchSource()
+	{
+        IBlockState iblockstate = container.getWorld().getBlockState(container.getPos());
+		int meta = ((EnumFacing)iblockstate.getValue(FACING)).ordinal();
 		int newMeta = 6;
 
 		for(int i = meta + 1; i <= meta + 6; ++i) {
@@ -41,10 +49,11 @@ public class PipeTransportAdvancedWood extends PipeTransportItems implements IIn
 			}
 		}
 
-		if(newMeta != meta) {
-			getWorld().setBlockMetadataWithNotify(container.getPos(), newMeta, 2);
+		if(newMeta != meta)
+		{
+			getWorld().setBlockState(container.getPos(), iblockstate.withProperty(FACING, EnumFacing.values()[newMeta]), 2);
+			
 			container.scheduleRenderUpdate();
-			// worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 
@@ -75,7 +84,7 @@ public class PipeTransportAdvancedWood extends PipeTransportItems implements IIn
 		if(meta > 5)
 			switchSource();
 		else {
-			TileEntity tile = container.getTile(EnumFacing.VALID_DIRECTIONS[meta]);
+			TileEntity tile = container.getTile(EnumFacing.values()[meta]);
 			if(!isInput(tile))
 				switchSource();
 		}
@@ -155,7 +164,7 @@ public class PipeTransportAdvancedWood extends PipeTransportItems implements IIn
 	}
 
 	@Override
-	public String getInventoryName() {
+	public String getName() {
 		return "gui.PipeItemsAdvancedWood";
 	}
 
@@ -175,7 +184,8 @@ public class PipeTransportAdvancedWood extends PipeTransportItems implements IIn
 	}
 
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomName()
+	{
 		return false;
 	}
 
@@ -185,12 +195,48 @@ public class PipeTransportAdvancedWood extends PipeTransportItems implements IIn
 	}
 
 	@Override
-	public void openInventory() {
+	public void openInventory(EntityPlayer playerIn)
+	{
+
+	}
+
+	@Override
+	public void closeInventory(EntityPlayer playerIn)
+	{
+
+	}
+
+	@Override
+	public IChatComponent getDisplayName()
+	{
+		return new ChatComponentText(getName());
+	}
+
+	@Override
+	public int getField(int id)
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value)
+	{
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void closeInventory() {
+	public int getFieldCount()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void clear()
+	{
+		// TODO Auto-generated method stub
 		
 	}
 

@@ -1,21 +1,14 @@
 package buildcraft.additionalpipes.textures;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.util.IIcon;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
 
 public class Textures {
-	public static final APActionTriggerIconProvider actionIconProvider = new APActionTriggerIconProvider();
-	public static final APPipeIconProvider pipeIconProvider = new APPipeIconProvider();
-	public static IIcon tetherTexture;
+	//public static final APActionTriggerIconProvider actionIconProvider = new APActionTriggerIconProvider();
+	//public static final APPipeIconProvider pipeIconProvider = new APPipeIconProvider();
 
-	public static void registerIcons(IIconRegister iconRegister, int textureType) {
-		if(textureType == 0) {
-			pipeIconProvider.registerIcons(iconRegister);
-			tetherTexture = iconRegister.registerIcon("additionalpipes:tether");
-		} else if(textureType == 1) {
-			actionIconProvider.registerIcons(iconRegister);
-		}
+	public static void registerIcons(TextureMap map)
+	{
 	}
 	
 	// textures

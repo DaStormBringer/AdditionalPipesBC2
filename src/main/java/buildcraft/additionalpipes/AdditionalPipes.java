@@ -349,7 +349,8 @@ public class AdditionalPipes {
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void textureHook(TextureStitchEvent.Pre event) throws IOException {
-		Textures.registerIcons(event.map, event.map.getTextureType());
+	public void textureHook(TextureStitchEvent.Pre event) throws IOException
+	{
+		Textures.registerIcons(event.map);
 	}
 }
