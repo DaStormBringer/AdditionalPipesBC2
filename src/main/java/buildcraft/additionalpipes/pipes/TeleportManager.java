@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import buildcraft.additionalpipes.AdditionalPipes;
 
@@ -25,16 +26,16 @@ public class TeleportManager {
 		if(!AdditionalPipes.proxy.isServer(pipe.getWorld()))
 			return;
 		teleportPipes.add(pipe);
-		AdditionalPipes.instance.logger.info(String.format("[TeleportManager] Pipe added: %s @ (%d, %d, %d), %d pipes in network", pipe.getClass().getSimpleName(), pipe.container.xCoord, pipe.container.yCoord,
-				pipe.container.zCoord, teleportPipes.size()));
+		AdditionalPipes.instance.logger.info(String.format("[TeleportManager] Pipe added: %s @ (%d, %d, %d), %d pipes in network", pipe.getClass().getSimpleName(), pipe.container.getWorld(), pipe.container.getPos().getX(),
+				pipe.container.getPos().getY(), pipe.container.getPos().getZ(), teleportPipes.size()));
 	}
 
 	public void remove(PipeTeleport<?> pipe) {
 		if(!AdditionalPipes.proxy.isServer(pipe.getWorld()))
 			return;
 		teleportPipes.remove(pipe);
-		AdditionalPipes.instance.logger.info(String.format("[TeleportManager] Pipe removed: %s @ (%d, %d, %d), %d pipes in network", pipe.getClass().getSimpleName(), pipe.container.xCoord, pipe.container.yCoord,
-				pipe.container.zCoord, teleportPipes.size()));
+		AdditionalPipes.instance.logger.info(String.format("[TeleportManager] Pipe removed: %s @ (%d, %d, %d), %d pipes in network",  pipe.container.getWorld(), pipe.container.getPos().getX(),
+				pipe.container.getPos().getY(), pipe.container.getPos().getZ(), teleportPipes.size()));
 	}
 
 	public void reset() {
@@ -49,16 +50,20 @@ public class TeleportManager {
 	public List<PipeTeleport<?>> getConnectedPipes(PipeTeleport<?> pipe, boolean forceReceive) {
 		List<PipeTeleport<?>> connected = new LinkedList<PipeTeleport<?>>();
 
+		BlockPos pipeLocation = pipe.container.getPos();
+		
 		for(PipeTeleport<?> other : teleportPipes) {
 			if(!pipe.getClass().equals(other.getClass()) || other.container.isInvalid()) {
 				continue;
 			}
+			
+			BlockPos otherLocation = other.container.getPos();
 
 			// not the same pipe &&
 			// same frequency &&
 			// pipe is open or forceReceive &&
 			// both public or same owner
-			if((pipe.container.xCoord != other.container.xCoord || pipe.container.yCoord != other.container.yCoord || pipe.container.zCoord != other.container.zCoord) && other.getFrequency() == pipe.getFrequency()
+			if((pipeLocation.getX() != otherLocation.getX() || pipeLocation.getY() != otherLocation.getY() || pipeLocation.getZ() != otherLocation.getZ()) && other.getFrequency() == pipe.getFrequency()
 					&& ((other.state & 0x2) > 0 || forceReceive) && (pipe.isPublic ? other.isPublic : other.ownerUUID.equals(pipe.ownerUUID)))
 			{
 				connected.add(other);

@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import buildcraft.core.utils.Utils;
 import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransportItems;
@@ -32,7 +32,7 @@ public class PipeTransportAdvancedWood extends PipeTransportItems implements IIn
 		int newMeta = 6;
 
 		for(int i = meta + 1; i <= meta + 6; ++i) {
-			ForgeDirection o = ForgeDirection.VALID_DIRECTIONS[i % 6];
+			EnumFacing o = EnumFacing.values()[i % 6];
 			TileEntity tile = container.getTile(o);
 			if(isInput(tile))
 			{
@@ -42,7 +42,7 @@ public class PipeTransportAdvancedWood extends PipeTransportItems implements IIn
 		}
 
 		if(newMeta != meta) {
-			getWorld().setBlockMetadataWithNotify(container.xCoord, container.yCoord, container.zCoord, newMeta, 2);
+			getWorld().setBlockMetadataWithNotify(container.getPos(), newMeta, 2);
 			container.scheduleRenderUpdate();
 			// worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
 		}
@@ -53,7 +53,7 @@ public class PipeTransportAdvancedWood extends PipeTransportItems implements IIn
 	}
 
 	@Override
-	public boolean canPipeConnect(TileEntity tile, ForgeDirection side) {
+	public boolean canPipeConnect(TileEntity tile, EnumFacing side) {
 		Pipe<?> pipe2 = null;
 
 		if(tile instanceof TileGenericPipe) {
@@ -75,7 +75,7 @@ public class PipeTransportAdvancedWood extends PipeTransportItems implements IIn
 		if(meta > 5)
 			switchSource();
 		else {
-			TileEntity tile = container.getTile(ForgeDirection.VALID_DIRECTIONS[meta]);
+			TileEntity tile = container.getTile(EnumFacing.VALID_DIRECTIONS[meta]);
 			if(!isInput(tile))
 				switchSource();
 		}

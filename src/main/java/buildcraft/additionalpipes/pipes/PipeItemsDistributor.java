@@ -14,7 +14,7 @@ import java.util.LinkedList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.transport.PipeTransportItems;
@@ -31,7 +31,8 @@ public class PipeItemsDistributor extends APPipe<PipeTransportItems> {
 	}
 
 	@Override
-	public int getIconIndex(net.minecraftforge.common.util.ForgeDirection connection) {
+	public int getIconIndex(EnumFacing connection)
+	{
 		switch(connection) {
 		case DOWN: // -y
 			return 10;
@@ -51,13 +52,13 @@ public class PipeItemsDistributor extends APPipe<PipeTransportItems> {
 	
 	public void eventHandler(PipeEventItem.FindDest event)
 	{
-		LinkedList<ForgeDirection> result = new LinkedList<ForgeDirection>();
+		LinkedList<EnumFacing> result = new LinkedList<EnumFacing>();
 
 		if(curTick >= distData[distSide]) {
 			toNextOpenSide();
 		}
 
-		result.add(ForgeDirection.VALID_DIRECTIONS[distSide]);
+		result.add(EnumFacing.values()[distSide]);
 		curTick += event.item.getItemStack().stackSize;
 
 		event.destinations.clear();
@@ -68,7 +69,7 @@ public class PipeItemsDistributor extends APPipe<PipeTransportItems> {
 		curTick = 0;
 		for(int o = 0; o < distData.length; ++o) {
 			distSide = (distSide + 1) % distData.length;
-			if(distData[distSide] > 0 && container.isPipeConnected(ForgeDirection.VALID_DIRECTIONS[distSide])) {
+			if(distData[distSide] > 0 && container.isPipeConnected(EnumFacing.values()[distSide])) {
 				break;
 			}
 		}
@@ -88,7 +89,7 @@ public class PipeItemsDistributor extends APPipe<PipeTransportItems> {
 			}
 		}
 
-		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_DIST, container.getWorldObj(), container.xCoord, container.yCoord, container.zCoord);
+		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_DIST,container.getWorld(), container.getPos().getX(), container.getPos().getY(), container.getPos().getZ());
 
 		return true;
 	}

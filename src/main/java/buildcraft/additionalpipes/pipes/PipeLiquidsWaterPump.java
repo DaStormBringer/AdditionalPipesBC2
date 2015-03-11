@@ -3,7 +3,7 @@ package buildcraft.additionalpipes.pipes;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import buildcraft.additionalpipes.AdditionalPipes;
@@ -25,13 +25,14 @@ public class PipeLiquidsWaterPump extends APPipe<PipeTransportFluids> {
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		if(AdditionalPipes.proxy.isServer(getWorld()) && getWorld().getBlock(container.xCoord, container.yCoord - 1, container.zCoord) == water) {
-			transport.fill(ForgeDirection.UNKNOWN, new FluidStack(FluidRegistry.WATER, 100), true);
+		if(AdditionalPipes.proxy.isServer(getWorld()) && getWorld().getBlockState(container.getPos().offsetDown()).getBlock() == water)
+		{
+			transport.fill(EnumFacing.DOWN, new FluidStack(FluidRegistry.WATER, 100), true);
 		}
 	}
 
 	@Override
-	public int getIconIndex(ForgeDirection direction) {
+	public int getIconIndex(EnumFacing direction) {
 		return ICON;
 	}
 

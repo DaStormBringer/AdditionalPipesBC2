@@ -12,7 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.item.Item;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.api.core.Position;
 import buildcraft.transport.PipeTransportItems;
@@ -40,11 +40,11 @@ public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 		}
 
 		// output to random pipe
-		LinkedList<ForgeDirection> outputOrientations = new LinkedList<ForgeDirection>();
+		LinkedList<EnumFacing> outputOrientations = new LinkedList<EnumFacing>();
 		PipeTeleport<?> otherPipe = connectedTeleportPipes.get(rand.nextInt(connectedTeleportPipes.size()));
 
 		// find possible output orientations
-		for(ForgeDirection o : ForgeDirection.VALID_DIRECTIONS) {
+		for(EnumFacing o : EnumFacing.values()) {
 			if(otherPipe.outputOpen(o))
 				outputOrientations.add(o);
 		}
@@ -53,14 +53,14 @@ public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 			return;
 		}
 
-		ForgeDirection newOrientation = outputOrientations.get(rand.nextInt(outputOrientations.size()));
+		EnumFacing newOrientation = outputOrientations.get(rand.nextInt(outputOrientations.size()));
 		TileGenericPipe destination = (TileGenericPipe) otherPipe.container.getTile(newOrientation);
 
 		if(destination == null) {
 			return;
 		}
 		
-		Position insertPoint = new Position(destination.xCoord + 0.5, destination.yCoord + TransportUtils.getPipeFloorOf(event.item.getItemStack()), destination.zCoord + 0.5, newOrientation.getOpposite());
+		Position insertPoint = new Position(destination.getPos().getX() + 0.5, destination.getPos().getY() + TransportUtils.getPipeFloorOf(event.item.getItemStack()), destination.getPos().getZ() + 0.5, newOrientation.getOpposite());
 		insertPoint.moveForwards(0.5);
 		event.item.setPosition(insertPoint.x, insertPoint.y, insertPoint.z);
 		
@@ -71,7 +71,7 @@ public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 	}
 
 	@Override
-	public int getIconIndex(ForgeDirection direction) {
+	public int getIconIndex(EnumFacing direction) {
 		return ICON;
 	}
 

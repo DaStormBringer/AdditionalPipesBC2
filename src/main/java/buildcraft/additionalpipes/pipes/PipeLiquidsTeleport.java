@@ -12,7 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.item.Item;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import buildcraft.transport.IPipeTransportFluidsHook;
@@ -28,7 +28,7 @@ public class PipeLiquidsTeleport extends PipeTeleport<PipeTransportFluids> imple
 	}
 
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
 		List<PipeTeleport<?>> pipeList = TeleportManager.instance.getConnectedPipes(this, false);
 
 		if(pipeList.size() == 0 || (state & 0x1) == 0) {
@@ -45,7 +45,7 @@ public class PipeLiquidsTeleport extends PipeTeleport<PipeTransportFluids> imple
 		int used = 0;
 		while(possibleMovements.size() > 0 && used <= 0) {
 			int a = rand.nextInt(possibleMovements.size());
-			used = possibleMovements.get(a).fill(ForgeDirection.UNKNOWN, resource, doFill);
+			used = possibleMovements.get(a).fill(EnumFacing.UP, resource, doFill);
 			possibleMovements.remove(a);
 		}
 
@@ -55,7 +55,7 @@ public class PipeLiquidsTeleport extends PipeTeleport<PipeTransportFluids> imple
 	private static List<IFluidHandler> getPossibleLiquidMovements(PipeTeleport<?> pipe) {
 		List<IFluidHandler> result = new LinkedList<IFluidHandler>();
 
-		for(ForgeDirection o : ForgeDirection.VALID_DIRECTIONS) {
+		for(EnumFacing o : EnumFacing.values()) {
 			if(pipe.outputOpen(o)) {
 				IFluidHandler te = (IFluidHandler) pipe.container.getTile(o);
 				if (te != null) {
@@ -68,7 +68,7 @@ public class PipeLiquidsTeleport extends PipeTeleport<PipeTransportFluids> imple
 	}
 
 	@Override
-	public int getIconIndex(ForgeDirection direction) {
+	public int getIconIndex(EnumFacing direction) {
 		return ICON;
 	}
 
