@@ -59,7 +59,7 @@ public class TeleportManager {
 			// pipe is open or forceReceive &&
 			// both public or same owner
 			if((pipe.container.xCoord != other.container.xCoord || pipe.container.yCoord != other.container.yCoord || pipe.container.zCoord != other.container.zCoord) && other.getFrequency() == pipe.getFrequency()
-					&& ((other.state & 0x2) > 0 || forceReceive) && (pipe.isPublic ? other.isPublic : (other.ownerUUID != null && other.ownerUUID.equals(pipe.ownerUUID)))
+					&& ((other.state & 0x2) > 0 || forceReceive) && (pipe.isPublic ? other.isPublic : (other.ownerUUID != null && other.ownerUUID.equals(pipe.ownerUUID))))
 			{
 				connected.add(other);
 			}
@@ -76,7 +76,7 @@ public class TeleportManager {
 				continue;
 			}
 
-			if(other.getFrequency() == pipe.getFrequency() && (pipe.isPublic ? other.isPublic : other.ownerUUID.equals(pipe.ownerUUID))) {
+			if(other.getFrequency() == pipe.getFrequency() && (pipe.isPublic ? other.isPublic : (other.ownerUUID != null && other.ownerUUID.equals(pipe.ownerUUID)))) {
 				pipes.add(other);
 			}
 		}
