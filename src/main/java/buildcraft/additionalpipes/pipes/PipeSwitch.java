@@ -45,7 +45,7 @@ public class PipeSwitch<pipeType extends PipeTransport> extends APPipe<pipeType>
 
 	@Override
 	public boolean canPipeConnect(TileEntity tile, EnumFacing side) {
-		if(container == null) return false;
+		if(container == null && side == null) return false;
 		World world = getWorld();
 		return world != null && !world.isBlockPowered(container.getPos());
 	}

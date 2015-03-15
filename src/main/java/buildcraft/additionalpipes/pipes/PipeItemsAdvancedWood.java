@@ -188,14 +188,13 @@ public class PipeItemsAdvancedWood extends APPipe<PipeTransportItems> implements
 	}
 
 	@Override
-	public int getIconIndex(EnumFacing direction) {
-		{
-			int metadata = container.getBlockMetadata();
-			if(metadata == direction.ordinal())
-				return 7;
-			else
-				return 6;
-		}
+	public int getIconIndex(EnumFacing direction) 
+	{
+		if(direction != null && container != null && container.getBlockMetadata() == direction.ordinal())
+			return 7;
+		else
+			return 6;
+		
 	}
 	
 	@Override

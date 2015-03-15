@@ -33,7 +33,12 @@ public class PipeItemsDistributor extends APPipe<PipeTransportItems> {
 	@Override
 	public int getIconIndex(EnumFacing connection)
 	{
-		switch(connection) {
+		if(connection == null)
+		{
+			return 10;
+		}
+		switch(connection) 
+		{
 		case DOWN: // -y
 			return 10;
 		case UP: // +y
