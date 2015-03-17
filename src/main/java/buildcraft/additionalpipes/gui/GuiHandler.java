@@ -14,6 +14,8 @@ public class GuiHandler implements IGuiHandler {
 	public static final int PIPE_DIST = 2;
 	public static final int PIPE_WOODEN_ADV = 3;
 	public static final int PIPE_CLOSED = 4;
+	public static final int PIPE_PRIORITY = 5;
+
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
@@ -30,6 +32,8 @@ public class GuiHandler implements IGuiHandler {
 			return new ContainerAdvancedWoodPipe(player.inventory, (PipeTransportAdvancedWood) ((TileGenericPipe) tile).pipe.transport);
 		case PIPE_CLOSED:
 			return new ContainerPipeClosed(player.inventory, ((TileGenericPipe) tile).pipe);
+		case PIPE_PRIORITY:
+			return new ContainerPriorityInsertionPipe((TileGenericPipe) tile);
 		default:
 			return null;
 		}
@@ -50,6 +54,8 @@ public class GuiHandler implements IGuiHandler {
 			return new GuiAdvancedWoodPipe(player.inventory, (TileGenericPipe) tile);
 		case PIPE_CLOSED:
 			return new GuiPipeClosed(player.inventory, ((TileGenericPipe) tile).pipe);
+		case PIPE_PRIORITY:
+			return new GuiPriorityInsertionPipe((TileGenericPipe) tile);
 		default:
 			return null;
 		}

@@ -5,8 +5,9 @@ import buildcraft.additionalpipes.network.message.MessageAdvWoodPipe;
 import buildcraft.additionalpipes.network.message.MessageChunkloadData;
 import buildcraft.additionalpipes.network.message.MessageChunkloadRequest;
 import buildcraft.additionalpipes.network.message.MessageDistPipe;
-import buildcraft.additionalpipes.network.message.MessageTelePipeUpdate;
+import buildcraft.additionalpipes.network.message.MessagePriorityPipe;
 import buildcraft.additionalpipes.network.message.MessageTelePipeData;
+import buildcraft.additionalpipes.network.message.MessageTelePipeUpdate;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
@@ -23,5 +24,6 @@ public class PacketHandler
         INSTANCE.registerMessage(MessageTelePipeData.class, MessageTelePipeData.class, 3, Side.CLIENT);
         INSTANCE.registerMessage(MessageChunkloadRequest.class, MessageChunkloadRequest.class, 4, Side.SERVER);
         INSTANCE.registerMessage(MessageChunkloadData.class, MessageChunkloadData.class, 5, Side.CLIENT);
+        INSTANCE.registerMessage(MessagePriorityPipe.class, MessagePriorityPipe.class, 6, Side.SERVER);
     }
 }

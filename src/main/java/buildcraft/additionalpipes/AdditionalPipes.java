@@ -34,6 +34,7 @@ import buildcraft.additionalpipes.pipes.PipeItemsAdvancedInsertion;
 import buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
 import buildcraft.additionalpipes.pipes.PipeItemsClosed;
 import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
+import buildcraft.additionalpipes.pipes.PipeItemsPriorityInsertion;
 import buildcraft.additionalpipes.pipes.PipeItemsTeleport;
 import buildcraft.additionalpipes.pipes.PipeLiquidsTeleport;
 import buildcraft.additionalpipes.pipes.PipeLiquidsWaterPump;
@@ -104,7 +105,10 @@ public class AdditionalPipes {
 	// Advanced Wood
 	public Item pipeItemsAdvancedWood;
 	// Distributor
-	public Item pipeItemsDistributor;;
+	public Item pipeItemsDistributor;
+	
+	//priority insertion pipe
+	public Item pipeItemsPriority;
 	// Item Teleport
 	public Item pipeItemsTeleport;
 	// Liquid Teleport
@@ -268,12 +272,14 @@ public class AdditionalPipes {
 		// Distributor Pipe
 		pipeItemsDistributor = doCreatePipeAndRecipe(PipeItemsDistributor.class, new Object[] { " r ", "IgI", 'r', Items.redstone, 'I', Items.iron_ingot, 'g', Blocks.glass });
 
-		// Advanced Wooded Pipe
-		pipeItemsAdvancedWood = doCreatePipeAndRecipe(8, PipeItemsAdvancedWood.class, new Object[] { "WgW", 'W', BuildCraftCore.woodenGearItem, 'g', Blocks.glass });
-
 		// Advanced Insertion Pipe
 		pipeItemsAdvancedInsertion = doCreatePipeAndRecipe(8, PipeItemsAdvancedInsertion.class,
 				new Object[] { "IgI", 'I', BuildCraftCore.ironGearItem, 'g', Blocks.glass });
+		
+		pipeItemsPriority = doCreatePipeAndRecipe(2, PipeItemsPriorityInsertion.class, new Object[] { "   ", "D I", 'D', pipeItemsDistributor, 'I', pipeItemsAdvancedInsertion});
+		
+		// Advanced Wooded Pipe
+		pipeItemsAdvancedWood = doCreatePipeAndRecipe(8, PipeItemsAdvancedWood.class, new Object[] { "WgW", 'W', BuildCraftCore.woodenGearItem, 'g', Blocks.glass });
 
 		// Closed Items Pipe
 		pipeItemsClosed = doCreatePipeAndRecipe(PipeItemsClosed.class, new Object[] { "r", "I", 'I', BuildCraftTransport.pipeItemsVoid, 'i', BuildCraftCore.ironGearItem });
