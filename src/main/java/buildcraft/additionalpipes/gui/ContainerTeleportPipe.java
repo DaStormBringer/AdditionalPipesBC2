@@ -5,11 +5,11 @@ import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ICrafting;
-import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessageTelePipeData;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.additionalpipes.pipes.TeleportManager;
+import buildcraft.additionalpipes.utils.Log;
 import buildcraft.core.gui.BuildCraftContainer;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -59,9 +59,9 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 		int connectedPipesNew = connectedPipes;
 		if(ticks % 40 == 0) { // reduce lag
 			ticks = 0;
-			AdditionalPipes.instance.logger.info("Old connected:" + connectedPipesNew);
+			Log.info("Old connected:" + connectedPipesNew);
 			connectedPipesNew = TeleportManager.instance.getConnectedPipes(pipe, false).size();
-			AdditionalPipes.instance.logger.info("New connected:" + connectedPipesNew);
+			Log.info("New connected:" + connectedPipesNew);
 		}
 		ticks++;
 		for(Object crafter : crafters) {

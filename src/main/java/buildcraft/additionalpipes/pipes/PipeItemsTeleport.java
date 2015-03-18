@@ -13,7 +13,7 @@ import java.util.List;
 
 import net.minecraft.item.Item;
 import net.minecraftforge.common.util.ForgeDirection;
-import buildcraft.additionalpipes.AdditionalPipes;
+import buildcraft.additionalpipes.utils.Log;
 import buildcraft.api.core.Position;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.TileGenericPipe;
@@ -66,7 +66,7 @@ public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 		
 		((PipeTransportItems) destination.pipe.transport).injectItem(event.item, newOrientation);
 
-		AdditionalPipes.instance.logger.info(event.item + " from " + getPosition() + " to " + otherPipe.getPosition() + " " + newOrientation);
+		Log.debug(event.item + " from " + getPosition() + " to " + otherPipe.getPosition() + " " + newOrientation);
 		event.cancelled = true;
 	}
 

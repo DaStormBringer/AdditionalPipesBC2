@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -44,6 +42,7 @@ import buildcraft.additionalpipes.pipes.PipeSwitchItems;
 import buildcraft.additionalpipes.pipes.PipeSwitchPower;
 import buildcraft.additionalpipes.pipes.TeleportManager;
 import buildcraft.additionalpipes.textures.Textures;
+import buildcraft.additionalpipes.utils.Log;
 import buildcraft.api.statements.ITriggerInternal;
 import buildcraft.api.statements.StatementManager;
 import buildcraft.core.CreativeTabBuildCraft;
@@ -78,8 +77,6 @@ public class AdditionalPipes {
 	public static MultiPlayerProxy proxy;
 
 	public File configFile;
-
-	public Logger logger;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	private static @interface CfgBool {
@@ -146,10 +143,8 @@ public class AdditionalPipes {
 	public float powerLossCfg = 0.90f; // config option
 
 	@EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
-		logger = Logger.getLogger(MODID);
-		//logger.setParent(FMLLog.getLogger());
-		logger.setLevel(Level.SEVERE); // DEBUG
+	public void preInit(FMLPreInitializationEvent event) 
+	{
 		
 		PacketHandler.init();
 
@@ -163,7 +158,7 @@ public class AdditionalPipes {
 	{
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 	
-		logger.info("Registering chunk load handler");
+		Log.info("Registering chunk load handler");
 		ForgeChunkManager.setForcedChunkLoadingCallback(this, new ChunkLoadingHandler());
 		chunkLoadViewer = new ChunkLoadViewDataProxy(chunkSightRange);
 		FMLCommonHandler.instance().bus().register(chunkLoadViewer);
@@ -174,7 +169,7 @@ public class AdditionalPipes {
 
 		loadConfigs(true);
 		
-		logger.info("Registering pipes");
+		Log.info("Registering pipes");
 		loadPipes();
 
 		triggerPipeClosed = new TriggerPipeClosed("APClosed");
@@ -241,7 +236,7 @@ public class AdditionalPipes {
 			
 			
 		} catch(Exception e) {
-			logger.log(Level.SEVERE, "Error loading Additional Pipes configs.", e);
+			Log.error("Error loading Additional Pipes configs." + e);
 		} finally {
 			config.save();
 		}

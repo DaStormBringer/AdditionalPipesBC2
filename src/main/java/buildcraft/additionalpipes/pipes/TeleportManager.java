@@ -8,6 +8,7 @@ import java.util.Map;
 
 import net.minecraft.world.World;
 import buildcraft.additionalpipes.AdditionalPipes;
+import buildcraft.additionalpipes.utils.Log;
 
 public class TeleportManager {
 	public static final TeleportManager instance = new TeleportManager();
@@ -25,7 +26,7 @@ public class TeleportManager {
 		if(!AdditionalPipes.proxy.isServer(pipe.getWorld()))
 			return;
 		teleportPipes.add(pipe);
-		AdditionalPipes.instance.logger.info(String.format("[TeleportManager] Pipe added: %s @ (%d, %d, %d), %d pipes in network", pipe.getClass().getSimpleName(), pipe.container.xCoord, pipe.container.yCoord,
+		Log.info(String.format("[TeleportManager] Pipe added: %s @ (%d, %d, %d), %d pipes in network", pipe.getClass().getSimpleName(), pipe.container.xCoord, pipe.container.yCoord,
 				pipe.container.zCoord, teleportPipes.size()));
 	}
 
@@ -33,14 +34,14 @@ public class TeleportManager {
 		if(!AdditionalPipes.proxy.isServer(pipe.getWorld()))
 			return;
 		teleportPipes.remove(pipe);
-		AdditionalPipes.instance.logger.info(String.format("[TeleportManager] Pipe removed: %s @ (%d, %d, %d), %d pipes in network", pipe.getClass().getSimpleName(), pipe.container.xCoord, pipe.container.yCoord,
+		Log.info(String.format("[TeleportManager] Pipe removed: %s @ (%d, %d, %d), %d pipes in network", pipe.getClass().getSimpleName(), pipe.container.xCoord, pipe.container.yCoord,
 				pipe.container.zCoord, teleportPipes.size()));
 	}
 
 	public void reset() {
 		teleportPipes.clear();
 		frequencyNames.clear();
-		AdditionalPipes.instance.logger.info("Reset teleport manager.");
+		Log.info("Reset teleport manager.");
 	}
 
 	// returns all other teleport pipes of the same type (class) and frequency

@@ -14,6 +14,7 @@ import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessageChunkloadData;
 import buildcraft.additionalpipes.network.message.MessageChunkloadRequest;
+import buildcraft.additionalpipes.utils.Log;
 import buildcraft.core.EntityBlock;
 import buildcraft.core.utils.Utils;
 
@@ -170,7 +171,7 @@ public class ChunkLoadViewDataProxy implements Comparator<ChunkCoordIntPair> {
 		
 		PacketHandler.INSTANCE.sendTo(message, player);
 		
-		AdditionalPipes.instance.logger.info("[ChunkLoadViewDataProxy] Sent chunks within " + sightRange + " of player.");
+		Log.info("[ChunkLoadViewDataProxy] Sent chunks within " + sightRange + " of player.");
 	}
 
 	@SideOnly(Side.CLIENT)
