@@ -56,7 +56,7 @@ public class PipeItemsPriorityInsertion extends APPipe<PipeTransportItems> {
 	{
 		ArrayList<ForgeDirection> result = new ArrayList<ForgeDirection>();
 
-		for(int checkingPriority = 1; checkingPriority <= 6; ++checkingPriority)
+		for(int checkingPriority = 6; checkingPriority >= 1; --checkingPriority)
 		{
 			boolean foundAny = false;
 			
@@ -126,7 +126,7 @@ public class PipeItemsPriorityInsertion extends APPipe<PipeTransportItems> {
 
 		if(nbt.hasKey("priorities"))
 		{
-			nbt.setIntArray("priorities", sidePriorities);
+			sidePriorities = nbt.getIntArray("priorities");
 		}
 	}
 

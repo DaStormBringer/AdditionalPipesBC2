@@ -2,24 +2,18 @@
 
 ### Cloning and Compiling ###
 
-Windows
-
     git clone https://github.com/tcooc/AdditionalPipesBC.git
     cd AdditionalPipesBC
     init-buildcraft
-	gradlew setupDecompWorkspace
-	gradlew build
-
-Linux
-
-    # (optional) export AP_VERSION=... and export BC_VERSION=... to set versions
-    git clone https://github.com/tcooc/AdditionalPipesBC.git
-    cd AdditionalPipesBC
-	chmod +x init-buildcraft.sh
-	chmod +x gradlew
-    ./init-buildcraft.sh
-	./gradlew setupDecompWorkspace
-	./gradlew build
+    gradle setupDecompWorkspace
+    gradle build
+    
+### Setting Up Eclipse ###
+--version 1.8 --tweakClass net.minecraftforge.fml.common.launcher.FMLTweaker --accessToken modstest --username YourMCUsername
+ --userProperties {} --assetIndex 1.8 --assetsDir C:/Users/YourWindowsUsername/.gradle/caches/minecraft/assets
+ 
+--version 1.7 --tweakClass cpw.mods.fml.common.launcher.FMLTweaker --accessToken modstest --username YourMCUsername
+ --userProperties {} --assetIndex 1.7.10 --assetsDir C:/Users/YourWindowsUsername/.gradle/caches/minecraft/assets
 
 Compiled binaries can be found in `build/libs`.
 

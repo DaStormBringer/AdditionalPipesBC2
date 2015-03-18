@@ -89,6 +89,8 @@ public class AdditionalPipes {
 	public int chunkSightRange = 8; // config option
 	public @CfgBool
 	boolean chunkSightAutorefresh = true;
+	
+	public @CfgBool boolean enableDebugLog = false;
 
 	// teleport scanner TODO
 	// public Item teleportScanner;
@@ -233,6 +235,10 @@ public class AdditionalPipes {
 			Property filterRightclicksProperty = config.get(Configuration.CATEGORY_GENERAL, "filterRightclicks", false);
 			filterRightclicksProperty.comment = "When right clicking on something with a gui, do not show the gui if you have a pipe in your hand";
 			filterRightclicks = filterRightclicksProperty.getBoolean();
+			
+			Property enableDebugLogProperty = config.get(Configuration.CATEGORY_GENERAL, "enableDebugLog", false);
+			enableDebugLogProperty.comment = "Enable debug logging for development";
+			enableDebugLog = enableDebugLogProperty.getBoolean();
 			
 			
 		} catch(Exception e) {

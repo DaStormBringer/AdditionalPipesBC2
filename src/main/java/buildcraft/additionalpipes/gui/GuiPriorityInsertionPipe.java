@@ -77,7 +77,6 @@ public class GuiPriorityInsertionPipe extends GuiContainer {
 	@Override
 	protected void actionPerformed(GuiButton guibutton) {
 		int index = (guibutton.id - 1) / 3;
-				
 		int newData = pipe.sidePriorities[index];
 		if((guibutton.id - 1) % 3 == 0) {
 			newData--;

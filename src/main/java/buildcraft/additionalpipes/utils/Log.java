@@ -20,7 +20,10 @@ public class Log
 
     public static void debug(Object object)
     {
-    	log(Level.DEBUG, object);
+    	if(AdditionalPipes.instance.enableDebugLog)
+    	{
+    		log(Level.DEBUG, object);
+    	}
     }
 
     public static void error(Object object)
