@@ -8,7 +8,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class APPipeIconProvider implements IIconProvider {
 	private IIcon icons[];
-	private final int iconCount = 25;
+	
+	//1 more than highest-numbered icon
+	private final int iconCount = 31;
 
 	public APPipeIconProvider() {
 		icons = new IIcon[iconCount];

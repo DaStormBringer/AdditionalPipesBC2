@@ -37,18 +37,18 @@ public class PipeItemsPriorityInsertion extends APPipe<PipeTransportItems> {
 	{
 		switch(connection) {
 		case DOWN: // -y
-			return 10;
+			return 26;
 		case UP: // +y
-			return 11;
+			return 27;
 		case NORTH: // -z
-			return 12;
+			return 28;
 		case SOUTH: // +z
-			return 13;
+			return 29;
 		case WEST: // -x
-			return 14;
+			return 30;
 		case EAST: // +x
 		default:
-			return 9;
+			return 25;
 		}
 	}
 	

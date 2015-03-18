@@ -24,3 +24,5 @@ usernamecache.json
 /src/main/java/buildcraft/*
 
 !/src/main/java/buildcraft/additionalpipes
+/bcsource/BuildCraft
+/bcsource/buildcraft-mc1.8-src.zip

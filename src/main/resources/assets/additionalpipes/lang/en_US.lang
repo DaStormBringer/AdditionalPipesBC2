@@ -1,10 +1,11 @@
 tile.TeleportTether.name=Teleport Tether
 item.PipeLiquidsRedstone.name=Redstone Fluid Pipe
 item.PipeItemsRedstone.name=Redstone Transport Pipe
+item.PipeItemsPriorityInsertion.name=Priority Insertion Pipe
 item.PipeItemsAdvancedInsertion.name=Insertion Transport Pipe
 item.PipeItemsAdvancedWood.name=Adv. Wooden Transport Pipe
 item.PipeItemsDistributor.name=Distribution Transport Pipe
-item.PipeItemsClosed.name=Closed Transport Pipe [WIP]
+item.PipeItemsClosed.name=Closed Transport Pipe
 item.PipeItemsTeleport.name=Phased Transport Pipe
 item.PipeLiquidsTeleport.name=Phased Fluid Pipe
 item.PipePowerTeleport.name=Phased Kinesis Pipe
