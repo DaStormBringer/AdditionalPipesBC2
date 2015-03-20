@@ -14,6 +14,9 @@ item.PipeSwitchFluids.name=Switch Fluid Pipe
 item.PipeSwitchItems.name=Switch Transport Pipe
 item.PipeLiquidsWaterPump.name=Water Pump Pipe
 
+
+gui.pipeItemsDistributor=Distribution Pipe
+gui.pipeItemsPriorityInsertion=Priority Insertion Pipe
 gui.PipeItemsAdvancedWood=Advanced Wooden Pipe
 
 key.lasers=Toggle chunk loading boundaries display
