@@ -22,8 +22,10 @@ import buildcraft.transport.TransportConstants;
 import buildcraft.transport.TravelingItem;
 import buildcraft.transport.pipes.events.PipeEventItem;
 
-public class PipeItemsAddition extends APPipe<PipeTransportItems> {
-	private static final int ICON = 8;
+public class PipeItemsAddition extends APPipe<PipeTransportItems>
+{
+	//re-use old Redstone Pipe texture
+	private static final int ICON = 4;
 
 	public PipeItemsAddition(Item item) {
 		super(new PipeTransportItems(), item);
