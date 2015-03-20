@@ -99,7 +99,7 @@ public class GuiPriorityInsertionPipe extends GuiContainer {
 		 * 1; break; }
 		 */
 
-		if(newData < 0)
+		if(newData < 0 || newData > 6)
 			return;
 
 		MessagePriorityPipe message = new MessagePriorityPipe(pipe.container.xCoord, pipe.container.yCoord, pipe.container.zCoord, (byte) index, newData);

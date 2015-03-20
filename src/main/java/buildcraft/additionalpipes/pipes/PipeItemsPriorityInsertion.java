@@ -18,7 +18,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
-import buildcraft.additionalpipes.utils.InventoryUtils;
 import buildcraft.core.inventory.ITransactor;
 import buildcraft.core.inventory.Transactor;
 import buildcraft.transport.PipeTransportItems;
@@ -67,17 +66,13 @@ public class PipeItemsPriorityInsertion extends APPipe<PipeTransportItems> {
 					TileEntity entity = container.getTile(side);
 					if (entity instanceof IInventory)
 					{
-						int freeSlotIndex = InventoryUtils.getFirstFreeSlot((IInventory)entity);
-						if(freeSlotIndex != -1)
+						ITransactor transactor = Transactor.getTransactorFor(entity);
+						if (transactor.add(event.item.getItemStack(), side.getOpposite(), false).stackSize > 0)
 						{
-							ITransactor transactor = Transactor.getTransactorFor(entity);
-							if (transactor.add(event.item.getItemStack(), side.getOpposite(), false).stackSize > 0)
-							{
-								result.add(side);
-							}
-							
-							foundAny = true;
+							result.add(side);
 						}
+						
+						foundAny = true;
 					}
 				}
 			}

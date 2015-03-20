@@ -13,6 +13,7 @@ item.PipeSwitchPower.name=Switch Kinesis Pipe
 item.PipeSwitchFluids.name=Switch Fluid Pipe
 item.PipeSwitchItems.name=Switch Transport Pipe
 item.PipeLiquidsWaterPump.name=Water Pump Pipe
+item.PipeItemsAddition.name=Addition Transport Pipe
 
 
 gui.pipeItemsDistributor=Distribution Pipe
@@ -21,4 +22,4 @@ gui.PipeItemsAdvancedWood=Advanced Wooden Pipe
 
 key.lasers=Toggle chunk loading boundaries display
 
-tip.ItemPipeAP=Transports your stuff with no need for a long pipeline
+tip.ItemPipeAP=No more long pipelines!

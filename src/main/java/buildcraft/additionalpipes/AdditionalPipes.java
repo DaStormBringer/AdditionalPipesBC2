@@ -28,6 +28,7 @@ import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.additionalpipes.item.ItemPipeAP;
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.pipes.APPipe;
+import buildcraft.additionalpipes.pipes.PipeItemsAddition;
 import buildcraft.additionalpipes.pipes.PipeItemsAdvancedInsertion;
 import buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
 import buildcraft.additionalpipes.pipes.PipeItemsClosed;
@@ -68,7 +69,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class AdditionalPipes {
 	public static final String MODID = "additionalpipes";
 	public static final String NAME = "Additional Pipes";
-	public static final String VERSION = "3.4";
+	public static final String VERSION = "4.3.0";
 
 	@Instance(MODID)
 	public static AdditionalPipes instance;
@@ -101,6 +102,8 @@ public class AdditionalPipes {
 	public Item pipeItemsRedStone;
 	// Advanced Insertion
 	public Item pipeItemsAdvancedInsertion;
+	// Advanced Insertion
+	public Item pipeItemsAddition;
 	// Advanced Wood
 	public Item pipeItemsAdvancedWood;
 	// Distributor
@@ -276,6 +279,10 @@ public class AdditionalPipes {
 		// Advanced Insertion Pipe
 		pipeItemsAdvancedInsertion = doCreatePipeAndRecipe(8, PipeItemsAdvancedInsertion.class,
 				new Object[] { "IgI", 'I', BuildCraftCore.ironGearItem, 'g', Blocks.glass });
+		
+		// Advanced Insertion Pipe
+		pipeItemsAddition = doCreatePipeAndRecipe(8, PipeItemsAddition.class,
+				new Object[] { " R ", "RIR", " R ", 'I', pipeItemsAdvancedInsertion, 'R', Items.redstone});
 		
 		pipeItemsPriority = doCreatePipeAndRecipe(2, PipeItemsPriorityInsertion.class, new Object[] { "   ", "D I", 'D', pipeItemsDistributor, 'I', pipeItemsAdvancedInsertion});
 		
