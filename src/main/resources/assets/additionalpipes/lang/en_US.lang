@@ -20,6 +20,7 @@ gui.pipeItemsDistributor=Distribution Pipe
 gui.pipeItemsPriorityInsertion=Priority Insertion Pipe
 gui.PipeItemsAdvancedWood=Advanced Wooden Pipe
 gui.jeweled_pipe=Jeweled Pipe
+gui.button.up=§fUp
 
 key.lasers=Toggle chunk loading boundaries display
 

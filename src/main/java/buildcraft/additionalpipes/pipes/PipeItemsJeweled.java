@@ -8,13 +8,13 @@
 
 package buildcraft.additionalpipes.pipes;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
@@ -23,8 +23,10 @@ import buildcraft.transport.pipes.events.PipeEventItem;
 
 public class PipeItemsJeweled extends APPipe<PipeTransportItems> {
 
-	public SideFilterData[] filterData;
-	public PipeItemsJeweled(Item item) {
+	//looks ugly but actually initializes things cleanly
+	public SideFilterData[] filterData = {new SideFilterData(), new SideFilterData(), new SideFilterData(), new SideFilterData(), new SideFilterData(), new SideFilterData()};
+	public PipeItemsJeweled(Item item) 
+	{
 		super(new PipeTransportItems(), item);
 	}
 
@@ -83,8 +85,10 @@ public class PipeItemsJeweled extends APPipe<PipeTransportItems> {
 	}
 
 	@Override
-	public boolean blockActivated(EntityPlayer player) {
-		if(player.isSneaking()) {
+	public boolean blockActivated(EntityPlayer player)
+	{
+		if(player.isSneaking())
+		{
 			return false;
 		}
 
@@ -95,43 +99,39 @@ public class PipeItemsJeweled extends APPipe<PipeTransportItems> {
 			}
 		}
 
-		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_DIST, container.getWorldObj(), container.xCoord, container.yCoord, container.zCoord);
+		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_JEWELED, container.getWorldObj(), container.xCoord, container.yCoord, container.zCoord);
 
 		return true;
 	}
 
-	private void sanityCheck() {
-		for(int d : distData) {
-			if(d > 0) {
-				return;
-			}
-		}
-		for(int i = 0; i < distData.length; i++) {
-			Arrays.fill(distData, 1);
-		}
-	}
-
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public void writeToNBT(NBTTagCompound nbt)
+	{
 		super.writeToNBT(nbt);
-
-		nbt.setInteger("curTick", curTick);
-		nbt.setInteger("distSide", distSide);
-		for(int i = 0; i < distData.length; i++) {
-			nbt.setInteger("distData" + i, distData[i]);
+		
+		NBTTagList filterList = new NBTTagList();
+		for(int index = 0; index < filterData.length; ++index)
+		{
+			NBTTagCompound filterTag = new NBTTagCompound();
+			filterData[index].writeToNBT(filterTag);
+			filterList.appendTag(filterTag);
 		}
+		
+		nbt.setTag("filterList", filterList);
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
+	public void readFromNBT(NBTTagCompound nbt) 
+	{
 		super.readFromNBT(nbt);
 
-		curTick = nbt.getInteger("curTick");
-		distSide = nbt.getInteger("distSide");
-		for(int i = 0; i < distData.length; i++) {
-			distData[i] = nbt.getInteger("distData" + i);
+		NBTTagList filterList = nbt.getTagList("filterList", 9);
+		for(int index = 0; index < filterData.length; ++index)
+		{
+			NBTTagCompound filterTag = filterList.getCompoundTagAt(index);
+			filterData[index] = new SideFilterData();
+			filterData[index].readFromNBT(filterTag);
 		}
-		sanityCheck();
 	}
 
 }

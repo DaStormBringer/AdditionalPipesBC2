@@ -8,13 +8,13 @@ import net.minecraft.nbt.NBTTagList;
 import buildcraft.additionalpipes.utils.Log;
 
 /**
- * The purpose of this class is to store data for one of the sides of a Jeweled Transport Pipe
+ * The purpose of this class is to store data for one of the sides of a Jeweled Transport Pipe.
  * @author Jamie
  *
  */
 public class SideFilterData implements IInventory
 {
-	public static  final int INVENTORY_SIZE = 30;
+	public static  final int INVENTORY_SIZE = 27;
 	
 	private ItemStack[] inventory;
 	

@@ -33,6 +33,7 @@ import buildcraft.additionalpipes.pipes.PipeItemsAdvancedInsertion;
 import buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
 import buildcraft.additionalpipes.pipes.PipeItemsClosed;
 import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
+import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
 import buildcraft.additionalpipes.pipes.PipeItemsPriorityInsertion;
 import buildcraft.additionalpipes.pipes.PipeItemsTeleport;
 import buildcraft.additionalpipes.pipes.PipeLiquidsTeleport;
@@ -108,6 +109,9 @@ public class AdditionalPipes {
 	public Item pipeItemsAdvancedWood;
 	// Distributor
 	public Item pipeItemsDistributor;
+	// Jeweled
+	public Item pipeItemsJeweled;
+
 	
 	//priority insertion pipe
 	public Item pipeItemsPriority;
@@ -273,6 +277,9 @@ public class AdditionalPipes {
 			GameRegistry.addRecipe(new ItemStack(pipePowerTeleport), new Object[] { "r", "P", 'r', Items.redstone, 'P', pipeItemsTeleport });
 		}
 
+		//Jeweled Pipe
+		pipeItemsJeweled = doCreatePipeAndRecipe(PipeItemsJeweled.class, new Object[] { " D ", "DGD", " D ", 'D', BuildCraftTransport.pipeItemsDiamond, 'G', BuildCraftCore.goldGearItem});
+		
 		// Distributor Pipe
 		pipeItemsDistributor = doCreatePipeAndRecipe(PipeItemsDistributor.class, new Object[] { " r ", "IgI", 'r', Items.redstone, 'I', Items.iron_ingot, 'g', Blocks.glass });
 
@@ -306,7 +313,8 @@ public class AdditionalPipes {
 		return doCreatePipeAndRecipe(1, clas, recipe);
 	}
 
-	private Item doCreatePipeAndRecipe(int output, Class<? extends Pipe<?>> clas, Object[] recipe) {
+	private Item doCreatePipeAndRecipe(int output, Class<? extends Pipe<?>> clas, Object[] recipe) 
+	{
 
 		Item pipe = createPipe(clas);
 		for(Object obj : recipe) {
@@ -340,8 +348,10 @@ public class AdditionalPipes {
 	}
 
 	// legacy method
-	public static boolean isPipe(Item item) {
-		if(item != null && BlockGenericPipe.pipes.containsKey(item)) {
+	public static boolean isPipe(Item item)
+	{
+		if(item != null && BlockGenericPipe.pipes.containsKey(item))
+		{
 			return true;
 		}
 		return false;
@@ -349,7 +359,8 @@ public class AdditionalPipes {
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void textureHook(TextureStitchEvent.Pre event) throws IOException {
+	public void textureHook(TextureStitchEvent.Pre event) throws IOException 
+	{
 		Textures.registerIcons(event.map, event.map.getTextureType());
 	}
 }

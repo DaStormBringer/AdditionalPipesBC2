@@ -15,6 +15,7 @@ public class GuiHandler implements IGuiHandler {
 	public static final int PIPE_WOODEN_ADV = 3;
 	public static final int PIPE_CLOSED = 4;
 	public static final int PIPE_PRIORITY = 5;
+	public static final int PIPE_JEWELED = 6;
 
 
 	@Override
@@ -34,6 +35,8 @@ public class GuiHandler implements IGuiHandler {
 			return new ContainerPipeClosed(player.inventory, ((TileGenericPipe) tile).pipe);
 		case PIPE_PRIORITY:
 			return new ContainerPriorityInsertionPipe((TileGenericPipe) tile);
+		case PIPE_JEWELED:
+			return new ContainerJeweledPipe(player.inventory, ((TileGenericPipe) tile).pipe);
 		default:
 			return null;
 		}
@@ -56,6 +59,8 @@ public class GuiHandler implements IGuiHandler {
 			return new GuiPipeClosed(player.inventory, ((TileGenericPipe) tile).pipe);
 		case PIPE_PRIORITY:
 			return new GuiPriorityInsertionPipe((TileGenericPipe) tile);
+		case PIPE_JEWELED:
+			return new GuiJeweledPipe(player.inventory, ((TileGenericPipe) tile).pipe);
 		default:
 			return null;
 		}
