@@ -31,7 +31,8 @@ public class PipeItemsJeweled extends APPipe<PipeTransportItems> {
 	}
 
 	@Override
-	public int getIconIndex(net.minecraftforge.common.util.ForgeDirection connection) {
+	public int getIconIndex(net.minecraftforge.common.util.ForgeDirection connection)
+	{
 		switch(connection) {
 		case DOWN: // -y
 			return 10;

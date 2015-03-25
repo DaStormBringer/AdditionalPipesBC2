@@ -14,7 +14,7 @@ import buildcraft.additionalpipes.utils.Log;
  */
 public class SideFilterData implements IInventory
 {
-	public static  final int INVENTORY_SIZE = 27;
+	public static  final int INVENTORY_SIZE = 28;
 	
 	private ItemStack[] inventory;
 	

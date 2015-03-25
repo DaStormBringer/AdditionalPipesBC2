@@ -5,6 +5,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.additionalpipes.pipes.PipeTransportAdvancedWood;
+import buildcraft.additionalpipes.utils.Log;
 import buildcraft.transport.TileGenericPipe;
 import cpw.mods.fml.common.network.IGuiHandler;
 
@@ -21,9 +22,13 @@ public class GuiHandler implements IGuiHandler {
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if(tile == null) {
+		if(tile == null)
+		{
 			return null;
 		}
+		
+		Log.debug("Opening Container " + ID + " on the server");
+		
 		switch(ID) {
 		case PIPE_TP:
 			return new ContainerTeleportPipe(player, (PipeTeleport<?>) ((TileGenericPipe) tile).pipe);
@@ -43,12 +48,18 @@ public class GuiHandler implements IGuiHandler {
 	}
 
 	@Override
-	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+	{
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if(tile == null) {
+		if(tile == null)
+		{
 			return null;
 		}
-		switch(ID) {
+		
+		Log.debug("Opening GUI " + ID + " on the client");
+		
+		switch(ID)
+		{
 		case PIPE_TP:
 			return new GuiTeleportPipe(player, (PipeTeleport<?>) ((TileGenericPipe) tile).pipe);
 		case PIPE_DIST:

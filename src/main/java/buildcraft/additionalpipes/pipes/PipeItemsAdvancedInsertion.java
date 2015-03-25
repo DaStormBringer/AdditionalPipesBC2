@@ -41,24 +41,20 @@ public class PipeItemsAdvancedInsertion extends APPipe<PipeTransportItems> {
 		{
 			ForgeDirection orientation = ForgeDirection.VALID_DIRECTIONS[o];
 			
-			//commented out during port from BC 4.2 to 6.1
-			//I don't know what the equivalent to the Position argument to filterPossibleMovements() is in the new eventHandler system
-			//if(orientation != pos.orientation.getOpposite())
+			TileEntity entity = container.getTile(orientation);
+			if (entity instanceof IInventory)
 			{
-				TileEntity entity = container.getTile(orientation);
-				if (entity instanceof IInventory)
+				if (event.item.output == orientation.getOpposite())
 				{
-					if (event.item.output == orientation.getOpposite())
-					{
-						// continue;
-					}
-					ITransactor transactor = Transactor.getTransactorFor(entity);
-					if (transactor.add(event.item.getItemStack(), orientation.getOpposite(), false).stackSize > 0)
-					{
-						newOris.add(orientation);
-					}
+					// continue;
+				}
+				ITransactor transactor = Transactor.getTransactorFor(entity);
+				if (transactor.add(event.item.getItemStack(), orientation.getOpposite(), false).stackSize > 0)
+				{
+					newOris.add(orientation);
 				}
 			}
+		
 		}
 
 		if (!newOris.isEmpty())

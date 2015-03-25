@@ -33,8 +33,8 @@ public class GuiJeweledPipe extends GuiContainer
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-		fontRendererObj.drawString(StatCollector.translateToLocal("Closed Pipe"), 60, 6, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 4210752);
+		fontRendererObj.drawString(StatCollector.translateToLocal("gui.jeweled_pipe"), 150, 6, 4210752);
+		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 146, ySize - 55 + 2, 4210752);
 	}
 
 	/**
