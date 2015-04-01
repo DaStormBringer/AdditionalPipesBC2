@@ -41,7 +41,7 @@ public class GuiHandler implements IGuiHandler {
 		case PIPE_PRIORITY:
 			return new ContainerPriorityInsertionPipe((TileGenericPipe) tile);
 		case PIPE_JEWELED:
-			return new ContainerJeweledPipe(player.inventory, ((TileGenericPipe) tile).pipe);
+			return new ContainerJeweledPipe(player.inventory);
 		default:
 			return null;
 		}
@@ -71,7 +71,7 @@ public class GuiHandler implements IGuiHandler {
 		case PIPE_PRIORITY:
 			return new GuiPriorityInsertionPipe((TileGenericPipe) tile);
 		case PIPE_JEWELED:
-			return new GuiJeweledPipe(player.inventory, ((TileGenericPipe) tile).pipe);
+			return new GuiJeweledPipe(player.inventory);
 		default:
 			return null;
 		}
