@@ -3,6 +3,7 @@ package buildcraft.additionalpipes.gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.additionalpipes.pipes.PipeTransportAdvancedWood;
 import buildcraft.additionalpipes.utils.Log;
@@ -41,7 +42,7 @@ public class GuiHandler implements IGuiHandler {
 		case PIPE_PRIORITY:
 			return new ContainerPriorityInsertionPipe((TileGenericPipe) tile);
 		case PIPE_JEWELED:
-			return new ContainerJeweledPipe(player.inventory);
+			return new ContainerJeweledPipe(player.inventory, (PipeItemsJeweled) ((TileGenericPipe)tile).pipe);
 		default:
 			return null;
 		}
@@ -71,7 +72,7 @@ public class GuiHandler implements IGuiHandler {
 		case PIPE_PRIORITY:
 			return new GuiPriorityInsertionPipe((TileGenericPipe) tile);
 		case PIPE_JEWELED:
-			return new GuiJeweledPipe(player.inventory);
+			return new GuiJeweledPipe(player.inventory, (PipeItemsJeweled) ((TileGenericPipe)tile).pipe);
 		default:
 			return null;
 		}
