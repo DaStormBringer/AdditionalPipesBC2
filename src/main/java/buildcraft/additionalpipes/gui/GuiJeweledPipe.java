@@ -18,8 +18,11 @@ public class GuiJeweledPipe extends GuiContainer
 	
 	GuiButton[] directionButtons = new GuiButton[9];
 
-	public GuiJeweledPipe(InventoryPlayer inventory, Pipe<?> pipe) {
+	public GuiJeweledPipe(InventoryPlayer inventory, Pipe<?> pipe)
+	{
 		super(new ContainerJeweledPipe(inventory, pipe));
+        xSize = 176;
+        ySize = 140;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -33,8 +36,8 @@ public class GuiJeweledPipe extends GuiContainer
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-		fontRendererObj.drawString(StatCollector.translateToLocal("gui.jeweled_pipe"), 150, 6, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 146, ySize - 55 + 2, 4210752);
+		//fontRendererObj.drawString(StatCollector.translateToLocal("gui.jeweled_pipe"), 150, 6, 4210752);
+		//fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 146, ySize - 55 + 2, 4210752);
 	}
 
 	/**
