@@ -26,7 +26,7 @@ and for 1.8.0:
 
 Replace YourMCUsername and YourWindowsUsername with the appropriate text.
 
-10. Done!
+*Done!*
 
 ### Download: [latest releases](https://github.com/tcooc/AdditionalPipesBC/releases) ####
 To install, place in the standard minecraft/mods folder.
