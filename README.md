@@ -4,18 +4,28 @@
 
     git clone https://github.com/tcooc/AdditionalPipesBC.git
     cd AdditionalPipesBC
-    init-buildcraft
-    gradle setupDecompWorkspace
+    gradle setupCiWorkspace
     gradle build
+Compiled binaries can be found in `build/libs`.
     
 ### Setting Up Eclipse ###
---version 1.8 --tweakClass net.minecraftforge.fml.common.launcher.FMLTweaker --accessToken modstest --username YourMCUsername
- --userProperties {} --assetIndex 1.8 --assetsDir C:/Users/YourWindowsUsername/.gradle/caches/minecraft/assets
- 
---version 1.7 --tweakClass cpw.mods.fml.common.launcher.FMLTweaker --accessToken modstest --username YourMCUsername
- --userProperties {} --assetIndex 1.7.10 --assetsDir C:/Users/YourWindowsUsername/.gradle/caches/minecraft/assets
+1. Install Eclipse JDK.
+2. Run the command `gradle setupDecompWorkspace --refresh-dependencies eclipse`
+3. In Eclipse, go to File > Import... > Genral > Existing Projects into Workspace
+4. Hit Next.  Click Browse... in the top right, and select the directory you cloned Additional Pipes into.  Check the box next to AdditionalPipesBC in the Projects list.
+5. Hit Finish, and the mod project should be imported.
+6. Set up the run configuration.  Click the dropdown next to the play button on the top bar, and select Run Configurations...
+7. Hit the New icon in the top left.  Type AP Client as the name, and `net.minecraft.launchwrapper.Launch` as the main class.
+8. Go to the Arguments tab.  In the VM arguments box put `-Dfml.ignoreInvalidMinecraftCertificates=true`
+9. In the program arguments box, put for a 1.7.10 version:
+> --version 1.7 --tweakClass cpw.mods.fml.common.launcher.FMLTweaker --accessToken        modstest --username YourMCUsername --userProperties {} --assetIndex 1.7.10 --assetsDir C:/Users/YourWindowsUsername/.gradle/caches/minecraft/assets
 
-Compiled binaries can be found in `build/libs`.
+and for 1.8.0:
+> --version 1.8 --tweakClass net.minecraftforge.fml.common.launcher.FMLTweaker --accessToken modstest --username YourMCUsername --userProperties {} --assetIndex 1.8 --assetsDir C:/Users/YourWindowsUsername/.gradle/caches/minecraft/assets
+
+Replace YourMCUsername and YourWindowsUsername with the appropriate text.
+
+*Done!*
 
 ### Download: [latest releases](https://github.com/tcooc/AdditionalPipesBC/releases) ####
 To install, place in the standard minecraft/mods folder.
