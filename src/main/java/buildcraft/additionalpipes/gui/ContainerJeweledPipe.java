@@ -3,32 +3,42 @@ package buildcraft.additionalpipes.gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
-import buildcraft.transport.Pipe;
 
 public class ContainerJeweledPipe extends Container
 {
-
-	private PipeItemsJeweled pipe;
-	
     private final int PLAYER_INVENTORY_ROWS = 3;
     private final int PLAYER_INVENTORY_COLUMNS = 9;
+    
+	PipeItemsJeweled _pipe;
+	
+	int currentSide = 0;
+	
+	protected int guiTab = 0;
+	
+	/*
+	 * Mapping:
+	 * 0 -> white      -> down
+	 * 1 -> light blue -> up
+	 * 2 -> dark blue  -> north
+	 * 3 -> green      -> south
+	 * 4 -> yellow     -> west
+	 * 5 -> red        -> east
+	 */
 
-	public ContainerJeweledPipe(InventoryPlayer inventoryPlayer, Pipe<?> pipe)
-	{
-		this.pipe = (PipeItemsJeweled) pipe;
-
-        int chestInventoryRows = 3;
-        int chestInventoryColumns = 9;
-
-        // Add the pipe gui slots to the container
-        for (int chestRowIndex = 0; chestRowIndex < chestInventoryRows; ++chestRowIndex)
+    public ContainerJeweledPipe(InventoryPlayer inventoryPlayer, PipeItemsJeweled pipe)
+    {
+    	_pipe = pipe;
+    	
+        // Add the filter inventory to the container
+        for(int filterRowIndex = 0; filterRowIndex < PLAYER_INVENTORY_ROWS; ++filterRowIndex)
         {
-            for (int chestColumnIndex = 0; chestColumnIndex < chestInventoryColumns; ++chestColumnIndex)
+            for(int filterColumnIndex = 0; filterColumnIndex < PLAYER_INVENTORY_COLUMNS; ++filterColumnIndex)
             {
-            	this.addSlotToContainer(new Slot(this.pipe.filterData[0], chestColumnIndex + chestRowIndex * chestInventoryColumns, 8 + chestColumnIndex * 18, 18 + chestRowIndex * 18));
+                this.addSlotToContainer(new Slot(_pipe.filterData[currentSide], filterColumnIndex + filterRowIndex * 9, 8 + filterColumnIndex * 18, 8 + filterRowIndex * 18));
             }
         }
 
@@ -37,64 +47,57 @@ public class ContainerJeweledPipe extends Container
         {
             for (int inventoryColumnIndex = 0; inventoryColumnIndex < PLAYER_INVENTORY_COLUMNS; ++inventoryColumnIndex)
             {
-                this.addSlotToContainer(new Slot(inventoryPlayer, inventoryColumnIndex + (inventoryRowIndex * 9) + 9, 35 + inventoryColumnIndex * 18, 104 + inventoryRowIndex * 18));
-                
+                this.addSlotToContainer(new Slot(inventoryPlayer, inventoryColumnIndex + inventoryRowIndex * 9 + 9, 8 + inventoryColumnIndex * 18, 58 + inventoryRowIndex * 18));
             }
         }
 
         // Add the player's action bar slots to the container
         for (int actionBarSlotIndex = 0; actionBarSlotIndex < PLAYER_INVENTORY_COLUMNS; ++actionBarSlotIndex)
         {
-            this.addSlotToContainer(new Slot(inventoryPlayer, actionBarSlotIndex, 35 + actionBarSlotIndex * 18, 162));
-      
+            this.addSlotToContainer(new Slot(inventoryPlayer, actionBarSlotIndex, 8 + actionBarSlotIndex * 18, 116));
         }
-	}
+        
+    }
 
-	@Override
-	public boolean canInteractWith(EntityPlayer par1EntityPlayer) {
-		return true;
-	}
-
-	/**
-	 * Called when a player shift-clicks on a slot. You must override this or
-	 * you will crash when someone does that.
-	 */
-	@Override
-	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2)
-	{
-		ItemStack var3 = null;
-		Slot var4 = (Slot) inventorySlots.get(par2);
-
-		if(var4 != null && var4.getHasStack())
+    @Override
+    public boolean canInteractWith(EntityPlayer entityPlayer)
+    {
+        return true;
+    }
+    
+    /**
+     * Change the pipe inventory slots to be the inventory in the specified tab.
+     * 
+     * Updates the guiTab class variable
+     * @param tab
+     */
+    public void setFilterTab(byte tab)
+    {
+    	if(tab > _pipe.filterData.length)
+    	{
+    		throw new IllegalArgumentException();
+    	}
+    		
+    	guiTab = tab;
+    	
+    	//send updates to client containers
+		for(Object obj : crafters)
 		{
-			ItemStack var5 = var4.getStack();
-			var3 = var5.copy();
-
-			if(par2 < 9)
-			{
-				if(!mergeItemStack(var5, 9, 45, true))
-				{
-					return null;
-				}
-			}
-			else if(!mergeItemStack(var5, 0, 9, false))
-			{
-				return null;
-			}
-
-			if(var5.stackSize == 0) {
-				var4.putStack((ItemStack) null);
-			} else {
-				var4.onSlotChanged();
-			}
-
-			if(var5.stackSize == var3.stackSize) {
-				return null;
-			}
-
-			var4.onPickupFromSlot(par1EntityPlayer, var5);
+			ICrafting crafter = (ICrafting) obj;
+			crafter.sendProgressBarUpdate(this, guiTab, 0);
 		}
+    }
 
-		return var3;
+    @Override
+    public ItemStack transferStackInSlot(EntityPlayer entityPlayer, int slotIndex)
+    {
+       // return ItemHelper.transferStackInSlot(entityPlayer, tileEntityGlassBell, (Slot)inventorySlots.get(slotIndex), slotIndex, TileEntityGlassBell.INVENTORY_SIZE);
+    	return null;
+    }
+    
+	@Override
+	public void updateProgressBar(int guiTab, int unused)
+	{
+		setFilterTab((byte) guiTab);
 	}
 }

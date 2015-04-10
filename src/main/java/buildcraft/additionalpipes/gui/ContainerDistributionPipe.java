@@ -24,7 +24,8 @@ public class ContainerDistributionPipe extends Container {
 	}
 
 	@Override
-	public void detectAndSendChanges() {
+	public void detectAndSendChanges()
+	{
 		super.detectAndSendChanges();
 		for(Object obj : crafters) {
 			ICrafting crafter = (ICrafting) obj;
