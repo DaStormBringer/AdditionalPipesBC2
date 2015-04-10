@@ -25,7 +25,6 @@ import buildcraft.additionalpipes.chunkloader.TileChunkLoader;
 import buildcraft.additionalpipes.gates.GateProvider;
 import buildcraft.additionalpipes.gates.TriggerPipeClosed;
 import buildcraft.additionalpipes.gui.GuiHandler;
-import buildcraft.additionalpipes.item.ItemPipeAP;
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.pipes.APPipe;
 import buildcraft.additionalpipes.pipes.PipeItemsAddition;
@@ -33,7 +32,6 @@ import buildcraft.additionalpipes.pipes.PipeItemsAdvancedInsertion;
 import buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
 import buildcraft.additionalpipes.pipes.PipeItemsClosed;
 import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
-import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
 import buildcraft.additionalpipes.pipes.PipeItemsPriorityInsertion;
 import buildcraft.additionalpipes.pipes.PipeItemsTeleport;
 import buildcraft.additionalpipes.pipes.PipeLiquidsTeleport;
@@ -45,13 +43,11 @@ import buildcraft.additionalpipes.pipes.PipeSwitchPower;
 import buildcraft.additionalpipes.pipes.TeleportManager;
 import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.additionalpipes.utils.Log;
+import buildcraft.additionalpipes.utils.PipeCreator;
 import buildcraft.api.statements.ITriggerInternal;
 import buildcraft.api.statements.StatementManager;
-import buildcraft.core.CreativeTabBuildCraft;
 import buildcraft.core.recipes.AssemblyRecipeManager;
 import buildcraft.transport.BlockGenericPipe;
-import buildcraft.transport.ItemPipe;
-import buildcraft.transport.Pipe;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -257,94 +253,56 @@ public class AdditionalPipes {
 
 	private void loadPipes() {
 		// Item Teleport Pipe
-		pipeItemsTeleport = createPipeSpecial((Class<? extends APPipe<?>>) PipeItemsTeleport.class);
+		pipeItemsTeleport = PipeCreator.createPipeSpecial((Class<? extends APPipe<?>>) PipeItemsTeleport.class);
 		
 		GameRegistry.addRecipe(new ItemStack(pipeItemsTeleport, 4), new Object[] { "dgd", 'd', BuildCraftCore.diamondGearItem, 'g', Blocks.glass });
-		AssemblyRecipeManager.INSTANCE.addRecipe("teleportPipe", 1000, new ItemStack(pipeItemsTeleport, 8), new Object[] { new ItemStack(BuildCraftSilicon.redstoneChipset, 1, 4), new ItemStack(BuildCraftTransport.pipeItemsDiamond, 8),
+		AssemblyRecipeManager.INSTANCE.addRecipe("teleportPipe", 10000, new ItemStack(pipeItemsTeleport, 8), new Object[] { new ItemStack(BuildCraftSilicon.redstoneChipset, 1, 4), new ItemStack(BuildCraftTransport.pipeItemsDiamond, 8),
 				new ItemStack(BuildCraftSilicon.redstoneChipset, 1, 3) });
 
 
 		// Liquid Teleport Pipe
-		pipeLiquidsTeleport = createPipeSpecial((Class<? extends APPipe<?>>) PipeLiquidsTeleport.class);
+		pipeLiquidsTeleport = PipeCreator.createPipeSpecial((Class<? extends APPipe<?>>) PipeLiquidsTeleport.class);
 		if(pipeItemsTeleport != null) {
-			GameRegistry.addRecipe(new ItemStack(pipeLiquidsTeleport), new Object[] { "w", "P", 'w', BuildCraftTransport.pipeWaterproof, 'P', pipeItemsTeleport });
+			GameRegistry.addShapelessRecipe(new ItemStack(pipeLiquidsTeleport), new Object[] {BuildCraftTransport.pipeWaterproof, pipeItemsTeleport});
 		}
 
 		// Power Teleport Pipe
 		
-		pipePowerTeleport = createPipeSpecial((Class<? extends APPipe<?>>) PipePowerTeleport.class);
+		pipePowerTeleport = PipeCreator.createPipeSpecial((Class<? extends APPipe<?>>) PipePowerTeleport.class);
 		if(pipeItemsTeleport != null) {
-			GameRegistry.addRecipe(new ItemStack(pipePowerTeleport), new Object[] { "r", "P", 'r', Items.redstone, 'P', pipeItemsTeleport });
+			GameRegistry.addShapelessRecipe(new ItemStack(pipePowerTeleport), new Object[] {Items.redstone, pipeItemsTeleport});
 		}
 
 		//Jeweled Pipe
-		pipeItemsJeweled = doCreatePipeAndRecipe(PipeItemsJeweled.class, new Object[] { " D ", "DGD", " D ", 'D', BuildCraftTransport.pipeItemsDiamond, 'G', BuildCraftCore.goldGearItem});
+		//disabled since I can't get the GUI to work
+		//pipeItemsJeweled = doCreatePipeAndRecipe(PipeItemsJeweled.class, new Object[] { " D ", "DGD", " D ", 'D', BuildCraftTransport.pipeItemsDiamond, 'G', BuildCraftCore.goldGearItem});
 		
 		// Distributor Pipe
-		pipeItemsDistributor = doCreatePipeAndRecipe(PipeItemsDistributor.class, new Object[] { " r ", "IgI", 'r', Items.redstone, 'I', Items.iron_ingot, 'g', Blocks.glass });
+		pipeItemsDistributor = PipeCreator.createPipeAndRecipe(1, PipeItemsDistributor.class, new Object[] { " r ", "IgI", 'r', Items.redstone, 'I', Items.iron_ingot, 'g', Blocks.glass }, false);
 
 		// Advanced Insertion Pipe
-		pipeItemsAdvancedInsertion = doCreatePipeAndRecipe(8, PipeItemsAdvancedInsertion.class,
-				new Object[] { "IgI", 'I', BuildCraftCore.ironGearItem, 'g', Blocks.glass });
+		pipeItemsAdvancedInsertion = PipeCreator.createPipeAndRecipe(8, PipeItemsAdvancedInsertion.class,
+				new Object[] { "IgI", 'I', BuildCraftCore.ironGearItem, 'g', Blocks.glass }, false);
 		
 		// Advanced Insertion Pipe
-		pipeItemsAddition = doCreatePipeAndRecipe(8, PipeItemsAddition.class,
-				new Object[] { " R ", "RIR", " R ", 'I', pipeItemsAdvancedInsertion, 'R', Items.redstone});
+		pipeItemsAddition = PipeCreator.createPipeAndRecipe(1, PipeItemsAddition.class,
+				new Object[] { " R ", "RIR", " R ", 'I', pipeItemsAdvancedInsertion, 'R', Items.redstone}, false);
 		
-		pipeItemsPriority = doCreatePipeAndRecipe(2, PipeItemsPriorityInsertion.class, new Object[] { "   ", "D I", 'D', pipeItemsDistributor, 'I', pipeItemsAdvancedInsertion});
+		pipeItemsPriority = PipeCreator.createPipeAndRecipe(2, PipeItemsPriorityInsertion.class, new Object[] {pipeItemsDistributor, pipeItemsAdvancedInsertion}, true);
 		
 		// Advanced Wooded Pipe
-		pipeItemsAdvancedWood = doCreatePipeAndRecipe(8, PipeItemsAdvancedWood.class, new Object[] { "WgW", 'W', BuildCraftCore.woodenGearItem, 'g', Blocks.glass });
+		pipeItemsAdvancedWood = PipeCreator.createPipeAndRecipe(8, PipeItemsAdvancedWood.class, new Object[] { "WgW", 'W', BuildCraftCore.woodenGearItem, 'g', Blocks.glass }, false);
 
 		// Closed Items Pipe
-		pipeItemsClosed = doCreatePipeAndRecipe(PipeItemsClosed.class, new Object[] { "r", "I", 'I', BuildCraftTransport.pipeItemsVoid, 'i', BuildCraftCore.ironGearItem });
+		pipeItemsClosed = PipeCreator.createPipeAndRecipe(1, PipeItemsClosed.class, new Object[] {BuildCraftTransport.pipeItemsVoid, BuildCraftCore.ironGearItem}, true);
 		// switch pipes
-		pipeItemsSwitch = doCreatePipeAndRecipe(8, PipeSwitchItems.class, new Object[] { "GgI", 'g', Blocks.glass, 'G', BuildCraftCore.goldGearItem, 'I', BuildCraftCore.ironGearItem});
-		pipePowerSwitch = doCreatePipeAndRecipe(PipeSwitchPower.class, new Object[] { "r", "I", 'I', pipeItemsSwitch, 'r', Items.redstone });
-		pipeLiquidsSwitch = doCreatePipeAndRecipe(PipeSwitchFluids.class, new Object[] { "w", "I", 'I', pipeItemsSwitch, 'w', BuildCraftTransport.pipeWaterproof });
+		pipeItemsSwitch = PipeCreator.createPipeAndRecipe(8, PipeSwitchItems.class, new Object[] { "GgI", 'g', Blocks.glass, 'G', BuildCraftCore.goldGearItem, 'I', BuildCraftCore.ironGearItem}, false);
+		pipePowerSwitch = PipeCreator.createPipeAndRecipe(1, PipeSwitchPower.class, new Object[] {pipeItemsSwitch, Items.redstone }, true);
+		pipeLiquidsSwitch = PipeCreator.createPipeAndRecipe(1, PipeSwitchFluids.class, new Object[] {pipeItemsSwitch, BuildCraftTransport.pipeWaterproof }, true);
 
 		// water pump pipe
-		pipeLiquidsWaterPump = doCreatePipeAndRecipe(PipeLiquidsWaterPump.class, new Object[] { " L ", "rPr", " W ", 'r', Items.redstone, 'P', BuildCraftCore.ironGearItem, 'L',
-				BuildCraftTransport.pipeFluidsGold, 'w', BuildCraftTransport.pipeWaterproof, 'W', BuildCraftTransport.pipeFluidsWood });
-	}
-
-	private Item doCreatePipeAndRecipe(Class<? extends Pipe<?>> clas, Object[] recipe) 
-	{
-		return doCreatePipeAndRecipe(1, clas, recipe);
-	}
-
-	private Item doCreatePipeAndRecipe(int output, Class<? extends Pipe<?>> clas, Object[] recipe) 
-	{
-
-		Item pipe = createPipe(clas);
-		for(Object obj : recipe) {
-			if(obj == null)
-				return pipe;
-		}
-		GameRegistry.addRecipe(new ItemStack(pipe, output), recipe);
-		return pipe;
-	}
-
-	private static Item createPipe(Class<? extends Pipe<?>> clas)
-	{
-		Item res = BlockGenericPipe.registerPipe(clas, CreativeTabBuildCraft.PIPES);
-		res.setUnlocalizedName(clas.getSimpleName());
-		proxy.registerPipeRendering(res);
-		return res;
-	}
-
-	private Item createPipeSpecial(Class<? extends APPipe<?>> clas)
-	{
-		ItemPipe item = new ItemPipeAP();
-		item.setUnlocalizedName(clas.getSimpleName());
-		proxy.registerPipeRendering(item);
-		BlockGenericPipe.pipes.put(item, clas);
-		
-		GameRegistry.registerItem(item, item.getUnlocalizedName());
-		
-		proxy.createPipeSpecial(item, clas);
-
-		return item;
+		pipeLiquidsWaterPump = PipeCreator.createPipeAndRecipe(1, PipeLiquidsWaterPump.class, new Object[] { " L ", "rPr", " W ", 'r', Items.redstone, 'P', BuildCraftCore.ironGearItem, 'L',
+				BuildCraftTransport.pipeFluidsGold, 'w', BuildCraftTransport.pipeWaterproof, 'W', BuildCraftTransport.pipeFluidsWood }, false);
 	}
 
 	// legacy method
