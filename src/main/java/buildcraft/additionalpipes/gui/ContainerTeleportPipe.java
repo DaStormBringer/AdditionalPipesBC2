@@ -59,9 +59,9 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 		int connectedPipesNew = connectedPipes;
 		if(ticks % 40 == 0) { // reduce lag
 			ticks = 0;
-			Log.info("Old connected:" + connectedPipesNew);
+			Log.debug("Old connected:" + connectedPipesNew);
 			connectedPipesNew = TeleportManager.instance.getConnectedPipes(pipe, false).size();
-			Log.info("New connected:" + connectedPipesNew);
+			Log.debug("New connected:" + connectedPipesNew);
 		}
 		ticks++;
 		for(Object crafter : crafters) {

@@ -171,7 +171,7 @@ public class ChunkLoadViewDataProxy implements Comparator<ChunkCoordIntPair> {
 		
 		PacketHandler.INSTANCE.sendTo(message, player);
 		
-		Log.info("[ChunkLoadViewDataProxy] Sent chunks within " + sightRange + " of player.");
+		Log.debug("[ChunkLoadViewDataProxy] Sent chunks within " + sightRange + " of player.");
 	}
 
 	@SideOnly(Side.CLIENT)
