@@ -21,9 +21,11 @@ Compiled binaries can be found in `build/libs`.
 ``` --version 1.7 --tweakClass cpw.mods.fml.common.launcher.FMLTweaker --accessToken        modstest --username YourMCUsername --userProperties {} --assetIndex 1.7.10 --assetsDir C:/Users/YourWindowsUsername/.gradle/caches/minecraft/assets```
 
 and for 1.8.0:
+
 ``` --version 1.8 --tweakClass net.minecraftforge.fml.common.launcher.FMLTweaker --accessToken modstest --username YourMCUsername --userProperties {} --assetIndex 1.8 --assetsDir C:/Users/YourWindowsUsername/.gradle/caches/minecraft/assets```
 
 Replace YourMCUsername and YourWindowsUsername with the appropriate text.
+
 10. Done!
 
 ### Download: [latest releases](https://github.com/tcooc/AdditionalPipesBC/releases) ####
