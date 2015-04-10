@@ -177,7 +177,7 @@ public class AdditionalPipes {
 		Log.info("Registering pipes");
 		loadPipes();
 
-		triggerPipeClosed = new TriggerPipeClosed("APClosed");
+		triggerPipeClosed = new TriggerPipeClosed();
 		StatementManager.registerTriggerProvider(new GateProvider());
 
 		if(allowWRRemove) {

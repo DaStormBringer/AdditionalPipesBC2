@@ -18,6 +18,8 @@ gui.pipeItemsPriorityInsertion=Priority Insertion Pipe
 gui.PipeItemsAdvancedWood=Advanced Wooden Pipe
 gui.jeweled_pipe=Jeweled Pipe
 
+gate.pipeClosed=Pipe Closed (Storing Items)
+
 key.lasers=Toggle chunk loading boundaries display
 
 tip.ItemPipeAP=No more long pipelines!
