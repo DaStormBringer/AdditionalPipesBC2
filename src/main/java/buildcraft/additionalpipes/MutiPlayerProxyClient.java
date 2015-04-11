@@ -25,7 +25,7 @@ public class MutiPlayerProxyClient extends MultiPlayerProxy
 		
 		Log.info("Registering key handler(s)");
 
-		Keybindings.lasers = new KeyBinding("key.lasers", AdditionalPipes.laserKeyCode, AdditionalPipes.NAME);
+		Keybindings.lasers = new KeyBinding("key.lasers", APConfiguration.laserKeyCode, AdditionalPipes.NAME);
 		ClientRegistry.registerKeyBinding(Keybindings.lasers);
 		
 		FMLCommonHandler.instance().bus().register(new KeyInputEventHandler());

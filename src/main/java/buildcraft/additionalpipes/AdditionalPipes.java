@@ -2,8 +2,6 @@ package buildcraft.additionalpipes;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -14,8 +12,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
 import buildcraft.BuildCraftCore;
 import buildcraft.BuildCraftSilicon;
 import buildcraft.BuildCraftTransport;
@@ -76,19 +72,9 @@ public class AdditionalPipes {
 
 	public File configFile;
 
-	@Retention(RetentionPolicy.RUNTIME)
-	private static @interface CfgBool {
-	}
-
 	// chunk load boundaries
 	public ChunkLoadViewDataProxy chunkLoadViewer;
-	public @CfgBool
-	boolean chunkSight = true;
-	public int chunkSightRange = 8; // config option
-	public @CfgBool
-	boolean chunkSightAutorefresh = true;
-	
-	public @CfgBool boolean enableDebugLog = false;
+
 
 	// teleport scanner TODO
 	// public Item teleportScanner;
@@ -127,12 +113,6 @@ public class AdditionalPipes {
 	public Item pipeLiquidsWaterPump;
 	// chunk loader
 	public Block blockChunkLoader;
-
-	public @CfgBool
-	boolean enableTriggers = true;
-	
-	//set from config
-	public boolean filterRightclicks = false;
 	
 	public ITriggerInternal triggerPipeClosed;
 
@@ -140,13 +120,6 @@ public class AdditionalPipes {
 	public ITriggerInternal triggerPhasedSignalBlue;
 	public ITriggerInternal triggerPhasedSignalGreen;
 	public ITriggerInternal triggerPhasedSignalYellow;
-	// keybinding
-	public static int laserKeyCode = 68; // config option (& in options menu)
-	// misc
-	public @CfgBool
-	boolean allowWRRemove = false;
-	public float powerLossCfg = 0.90f; // config option
-
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) 
 	{
@@ -154,7 +127,7 @@ public class AdditionalPipes {
 		PacketHandler.init();
 
 		configFile = event.getSuggestedConfigurationFile();
-		loadConfigs(false);
+		APConfiguration.loadConfigs(false, configFile);
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
@@ -165,14 +138,14 @@ public class AdditionalPipes {
 	
 		Log.info("Registering chunk load handler");
 		ForgeChunkManager.setForcedChunkLoadingCallback(this, new ChunkLoadingHandler());
-		chunkLoadViewer = new ChunkLoadViewDataProxy(chunkSightRange);
+		chunkLoadViewer = new ChunkLoadViewDataProxy(APConfiguration.chunkSightRange);
 		FMLCommonHandler.instance().bus().register(chunkLoadViewer);
 		
 		proxy.registerKeyHandler();
 		
 		proxy.registerRendering();
 
-		loadConfigs(true);
+		APConfiguration.loadConfigs(true, configFile);
 		
 		Log.info("Registering pipes");
 		loadPipes();
@@ -180,21 +153,35 @@ public class AdditionalPipes {
 		triggerPipeClosed = new TriggerPipeClosed();
 		StatementManager.registerTriggerProvider(new GateProvider());
 
-		if(allowWRRemove) {
+		if(APConfiguration.allowWRRemove)
+		{
 			// Additional Pipes
-			GameRegistry.addRecipe(new ItemStack(pipeItemsTeleport), new Object[] { "A", 'A', pipePowerTeleport });
-			GameRegistry.addRecipe(new ItemStack(pipeItemsTeleport), new Object[] { "A", 'A', pipeLiquidsTeleport });
-			GameRegistry.addRecipe(new ItemStack(pipeItemsRedStone), new Object[] { "A", 'A', pipeLiquidsRedstone });
+			GameRegistry.addShapelessRecipe(new ItemStack(pipeItemsTeleport), new Object[] {pipePowerTeleport});
+			GameRegistry.addShapelessRecipe(new ItemStack(pipeItemsTeleport), new Object[] {pipeLiquidsTeleport});
+			
+			GameRegistry.addShapelessRecipe(new ItemStack(pipeItemsSwitch), new Object[] {pipeLiquidsSwitch});
+			GameRegistry.addShapelessRecipe(new ItemStack(pipeItemsSwitch), new Object[] {pipePowerSwitch});
+			
+			//it looks like Buildcraft might be adding these itself.  I need to look into removing this. -JS
+			
 			// BC Liquid
-			GameRegistry.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsCobblestone), new Object[] { "A", 'A', BuildCraftTransport.pipeFluidsCobblestone });
-			GameRegistry.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsGold), new Object[] { "A", 'A', BuildCraftTransport.pipeFluidsGold });
-			GameRegistry.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsIron), new Object[] { "A", 'A', BuildCraftTransport.pipeFluidsIron });
-			GameRegistry.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsStone), new Object[] { "A", 'A', BuildCraftTransport.pipeFluidsStone });
-			GameRegistry.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsWood), new Object[] { "A", 'A', BuildCraftTransport.pipeFluidsWood });
+			GameRegistry.addShapelessRecipe(new ItemStack(BuildCraftTransport.pipeItemsCobblestone), new Object[] { BuildCraftTransport.pipeFluidsCobblestone });
+			GameRegistry.addShapelessRecipe(new ItemStack(BuildCraftTransport.pipeItemsGold), new Object[] { BuildCraftTransport.pipeFluidsGold });
+			GameRegistry.addShapelessRecipe(new ItemStack(BuildCraftTransport.pipeItemsIron), new Object[] { BuildCraftTransport.pipeFluidsIron });
+			GameRegistry.addShapelessRecipe(new ItemStack(BuildCraftTransport.pipeItemsStone), new Object[] { BuildCraftTransport.pipeFluidsStone });
+			GameRegistry.addShapelessRecipe(new ItemStack(BuildCraftTransport.pipeItemsWood), new Object[] { BuildCraftTransport.pipeFluidsWood });
+			GameRegistry.addShapelessRecipe(new ItemStack(BuildCraftTransport.pipeItemsDiamond), new Object[] { BuildCraftTransport.pipeFluidsDiamond });
+			GameRegistry.addShapelessRecipe(new ItemStack(BuildCraftTransport.pipeItemsEmerald), new Object[] { BuildCraftTransport.pipeFluidsEmerald });
+			
 			// BC Power
-			GameRegistry.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsGold), new Object[] { "A", 'A', BuildCraftTransport.pipePowerGold });
-			GameRegistry.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsStone), new Object[] { "A", 'A', BuildCraftTransport.pipePowerStone });
-			GameRegistry.addRecipe(new ItemStack(BuildCraftTransport.pipeItemsWood), new Object[] { "A", 'A', BuildCraftTransport.pipePowerWood });
+			GameRegistry.addShapelessRecipe(new ItemStack(BuildCraftTransport.pipeItemsGold), new Object[] { BuildCraftTransport.pipePowerGold });
+			GameRegistry.addShapelessRecipe(new ItemStack(BuildCraftTransport.pipeItemsStone), new Object[] { BuildCraftTransport.pipePowerStone });
+			GameRegistry.addShapelessRecipe(new ItemStack(BuildCraftTransport.pipeItemsWood), new Object[] { BuildCraftTransport.pipePowerWood });
+			GameRegistry.addShapelessRecipe(new ItemStack(BuildCraftTransport.pipeItemsCobblestone), new Object[] { BuildCraftTransport.pipePowerCobblestone });
+			GameRegistry.addShapelessRecipe(new ItemStack(BuildCraftTransport.pipeItemsEmerald), new Object[] { BuildCraftTransport.pipePowerEmerald });
+			GameRegistry.addShapelessRecipe(new ItemStack(BuildCraftTransport.pipeItemsDiamond), new Object[] { BuildCraftTransport.pipePowerDiamond });
+			GameRegistry.addShapelessRecipe(new ItemStack(BuildCraftTransport.pipeItemsQuartz), new Object[] { BuildCraftTransport.pipePowerQuartz });
+
 		}
 
 		// ChunkLoader
@@ -211,46 +198,7 @@ public class AdditionalPipes {
 		TeleportManager.instance.reset();
 	}
 
-	private void loadConfigs(boolean init) {
-		if((!configFile.exists() && !init) || (configFile.exists() && init)) {
-			return;
-		}
-		Configuration config = new Configuration(configFile);
-		try {
-			config.load();
-						
-			Property powerLoss = config.get(Configuration.CATEGORY_GENERAL, "powerLoss", (int) (powerLossCfg * 100));
-			powerLoss.comment = "Percentage of power a power teleport pipe transmits. Between 0 and 100.";
-			powerLossCfg = powerLoss.getInt() / 100.0f;
-			if(powerLossCfg > 1.00) {
-				powerLossCfg = 0.99f;
-			} else if(powerLossCfg < 0.0) {
-				powerLossCfg = 0.0f;
-			}
-
-			Property chunkLoadSightRange = config.get(Configuration.CATEGORY_GENERAL, "chunkSightRange", chunkSightRange);
-			chunkLoadSightRange.comment = "Range of chunk load boundaries.";
-
-			Property laserKey = config.get(Configuration.CATEGORY_GENERAL, "laserKeyChar", laserKeyCode);
-			laserKey.comment = "Default key to toggle chunk load boundaries.";
-			laserKeyCode = laserKey.getInt();
-			
-			Property filterRightclicksProperty = config.get(Configuration.CATEGORY_GENERAL, "filterRightclicks", false);
-			filterRightclicksProperty.comment = "When right clicking on something with a gui, do not show the gui if you have a pipe in your hand";
-			filterRightclicks = filterRightclicksProperty.getBoolean();
-			
-			Property enableDebugLogProperty = config.get(Configuration.CATEGORY_GENERAL, "enableDebugLog", false);
-			enableDebugLogProperty.comment = "Enable debug logging for development";
-			enableDebugLog = enableDebugLogProperty.getBoolean();
-			
-			
-		} catch(Exception e) {
-			Log.error("Error loading Additional Pipes configs." + e);
-		} finally {
-			config.save();
-		}
-	}
-
+	
 	private void loadPipes() {
 		// Item Teleport Pipe
 		pipeItemsTeleport = PipeCreator.createPipeSpecial((Class<? extends APPipe<?>>) PipeItemsTeleport.class);

@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.transport.PipeTransportFluids;
 
@@ -15,7 +16,8 @@ public class PipeLiquidsWaterPump extends APPipe<PipeTransportFluids> {
 
 	private PipeTransportFluids transport;
 
-	public PipeLiquidsWaterPump(Item item) {
+	public PipeLiquidsWaterPump(Item item)
+	{
 		super(new PipeTransportFluids(), item);
 		transport = (PipeTransportFluids) super.transport;
 		transport.flowRate = 80;
@@ -23,15 +25,18 @@ public class PipeLiquidsWaterPump extends APPipe<PipeTransportFluids> {
 	}
 
 	@Override
-	public void updateEntity() {
+	public void updateEntity() 
+	{
 		super.updateEntity();
-		if(AdditionalPipes.proxy.isServer(getWorld()) && getWorld().getBlock(container.xCoord, container.yCoord - 1, container.zCoord) == water) {
-			transport.fill(ForgeDirection.UNKNOWN, new FluidStack(FluidRegistry.WATER, 100), true);
+		if(AdditionalPipes.proxy.isServer(getWorld()) && getWorld().getBlock(container.xCoord, container.yCoord - 1, container.zCoord) == water)
+		{
+			transport.fill(ForgeDirection.UNKNOWN, new FluidStack(FluidRegistry.WATER, APConfiguration.waterPumpWaterPerTick), true);
 		}
 	}
 
 	@Override
-	public int getIconIndex(ForgeDirection direction) {
+	public int getIconIndex(ForgeDirection direction)
+	{
 		return ICON;
 	}
 

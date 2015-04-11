@@ -148,7 +148,7 @@ public class ChunkLoadViewDataProxy implements Comparator<ChunkCoordIntPair> {
 	}
 
 	public void sendPersistentChunksToPlayer(EntityPlayerMP player) {
-		if(!AdditionalPipes.instance.chunkSight) {
+		if(!APConfiguration.chunkSight) {
 			return;
 		}
 		if(sightRange > MAX_SIGHT_RANGE)
@@ -179,7 +179,7 @@ public class ChunkLoadViewDataProxy implements Comparator<ChunkCoordIntPair> {
 	public void tickEnd(WorldTickEvent event) {
 		if(event.phase == Phase.END)
 		{
-			if(AdditionalPipes.instance.chunkSightAutorefresh && lasersActive()) {
+			if(APConfiguration.chunkSightAutorefresh && lasersActive()) {
 				requestPersistentChunks();
 			}
 		}

@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
+import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.additionalpipes.utils.PlayerUtils;
@@ -72,7 +73,7 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 			}
 		}
 		
-		if(AdditionalPipes.instance.filterRightclicks)
+		if(APConfiguration.filterRightclicks)
 		{
 			ItemStack equippedItem = player.getCurrentEquippedItem();
 			

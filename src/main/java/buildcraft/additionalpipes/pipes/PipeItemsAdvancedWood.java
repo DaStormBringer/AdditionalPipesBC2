@@ -18,6 +18,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.api.core.Position;
@@ -210,7 +211,7 @@ public class PipeItemsAdvancedWood extends APPipe<PipeTransportItems> implements
 			((IToolWrench) equipped).wrenchUsed(entityplayer, container.xCoord, container.yCoord, container.zCoord);
 			return true;
 		}
-		if(AdditionalPipes.instance.filterRightclicks && AdditionalPipes.isPipe(equipped))
+		if(APConfiguration.filterRightclicks && AdditionalPipes.isPipe(equipped))
 		{
 			return false;
 		}

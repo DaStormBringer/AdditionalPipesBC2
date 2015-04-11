@@ -16,6 +16,7 @@ import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
+import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.core.inventory.ITransactor;
@@ -98,7 +99,7 @@ public class PipeItemsPriorityInsertion extends APPipe<PipeTransportItems> {
 
 		Item equipped = player.getCurrentEquippedItem() != null ? player.getCurrentEquippedItem().getItem() : null;
 		if(equipped != null) {
-			if(AdditionalPipes.instance.filterRightclicks && AdditionalPipes.isPipe(equipped)) {
+			if(APConfiguration.filterRightclicks && AdditionalPipes.isPipe(equipped)) {
 				return false;
 			}
 		}

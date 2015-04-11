@@ -15,7 +15,7 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.ForgeDirection;
-import buildcraft.additionalpipes.AdditionalPipes;
+import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.core.utils.Utils;
 import buildcraft.transport.IPipeTransportPowerHook;
 import buildcraft.transport.PipeTransportPower;
@@ -92,7 +92,7 @@ public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implemen
 		}
 
 		// TODO proportional power relay
-		double powerToSend = AdditionalPipes.instance.powerLossCfg * energy / sendingToList.size();
+		double powerToSend = APConfiguration.powerTransmittanceCfg * energy / sendingToList.size();
 
 		for(PipeTeleport<?> receiver : sendingToList) {
 			List<PowerRequest> needsPower = getPipesNeedsPower(receiver);

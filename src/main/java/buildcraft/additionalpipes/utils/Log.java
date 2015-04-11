@@ -3,6 +3,7 @@ package buildcraft.additionalpipes.utils;
 
 import org.apache.logging.log4j.Level;
 
+import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.AdditionalPipes;
 import cpw.mods.fml.common.FMLLog;
 
@@ -20,7 +21,7 @@ public class Log
 
     public static void debug(Object object)
     {
-    	if(AdditionalPipes.instance.enableDebugLog)
+    	if(APConfiguration.enableDebugLog)
     	{
     		log(Level.DEBUG, object);
     	}
