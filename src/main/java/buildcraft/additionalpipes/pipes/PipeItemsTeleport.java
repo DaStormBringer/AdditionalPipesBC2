@@ -24,7 +24,7 @@ public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 	private static final int ICON = 0;
 
 	public PipeItemsTeleport(Item items) {
-		super(new PipeTransportItems(), items);
+		super(new PipeTransportItems(), items, PipeType.ITEMS);
 	}
 	
 	public void eventHandler(PipeEventItem.Entered event)
@@ -34,6 +34,7 @@ public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 		}*/
 		
 		List<PipeTeleport<?>> connectedTeleportPipes = TeleportManager.instance.getConnectedPipes(this, false);
+		
 		// no teleport pipes connected, use default
 		if(connectedTeleportPipes.size() <= 0 || (state & 0x1) == 0) {
 			return;
@@ -41,15 +42,50 @@ public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 
 		// output to random pipe
 		LinkedList<ForgeDirection> outputOrientations = new LinkedList<ForgeDirection>();
-		PipeTeleport<?> otherPipe = connectedTeleportPipes.get(rand.nextInt(connectedTeleportPipes.size()));
-
-		// find possible output orientations
-		for(ForgeDirection o : ForgeDirection.VALID_DIRECTIONS) {
-			if(otherPipe.outputOpen(o))
-				outputOrientations.add(o);
+		PipeTeleport<?> otherPipe;
+		
+		int originalPipeNumber = rand.nextInt(connectedTeleportPipes.size());
+		int currentPipeNumber = originalPipeNumber;
+		
+		boolean found = false;
+		int numberOfTries = 0;
+		
+		// find a pipe with something connected to it
+		// The logic for this is... pretty complicated, actually.
+		do
+		{
+			++numberOfTries;
+			otherPipe = connectedTeleportPipes.get(currentPipeNumber);
+			
+			for(ForgeDirection o : ForgeDirection.VALID_DIRECTIONS)
+			{
+				if(otherPipe.outputOpen(o))
+				{
+					outputOrientations.add(o);
+				}
+			}
+			
+			// no outputs found, try again
+			if(outputOrientations.size() <= 0) 
+			{
+				++currentPipeNumber;
+				
+				//loop back to the start
+				if(currentPipeNumber >= connectedTeleportPipes.size())
+				{
+					currentPipeNumber = 0;
+				}
+			}
+			else
+			{
+				found = true;
+			}
 		}
-		// no outputs found, default behaviour
-		if(outputOrientations.size() <= 0) {
+		while(numberOfTries < connectedTeleportPipes.size() && !found);
+
+		//couldn't find any, so give up
+		if(!found)
+		{
 			return;
 		}
 
