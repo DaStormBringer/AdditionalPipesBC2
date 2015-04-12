@@ -21,8 +21,9 @@ import buildcraft.transport.PipeTransportFluids;
 public class PipeLiquidsTeleport extends PipeTeleport<PipeTransportFluids> implements IPipeTransportFluidsHook {
 	private static final int ICON = 2;
 
-	public PipeLiquidsTeleport(Item item) {
-		super(new PipeTransportFluids(), item);
+	public PipeLiquidsTeleport(Item item)
+	{
+		super(new PipeTransportFluids(), item, PipeType.FLUIDS);
 		transport.flowRate = 220;
 		transport.travelDelay = 3;
 	}

@@ -30,27 +30,38 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 	
 	public int[] network = new int[0];
 	public boolean isPublic = false;
+	
+	public enum PipeType
+	{
+		ITEMS,
+		FLUIDS,
+		POWER
+	}
+	
+	public final PipeType type;
 
-	public PipeTeleport(pipeType transport, Item item) {
+	public PipeTeleport(pipeType transport, Item item, PipeType type)
+	{
 		super(transport, item);
+		this.type = type;
 	}
 
 	@Override
 	public void initialize() {
 		super.initialize();
-		TeleportManager.instance.add(this);
+		TeleportManager.instance.add(this, frequency);
 	}
 
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		TeleportManager.instance.remove(this);
+		TeleportManager.instance.remove(this, frequency);
 	}
 
 	@Override
 	public void onChunkUnload() {
 		super.onChunkUnload();
-		TeleportManager.instance.remove(this);
+		TeleportManager.instance.remove(this, frequency);
 	}
 	
 	@Override

@@ -36,7 +36,7 @@ public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implemen
 	}
 
 	public PipePowerTeleport(Item item) {
-		super(new PipeTransportPower(), item);
+		super(new PipeTransportPower(), item, PipeType.POWER);
 		((PipeTransportPower) transport).initFromPipe(PipePowerDiamond.class);
 	}
 

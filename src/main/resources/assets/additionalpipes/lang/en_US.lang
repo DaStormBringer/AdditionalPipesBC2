@@ -19,7 +19,13 @@ gui.PipeItemsAdvancedWood=Advanced Wooden Pipe
 gui.jeweled_pipe=Jeweled Pipe
 
 gate.pipeClosed=Pipe Closed (Storing Items)
+gate.phasedSignalRed=Red Phased Signal
+gate.phasedSignalBlue=Blue Phased Signal
+gate.phasedSignalGreen=Green Phased Signal
+gate.phasedSignalYellow=Yellow Phased Signal
 
 key.lasers=Toggle chunk loading boundaries display
 
 tip.ItemPipeAP=No more long pipelines!
+
+command.ap.usage=additionalpipes teleport [items|fluids|power]
