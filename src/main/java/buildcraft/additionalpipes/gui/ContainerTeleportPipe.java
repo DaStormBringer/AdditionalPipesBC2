@@ -30,7 +30,7 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 
 		state = -1;
 		isPublic = !pipe.isPublic;
-		freq = -1;
+		freq = pipe.getFrequency();
 		
 		if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 		{
@@ -45,6 +45,9 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 			
 			MessageTelePipeData message = new MessageTelePipeData(pipe.container.xCoord, pipe.container.yCoord, pipe.container.zCoord, locations, pipe.ownerUUID, pipe.ownerName);
 			PacketHandler.INSTANCE.sendTo(message, (EntityPlayerMP) player);
+			
+			//remove the pipe from its old frequency before it is changed
+			TeleportManager.instance.remove(pipe, freq);
 		}
 	}
 
@@ -99,6 +102,17 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 		case 3:
 			pipe.isPublic = (j == 1);
 			break;
+		}
+	}
+	
+	@Override
+	public void onContainerClosed(EntityPlayer player)
+	{
+		super.onContainerClosed(player);
+		if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+		{
+			//re-add the pipe to the new frequency
+			TeleportManager.instance.add(pipe, freq);
 		}
 	}
 
