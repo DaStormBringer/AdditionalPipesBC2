@@ -85,6 +85,6 @@ public class MessageTelePipeUpdate implements IMessage, IMessageHandler<MessageT
     @Override
     public String toString()
     {
-        return "MessageTelePipe";
+        return "MessageTelePipeUpdate";
     }
 }

@@ -23,14 +23,18 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 	private int freq;
 	private byte state;
 	private boolean isPublic;
+	
+	private int originalfreq;
 
-	public ContainerTeleportPipe(EntityPlayer player, PipeTeleport<?> pipe) {
+	public ContainerTeleportPipe(EntityPlayer player, PipeTeleport<?> pipe)
+	{
 		super(0);
 		this.pipe = pipe;
 
+		//set these variables to invalid values so that they will be updated
 		state = -1;
 		isPublic = !pipe.isPublic;
-		freq = pipe.getFrequency();
+		freq = -1;
 		
 		if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 		{
@@ -47,7 +51,7 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 			PacketHandler.INSTANCE.sendTo(message, (EntityPlayerMP) player);
 			
 			//remove the pipe from its old frequency before it is changed
-			TeleportManager.instance.remove(pipe, freq);
+			TeleportManager.instance.remove(pipe, pipe.getFrequency());
 		}
 	}
 
@@ -60,7 +64,7 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
 		int connectedPipesNew = connectedPipes;
-		if(ticks % 40 == 0) { // reduce lag
+		if(ticks % 20 == 0) { // reduce lag
 			ticks = 0;
 			Log.debug("Old connected:" + connectedPipesNew);
 			connectedPipesNew = TeleportManager.instance.getConnectedPipes(pipe, false).size();
