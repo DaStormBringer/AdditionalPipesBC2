@@ -28,4 +28,4 @@ key.lasers=Переключает отображение загрузки гра
 
 tip.ItemPipeAP=Больше никаких труб!
 
-command.ap.usage=additionalpipes teleport [items|fluids|power]
+command.ap.usage=/additionalpipes teleport [items|fluids|power]

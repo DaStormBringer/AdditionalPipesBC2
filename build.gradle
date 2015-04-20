@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "4.3.0"
+version = "4.3.1"
 group= "com.buildcraft.additionalpipes" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "additionalpipes"
 
