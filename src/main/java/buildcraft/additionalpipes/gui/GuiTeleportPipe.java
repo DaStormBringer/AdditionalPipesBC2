@@ -23,13 +23,21 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 		int subheaderColour = 0xaaafb8;
 		int textColour = 0x000000;
 
+		String networkTitle;
+		
 		public TeleportPipeLedger() {
 			maxHeight = 99;
 			overlayColor = 0xd46c1f;
 		}
 
 		@Override
-		public void draw(int x, int y) {
+		public void draw(int x, int y) 
+		{
+			//we have to initialize this here since pipe is not yet set when the constructor is run
+			if(networkTitle == null)
+			{
+				networkTitle = ((pipe.state & 0x1) >= 1) ? "Outputs:" : "Inputs:";
+			}
 
 			// Draw background
 			drawBackground(x, y);
@@ -44,7 +52,7 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 			fontRendererObj.drawStringWithShadow("Teleport Pipe", x + 22, y + 8, headerColour);
 			fontRendererObj.drawStringWithShadow("Owner:", x + 22, y + 20, subheaderColour);
 			fontRendererObj.drawString(pipe.ownerName, x + 22, y + 32, textColour);
-			fontRendererObj.drawStringWithShadow("Outputs: ", x + 22, y + 44, subheaderColour);
+			fontRendererObj.drawStringWithShadow(networkTitle, x + 22, y + 44, subheaderColour);
 			fontRendererObj.drawString(String.valueOf(container.connectedPipes), x + 66, y + 45, textColour);
 			int[] net = pipe.network;
 			if(net.length > 0) {

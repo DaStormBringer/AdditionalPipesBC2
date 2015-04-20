@@ -22,7 +22,7 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 	protected static final Random rand = new Random();
 
 	private int frequency = 0;
-	// 00 = none, 01 = send, 10 = receive, 11 = both
+	// 0b0 = none, 0b1 = send, 0b10 = receive, 0b11 = both
 	public byte state = 1;
 
 	public UUID ownerUUID;

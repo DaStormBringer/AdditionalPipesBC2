@@ -19,11 +19,16 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 	public int connectedPipes = 0;
 
 	private int ticks = 0;
-	private PipeTeleport<?> pipe;
+	public PipeTeleport<?> pipe;
 	private int freq;
 	private byte state;
 	private boolean isPublic;
 	
+	//true if the provided pipe is sending items to other pipes
+	//and output locations should be shown on the ledger
+	private boolean isSendingPipe;
+	
+	// only set on the server side
 	private int originalfreq;
 
 	public ContainerTeleportPipe(EntityPlayer player, PipeTeleport<?> pipe)
@@ -36,9 +41,11 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 		isPublic = !pipe.isPublic;
 		freq = -1;
 		
+		isSendingPipe = (pipe.state & 0x1) > 1;
+		
 		if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-		{
-			List<PipeTeleport<?>> connectedPipes = TeleportManager.instance.getConnectedPipes(pipe, false);
+		{			
+			List<PipeTeleport<?>> connectedPipes = TeleportManager.instance.getConnectedPipes(pipe, !isSendingPipe, isSendingPipe);
 			int[] locations = new int[connectedPipes.size() * 3];
 			for(int i = 0; i < connectedPipes.size() && i < 9; i++) {
 				PipeTeleport<?> connectedPipe = connectedPipes.get(i);
@@ -50,8 +57,9 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 			MessageTelePipeData message = new MessageTelePipeData(pipe.container.xCoord, pipe.container.yCoord, pipe.container.zCoord, locations, pipe.ownerUUID, pipe.ownerName);
 			PacketHandler.INSTANCE.sendTo(message, (EntityPlayerMP) player);
 			
-			//remove the pipe from its old frequency before it is changed
-			TeleportManager.instance.remove(pipe, pipe.getFrequency());
+			//save the pipe's old frequency so it can be removed later
+			originalfreq = pipe.getFrequency();
+			
 		}
 	}
 
@@ -67,7 +75,7 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 		if(ticks % 20 == 0) { // reduce lag
 			ticks = 0;
 			Log.debug("Old connected:" + connectedPipesNew);
-			connectedPipesNew = TeleportManager.instance.getConnectedPipes(pipe, false).size();
+			connectedPipesNew = TeleportManager.instance.getConnectedPipes(pipe, !isSendingPipe, isSendingPipe).size();
 			Log.debug("New connected:" + connectedPipesNew);
 		}
 		ticks++;
@@ -115,8 +123,14 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 		super.onContainerClosed(player);
 		if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 		{
-			//re-add the pipe to the new frequency
-			TeleportManager.instance.add(pipe, freq);
+			if(originalfreq != freq)
+			{
+				//remove the pipe from the old frequency
+				TeleportManager.instance.remove(pipe, originalfreq);
+				//re-add the pipe to the new frequency
+				TeleportManager.instance.add(pipe, freq);
+			}
+
 		}
 	}
 

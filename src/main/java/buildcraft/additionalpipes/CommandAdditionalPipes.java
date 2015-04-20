@@ -42,19 +42,18 @@ public class CommandAdditionalPipes extends CommandBase {
 			{
 				return;
 			}
-			StringBuffer sb = new StringBuffer();
-			sb.append("Teleport pipes: ");
+			sender.addChatMessage(new ChatComponentText("Teleport pipes: "));
 			for(Object pipeObject : pipes)
 			{
+				StringBuffer sb = new StringBuffer();
 				PipeTeleport<?> pipe = (PipeTeleport<?>)pipeObject;
 				sb.append('[');
-				sb.append(pipe.type.toString()).append(',');
-				sb.append(pipe.getPosition().x).append(',');
-				sb.append(pipe.getPosition().y).append(',');
-				sb.append(pipe.getPosition().z).append(']');
+				sb.append(pipe.getPosition().x).append(", ");
+				sb.append(pipe.getPosition().y).append(", ");
+				sb.append(pipe.getPosition().z).append("] ");
+				sb.append(pipe.ownerName);
+				sender.addChatMessage(new ChatComponentText(sb.toString()));
 			}
-			sender.addChatMessage(new ChatComponentText(sb.toString()));
-
 		}
 	}
 

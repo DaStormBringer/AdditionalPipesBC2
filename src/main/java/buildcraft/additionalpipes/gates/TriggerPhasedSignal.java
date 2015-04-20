@@ -71,7 +71,7 @@ public class TriggerPhasedSignal extends APTrigger implements ITriggerInternal {
 			return false;
 		}
 		
-		ArrayList<PipeTeleport<?>> network = TeleportManager.instance.getConnectedPipes(teleportPipe, true);
+		ArrayList<PipeTeleport<?>> network = TeleportManager.instance.getConnectedPipes(teleportPipe, true, true);
 		for(PipeTeleport<?> testingPipe : network)
 		{
 			if(testingPipe.signalStrength[colour.ordinal()] > 0)

@@ -37,6 +37,7 @@ import buildcraft.additionalpipes.pipes.PipeSwitchFluids;
 import buildcraft.additionalpipes.pipes.PipeSwitchItems;
 import buildcraft.additionalpipes.pipes.PipeSwitchPower;
 import buildcraft.additionalpipes.pipes.TeleportManager;
+import buildcraft.additionalpipes.test.TeleportManagerTest;
 import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.additionalpipes.utils.Log;
 import buildcraft.additionalpipes.utils.PipeCreator;
@@ -190,6 +191,9 @@ public class AdditionalPipes {
 		GameRegistry.registerBlock(blockChunkLoader, ItemBlock.class, "chunkLoader");
 		GameRegistry.registerTileEntity(TileChunkLoader.class, "TeleportTether");
 		GameRegistry.addRecipe(new ItemStack(blockChunkLoader), new Object[] { "iii", "iLi", "iii", 'i', Items.iron_ingot, 'L', new ItemStack(Items.dye, 1, 4) });
+		
+		Log.info("Running Teleport Manager Tests");
+		TeleportManagerTest.runAllTests();
 	}
 
 	@EventHandler

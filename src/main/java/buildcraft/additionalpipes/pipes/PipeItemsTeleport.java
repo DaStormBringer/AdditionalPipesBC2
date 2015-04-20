@@ -33,7 +33,7 @@ public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 			return;
 		}*/
 		
-		List<PipeTeleport<?>> connectedTeleportPipes = TeleportManager.instance.getConnectedPipes(this, false);
+		List<PipeTeleport<?>> connectedTeleportPipes = TeleportManager.instance.getConnectedPipes(this, false, true);
 		
 		// no teleport pipes connected, use default
 		if(connectedTeleportPipes.size() <= 0 || (state & 0x1) == 0) {

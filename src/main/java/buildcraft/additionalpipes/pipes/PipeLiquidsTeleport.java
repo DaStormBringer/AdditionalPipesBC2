@@ -30,7 +30,7 @@ public class PipeLiquidsTeleport extends PipeTeleport<PipeTransportFluids> imple
 
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
-		List<PipeTeleport<?>> pipeList = TeleportManager.instance.getConnectedPipes(this, false);
+		List<PipeTeleport<?>> pipeList = TeleportManager.instance.getConnectedPipes(this, false, true);
 
 		if(pipeList.size() == 0 || (state & 0x1) == 0) {
 			return 0;

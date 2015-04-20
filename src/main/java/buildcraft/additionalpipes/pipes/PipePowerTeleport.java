@@ -48,7 +48,7 @@ public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implemen
 			return requested;
 		}
 
-		List<PipeTeleport<?>> pipeList = TeleportManager.instance.getConnectedPipes(this, true);
+		List<PipeTeleport<?>> pipeList = TeleportManager.instance.getConnectedPipes(this, true, false);
 
 		if(pipeList.size() <= 0) {
 			return requested;
@@ -72,7 +72,7 @@ public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implemen
 
 	@Override
 	public int receiveEnergy(ForgeDirection from, int energy) {
-		List<PipeTeleport<?>> connectedPipes = TeleportManager.instance.getConnectedPipes(this, false);
+		List<PipeTeleport<?>> connectedPipes = TeleportManager.instance.getConnectedPipes(this, false, true);
 		List<PipeTeleport<?>> sendingToList = new LinkedList<PipeTeleport<?>>();
 
 		// no connected pipes, leave!

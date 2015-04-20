@@ -28,4 +28,4 @@ key.lasers=Toggle chunk loading boundaries display
 
 tip.ItemPipeAP=No more long pipelines!
 
-command.ap.usage=additionalpipes teleport [items|fluids|power]
+command.ap.usage=/additionalpipes teleport <items|fluids|power>

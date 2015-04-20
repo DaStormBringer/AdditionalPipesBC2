@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.world.World;
-import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.utils.Log;
 import buildcraft.transport.PipeTransportFluids;
 import buildcraft.transport.PipeTransportItems;
@@ -15,6 +14,9 @@ import buildcraft.transport.PipeTransportPower;
 
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
+
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 
 public class TeleportManager 
 {
@@ -67,7 +69,7 @@ public class TeleportManager
 	@SuppressWarnings("unchecked")
 	public void add(PipeTeleport<?> pipe, int frequency)
 	{
-		if(!AdditionalPipes.proxy.isServer(pipe.getWorld()))
+		if(FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
 		{
 			return;
 		}
@@ -85,15 +87,21 @@ public class TeleportManager
 			break;
 		}
 
-		Log.info(String.format("[TeleportManager] Pipe added: %s @ (%d, %d, %d), %d pipes in channel", pipe.type.toString(), pipe.container.xCoord, pipe.container.yCoord,
-				pipe.container.zCoord, getPipesInChannel(frequency, pipe.type).size()));
+		//if unit tests are being run, pipe.container will be null.
+		if(pipe.container != null)
+		{
+			Log.debug(String.format("[TeleportManager] Pipe added: %s @ (%d, %d, %d), %d pipes in channel", pipe.type.toString(), pipe.container.xCoord, pipe.container.yCoord,
+					pipe.container.zCoord, getPipesInChannel(frequency, pipe.type).size()));
+		}
 	}
 
 	@SuppressWarnings("unchecked")
 	public void remove(PipeTeleport<?> pipe, int frequency)
 	{
-		if(!AdditionalPipes.proxy.isServer(pipe.getWorld()))
+		if(FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+		{
 			return;
+		}
 		switch(pipe.type)
 		{
 		case ITEMS:
@@ -107,8 +115,12 @@ public class TeleportManager
 			break;
 		}
 
-		Log.info(String.format("[TeleportManager] Pipe removed: %s @ (%d, %d, %d), %d pipes in channel", pipe.type.toString(), pipe.container.xCoord, pipe.container.yCoord,
+		//if unit tests are being run, pipe.container will be null.
+		if(pipe.container != null)
+		{
+			Log.debug(String.format("[TeleportManager] Pipe removed: %s @ (%d, %d, %d), %d pipes in channel", pipe.type.toString(), pipe.container.xCoord, pipe.container.yCoord,
 				pipe.container.zCoord, getPipesInChannel(frequency, pipe.type).size()));
+		}
 	}
 
 	public void reset() {
@@ -120,11 +132,15 @@ public class TeleportManager
 		Log.info("Reset teleport manager.");
 	}
 
-	// returns all other teleport pipes of the same type (class) and frequency
-	// if includeReceive is true. Otherwise, take away all pipes that aren't
-	// receiving.
+	/**
+	 * Get pipes connected to the provided one.
+	 * @param pipe
+	 * @param includeSend whether or not to return connected pipes that send stuff.
+	 * @param includeReceive whether or not to return connected pipes that receive stuff.
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<PipeTeleport<?>> getConnectedPipes(PipeTeleport<?> pipe, boolean includeReceive) 
+	public ArrayList<PipeTeleport<?>> getConnectedPipes(PipeTeleport<?> pipe, boolean includeSend, boolean includeReceive) 
 	{
 		Collection<PipeTeleport<?>> channel = getPipesInChannel(pipe.getFrequency(), pipe.type);
 		
@@ -132,14 +148,14 @@ public class TeleportManager
 		
 		for(PipeTeleport<?> other : channel)
 		{
-			if(!pipe.getClass().equals(other.getClass()) || other.container.isInvalid())
+			if(other.container != null && other.container.isInvalid())
 			{
 				continue;
 			}
 
 			// pipe is open or includeReceive &&
 			// both public or same owner
-			if(((other.state & 0x2) > 0 || includeReceive) && (pipe.isPublic ? other.isPublic : (other.ownerUUID != null && other.ownerUUID.equals(pipe.ownerUUID))))
+			if((((other.state & 0x2) > 0 && includeReceive) || ((other.state & 0x1) > 0 && includeSend)) && (pipe.isPublic ? other.isPublic : (other.ownerUUID != null && other.ownerUUID.equals(pipe.ownerUUID))))
 			{
 				connected.add(other);
 			}
