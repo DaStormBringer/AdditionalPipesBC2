@@ -1,5 +1,8 @@
 package buildcraft.additionalpipes.pipes;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
@@ -14,6 +17,10 @@ import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.additionalpipes.utils.PlayerUtils;
 import buildcraft.api.core.Position;
+import buildcraft.api.transport.IPipeTile;
+import buildcraft.api.transport.PipeWire;
+import buildcraft.transport.BlockGenericPipe;
+import buildcraft.transport.Gate;
 import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransport;
 import buildcraft.transport.TileGenericPipe;
@@ -44,6 +51,31 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 	{
 		super(transport, item);
 		this.type = type;
+		
+		
+		//initialize the static reflection fields
+		if(readNearbyPipesSignal == null)
+		{	
+			try
+			{
+				//go up from PipeTeleportX to Pipe
+				Class<?> pipeClass = getClass().getSuperclass().getSuperclass().getSuperclass();
+				
+				readNearbyPipesSignal = pipeClass.getDeclaredMethod("readNearbyPipesSignal", new Class<?>[]{PipeWire.class});
+				receiveSignal = pipeClass.getDeclaredMethod("receiveSignal", new Class<?>[]{int.class, PipeWire.class});
+				
+				readNearbyPipesSignal.setAccessible(true);
+				receiveSignal.setAccessible(true);
+			}
+			catch (NoSuchMethodException e)
+			{
+				e.printStackTrace();
+			}
+			catch (SecurityException e)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
@@ -125,6 +157,94 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 	@Override
 	public boolean outputOpen(ForgeDirection to) {
 		return container.isPipeConnected(to);
+	}
+	
+	// Teleport Gates stuff
+	// ---------------------------------------------
+	
+	//we need to access stuff private to Pipe, so we use reflection to do it.
+	static Method readNearbyPipesSignal;
+	static Method receiveSignal;
+
+	@Override
+	public void updateSignalState() 
+	{
+		ArrayList<PipeTeleport<?>> otherTeleportPipes = TeleportManager.instance.getConnectedPipes(this, true, true);
+		
+		for (PipeWire c : PipeWire.values()) 
+		{
+			myUpdateSignalStateForColor(c, otherTeleportPipes);
+		}
+	}
+
+	//we cannot override this because it is private
+	//so we override the function that calls it and invoke our version.
+	private void myUpdateSignalStateForColor(PipeWire wire, ArrayList<PipeTeleport<?>> otherTeleportPipes)
+	{
+		if (!wireSet[wire.ordinal()]) {
+			return;
+		}
+		try
+		{
+			
+			// STEP 1: compute internal signal strength
+
+			boolean readNearbySignal = true;
+			for (Gate gate : gates) 
+			{
+				if (gate != null && gate.broadcastSignal.get(wire.ordinal()))
+				{
+					receiveSignal.invoke(this, 255, wire);
+					readNearbySignal = false;
+				}
+			}
+			
+			if (readNearbySignal)
+			{
+				readNearbyPipesSignal.invoke(this, wire);
+			}
+
+			// STEP 2: transmit signal in nearby blocks
+
+			if (signalStrength[wire.ordinal()] > 1)
+			{
+				for (ForgeDirection o : ForgeDirection.VALID_DIRECTIONS) {
+					TileEntity tile = container.getTile(o);
+
+					if (tile instanceof IPipeTile) {
+						IPipeTile tilePipe = (IPipeTile) tile;
+						Pipe<?> pipe = (Pipe<?>) tilePipe.getPipe();
+
+						if (BlockGenericPipe.isFullyDefined(pipe) && pipe.wireSet[wire.ordinal()]) {
+							if (isWireConnectedTo(tile, wire)) {
+								receiveSignal.invoke(pipe, signalStrength[wire.ordinal()] - 1, wire);
+							}
+						}
+					}
+				}
+				
+				//transmit ACROSS THE BOUNDS OF SPACE AND TIME!!!!!
+				for(PipeTeleport<?> pipe : otherTeleportPipes)
+				{
+					if (BlockGenericPipe.isFullyDefined(pipe) && pipe.wireSet[wire.ordinal()])
+					{
+						receiveSignal.invoke(pipe, signalStrength[wire.ordinal()] - 1, wire);
+					}
+				}
+			}
+		}
+		catch (IllegalAccessException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IllegalArgumentException e)
+		{
+			e.printStackTrace();
+		}
+		catch (InvocationTargetException e)
+		{	
+			e.printStackTrace();
+		}
 	}
 
 	@Override
