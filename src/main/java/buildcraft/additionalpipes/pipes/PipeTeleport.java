@@ -1,5 +1,6 @@
 package buildcraft.additionalpipes.pipes;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -54,17 +55,24 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 		
 		
 		//initialize the static reflection fields
-		if(readNearbyPipesSignal == null)
+		if(receiveSignal == null)
 		{	
 			try
-			{
+			{				
 				//go up from PipeTeleportX to Pipe
 				Class<?> pipeClass = getClass().getSuperclass().getSuperclass().getSuperclass();
 				
-				readNearbyPipesSignal = pipeClass.getDeclaredMethod("readNearbyPipesSignal", new Class<?>[]{PipeWire.class});
+				for(Field field : pipeClass.getDeclaredFields())
+				{
+					if(field.getName().equals("internalUpdateScheduled"))
+					{
+						field.setAccessible(true);
+						internalUpdateScheduled = field;
+					}
+				}
+	
 				receiveSignal = pipeClass.getDeclaredMethod("receiveSignal", new Class<?>[]{int.class, PipeWire.class});
 				
-				readNearbyPipesSignal.setAccessible(true);
 				receiveSignal.setAccessible(true);
 			}
 			catch (NoSuchMethodException e)
@@ -163,7 +171,8 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 	// ---------------------------------------------
 	
 	//we need to access stuff private to Pipe, so we use reflection to do it.
-	static Method readNearbyPipesSignal;
+	static Field internalUpdateScheduled;
+	
 	static Method receiveSignal;
 
 	@Override
@@ -201,7 +210,7 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 			
 			if (readNearbySignal)
 			{
-				readNearbyPipesSignal.invoke(this, wire);
+				myReadNearbyPipesSignal(wire, otherTeleportPipes);
 			}
 
 			// STEP 2: transmit signal in nearby blocks
@@ -223,7 +232,6 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 					}
 				}
 				
-				//transmit ACROSS THE BOUNDS OF SPACE AND TIME!!!!!
 				for(PipeTeleport<?> pipe : otherTeleportPipes)
 				{
 					if (BlockGenericPipe.isFullyDefined(pipe) && pipe.wireSet[wire.ordinal()])
@@ -233,6 +241,8 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 				}
 			}
 		}
+		
+		//Man, I really want to be able to use Multi-Catch here
 		catch (IllegalAccessException e)
 		{
 			e.printStackTrace();
@@ -243,6 +253,82 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 		}
 		catch (InvocationTargetException e)
 		{	
+			e.printStackTrace();
+		}
+	}
+	
+	private void myReadNearbyPipesSignal(PipeWire color, ArrayList<PipeTeleport<?>> otherTeleportPipes) 
+	{
+		boolean foundBiggerSignal = false;
+
+		try
+		{
+			
+			for (ForgeDirection o : ForgeDirection.VALID_DIRECTIONS) {
+				TileEntity tile = container.getTile(o);
+	
+				if (tile instanceof IPipeTile) {
+					IPipeTile tilePipe = (IPipeTile) tile;
+					Pipe<?> pipe = (Pipe<?>) tilePipe.getPipe();
+	
+					if (BlockGenericPipe.isFullyDefined(pipe))
+					{
+						if (isWireConnectedTo(tile, color)) {
+							foundBiggerSignal |= ((Boolean)receiveSignal.invoke(this, pipe.signalStrength[color.ordinal()] - 1, color)).booleanValue();
+						}
+					}
+				}
+			}
+			
+			//receive ACROSS THE BOUNDS OF SPACE AND TIME!!!!!
+			for(PipeTeleport<?> pipe : otherTeleportPipes)
+			{
+				if (BlockGenericPipe.isFullyDefined(pipe))
+				{
+					foundBiggerSignal |= ((Boolean)receiveSignal.invoke(this, pipe.signalStrength[color.ordinal()] - 1, color));
+				}
+			}
+	
+			if (!foundBiggerSignal && signalStrength[color.ordinal()] != 0) {
+				signalStrength[color.ordinal()] = 0;
+				// worldObj.markBlockNeedsUpdate(container.xCoord, container.yCoord, zCoord);
+				container.scheduleRenderUpdate();
+	
+				for (ForgeDirection o : ForgeDirection.VALID_DIRECTIONS) {
+					TileEntity tile = container.getTile(o);
+	
+					if (tile instanceof IPipeTile) {
+						IPipeTile tilePipe = (IPipeTile) tile;
+						Pipe<?> pipe = (Pipe<?>) tilePipe.getPipe();
+	
+						if (BlockGenericPipe.isFullyDefined(pipe)) {
+							
+								internalUpdateScheduled.set(pipe, Boolean.TRUE);
+	
+						}
+					}
+				}
+				
+				for(PipeTeleport<?> pipe : otherTeleportPipes)
+				{
+					if (BlockGenericPipe.isFullyDefined(pipe))
+					{
+						internalUpdateScheduled.set(pipe, Boolean.TRUE);
+					}
+				}
+			}
+		
+		} 
+		catch (IllegalArgumentException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IllegalAccessException e)
+		{
+			e.printStackTrace();
+		}
+		catch (InvocationTargetException e)
+		{
 			e.printStackTrace();
 		}
 	}

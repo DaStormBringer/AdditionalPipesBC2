@@ -23,7 +23,7 @@ public class Log
     {
     	if(APConfiguration.enableDebugLog)
     	{
-    		log(Level.DEBUG, object);
+    		log(Level.INFO, object);
     	}
     }
 
