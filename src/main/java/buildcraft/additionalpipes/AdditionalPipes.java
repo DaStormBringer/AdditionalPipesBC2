@@ -63,7 +63,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class AdditionalPipes {
 	public static final String MODID = "additionalpipes";
 	public static final String NAME = "Additional Pipes";
-	public static final String VERSION = "4.3.1";
+	public static final String VERSION = "4.4.0";
 
 	@Instance(MODID)
 	public static AdditionalPipes instance;
@@ -117,10 +117,6 @@ public class AdditionalPipes {
 	
 	public ITriggerInternal triggerPipeClosed;
 
-	public ITriggerInternal triggerPhasedSignalRed;
-	public ITriggerInternal triggerPhasedSignalBlue;
-	public ITriggerInternal triggerPhasedSignalGreen;
-	public ITriggerInternal triggerPhasedSignalYellow;
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) 
 	{
