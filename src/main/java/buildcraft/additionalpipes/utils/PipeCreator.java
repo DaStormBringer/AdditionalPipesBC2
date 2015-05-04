@@ -5,7 +5,6 @@ import net.minecraft.item.ItemStack;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.item.ItemPipeAP;
 import buildcraft.additionalpipes.pipes.APPipe;
-import buildcraft.core.CreativeTabBuildCraft;
 import buildcraft.transport.BlockGenericPipe;
 import buildcraft.transport.ItemPipe;
 import buildcraft.transport.Pipe;
@@ -49,7 +48,7 @@ public class PipeCreator
 	 */
 	public static Item createPipe(Class<? extends Pipe<?>> clas)
 	{
-		Item res = BlockGenericPipe.registerPipe(clas, CreativeTabBuildCraft.PIPES);
+		Item res = BlockGenericPipe.registerPipe(clas, AdditionalPipes.instance.creativeTab);
 		res.setUnlocalizedName(clas.getSimpleName());
 		AdditionalPipes.proxy.registerPipeRendering(res);
 		return res;

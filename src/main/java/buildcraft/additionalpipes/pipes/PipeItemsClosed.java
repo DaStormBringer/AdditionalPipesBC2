@@ -9,9 +9,9 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
-import buildcraft.core.inventory.Transactor;
-import buildcraft.core.inventory.TransactorSimple;
-import buildcraft.core.utils.Utils;
+import buildcraft.core.lib.inventory.Transactor;
+import buildcraft.core.lib.inventory.TransactorSimple;
+import buildcraft.core.lib.utils.Utils;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.pipes.events.PipeEventItem;
 

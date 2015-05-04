@@ -10,7 +10,7 @@ import buildcraft.additionalpipes.network.message.MessageTelePipeUpdate;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.core.CoreIconProvider;
-import buildcraft.core.gui.GuiBuildCraft;
+import buildcraft.core.lib.gui.GuiBuildCraft;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

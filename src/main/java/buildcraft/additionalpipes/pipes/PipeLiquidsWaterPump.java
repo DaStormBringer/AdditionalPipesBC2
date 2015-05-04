@@ -14,14 +14,12 @@ public class PipeLiquidsWaterPump extends APPipe<PipeTransportFluids> {
 	private static final int ICON = 24;
 	private static final Block water = Blocks.water;
 
-	private PipeTransportFluids transport;
-
 	public PipeLiquidsWaterPump(Item item)
 	{
 		super(new PipeTransportFluids(), item);
-		transport = (PipeTransportFluids) super.transport;
-		transport.flowRate = 80;
-		transport.travelDelay = 4;
+		
+		//load the fluid capacities set in mod init
+		transport.initFromPipe(getClass());
 	}
 
 	@Override

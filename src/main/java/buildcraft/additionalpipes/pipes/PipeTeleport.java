@@ -225,7 +225,7 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 						Pipe<?> pipe = (Pipe<?>) tilePipe.getPipe();
 
 						if (BlockGenericPipe.isFullyDefined(pipe) && pipe.wireSet[wire.ordinal()]) {
-							if (isWireConnectedTo(tile, wire)) {
+							if (isWireConnectedTo(tile, wire, o)) {
 								receiveSignal.invoke(pipe, signalStrength[wire.ordinal()] - 1, wire);
 							}
 						}
@@ -273,7 +273,7 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 	
 					if (BlockGenericPipe.isFullyDefined(pipe))
 					{
-						if (isWireConnectedTo(tile, color)) {
+						if (isWireConnectedTo(tile, color, o)) {
 							foundBiggerSignal |= ((Boolean)receiveSignal.invoke(this, pipe.signalStrength[color.ordinal()] - 1, color)).booleanValue();
 						}
 					}

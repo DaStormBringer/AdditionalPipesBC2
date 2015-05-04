@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
-import buildcraft.core.CreativeTabBuildCraft;
+import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.transport.ItemPipe;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -15,7 +15,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemPipeAP extends ItemPipe
 {
 	public ItemPipeAP() {
-		super(CreativeTabBuildCraft.PIPES);
+		super(AdditionalPipes.instance.creativeTab);
 	}
 
 	@Override

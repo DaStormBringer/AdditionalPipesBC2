@@ -28,7 +28,7 @@ minecraft {
 
 dependencies {
 		compile files('lib/CoFHLib-1.7.10-R3.0.0-DEV-CUSTOM_BUILD.jar')
-		compile files('lib/buildcraft-6.4.14-dev.jar')
+		compile files('lib/buildcraft-7.0.3-dev.jar')
 }
 
 processResources

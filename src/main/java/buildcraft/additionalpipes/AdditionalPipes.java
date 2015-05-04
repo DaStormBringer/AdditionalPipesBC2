@@ -43,8 +43,10 @@ import buildcraft.additionalpipes.utils.Log;
 import buildcraft.additionalpipes.utils.PipeCreator;
 import buildcraft.api.statements.ITriggerInternal;
 import buildcraft.api.statements.StatementManager;
+import buildcraft.core.BCCreativeTab;
 import buildcraft.core.recipes.AssemblyRecipeManager;
 import buildcraft.transport.BlockGenericPipe;
+import buildcraft.transport.PipeTransportFluids;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -75,6 +77,8 @@ public class AdditionalPipes {
 
 	// chunk load boundaries
 	public ChunkLoadViewDataProxy chunkLoadViewer;
+	
+	public BCCreativeTab creativeTab;
 
 
 	// teleport scanner TODO
@@ -126,6 +130,9 @@ public class AdditionalPipes {
 		configFile = event.getSuggestedConfigurationFile();
 		APConfiguration.loadConfigs(false, configFile);
 		MinecraftForge.EVENT_BUS.register(this);
+		
+		//create BuildCraft creative tab
+		creativeTab = new BCCreativeTab("apcreativetab");
 	}
 
 	@EventHandler
@@ -146,6 +153,9 @@ public class AdditionalPipes {
 		
 		Log.info("Registering pipes");
 		loadPipes();
+		
+		//set creative tab icon
+		creativeTab.setIcon(new ItemStack(pipeItemsTeleport));
 
 		triggerPipeClosed = new TriggerPipeClosed();
 		StatementManager.registerTriggerProvider(new GateProvider());
@@ -209,6 +219,8 @@ public class AdditionalPipes {
 
 
 		// Liquid Teleport Pipe
+		//set fluid capacity
+		PipeTransportFluids.fluidCapacities.put(PipeLiquidsTeleport.class, 220);
 		pipeLiquidsTeleport = PipeCreator.createPipeSpecial((Class<? extends APPipe<?>>) PipeLiquidsTeleport.class);
 		if(pipeItemsTeleport != null) {
 			GameRegistry.addShapelessRecipe(new ItemStack(pipeLiquidsTeleport), new Object[] {BuildCraftTransport.pipeWaterproof, pipeItemsTeleport});
@@ -246,9 +258,13 @@ public class AdditionalPipes {
 		// switch pipes
 		pipeItemsSwitch = PipeCreator.createPipeAndRecipe(8, PipeSwitchItems.class, new Object[] { "GgI", 'g', Blocks.glass, 'G', BuildCraftCore.goldGearItem, 'I', BuildCraftCore.ironGearItem}, false);
 		pipePowerSwitch = PipeCreator.createPipeAndRecipe(1, PipeSwitchPower.class, new Object[] {pipeItemsSwitch, Items.redstone }, true);
+		//set fluid capacity
+		PipeTransportFluids.fluidCapacities.put(PipeSwitchFluids.class, 220);
 		pipeLiquidsSwitch = PipeCreator.createPipeAndRecipe(1, PipeSwitchFluids.class, new Object[] {pipeItemsSwitch, BuildCraftTransport.pipeWaterproof }, true);
 
 		// water pump pipe
+		//set fluid capacity
+		PipeTransportFluids.fluidCapacities.put(PipeLiquidsWaterPump.class, 80);
 		pipeLiquidsWaterPump = PipeCreator.createPipeAndRecipe(1, PipeLiquidsWaterPump.class, new Object[] { " L ", "rPr", " W ", 'r', Items.redstone, 'P', BuildCraftCore.ironGearItem, 'L',
 				BuildCraftTransport.pipeFluidsGold, 'w', BuildCraftTransport.pipeWaterproof, 'W', BuildCraftTransport.pipeFluidsWood }, false);
 	}

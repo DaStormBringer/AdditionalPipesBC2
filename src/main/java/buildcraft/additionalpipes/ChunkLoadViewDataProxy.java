@@ -15,8 +15,8 @@ import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessageChunkloadData;
 import buildcraft.additionalpipes.network.message.MessageChunkloadRequest;
 import buildcraft.additionalpipes.utils.Log;
-import buildcraft.core.EntityBlock;
-import buildcraft.core.utils.Utils;
+import buildcraft.core.lib.EntityBlock;
+import buildcraft.core.lib.utils.Utils;
 
 import com.google.common.collect.SetMultimap;
 

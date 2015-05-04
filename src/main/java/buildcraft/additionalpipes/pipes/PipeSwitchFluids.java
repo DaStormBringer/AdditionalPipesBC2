@@ -14,8 +14,8 @@ public class PipeSwitchFluids extends PipeSwitch<PipeTransportFluids> implements
 	public PipeSwitchFluids(Item item) {
 		super(new PipeTransportFluids(), item, 22);
 		
-		transport.flowRate = 220;
-		transport.travelDelay = 3;
+		//load the fluid capacities set in mod init
+		transport.initFromPipe(getClass());
 	}
 	
 	@Override
@@ -24,7 +24,7 @@ public class PipeSwitchFluids extends PipeSwitch<PipeTransportFluids> implements
 		if (!(container.getTile(from) instanceof IPipeTile)) {
 			return 0;
 		} else {
-			return transport.internalTanks[from.ordinal()].fill(resource, doFill);
+			return transport.fill(from, resource, doFill);
 		}
 	}
 

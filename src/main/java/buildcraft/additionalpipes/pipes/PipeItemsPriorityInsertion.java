@@ -19,8 +19,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
-import buildcraft.core.inventory.ITransactor;
-import buildcraft.core.inventory.Transactor;
+import buildcraft.core.lib.inventory.ITransactor;
+import buildcraft.core.lib.inventory.Transactor;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.pipes.events.PipeEventItem;
 

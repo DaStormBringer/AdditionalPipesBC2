@@ -26,6 +26,9 @@ gate.phasedSignalYellow=Yellow Phased Signal
 
 key.lasers=Toggle chunk loading boundaries display
 
+#tooltip for teleport pipes
 tip.ItemPipeAP=No more long pipelines!
+
+itemGroup.buildcraft.apcreativetab=Additional Pipes
 
 command.ap.usage=/additionalpipes teleport <items|fluids|power>

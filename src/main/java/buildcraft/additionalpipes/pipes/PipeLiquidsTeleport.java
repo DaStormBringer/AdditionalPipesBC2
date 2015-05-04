@@ -24,8 +24,9 @@ public class PipeLiquidsTeleport extends PipeTeleport<PipeTransportFluids> imple
 	public PipeLiquidsTeleport(Item item)
 	{
 		super(new PipeTransportFluids(), item, PipeType.FLUIDS);
-		transport.flowRate = 220;
-		transport.travelDelay = 3;
+		
+		//load the fluid capacities set in mod init
+		transport.initFromPipe(getClass());
 	}
 
 	@Override
