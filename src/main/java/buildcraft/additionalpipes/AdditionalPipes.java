@@ -30,6 +30,7 @@ import buildcraft.additionalpipes.pipes.PipeItemsClosed;
 import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
 import buildcraft.additionalpipes.pipes.PipeItemsPriorityInsertion;
 import buildcraft.additionalpipes.pipes.PipeItemsTeleport;
+import buildcraft.additionalpipes.pipes.PipeLiquidsObsidian;
 import buildcraft.additionalpipes.pipes.PipeLiquidsTeleport;
 import buildcraft.additionalpipes.pipes.PipeLiquidsWaterPump;
 import buildcraft.additionalpipes.pipes.PipePowerTeleport;
@@ -116,6 +117,8 @@ public class AdditionalPipes {
 	public Item pipeLiquidsSwitch;
 	// water pump pipe
 	public Item pipeLiquidsWaterPump;
+	// obsidian fluid pipe
+	public Item pipeLiquidsObsidian;
 	// chunk loader
 	public Block blockChunkLoader;
 	
@@ -259,14 +262,19 @@ public class AdditionalPipes {
 		pipeItemsSwitch = PipeCreator.createPipeAndRecipe(8, PipeSwitchItems.class, new Object[] { "GgI", 'g', Blocks.glass, 'G', BuildCraftCore.goldGearItem, 'I', BuildCraftCore.ironGearItem}, false);
 		pipePowerSwitch = PipeCreator.createPipeAndRecipe(1, PipeSwitchPower.class, new Object[] {pipeItemsSwitch, Items.redstone }, true);
 		//set fluid capacity
-		PipeTransportFluids.fluidCapacities.put(PipeSwitchFluids.class, 220);
+		PipeTransportFluids.fluidCapacities.put(PipeSwitchFluids.class, 40);
 		pipeLiquidsSwitch = PipeCreator.createPipeAndRecipe(1, PipeSwitchFluids.class, new Object[] {pipeItemsSwitch, BuildCraftTransport.pipeWaterproof }, true);
 
 		// water pump pipe
 		//set fluid capacity
-		PipeTransportFluids.fluidCapacities.put(PipeLiquidsWaterPump.class, 80);
+		PipeTransportFluids.fluidCapacities.put(PipeLiquidsWaterPump.class, APConfiguration.waterPumpWaterPerTick);
 		pipeLiquidsWaterPump = PipeCreator.createPipeAndRecipe(1, PipeLiquidsWaterPump.class, new Object[] { " L ", "rPr", " W ", 'r', Items.redstone, 'P', BuildCraftCore.ironGearItem, 'L',
 				BuildCraftTransport.pipeFluidsGold, 'w', BuildCraftTransport.pipeWaterproof, 'W', BuildCraftTransport.pipeFluidsWood }, false);
+		
+		// obsidian fluid pipe
+		//set fluid capacity
+		PipeTransportFluids.fluidCapacities.put(PipeLiquidsObsidian.class, 100);
+		pipeLiquidsObsidian = PipeCreator.createPipeAndRecipe(1, PipeLiquidsObsidian.class, new Object[] {BuildCraftTransport.pipeItemsObsidian, BuildCraftTransport.pipeWaterproof}, true);
 	}
 
 	// legacy method
