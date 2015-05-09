@@ -13,6 +13,7 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import buildcraft.BuildCraftTransport;
+import buildcraft.additionalpipes.utils.Log;
 import buildcraft.api.core.IIconProvider;
 import buildcraft.api.core.Position;
 import buildcraft.core.lib.RFBattery;
@@ -35,6 +36,9 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 	//rolling queue of entity IDs to avoid picking up
 	private int[] entitiesDropped;
 	private int entitiesDroppedIndex = 0;
+	
+	//used to output fluids over time to the pipe system
+	private FluidStack outputBuffer = null;
 
 	public PipeLiquidsObsidian(Item item)
 	{
@@ -157,6 +161,17 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 
 			battery.useEnergy(0, 5, false);
 		}
+		
+		//empty the fluid buffer, if it exists
+		if(outputBuffer != null)
+		{
+			outputBuffer.amount -= transport.fill(ForgeDirection.UNKNOWN, outputBuffer, true);
+			
+			if(outputBuffer.amount <= 0)
+			{
+				outputBuffer = null;
+			}
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -242,15 +257,22 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 		if(FluidContainerRegistry.isFilledContainer(stack))
 		{
 			FluidStack liquid = FluidContainerRegistry.getFluidForFilledItem(stack);
-		    //no take-backs.  If any liquid was drained, the bucket is emptied.
-		    if(transport.fill(ForgeDirection.UNKNOWN, liquid, true) != 0)
-		    {
-		    	stackToDrop = FluidContainerRegistry.drainFluidContainer(stack);
-		    }
-		    else
-		    {
-		    	stackToDrop = stack;
-		    }
+			
+			int fluidFilled = transport.fill(ForgeDirection.UNKNOWN, liquid, true);
+			
+			Log.debug("Storing " + (liquid.amount - fluidFilled) + "MB of fluid in buffer.");
+			
+			//add liquid to buffer
+			if(outputBuffer != null && outputBuffer.fluidID == liquid.fluidID)
+			{
+				outputBuffer.amount += liquid.amount - fluidFilled;
+			}
+			else
+			{
+				outputBuffer = new FluidStack(liquid, liquid.amount - fluidFilled);
+			}
+		    
+		    stackToDrop = FluidContainerRegistry.drainFluidContainer(stack);
 		}
 		else
 		{
