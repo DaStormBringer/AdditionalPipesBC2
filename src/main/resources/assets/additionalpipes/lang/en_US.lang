@@ -12,6 +12,7 @@ item.PipeSwitchFluids.name=Switch Fluid Pipe
 item.PipeSwitchItems.name=Switch Transport Pipe
 item.PipeLiquidsWaterPump.name=Water Pump Pipe
 item.PipeItemsAddition.name=Addition Transport Pipe
+item.PipeLiquidsObsidian.name=Obsidian Fluid Pipe
 
 gui.pipeItemsDistributor=Distribution Pipe
 gui.pipeItemsPriorityInsertion=Priority Insertion Pipe

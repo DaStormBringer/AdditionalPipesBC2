@@ -7,14 +7,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
-import buildcraft.BuildCraftTransport;
 import buildcraft.additionalpipes.utils.Log;
-import buildcraft.api.core.IIconProvider;
 import buildcraft.api.core.Position;
 import buildcraft.core.lib.RFBattery;
 import buildcraft.core.proxy.CoreProxy;
@@ -23,12 +22,10 @@ import buildcraft.transport.TransportProxy;
 import buildcraft.transport.TravelingItem;
 import buildcraft.transport.pipes.events.PipeEventItem;
 import cofh.api.energy.IEnergyHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements IEnergyHandler 
 {
-	private static final int ICON = 24;
+	private static final int ICON = 31;
 	
 	AxisAlignedBB searchBox;
 	private RFBattery battery = new RFBattery(2560, 640, 0);
@@ -38,8 +35,11 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 	private int entitiesDroppedIndex = 0;
 	
 	//used to output fluids over time to the pipe system
-	private FluidStack outputBuffer = null;
+	private FluidStack fluidInItem = null;
 
+	//item that the pipe is currently holding
+	private ItemStack currentItem = null;
+	
 	public PipeLiquidsObsidian(Item item)
 	{
 		super(new PipeTransportFluids(), item);
@@ -55,12 +55,6 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 	public int getIconIndex(ForgeDirection direction)
 	{
 		return ICON;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIconProvider getIconProvider() {
-		return BuildCraftTransport.instance.pipeIconProvider;
 	}
 
 	@Override
@@ -151,26 +145,36 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 	public void updateEntity ()
 	{
 		super.updateEntity();
-
-		if (battery.getEnergyStored() > 0) {
-			for (int j = 1; j < 5; ++j) {
-				if (suckItem(j)) {
-					return;
-				}
-			}
-
-			battery.useEnergy(0, 5, false);
-		}
 		
 		//empty the fluid buffer, if it exists
-		if(outputBuffer != null)
+		if(fluidInItem != null)
 		{
-			outputBuffer.amount -= transport.fill(ForgeDirection.UNKNOWN, outputBuffer, true);
+			fluidInItem.amount -= transport.fill(ForgeDirection.UNKNOWN, fluidInItem, true);
 			
-			if(outputBuffer.amount <= 0)
+			if(fluidInItem.amount <= 0)
 			{
-				outputBuffer = null;
+				TravelingItem travelingItem = TravelingItem.make(container.x(), container.y(), container.z(), currentItem);
+				travelingItem.setContainer(container);
+				dropItem(travelingItem);
+				
+				fluidInItem = null;
+				currentItem = null;
 			}
+		}
+		else
+		{
+			//suck in a new item
+			if (battery.getEnergyStored() > 0) {
+				for (int j = 1; j < 5; ++j) {
+					if (suckItem(j)) {
+						return;
+					}
+				}
+
+			}
+			
+			battery.useEnergy(0, 5, false);
+
 		}
 	}
 
@@ -197,7 +201,8 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 		return false;
 	}
 
-	public void pullItemIntoPipe(EntityItem entity, int distance) {
+	public void pullItemIntoPipe(EntityItem entity, int distance) 
+	{
 		if (container.getWorldObj().isRemote) {
 			return;
 		}
@@ -239,58 +244,48 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 				return;
 			}
 			
-			processAndExpelItem(contained);
+			storeAndDrainItem(contained);
 		}
 	}
 	
 	/**
-	 * Extract fluid from the item and put it in the pipe.
-	 * Then, drop the empty fluid container item.
+	 * Extract fluid from the item and put it in the pipe's buffer.
+	 * Then, store the empty fluid container item.
 	 * @param stack
 	 */
-	private void processAndExpelItem(ItemStack stack)
-	{
-		//annoyingly, buckets don't use the standard Forge fluid API, so we need to use the separate FluidContainerRegistry
+	private void storeAndDrainItem(ItemStack stack)
+	{		
+		FluidStack drainedLiquid;
 		
-		ItemStack stackToDrop = null;
-		
+		//annoyingly, buckets don't use the standard Forge fluid API, so we need to use the separate FluidContainerRegistry	
+	
 		if(FluidContainerRegistry.isFilledContainer(stack))
 		{
-			FluidStack liquid = FluidContainerRegistry.getFluidForFilledItem(stack);
+			drainedLiquid = FluidContainerRegistry.getFluidForFilledItem(stack);
 			
-			int fluidFilled = transport.fill(ForgeDirection.UNKNOWN, liquid, true);
-			
-			Log.debug("Storing " + (liquid.amount - fluidFilled) + "MB of fluid in buffer.");
-			
-			//add liquid to buffer
-			if(outputBuffer != null && outputBuffer.fluidID == liquid.fluidID)
-			{
-				outputBuffer.amount += liquid.amount - fluidFilled;
-			}
-			else
-			{
-				outputBuffer = new FluidStack(liquid, liquid.amount - fluidFilled);
-			}
-		    
-		    stackToDrop = FluidContainerRegistry.drainFluidContainer(stack);
+			currentItem = FluidContainerRegistry.drainFluidContainer(stack);
 		}
 		else
 		{
 			IFluidContainerItem fluidContainerItem = ((IFluidContainerItem)stack.getItem());
 			
-			//first, figure out how much liquid we can add
-			int amountFillable = transport.fill(ForgeDirection.UNKNOWN, fluidContainerItem.drain(stack, fluidContainerItem.getCapacity(stack), false), false);
+			drainedLiquid = fluidContainerItem.drain(stack, fluidContainerItem.getCapacity(stack), true);
 			
-			//now, do the actual fill
-			transport.fill(ForgeDirection.UNKNOWN, fluidContainerItem.drain(stack, amountFillable, true), true);
-			
-			stackToDrop = stack;
-			
+			currentItem = stack;			
 		}
 		
-		TravelingItem travelingItem = TravelingItem.make(container.x(), container.y(), container.z(), stackToDrop);
-		travelingItem.setContainer(container);
-		dropItem(travelingItem);
+		Log.debug("Storing " + drainedLiquid.amount + "MB of fluid in buffer.");
+
+		
+		//add liquid to buffer
+		if(fluidInItem != null && fluidInItem.fluidID == drainedLiquid.fluidID)
+		{
+			fluidInItem.amount += drainedLiquid.amount;
+		}
+		else
+		{
+			fluidInItem = drainedLiquid;
+		}
 	}
 	
 	//copy of PipeTransportItems.dropItem()
@@ -341,22 +336,54 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 
 	public boolean canSuck(EntityItem item, int distance) 
 	{
+		
+		//glitched item
 		if (item.getEntityItem().stackSize <= 0) {
 			return false;
 		}
 		
-		if(!(item.getEntityItem().getItem() instanceof IFluidContainerItem || FluidContainerRegistry.isFilledContainer(item.getEntityItem())))
+		//not enough energy
+		if(battery.getEnergyStored() < distance * 10)
 		{
 			return false;
 		}
+		
+		//-------------------------------------------------------------------------------
+		//check that we can suck up fluid from the item
+		
+		Item fluidItem = item.getEntityItem().getItem();
+		
+		//this is an Integer so that we can check if it is null/uninitialized
+		Integer fluidID = null;
+		
+		if(fluidItem instanceof IFluidContainerItem)
+		{	
+			FluidStack containedFluid = ((IFluidContainerItem)fluidItem).getFluid(item.getEntityItem());
+			if(containedFluid != null)
+			{
+				fluidID = containedFluid.fluidID;
+			}
+		}
+		else if(FluidContainerRegistry.isFilledContainer(item.getEntityItem()))
+		{
+			fluidID = FluidContainerRegistry.getFluidForFilledItem(item.getEntityItem()).fluidID;
+		}
+		
+		if(fluidID == null || (transport.fluidType != null && fluidID.intValue() != transport.fluidType.amount))
+		{
+			return false;
+		}
+		
+		//-------------------------------------------------------------------------------
 
+		//check that the item was not one we already dropped
 		for (int element : entitiesDropped) {
 			if(item.getEntityId() == element) {
 				return false;
 			}
 		}
 
-		return battery.getEnergyStored() >= distance * 10;
+		return true;
 	}
 
 	@Override
@@ -366,8 +393,7 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 	}
 
 	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive,
-			boolean simulate) {
+	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
 		return battery.receiveEnergy(maxReceive, simulate);
 	}
 
@@ -385,6 +411,37 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 	@Override
 	public int getMaxEnergyStored(ForgeDirection from) {
 		return battery.getMaxEnergyStored();
+	}
+	
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+
+		if(fluidInItem != null)
+		{
+			//store buffer fluidstack
+			NBTTagCompound fluidInItemTag = new NBTTagCompound();
+			fluidInItem.writeToNBT(fluidInItemTag);
+			nbt.setTag("fluidInItemTag", fluidInItemTag);
+			
+			//store the current item
+			NBTTagCompound currentItemTag = new NBTTagCompound();
+			currentItem.writeToNBT(currentItemTag);
+			nbt.setTag("currentItemTag", currentItemTag);
+		}
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+
+		if(nbt.hasKey("fluidInItemTag"))
+		{
+			fluidInItem = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("fluidInItemTag"));
+			currentItem = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("currentItemTag"));
+		}
 	}
 
 }
