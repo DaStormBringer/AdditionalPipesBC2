@@ -66,7 +66,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class AdditionalPipes {
 	public static final String MODID = "additionalpipes";
 	public static final String NAME = "Additional Pipes";
-	public static final String VERSION = "4.4.0";
+	public static final String VERSION = "4.5.0";
 
 	@Instance(MODID)
 	public static AdditionalPipes instance;
