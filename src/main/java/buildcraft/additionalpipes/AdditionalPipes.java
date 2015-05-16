@@ -48,6 +48,11 @@ import buildcraft.core.BCCreativeTab;
 import buildcraft.core.recipes.AssemblyRecipeManager;
 import buildcraft.transport.BlockGenericPipe;
 import buildcraft.transport.PipeTransportFluids;
+import buildcraft.transport.PipeTransportPower;
+import buildcraft.transport.pipes.PipeFluidsGold;
+import buildcraft.transport.pipes.PipeFluidsIron;
+import buildcraft.transport.pipes.PipePowerGold;
+import buildcraft.transport.pipes.PipePowerIron;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -62,7 +67,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@Mod(modid = AdditionalPipes.MODID, name = AdditionalPipes.NAME, dependencies = "after:BuildCraft|Transport;after:BuildCraft|Silicon;after:BuildCraft|Transport;after:BuildCraft|Factory", version = AdditionalPipes.VERSION)
+@Mod(modid = AdditionalPipes.MODID, name = AdditionalPipes.NAME, dependencies = "after:BuildCraft|Transport[7.0.3,);after:BuildCraft|Silicon;after:BuildCraft|Transport;after:BuildCraft|Factory", version = AdditionalPipes.VERSION)
 public class AdditionalPipes {
 	public static final String MODID = "additionalpipes";
 	public static final String NAME = "Additional Pipes";
@@ -222,8 +227,6 @@ public class AdditionalPipes {
 
 
 		// Liquid Teleport Pipe
-		//set fluid capacity
-		PipeTransportFluids.fluidCapacities.put(PipeLiquidsTeleport.class, 220);
 		pipeLiquidsTeleport = PipeCreator.createPipeSpecial((Class<? extends APPipe<?>>) PipeLiquidsTeleport.class);
 		if(pipeItemsTeleport != null) {
 			GameRegistry.addShapelessRecipe(new ItemStack(pipeLiquidsTeleport), new Object[] {BuildCraftTransport.pipeWaterproof, pipeItemsTeleport});
@@ -260,9 +263,17 @@ public class AdditionalPipes {
 		pipeItemsClosed = PipeCreator.createPipeAndRecipe(1, PipeItemsClosed.class, new Object[] {BuildCraftTransport.pipeItemsVoid, BuildCraftCore.ironGearItem}, true);
 		// switch pipes
 		pipeItemsSwitch = PipeCreator.createPipeAndRecipe(8, PipeSwitchItems.class, new Object[] { "GgI", 'g', Blocks.glass, 'G', BuildCraftCore.goldGearItem, 'I', BuildCraftCore.ironGearItem}, false);
+		
+		//set power capacity to the average between iron and gold
+		int switchPowerCapacity = (PipeTransportPower.powerCapacities.get(PipePowerGold.class) + PipeTransportPower.powerCapacities.get(PipePowerIron.class))/ 2;
+		
+		PipeTransportPower.powerCapacities.put(PipeSwitchPower.class, switchPowerCapacity);
 		pipePowerSwitch = PipeCreator.createPipeAndRecipe(1, PipeSwitchPower.class, new Object[] {pipeItemsSwitch, Items.redstone }, true);
-		//set fluid capacity
-		PipeTransportFluids.fluidCapacities.put(PipeSwitchFluids.class, 40);
+		
+		//set fluid capacity to the average between iron and gold
+		int switchFluidCapacity = (PipeTransportFluids.fluidCapacities.get(PipeFluidsGold.class) + PipeTransportFluids.fluidCapacities.get(PipeFluidsIron.class))/ 2;
+		
+		PipeTransportFluids.fluidCapacities.put(PipeSwitchFluids.class, switchFluidCapacity);
 		pipeLiquidsSwitch = PipeCreator.createPipeAndRecipe(1, PipeSwitchFluids.class, new Object[] {pipeItemsSwitch, BuildCraftTransport.pipeWaterproof }, true);
 
 		// water pump pipe

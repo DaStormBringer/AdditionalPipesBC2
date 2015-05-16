@@ -17,6 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import buildcraft.transport.IPipeTransportFluidsHook;
 import buildcraft.transport.PipeTransportFluids;
+import buildcraft.transport.pipes.PipeFluidsDiamond;
 
 public class PipeLiquidsTeleport extends PipeTeleport<PipeTransportFluids> implements IPipeTransportFluidsHook {
 	private static final int ICON = 2;
@@ -26,7 +27,7 @@ public class PipeLiquidsTeleport extends PipeTeleport<PipeTransportFluids> imple
 		super(new PipeTransportFluids(), item, PipeType.FLUIDS);
 		
 		//load the fluid capacities set in mod init
-		transport.initFromPipe(getClass());
+		transport.initFromPipe(PipeFluidsDiamond.class);
 	}
 
 	@Override
