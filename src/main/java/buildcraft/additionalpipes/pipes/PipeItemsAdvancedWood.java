@@ -79,7 +79,6 @@ public class PipeItemsAdvancedWood extends APPipe<PipeTransportItems> implements
 				
 			Position pos = new Position(container.xCoord, container.yCoord, container.zCoord, ForgeDirection.VALID_DIRECTIONS[meta]);
 			pos.moveForwards(1);
-			w.getBlock((int) pos.x, (int) pos.y, (int) pos.z);
 			TileEntity tile = w.getTileEntity((int) pos.x, (int) pos.y, (int) pos.z);
 			
 			ticksSincePull = 0;

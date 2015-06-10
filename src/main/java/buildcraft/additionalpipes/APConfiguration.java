@@ -26,6 +26,8 @@ public class APConfiguration
 	
 	public static int waterPumpWaterPerTick; // in millibuckets / tick
 	
+	public static int gravityFeedPipeTicksPerPull;
+	
 	public static boolean enableTriggers = true;
 	
 	//set from config
@@ -77,6 +79,10 @@ public class APConfiguration
 			Property waterPerTickProperty = config.get(Configuration.CATEGORY_GENERAL, "waterPumpWaterPerTick", 90);
 			waterPerTickProperty.comment = "Amount of water the Water Pump Pipe produces in millibuckets/tick";
 			waterPumpWaterPerTick = waterPerTickProperty.getInt();
+			
+			Property gpPullRateProperty = config.get(Configuration.CATEGORY_GENERAL, "gravityFeedPipeTicksPerPull", 48);
+			gpPullRateProperty.comment = "How many ticks the Gravity Feed Pipe needs to extract an item";
+			gravityFeedPipeTicksPerPull = gpPullRateProperty.getInt();
 		} 
 		catch(Exception e)
 		{

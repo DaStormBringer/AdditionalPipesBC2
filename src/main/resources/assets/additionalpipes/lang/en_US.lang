@@ -2,6 +2,7 @@ tile.TeleportTether.name=Teleport Tether
 item.PipeItemsPriorityInsertion.name=Priority Insertion Pipe
 item.PipeItemsAdvancedInsertion.name=[Deprecated] Insertion Transport Pipe
 item.PipeItemsAdvancedWood.name=Adv. Wooden Transport Pipe
+item.PipeItemsGravityFeed.name=Gravity Feed Transport Pipe
 item.PipeItemsDistributor.name=Distribution Transport Pipe
 item.PipeItemsClosed.name=Closed Transport Pipe
 item.PipeItemsTeleport.name=Item Teleport Pipe
@@ -20,10 +21,6 @@ gui.PipeItemsAdvancedWood=Advanced Wooden Pipe
 gui.jeweled_pipe=Jeweled Pipe
 
 gate.pipeClosed=Pipe Closed (Storing Items)
-gate.phasedSignalRed=Red Phased Signal
-gate.phasedSignalBlue=Blue Phased Signal
-gate.phasedSignalGreen=Green Phased Signal
-gate.phasedSignalYellow=Yellow Phased Signal
 
 key.lasers=Toggle chunk loading boundaries display
 
