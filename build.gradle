@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "4.5.2"
+version = "4.6.0"
 group= "com.buildcraft.additionalpipes" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "additionalpipes"
 
@@ -27,8 +27,14 @@ minecraft {
 }
 
 dependencies {
-		compile files('lib/CoFHLib-1.7.10-R3.0.0-DEV-CUSTOM_BUILD.jar')
-		compile files('lib/buildcraft-7.0.6-dev.jar')
+		compile name: 'buildcraft', version: "7.0.8", classifier: "dev", ext: 'jar'
+}
+
+repositories {
+	ivy {
+		name "BuildCraft"
+		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
+	}
 }
 
 processResources
@@ -47,8 +53,13 @@ processResources
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
         
-    // copy everything else, thats not the mcmod.info
+    // copy everything else, that's not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'dev'
 }
