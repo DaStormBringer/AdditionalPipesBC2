@@ -17,8 +17,8 @@ public class GuiJeweledPipe extends GuiContainer
     public GuiJeweledPipe(InventoryPlayer inventoryPlayer)
     {
         super(new ContainerJeweledPipe(inventoryPlayer));
-        xSize = 176;
-        ySize = 140;
+        xSize = 175;
+        ySize = 211;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class GuiJeweledPipe extends GuiContainer
     {
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(Textures.GUI_ADVANCEDWOOD);
+        this.mc.getTextureManager().bindTexture(Textures.GUI_JEWELED[0]);
         int xStart = (width - xSize) / 2;
         int yStart = (height - ySize) / 2;
         this.drawTexturedModalRect(xStart, yStart, 0, 0, xSize, ySize);
