@@ -3,7 +3,6 @@ package buildcraft.additionalpipes.gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
@@ -29,19 +28,8 @@ public class ContainerJeweledPipe extends Container
 	 * 5 -> red        -> east
 	 */
 
-    public ContainerJeweledPipe(InventoryPlayer inventoryPlayer, PipeItemsJeweled pipe)
+	public ContainerJeweledPipe(InventoryPlayer inventoryPlayer)
     {
-    	_pipe = pipe;
-    	
-        // Add the filter inventory to the container
-        for(int filterRowIndex = 0; filterRowIndex < PLAYER_INVENTORY_ROWS; ++filterRowIndex)
-        {
-            for(int filterColumnIndex = 0; filterColumnIndex < PLAYER_INVENTORY_COLUMNS; ++filterColumnIndex)
-            {
-                this.addSlotToContainer(new Slot(_pipe.filterData[currentSide], filterColumnIndex + filterRowIndex * 9, 8 + filterColumnIndex * 18, 8 + filterRowIndex * 18));
-            }
-        }
-
         // Add the player's inventory slots to the container
         for (int inventoryRowIndex = 0; inventoryRowIndex < PLAYER_INVENTORY_ROWS; ++inventoryRowIndex)
         {
@@ -56,7 +44,6 @@ public class ContainerJeweledPipe extends Container
         {
             this.addSlotToContainer(new Slot(inventoryPlayer, actionBarSlotIndex, 8 + actionBarSlotIndex * 18, 116));
         }
-        
     }
 
     @Override
@@ -64,40 +51,10 @@ public class ContainerJeweledPipe extends Container
     {
         return true;
     }
-    
-    /**
-     * Change the pipe inventory slots to be the inventory in the specified tab.
-     * 
-     * Updates the guiTab class variable
-     * @param tab
-     */
-    public void setFilterTab(byte tab)
-    {
-    	if(tab > _pipe.filterData.length)
-    	{
-    		throw new IllegalArgumentException();
-    	}
-    		
-    	guiTab = tab;
-    	
-    	//send updates to client containers
-		for(Object obj : crafters)
-		{
-			ICrafting crafter = (ICrafting) obj;
-			crafter.sendProgressBarUpdate(this, guiTab, 0);
-		}
-    }
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer entityPlayer, int slotIndex)
     {
-       // return ItemHelper.transferStackInSlot(entityPlayer, tileEntityGlassBell, (Slot)inventorySlots.get(slotIndex), slotIndex, TileEntityGlassBell.INVENTORY_SIZE);
     	return null;
     }
-    
-	@Override
-	public void updateProgressBar(int guiTab, int unused)
-	{
-		setFilterTab((byte) guiTab);
-	}
 }

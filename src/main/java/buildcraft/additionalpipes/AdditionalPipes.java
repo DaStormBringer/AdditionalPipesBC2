@@ -30,6 +30,7 @@ import buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
 import buildcraft.additionalpipes.pipes.PipeItemsClosed;
 import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
 import buildcraft.additionalpipes.pipes.PipeItemsGravityFeed;
+import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
 import buildcraft.additionalpipes.pipes.PipeItemsPriorityInsertion;
 import buildcraft.additionalpipes.pipes.PipeItemsTeleport;
 import buildcraft.additionalpipes.pipes.PipeLiquidsObsidian;
@@ -248,7 +249,7 @@ public class AdditionalPipes {
 
 		//Jeweled Pipe
 		//disabled since I can't get the GUI to work
-		//pipeItemsJeweled = doCreatePipeAndRecipe(PipeItemsJeweled.class, new Object[] { " D ", "DGD", " D ", 'D', BuildCraftTransport.pipeItemsDiamond, 'G', BuildCraftCore.goldGearItem});
+		pipeItemsJeweled = PipeCreator.createPipeAndRecipe(2, PipeItemsJeweled.class, new Object[] { " D ", "DGD", " D ", 'D', BuildCraftTransport.pipeItemsDiamond, 'G', BuildCraftCore.goldGearItem}, false);
 		
 		// Distributor Pipe
 		pipeItemsDistributor = PipeCreator.createPipeAndRecipe(1, PipeItemsDistributor.class, new Object[] { " r ", "IgI", 'r', Items.redstone, 'I', Items.iron_ingot, 'g', Blocks.glass }, false);
