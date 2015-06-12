@@ -15,6 +15,7 @@ import net.minecraft.item.Item;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
+import buildcraft.additionalpipes.api.PipeTeleport;
 import buildcraft.transport.IPipeTransportFluidsHook;
 import buildcraft.transport.PipeTransportFluids;
 import buildcraft.transport.pipes.PipeFluidsDiamond;

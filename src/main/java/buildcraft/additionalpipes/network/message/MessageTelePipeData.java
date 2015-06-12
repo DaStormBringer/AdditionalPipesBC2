@@ -5,7 +5,7 @@ import io.netty.buffer.ByteBuf;
 import java.util.UUID;
 
 import net.minecraft.tileentity.TileEntity;
-import buildcraft.additionalpipes.pipes.PipeTeleport;
+import buildcraft.additionalpipes.api.PipeTeleport;
 import buildcraft.transport.TileGenericPipe;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.ByteBufUtils;

@@ -1,4 +1,4 @@
-package buildcraft.additionalpipes.pipes;
+package buildcraft.additionalpipes.api;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -16,6 +16,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
+import buildcraft.additionalpipes.pipes.APPipe;
+import buildcraft.additionalpipes.pipes.TeleportManager;
 import buildcraft.additionalpipes.utils.PlayerUtils;
 import buildcraft.api.core.Position;
 import buildcraft.api.transport.IPipeTile;

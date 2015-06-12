@@ -2,8 +2,8 @@ package buildcraft.additionalpipes.test;
 
 import java.util.ArrayList;
 
+import buildcraft.additionalpipes.api.PipeTeleport;
 import buildcraft.additionalpipes.pipes.PipeItemsTeleport;
-import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.additionalpipes.pipes.TeleportManager;
 import buildcraft.additionalpipes.utils.Log;
 

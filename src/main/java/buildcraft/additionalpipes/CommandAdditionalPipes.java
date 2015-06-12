@@ -6,7 +6,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
-import buildcraft.additionalpipes.pipes.PipeTeleport;
+import buildcraft.additionalpipes.api.PipeTeleport;
 import buildcraft.additionalpipes.pipes.TeleportManager;
 
 public class CommandAdditionalPipes extends CommandBase {

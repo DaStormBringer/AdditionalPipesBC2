@@ -15,6 +15,7 @@ import net.minecraftforge.common.MinecraftForge;
 import buildcraft.BuildCraftCore;
 import buildcraft.BuildCraftSilicon;
 import buildcraft.BuildCraftTransport;
+import buildcraft.additionalpipes.api.TeleportManagerBase;
 import buildcraft.additionalpipes.chunkloader.BlockChunkLoader;
 import buildcraft.additionalpipes.chunkloader.ChunkLoadingHandler;
 import buildcraft.additionalpipes.chunkloader.TileChunkLoader;
@@ -211,6 +212,9 @@ public class AdditionalPipes {
 		
 		Log.info("Running Teleport Manager Tests");
 		TeleportManagerTest.runAllTests();
+		
+		//set the reference in the API
+		TeleportManagerBase.INSTANCE = TeleportManager.instance;
 	}
 
 	@EventHandler

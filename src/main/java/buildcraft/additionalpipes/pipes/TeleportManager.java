@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.world.World;
+import buildcraft.additionalpipes.api.PipeTeleport;
+import buildcraft.additionalpipes.api.TeleportManagerBase;
 import buildcraft.additionalpipes.utils.Log;
 import buildcraft.transport.PipeTransportFluids;
 import buildcraft.transport.PipeTransportItems;
@@ -18,7 +20,7 @@ import com.google.common.collect.Multimap;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
-public class TeleportManager 
+public class TeleportManager extends TeleportManagerBase
 {
 	public static final TeleportManager instance = new TeleportManager();
 
@@ -67,6 +69,7 @@ public class TeleportManager
 	}
 
 	@SuppressWarnings("unchecked")
+	@Override
 	public void add(PipeTeleport<?> pipe, int frequency)
 	{
 		if(FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
@@ -95,7 +98,8 @@ public class TeleportManager
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")	
+	@Override
 	public void remove(PipeTeleport<?> pipe, int frequency)
 	{
 		if(FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
@@ -123,6 +127,7 @@ public class TeleportManager
 		}
 	}
 
+	@Override
 	public void reset() {
 		itemPipes.clear();
 		fluidPipes.clear();
@@ -140,6 +145,7 @@ public class TeleportManager
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	public ArrayList<PipeTeleport<?>> getConnectedPipes(PipeTeleport<?> pipe, boolean includeSend, boolean includeReceive) 
 	{
 		Collection<PipeTeleport<?>> channel = getPipesInChannel(pipe.getFrequency(), pipe.type);
@@ -162,18 +168,20 @@ public class TeleportManager
 		}
 		return connected;
 	}
-
-	// FIXME unused, these three functions need to be in the api if we ever have one
+	
+	@Override
 	public Collection<PipeTeleport<PipeTransportItems>> getAllItemPipesInNetwork() 
 	{
 		return itemPipes.values();
 	}
 	
+	@Override
 	public Collection<PipeTeleport<PipeTransportFluids>> getAllFluidPipesInNetwork() 
 	{
 		return fluidPipes.values();
 	}
 	
+	@Override
 	public Collection<PipeTeleport<PipeTransportPower>> getAllPowerPipesInNetwork() 
 	{
 		return powerPipes.values();
@@ -184,12 +192,14 @@ public class TeleportManager
 	 * @param frequency
 	 * @return the name of the frequency, or an empty string if it has no name.
 	 */
+	@Override
 	public String getFrequencyName(int frequency)
 	{
 		String name = frequencyNames.get(frequency);
 		return name == null ? "" : name;
 	}
 
+	@Override
 	public void setFrequencyName(int frequency, String name) 
 	{
 		frequencyNames.put(frequency, name);
