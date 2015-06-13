@@ -24,9 +24,9 @@ public class GuiJeweledPipe extends GuiContainer
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y)
     {
-        String containerName = "foo";
+        String containerName = StatCollector.translateToLocal("gui.jeweled_pipe");
         fontRendererObj.drawString(containerName, xSize / 2 - fontRendererObj.getStringWidth(containerName) / 2, 6, 4210752);
-        fontRendererObj.drawString(StatCollector.translateToLocal("player.inventory"), 8, ySize - 93, 4210752);
+        fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 93, 4210752);
     }
 
     @Override

@@ -227,7 +227,7 @@ public class AdditionalPipes {
 	
 	private void loadPipes() {
 		// Item Teleport Pipe
-		pipeItemsTeleport = PipeCreator.createPipeSpecial((Class<? extends APPipe<?>>) PipeItemsTeleport.class);
+		pipeItemsTeleport = PipeCreator.createPipeTooltip((Class<? extends APPipe<?>>) PipeItemsTeleport.class);
 		
 		GameRegistry.addRecipe(new ItemStack(pipeItemsTeleport, 4), new Object[] { "dgd", 'd', BuildCraftCore.diamondGearItem, 'g', Blocks.glass });
 		AssemblyRecipeManager.INSTANCE.addRecipe("teleportPipe", 10000, new ItemStack(pipeItemsTeleport, 8), new Object[] { new ItemStack(BuildCraftSilicon.redstoneChipset, 1, 4), new ItemStack(BuildCraftTransport.pipeItemsDiamond, 8),
@@ -235,14 +235,14 @@ public class AdditionalPipes {
 
 
 		// Liquid Teleport Pipe
-		pipeLiquidsTeleport = PipeCreator.createPipeSpecial((Class<? extends APPipe<?>>) PipeLiquidsTeleport.class);
+		pipeLiquidsTeleport = PipeCreator.createPipeTooltip((Class<? extends APPipe<?>>) PipeLiquidsTeleport.class);
 		if(pipeItemsTeleport != null) {
 			GameRegistry.addShapelessRecipe(new ItemStack(pipeLiquidsTeleport), new Object[] {BuildCraftTransport.pipeWaterproof, pipeItemsTeleport});
 		}
 
 		// Power Teleport Pipe
 		
-		pipePowerTeleport = PipeCreator.createPipeSpecial((Class<? extends APPipe<?>>) PipePowerTeleport.class);
+		pipePowerTeleport = PipeCreator.createPipeTooltip((Class<? extends APPipe<?>>) PipePowerTeleport.class);
 		if(pipeItemsTeleport != null) {
 			GameRegistry.addShapelessRecipe(new ItemStack(pipePowerTeleport), new Object[] {Items.redstone, pipeItemsTeleport});
 		}
