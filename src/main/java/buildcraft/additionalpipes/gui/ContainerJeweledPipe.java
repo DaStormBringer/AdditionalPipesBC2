@@ -11,13 +11,9 @@ public class ContainerJeweledPipe extends Container
 {
     private final int PLAYER_INVENTORY_ROWS = 3;
     private final int PLAYER_INVENTORY_COLUMNS = 9;
-    
-	PipeItemsJeweled _pipe;
-	
+    	
 	int currentSide = 0;
-	
-	protected int guiTab = 0;
-	
+		
 	/*
 	 * Mapping:
 	 * 0 -> white      -> down
@@ -27,9 +23,21 @@ public class ContainerJeweledPipe extends Container
 	 * 4 -> yellow     -> west
 	 * 5 -> red        -> east
 	 */
+	
+	PipeItemsJeweled pipeItemsJeweled;
 
-	public ContainerJeweledPipe(InventoryPlayer inventoryPlayer)
+	public ContainerJeweledPipe(InventoryPlayer inventoryPlayer, PipeItemsJeweled pipe)
     {
+        // Add the jeweled pipe slots
+		for(int filterRowIndex = 0; filterRowIndex < 3; ++filterRowIndex)
+	    {
+            for(int filterColumnIndex = 0; filterColumnIndex < 9; ++filterColumnIndex)
+            {
+                this.addSlotToContainer(new Slot(pipe.filterData[currentSide], filterColumnIndex + filterRowIndex * 9, 8 + filterColumnIndex * 18, 34 + filterRowIndex * 18));
+            }
+	    }
+		
+		
         // Add the player's inventory slots to the container
         for (int inventoryRowIndex = 0; inventoryRowIndex < PLAYER_INVENTORY_ROWS; ++inventoryRowIndex)
         {
@@ -44,6 +52,8 @@ public class ContainerJeweledPipe extends Container
         {
             this.addSlotToContainer(new Slot(inventoryPlayer, actionBarSlotIndex, 8 + actionBarSlotIndex * 18, 188));
         }
+        
+        pipeItemsJeweled = pipe;
     }
 
     @Override

@@ -6,6 +6,7 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
+import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
 import buildcraft.additionalpipes.textures.Textures;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -14,9 +15,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class GuiJeweledPipe extends GuiContainer
 {
 	
-    public GuiJeweledPipe(InventoryPlayer inventoryPlayer)
+    public GuiJeweledPipe(InventoryPlayer inventoryPlayer, PipeItemsJeweled pipe)
     {
-        super(new ContainerJeweledPipe(inventoryPlayer));
+        super(new ContainerJeweledPipe(inventoryPlayer, pipe));
         xSize = 175;
         ySize = 211;
     }
