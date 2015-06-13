@@ -15,7 +15,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiJeweledPipe extends GuiContainer
 {
-	final int tabStartX = ((width - xSize) / 2) + 103;
+	//set in initGui()
+	int tabStartX;
+	
 	final int tabY = 18;
 	final int tabHeight = 9;
 	final int tabWidth = 30;
@@ -47,7 +49,7 @@ public class GuiJeweledPipe extends GuiContainer
     {
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(Textures.GUI_JEWELED[0]);
+        this.mc.getTextureManager().bindTexture(Textures.GUI_JEWELED[((ContainerJeweledPipe)inventorySlots).currentSide]);
         int xStart = (width - xSize) / 2;
         int yStart = (height - ySize) / 2;
         this.drawTexturedModalRect(xStart, yStart, 0, 0, xSize, ySize);
@@ -57,6 +59,8 @@ public class GuiJeweledPipe extends GuiContainer
 	public void initGui() 
 	{
 		super.initGui();
+		
+		tabStartX = ((width - xSize) / 2) + 30;
 	}
 	
     /**
@@ -70,6 +74,7 @@ public class GuiJeweledPipe extends GuiContainer
             int xDistance = x - (this.guiLeft + tabStartX);
             int yDistance = y - (this.guiTop + tabY);
 
+            //check if click was on a tab box
             if(xDistance >= 0 && xDistance <= 6 * tabWidth)
             {
             	if(yDistance >= 0 && yDistance <= tabHeight)
