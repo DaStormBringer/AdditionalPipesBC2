@@ -21,6 +21,15 @@ gui.pipeItemsPriorityInsertion=Priority Insertion Pipe
 gui.PipeItemsAdvancedWood=Advanced Wooden Pipe
 gui.jeweled_pipe=Jeweled Pipe
 
+#tab names for the Jeweled Pipe GUI
+gui.tab.up=Up
+gui.tab.down=Down
+gui.tab.north=North
+gui.tab.south=South
+gui.tab.east=East
+gui.tab.west=West
+
+
 gate.pipeClosed=Pipe Closed (Storing Items)
 
 key.lasers=Toggle chunk loading boundaries display

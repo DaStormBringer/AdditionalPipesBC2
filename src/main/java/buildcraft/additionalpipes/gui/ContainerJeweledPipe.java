@@ -3,6 +3,7 @@ package buildcraft.additionalpipes.gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
@@ -55,6 +56,33 @@ public class ContainerJeweledPipe extends Container
         
         pipeItemsJeweled = pipe;
     }
+	
+	
+	/**
+	 * Change the pipe inventory slots to be the inventory in the specified tab.
+	 * 
+	 * Updates the guiTab class variable
+	 * @param tab
+	 */
+	public void setFilterTab(byte tab)
+	{
+		if(tab > pipeItemsJeweled.filterData.length)
+		{
+			throw new IllegalArgumentException();
+		}
+			
+		currentSide = tab;
+		
+		//send updates to client containers
+		for(Object obj : crafters)
+		{
+			ICrafting crafter = (ICrafting) obj;
+			crafter.sendProgressBarUpdate(this, tab, 0);
+		}
+		
+		//update this container
+		updateProgressBar(tab, 0);
+	}
 
     @Override
     public boolean canInteractWith(EntityPlayer entityPlayer)
@@ -66,5 +94,23 @@ public class ContainerJeweledPipe extends Container
     public ItemStack transferStackInSlot(EntityPlayer entityPlayer, int slotIndex)
     {
     	return null;
+    }
+    
+    @SuppressWarnings("unchecked")
+	@Override
+    public void updateProgressBar(int guiTab, int unused)
+    {
+        // re-add the jeweled pipe filter slots
+    	int slotIndex = 0;
+    	
+		for(int filterRowIndex = 0; filterRowIndex < 3; ++filterRowIndex)
+	    {
+            for(int filterColumnIndex = 0; filterColumnIndex < 9; ++filterColumnIndex)
+            {
+                inventorySlots.set(slotIndex, new Slot(pipeItemsJeweled.filterData[currentSide], filterColumnIndex + filterRowIndex * 9, 8 + filterColumnIndex * 18, 34 + filterRowIndex * 18));
+                
+                ++slotIndex;
+            }
+	    }
     }
 }
