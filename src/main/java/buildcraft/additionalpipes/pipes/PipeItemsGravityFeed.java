@@ -79,14 +79,14 @@ public class PipeItemsGravityFeed extends APPipe<PipeTransportItems>
 		if(inventory instanceof ISidedInventory) {
 			ISidedInventory sidedInv = (ISidedInventory) inventory;
 			int[] accessibleSlots = sidedInv.getAccessibleSlotsFromSide(from.ordinal());
-			ItemStack result = removeItemGeneric(inv, doRemove, from, accessibleSlots);
+			ItemStack result = removeItemSided(sidedInv, doRemove, from, accessibleSlots);
 			return result;
 		}
-		ItemStack result = removeItemGeneric(inv, doRemove, from, first, last);
+		ItemStack result = removeItemNormal(inv, doRemove, from, first, last);
 		return result;
 	}
 
-	public ItemStack removeItemGeneric(IInventory inventory, boolean doRemove, ForgeDirection from, int start, int stop) {
+	public ItemStack removeItemNormal(IInventory inventory, boolean doRemove, ForgeDirection from, int start, int stop) {
 		for(int k = start; k <= stop; ++k) {
 			ItemStack slot = inventory.getStackInSlot(k);
 
@@ -104,12 +104,12 @@ public class PipeItemsGravityFeed extends APPipe<PipeTransportItems>
 		return null;
 	}
 
-	public ItemStack removeItemGeneric(IInventory inventory, boolean doRemove, ForgeDirection from, int[] slots) {
+	public ItemStack removeItemSided(ISidedInventory inventory, boolean doRemove, ForgeDirection from, int[] slots) {
 		for(int i : slots)
 		{
 			ItemStack slot = inventory.getStackInSlot(i);
 
-			if(slot != null && slot.stackSize > 0) {
+			if(slot != null && slot.stackSize > 0 && inventory.canExtractItem(i, slot, from.ordinal())) {
 				if(doRemove)
 				{
 					return inventory.decrStackSize(i, 1);

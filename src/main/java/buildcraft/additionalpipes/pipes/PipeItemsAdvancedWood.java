@@ -111,7 +111,7 @@ public class PipeItemsAdvancedWood extends APPipe<PipeTransportItems> implements
 		if(inventory instanceof ISidedInventory) {
 			ISidedInventory sidedInv = (ISidedInventory) inventory;
 			int[] accessibleSlots = sidedInv.getAccessibleSlotsFromSide(from.ordinal());
-			ItemStack result = checkExtractGeneric(inv, doRemove, from, accessibleSlots);
+			ItemStack result = checkExtractGeneric(sidedInv, doRemove, from, accessibleSlots);
 			return result;
 		}
 		ItemStack result = checkExtractGeneric(inv, doRemove, from, first, last);
@@ -140,12 +140,12 @@ public class PipeItemsAdvancedWood extends APPipe<PipeTransportItems> implements
 		return null;
 	}
 
-	public ItemStack checkExtractGeneric(IInventory inventory, boolean doRemove, ForgeDirection from, int[] slots) {
+	public ItemStack checkExtractGeneric(ISidedInventory inventory, boolean doRemove, ForgeDirection from, int[] slots) {
 		for(int i : slots)
 		{
 			ItemStack slot = inventory.getStackInSlot(i);
 
-			if(slot != null && slot.stackSize > 0 && canExtract(slot)) {
+			if(slot != null && slot.stackSize > 0 && canExtract(slot) && inventory.canExtractItem(i, slot, from.ordinal())) {
 				if(doRemove)
 				{
 					int itemsExtracted = battery.getEnergyStored() / 10 >= slot.stackSize ? slot.stackSize : MathHelper.floor_double(battery.getEnergyStored() / 10);
