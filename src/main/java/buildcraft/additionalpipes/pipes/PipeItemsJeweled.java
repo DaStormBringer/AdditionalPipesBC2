@@ -127,7 +127,7 @@ public class PipeItemsJeweled extends APPipe<PipeTransportItems> {
 	{
 		super.readFromNBT(nbt);
 
-		NBTTagList filterList = nbt.getTagList("filterList", 9);
+		NBTTagList filterList = nbt.getTagList("filterList", 10);
 		for(int index = 0; index < filterData.length; ++index)
 		{
 			NBTTagCompound filterTag = filterList.getCompoundTagAt(index);

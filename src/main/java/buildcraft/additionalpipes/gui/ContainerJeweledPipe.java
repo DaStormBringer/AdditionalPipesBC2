@@ -1,9 +1,10 @@
 package buildcraft.additionalpipes.gui;
 
+import java.util.ArrayList;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
@@ -26,17 +27,33 @@ public class ContainerJeweledPipe extends Container
 	 */
 	
 	PipeItemsJeweled pipeItemsJeweled;
+	
+	//holds references to the slots for each side
+	ArrayList<ArrayList<Slot>> sideSlots;
 
 	public ContainerJeweledPipe(InventoryPlayer inventoryPlayer, PipeItemsJeweled pipe)
     {
+		
+		sideSlots = new ArrayList<ArrayList<Slot>>();
+		
         // Add the jeweled pipe slots
-		for(int filterRowIndex = 0; filterRowIndex < 3; ++filterRowIndex)
-	    {
-            for(int filterColumnIndex = 0; filterColumnIndex < 9; ++filterColumnIndex)
-            {
-                this.addSlotToContainer(new Slot(pipe.filterData[currentSide], filterColumnIndex + filterRowIndex * 9, 8 + filterColumnIndex * 18, 34 + filterRowIndex * 18));
-            }
-	    }
+		for(int side = 0; side < 6; ++side)
+		{
+			ArrayList<Slot> currentSide = new ArrayList<Slot>();
+			
+			// add the slots off to the side initially
+			for(int filterRowIndex = 0; filterRowIndex < 3; ++filterRowIndex)
+		    {
+	            for(int filterColumnIndex = 0; filterColumnIndex < 9; ++filterColumnIndex)
+	            {
+	            	Slot newSlot = new Slot(pipe.filterData[side], filterColumnIndex + filterRowIndex * 9, ((3 * side) + filterColumnIndex) * 18, 200 + filterRowIndex * 18);
+	                this.addSlotToContainer(newSlot);
+	            	currentSide.add(newSlot);
+	            }
+		    }
+			
+			sideSlots.add(currentSide);
+		}
 		
 		
         // Add the player's inventory slots to the container
@@ -55,6 +72,8 @@ public class ContainerJeweledPipe extends Container
         }
         
         pipeItemsJeweled = pipe;
+        
+        setFilterTab((byte) 0);
     }
 	
 	
@@ -64,24 +83,39 @@ public class ContainerJeweledPipe extends Container
 	 * Updates the guiTab class variable
 	 * @param tab
 	 */
-	public void setFilterTab(byte tab)
+	public void setFilterTab(byte newTab)
 	{
-		if(tab > pipeItemsJeweled.filterData.length)
+		if(newTab > pipeItemsJeweled.filterData.length)
 		{
 			throw new IllegalArgumentException();
 		}
+		
+		ArrayList<Slot> oldTabSlots = sideSlots.get(currentSide);		
+		ArrayList<Slot> newTabSlots = sideSlots.get(newTab);
+
+		//move the old slots off to the side 
+		for(int filterRowIndex = 0; filterRowIndex < 3; ++filterRowIndex)
+	    {
+            for(int filterColumnIndex = 0; filterColumnIndex < 9; ++filterColumnIndex)
+            {
+            	Slot currentSlot = oldTabSlots.get(9 * filterRowIndex + filterColumnIndex);
+                currentSlot.xDisplayPosition = ((3 * currentSide) + filterColumnIndex) * 18;
+                currentSlot.yDisplayPosition = 200 + filterRowIndex * 18;
+            }
+	    }
+		
+		//move the new slots onto the GUI
+		for(int filterRowIndex = 0; filterRowIndex < 3; ++filterRowIndex)
+	    {
+            for(int filterColumnIndex = 0; filterColumnIndex < 9; ++filterColumnIndex)
+            {
+            	Slot currentSlot = newTabSlots.get(9 * filterRowIndex + filterColumnIndex);
+                currentSlot.xDisplayPosition = 8 + filterColumnIndex * 18;
+                currentSlot.yDisplayPosition = 34 + filterRowIndex * 18;
+            }
+	    }
 			
-		currentSide = tab;
-		
-		//send updates to client containers
-		for(Object obj : crafters)
-		{
-			ICrafting crafter = (ICrafting) obj;
-			crafter.sendProgressBarUpdate(this, tab, 0);
-		}
-		
-		//update this container
-		updateProgressBar(tab, 0);
+		currentSide = newTab;
 	}
 
     @Override
@@ -94,23 +128,5 @@ public class ContainerJeweledPipe extends Container
     public ItemStack transferStackInSlot(EntityPlayer entityPlayer, int slotIndex)
     {
     	return null;
-    }
-    
-    @SuppressWarnings("unchecked")
-	@Override
-    public void updateProgressBar(int guiTab, int unused)
-    {
-        // re-add the jeweled pipe filter slots
-    	int slotIndex = 0;
-    	
-		for(int filterRowIndex = 0; filterRowIndex < 3; ++filterRowIndex)
-	    {
-            for(int filterColumnIndex = 0; filterColumnIndex < 9; ++filterColumnIndex)
-            {
-                inventorySlots.set(slotIndex, new Slot(pipeItemsJeweled.filterData[currentSide], filterColumnIndex + filterRowIndex * 9, 8 + filterColumnIndex * 18, 34 + filterRowIndex * 18));
-                
-                ++slotIndex;
-            }
-	    }
     }
 }

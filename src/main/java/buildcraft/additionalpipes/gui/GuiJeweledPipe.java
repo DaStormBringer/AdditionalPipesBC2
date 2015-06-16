@@ -60,7 +60,7 @@ public class GuiJeweledPipe extends GuiContainer
 	{
 		super.initGui();
 		
-		tabStartX = ((width - xSize) / 2) + 30;
+		tabStartX = ((width - xSize) / 2) - 110;
 	}
 	
     /**

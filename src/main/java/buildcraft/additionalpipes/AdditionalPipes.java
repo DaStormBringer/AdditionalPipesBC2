@@ -268,7 +268,7 @@ public class AdditionalPipes {
 		pipeItemsAdvancedWood = PipeCreator.createPipeAndRecipe(8, PipeItemsAdvancedWood.class, new Object[] { "WgW", 'W', BuildCraftCore.woodenGearItem, 'g', Blocks.glass }, false);
 
 		// Gravity Feed Pipe
-		pipeItemsGravityFeed = PipeCreator.createPipeAndRecipe(1, PipeItemsGravityFeed.class, new Object[] { " I ", "SgS", 'S', Blocks.stone, 'I', Items.iron_ingot, 'g', Blocks.glass }, false);
+		pipeItemsGravityFeed = PipeCreator.createPipeAndRecipe(1, PipeItemsGravityFeed.class, new Object[] { "   ", "IgI", " I ", 'S', Blocks.stone, 'I', Items.iron_ingot, 'g', Blocks.glass }, false);
 		
 		// Closed Items Pipe
 		pipeItemsClosed = PipeCreator.createPipeAndRecipe(1, PipeItemsClosed.class, new Object[] {BuildCraftTransport.pipeItemsVoid, BuildCraftCore.ironGearItem}, true);
