@@ -207,45 +207,42 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 			return;
 		}
 
-		ForgeDirection orientation = getOpenOrientation().getOpposite();
+		container.getWorldObj().playSoundAtEntity(entity, "random.pop", 0.2F, ((container.getWorldObj().rand.nextFloat() - container.getWorldObj().rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
 
-		if (orientation != ForgeDirection.UNKNOWN) {
-			container.getWorldObj().playSoundAtEntity(entity, "random.pop", 0.2F, ((container.getWorldObj().rand.nextFloat() - container.getWorldObj().rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
+		ItemStack stack = null;
 
-			ItemStack stack = null;
+		double speed = 0.01F;
 
-			double speed = 0.01F;
+		ItemStack contained = entity.getEntityItem();
 
-			ItemStack contained = entity.getEntityItem();
-
-			if (contained == null) {
-				return;
-			}
-			
-			TransportProxy.proxy.obsidianPipePickup(container.getWorldObj(), entity, this.container);
-
-			int energyUsed = Math.min(10 * contained.stackSize * distance, battery.getEnergyStored());
-
-			if (distance == 0 || energyUsed / distance / 10 == contained.stackSize) {
-				stack = contained;
-				CoreProxy.proxy.removeEntity(entity);
-			} else {
-				stack = contained.splitStack(energyUsed / distance / 10);
-			}
-
-			speed = Math.sqrt(entity.motionX * entity.motionX + entity.motionY * entity.motionY + entity.motionZ * entity.motionZ);
-			speed = speed / 2F - 0.05;
-
-			if (speed < 0.01) {
-				speed = 0.01;
-			}
-
-			if (stack == null) {
-				return;
-			}
-			
-			storeAndDrainItem(contained);
+		if (contained == null) {
+			return;
 		}
+		
+		TransportProxy.proxy.obsidianPipePickup(container.getWorldObj(), entity, this.container);
+
+		int energyUsed = Math.min(10 * contained.stackSize * distance, battery.getEnergyStored());
+
+		if (distance == 0 || energyUsed / distance / 10 == contained.stackSize) {
+			stack = contained;
+			CoreProxy.proxy.removeEntity(entity);
+		} else {
+			stack = contained.splitStack(energyUsed / distance / 10);
+		}
+
+		speed = Math.sqrt(entity.motionX * entity.motionX + entity.motionY * entity.motionY + entity.motionZ * entity.motionZ);
+		speed = speed / 2F - 0.05;
+
+		if (speed < 0.01) {
+			speed = 0.01;
+		}
+
+		if (stack == null) {
+			return;
+		}
+		
+		storeAndDrainItem(contained);
+		
 	}
 	
 	/**
@@ -278,7 +275,7 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 
 		
 		//add liquid to buffer
-		if(fluidInItem != null && fluidInItem.fluidID == drainedLiquid.fluidID)
+		if(fluidInItem != null && fluidInItem.isFluidEqual(drainedLiquid))
 		{
 			fluidInItem.amount += drainedLiquid.amount;
 		}
@@ -361,12 +358,12 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 			FluidStack containedFluid = ((IFluidContainerItem)fluidItem).getFluid(item.getEntityItem());
 			if(containedFluid != null)
 			{
-				fluidID = containedFluid.fluidID;
+				fluidID = containedFluid.getFluidID();
 			}
 		}
 		else if(FluidContainerRegistry.isFilledContainer(item.getEntityItem()))
 		{
-			fluidID = FluidContainerRegistry.getFluidForFilledItem(item.getEntityItem()).fluidID;
+			fluidID = FluidContainerRegistry.getFluidForFilledItem(item.getEntityItem()).getFluidID();
 		}
 		
 		if(fluidID == null || (transport.fluidType != null && fluidID.intValue() != transport.fluidType.amount))
