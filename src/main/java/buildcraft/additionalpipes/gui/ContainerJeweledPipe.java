@@ -13,6 +13,9 @@ public class ContainerJeweledPipe extends Container
 {
     private final int PLAYER_INVENTORY_ROWS = 3;
     private final int PLAYER_INVENTORY_COLUMNS = 9;
+    
+    //x coordinate where the slots start
+    private final int SLOT_START_X = 12;
     	
 	int currentSide = 0;
 		
@@ -46,7 +49,7 @@ public class ContainerJeweledPipe extends Container
 		    {
 	            for(int filterColumnIndex = 0; filterColumnIndex < 9; ++filterColumnIndex)
 	            {
-	            	Slot newSlot = new Slot(pipe.filterData[side], filterColumnIndex + filterRowIndex * 9, ((3 * side) + filterColumnIndex) * 18, 200 + filterRowIndex * 18);
+	            	Slot newSlot = new Slot(pipe.filterData[side], filterColumnIndex + filterRowIndex * 9, filterColumnIndex * 18, 1000 + ((3 * side) + filterRowIndex) * 18);
 	                this.addSlotToContainer(newSlot);
 	            	currentSide.add(newSlot);
 	            }
@@ -61,14 +64,14 @@ public class ContainerJeweledPipe extends Container
         {
             for (int inventoryColumnIndex = 0; inventoryColumnIndex < PLAYER_INVENTORY_COLUMNS; ++inventoryColumnIndex)
             {
-                this.addSlotToContainer(new Slot(inventoryPlayer, inventoryColumnIndex + inventoryRowIndex * 9 + 9, 8 + inventoryColumnIndex * 18, 130 + inventoryRowIndex * 18));
+                this.addSlotToContainer(new Slot(inventoryPlayer, inventoryColumnIndex + inventoryRowIndex * 9 + 9, SLOT_START_X + inventoryColumnIndex * 18, 130 + inventoryRowIndex * 18));
             }
         }
 
         // Add the player's action bar slots to the container
         for (int actionBarSlotIndex = 0; actionBarSlotIndex < PLAYER_INVENTORY_COLUMNS; ++actionBarSlotIndex)
         {
-            this.addSlotToContainer(new Slot(inventoryPlayer, actionBarSlotIndex, 8 + actionBarSlotIndex * 18, 188));
+            this.addSlotToContainer(new Slot(inventoryPlayer, actionBarSlotIndex, SLOT_START_X + actionBarSlotIndex * 18, 188));
         }
         
         pipeItemsJeweled = pipe;
@@ -110,7 +113,7 @@ public class ContainerJeweledPipe extends Container
             for(int filterColumnIndex = 0; filterColumnIndex < 9; ++filterColumnIndex)
             {
             	Slot currentSlot = newTabSlots.get(9 * filterRowIndex + filterColumnIndex);
-                currentSlot.xDisplayPosition = 8 + filterColumnIndex * 18;
+                currentSlot.xDisplayPosition = SLOT_START_X + filterColumnIndex * 18;
                 currentSlot.yDisplayPosition = 34 + filterRowIndex * 18;
             }
 	    }

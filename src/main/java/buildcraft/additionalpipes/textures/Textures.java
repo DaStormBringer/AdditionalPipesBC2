@@ -3,7 +3,6 @@ package buildcraft.additionalpipes.textures;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class Textures {
 	public static final APActionTriggerIconProvider actionIconProvider = new APActionTriggerIconProvider();
@@ -29,16 +28,7 @@ public class Textures {
 	public static final ResourceLocation GUI_ADVANCEDWOOD = new ResourceLocation("additionalpipes", TEXTURE_PATH + "/gui/advancedWoodGui.png");
 	public static final ResourceLocation GUI_DISTRIBUTION = new ResourceLocation("additionalpipes", TEXTURE_PATH + "/gui/distributionGui.png");
 	public static final ResourceLocation GUI_PRIORITY = new ResourceLocation("additionalpipes", TEXTURE_PATH + "/gui/priorityGui.png");
-	public static final ResourceLocation[] GUI_JEWELED = new ResourceLocation[ForgeDirection.VALID_DIRECTIONS.length];
-	
-	static
-	{
-		//load the 6 Jeweled Pipe textures
-		for(int counter = 0; counter < ForgeDirection.VALID_DIRECTIONS.length; ++counter)
-		{
-			GUI_JEWELED[counter] = new ResourceLocation("additionalpipes", TEXTURE_PATH + "/gui/jeweledPipeGui" + counter + ".png");
-		}
-	}
+	public static final ResourceLocation GUI_JEWELED = new ResourceLocation("additionalpipes", TEXTURE_PATH + "/gui/jeweledPipeGui.png");
 
 
 }
