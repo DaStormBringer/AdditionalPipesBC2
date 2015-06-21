@@ -16,25 +16,27 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiJeweledPipe extends GuiContainer
 {
+	//1-indexed, the first number is the start of the tab row
+	final public static int NUM_TABS = 6;
+	
 	//note: the first two ff's are the alpha value.
-	final static int[] tabColorsMain = {0xFFFFFFFF, 0xff3fc2ff, 0xff3e3ee0, 0xff44be4e, 0xfffffa00, 0xffff2323};
+	final static int[] tabColorsMain = {0xFFFFFFFF, 0xff3fc2ff, 0xff3e3ee0, 0xff44be4e, 0xfff0db00, 0xffd20000};
 	
-	final static int[] tabColorsOutline = {0xFFF0F0F0, 0xff30b2f0, 0xff2121d0, 0xff35af3f, 0xfff0db00, 0xfff01414};
+	final static int[] tabColorsOutline = {0xFFd0d0d0, 0xff20a2d0, 0xff1111c0, 0xff259f2f, 0xffe0cb00, 0xffc20000};
 
-	
-	//set in initGui()
-	int tabStartX;
 	
 	final int tabY = 14;
 	final int tabHeight = 11;
 	final int totalSpaceBetweenTabs = 7; //total space between tab strings
+    final int halfSpaceBetweenTabs = MathHelper.floor_double(totalSpaceBetweenTabs / 2.0);
+    final int tabOutlineWidth = 2;
 	
-	int[] tabEndX = new int[6];
+	int[] tabEndX = new int[NUM_TABS + 1];
 		
     public GuiJeweledPipe(InventoryPlayer inventoryPlayer, PipeItemsJeweled pipe)
     {
         super(new ContainerJeweledPipe(inventoryPlayer, pipe));
-        xSize = 184;
+        xSize = 202;
         ySize = 211;
     }
 
@@ -46,25 +48,23 @@ public class GuiJeweledPipe extends GuiContainer
         fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 93, 4210752);
 		
         //draw the actual tabs
-        for(int tabNumber = 0; tabNumber < 6; ++tabNumber)
+        for(int tabNumber = 1; tabNumber <= NUM_TABS; ++tabNumber)
         {
         	//make the selected tab taller
         	int startY = ((ContainerJeweledPipe)inventorySlots).currentSide == tabNumber ? tabY - 3 : tabY;
         	
         	//draw outer rectangle
-        	drawRect((tabNumber == 0 ? tabStartX - 3 : tabEndX[tabNumber- 1] + 3), startY, tabEndX[tabNumber] + 2, tabY + tabHeight, tabColorsMain[tabNumber]);
+        	drawRect(tabEndX[tabNumber- 1], startY, tabEndX[tabNumber] - 1, tabY + tabHeight, tabColorsOutline[tabNumber - 1]);
         	//draw inner rectangle
-        	drawRect((tabNumber == 0 ? tabStartX - 1 : tabEndX[tabNumber- 1] + 5), startY + 2, tabEndX[tabNumber], tabY + tabHeight, tabColorsOutline[tabNumber] - 0x000f0f0f);
+        	drawRect(tabEndX[tabNumber- 1] + tabOutlineWidth, startY + tabOutlineWidth, tabEndX[tabNumber] - tabOutlineWidth - 1, tabY + tabHeight, tabColorsMain[tabNumber - 1]);
         }
         
 		//add the tab labels
-		for(int tabNumber = 0; tabNumber < 6; ++tabNumber)
+		for(int tabNumber = 1; tabNumber <= NUM_TABS; ++tabNumber)
 		{
-			String tabName = StatCollector.translateToLocal("gui.tab." + ForgeDirection.VALID_DIRECTIONS[tabNumber].toString().toLowerCase());
-			
-			int thisTabStartX = (tabNumber == 0 ? tabStartX: tabEndX[tabNumber- 1] + 6);
-			
-			fontRendererObj.drawString(tabName, thisTabStartX, tabY + 3, 4210752);
+			String tabName = StatCollector.translateToLocal("gui.tab." + ForgeDirection.VALID_DIRECTIONS[tabNumber - 1].toString().toLowerCase());
+						
+			fontRendererObj.drawString(tabName, tabEndX[tabNumber- 1] + halfSpaceBetweenTabs, tabY + 3, 4210752);
 		}
 	
     }
@@ -78,6 +78,9 @@ public class GuiJeweledPipe extends GuiContainer
         int xStart = (width - xSize) / 2;
         int yStart = (height - ySize) / 2;
         this.drawTexturedModalRect(xStart, yStart, 0, 0, xSize, ySize);
+
+        this.mc.getTextureManager().bindTexture(Textures.GUI_OUTLINE_JEWELED[((ContainerJeweledPipe)inventorySlots).currentSide - 1]);
+        this.drawTexturedModalRect(xStart + 5, yStart + 25, 0, 0, 192, 86);
         
     }
     
@@ -86,17 +89,15 @@ public class GuiJeweledPipe extends GuiContainer
 	{
 		super.initGui();
 		
-		tabStartX = 15;
+		tabEndX[0] = 15;
 		
 		//calculate the tab widths
-		for(int tabNumber = 0; tabNumber < 6; ++tabNumber)
+		for(int tabNumber = 1; tabNumber <= NUM_TABS; ++tabNumber)
 		{
-			String tabName = StatCollector.translateToLocal("gui.tab." + ForgeDirection.VALID_DIRECTIONS[tabNumber].toString().toLowerCase());
-			
-			int thisTabStartX = (tabNumber == 0 ? tabStartX: tabEndX[tabNumber- 1]);
-			
+			String tabName = StatCollector.translateToLocal("gui.tab." + ForgeDirection.VALID_DIRECTIONS[tabNumber - 1].toString().toLowerCase());
+						
 			//record the width of this tab
-			tabEndX[tabNumber] = thisTabStartX + fontRendererObj.getStringWidth(tabName) + (tabNumber == 0 ? 0 : totalSpaceBetweenTabs);
+			tabEndX[tabNumber] = tabEndX[tabNumber- 1] + fontRendererObj.getStringWidth(tabName) - 1 + totalSpaceBetweenTabs;
 			
 			//Log.debug("End x coordinate of tab number " + tabNumber + " is " + tabEndX[tabNumber]);
 		}
@@ -110,9 +111,7 @@ public class GuiJeweledPipe extends GuiContainer
     {
         if (type == 0)
         {
-            int hitboxShiftDistance = MathHelper.floor_double(totalSpaceBetweenTabs / 2.0);
-
-            int xDistance = x - (this.guiLeft + tabStartX - hitboxShiftDistance);
+            int xDistance = x - (this.guiLeft + tabEndX[0]);
             int yDistance = y - (this.guiTop + tabY);
             
             //check if click was on a tab box
@@ -121,9 +120,9 @@ public class GuiJeweledPipe extends GuiContainer
             	if(yDistance >= 0 && yDistance <= tabHeight)
             	{
             		//find the tab the user clicked on
-            		for(int tabNumber = 0; tabNumber < 6; ++tabNumber)
+            		for(int tabNumber = 1; tabNumber <= NUM_TABS; ++tabNumber)
             		{
-            			if(tabEndX[tabNumber] + hitboxShiftDistance > x - guiLeft)
+            			if(tabEndX[tabNumber] > x - guiLeft)
             			{
             				((ContainerJeweledPipe)inventorySlots).setFilterTab((byte) tabNumber);
             				break;

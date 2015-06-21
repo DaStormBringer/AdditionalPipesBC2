@@ -15,9 +15,9 @@ public class ContainerJeweledPipe extends Container
     private final int PLAYER_INVENTORY_COLUMNS = 9;
     
     //x coordinate where the slots start
-    private final int SLOT_START_X = 12;
+    private final int SLOT_START_X = 20;
     	
-	int currentSide = 0;
+	int currentSide = 1;
 		
 	/*
 	 * Mapping:
@@ -40,7 +40,7 @@ public class ContainerJeweledPipe extends Container
 		sideSlots = new ArrayList<ArrayList<Slot>>();
 		
         // Add the jeweled pipe slots
-		for(int side = 0; side < 6; ++side)
+		for(int side = 0; side < GuiJeweledPipe.NUM_TABS; ++side)
 		{
 			ArrayList<Slot> currentSide = new ArrayList<Slot>();
 			
@@ -76,7 +76,7 @@ public class ContainerJeweledPipe extends Container
         
         pipeItemsJeweled = pipe;
         
-        setFilterTab((byte) 0);
+        setFilterTab((byte) 1);
     }
 	
 	
@@ -93,8 +93,8 @@ public class ContainerJeweledPipe extends Container
 			throw new IllegalArgumentException();
 		}
 		
-		ArrayList<Slot> oldTabSlots = sideSlots.get(currentSide);		
-		ArrayList<Slot> newTabSlots = sideSlots.get(newTab);
+		ArrayList<Slot> oldTabSlots = sideSlots.get(currentSide - 1);		
+		ArrayList<Slot> newTabSlots = sideSlots.get(newTab - 1);
 
 		//move the old slots off to the side 
 		for(int filterRowIndex = 0; filterRowIndex < 3; ++filterRowIndex)
@@ -102,8 +102,8 @@ public class ContainerJeweledPipe extends Container
             for(int filterColumnIndex = 0; filterColumnIndex < 9; ++filterColumnIndex)
             {
             	Slot currentSlot = oldTabSlots.get(9 * filterRowIndex + filterColumnIndex);
-                currentSlot.xDisplayPosition = ((3 * currentSide) + filterColumnIndex) * 18;
-                currentSlot.yDisplayPosition = 200 + filterRowIndex * 18;
+                currentSlot.xDisplayPosition = filterColumnIndex * 18;
+                currentSlot.yDisplayPosition =  1000 + ((3 * (currentSide - 1)) + filterRowIndex) * 18;
             }
 	    }
 		
