@@ -22,7 +22,7 @@ group= "com.buildcraft.additionalpipes" // http://maven.apache.org/guides/mini/g
 archivesBaseName = "additionalpipes"
 
 minecraft {
-    version = "1.7.10-10.13.2.1236"
+    version = "1.7.10-10.13.3.1388-1.7.10"
     runDir = "eclipse/assets"
 }
 
