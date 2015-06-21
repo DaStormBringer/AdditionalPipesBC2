@@ -20,8 +20,8 @@ public class GuiJeweledPipe extends GuiContainer
 	
 	final int tabY = 18;
 	final int tabHeight = 9;
-	final int tabWidth = 30;
-		
+	int[] tabEndX = new int[6];
+	
     public GuiJeweledPipe(InventoryPlayer inventoryPlayer, PipeItemsJeweled pipe)
     {
         super(new ContainerJeweledPipe(inventoryPlayer, pipe));
@@ -40,7 +40,13 @@ public class GuiJeweledPipe extends GuiContainer
 		for(int tabNumber = 0; tabNumber < 6; ++tabNumber)
 		{
 			String tabName = StatCollector.translateToLocal("gui.tab." + ForgeDirection.VALID_DIRECTIONS[tabNumber].toString().toLowerCase());
-			fontRendererObj.drawString(tabName, tabStartX + (tabWidth * tabNumber), tabY, 4210752);
+			
+			int thisTabStartX = (tabNumber == 0 ? tabStartX : tabEndX[tabNumber- 1] + 5);
+			
+			//record the width of this tab
+			tabEndX[tabNumber] = thisTabStartX + fontRendererObj.getStringWidth(tabName);
+			
+			fontRendererObj.drawString(tabName, thisTabStartX, tabY, 4210752);
 		}
     }
 
@@ -75,11 +81,12 @@ public class GuiJeweledPipe extends GuiContainer
             int yDistance = y - (this.guiTop + tabY);
 
             //check if click was on a tab box
-            if(xDistance >= 0 && xDistance <= 6 * tabWidth)
+            if(xDistance >= 0 && xDistance <= tabEndX[tabEndX.length - 1])
             {
             	if(yDistance >= 0 && yDistance <= tabHeight)
             	{
-            		((ContainerJeweledPipe)inventorySlots).setFilterTab((byte) (xDistance / tabWidth));
+            		byte tab = 0;
+            		((ContainerJeweledPipe)inventorySlots).setFilterTab(tab);
             	}
             }
         }
