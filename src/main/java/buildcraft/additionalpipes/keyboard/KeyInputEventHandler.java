@@ -22,11 +22,11 @@ public class KeyInputEventHandler
             	if(Keybindings.lasers.isPressed())
             	{
 	            	ChunkLoadViewDataProxy viewer = AdditionalPipes.instance.chunkLoadViewer;
-	    			viewer.toggleLasers();
-	    			if(viewer.lasersActive()) 
+	    			if(!viewer.lasersActive()) 
 	    			{
 	    				viewer.requestPersistentChunks();
 	    			}
+	    			viewer.toggleLasers();
             	}
             }
         }

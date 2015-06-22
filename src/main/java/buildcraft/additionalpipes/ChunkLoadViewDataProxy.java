@@ -147,10 +147,8 @@ public class ChunkLoadViewDataProxy implements Comparator<ChunkCoordIntPair> {
 
 	}
 
-	public void sendPersistentChunksToPlayer(EntityPlayerMP player) {
-		if(!APConfiguration.chunkSight) {
-			return;
-		}
+	public void sendPersistentChunksToPlayer(EntityPlayerMP player)
+	{
 		if(sightRange > MAX_SIGHT_RANGE)
 			sightRange = MAX_SIGHT_RANGE;
 

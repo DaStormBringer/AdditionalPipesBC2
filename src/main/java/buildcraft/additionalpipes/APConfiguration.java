@@ -8,9 +8,7 @@ import buildcraft.additionalpipes.utils.Log;
 
 
 public class APConfiguration
-{
-	public static boolean chunkSight;
-	
+{	
 	public static int chunkSightRange; // config option
 	
 	public static boolean chunkSightAutorefresh = true;
@@ -57,8 +55,9 @@ public class APConfiguration
 				powerTransmittanceCfg = 0.0f;
 			}
 
-			Property chunkLoadSightRange = config.get(Configuration.CATEGORY_GENERAL, "chunkSightRange", 8);
-			chunkLoadSightRange.comment = "Range of chunk load boundaries.";
+			Property chunkSightRangeProperty = config.get(Configuration.CATEGORY_GENERAL, "chunkSightRange", 8);
+			chunkSightRangeProperty.comment = "Range of chunk load boundaries.";
+			chunkSightRange = chunkSightRangeProperty.getInt();
 
 			Property laserKey = config.get(Configuration.CATEGORY_GENERAL, "laserKeyChar", 68);
 			laserKey.comment = "Default key to toggle chunk load boundaries.";
