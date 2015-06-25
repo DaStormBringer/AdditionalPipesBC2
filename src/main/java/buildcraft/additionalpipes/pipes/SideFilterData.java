@@ -14,7 +14,7 @@ import buildcraft.additionalpipes.utils.Log;
  */
 public class SideFilterData implements IInventory
 {
-	public static  final int INVENTORY_SIZE = 28;
+	public static  final int INVENTORY_SIZE = 27;
 	
 	private ItemStack[] inventory;
 	
@@ -116,7 +116,7 @@ public class SideFilterData implements IInventory
 			return false;
 		}
 		
-		for(int index = 0; index <= INVENTORY_SIZE; ++index)
+		for(int index = 0; index < INVENTORY_SIZE; ++index)
 		{
 			ItemStack slotStack = inventory[index];
 			if(slotStack != null)

@@ -34,8 +34,8 @@ public class MessageJeweledPipeOptionsServer implements IMessage, IMessageHandle
     	this.index = index;
 
     	acceptUnsorted = filterData.acceptsUnsortedItems();
-    	matchNBT = filterData.matchMetadata();
-    	matchMeta = filterData.matchNBT();
+    	matchMeta = filterData.matchMetadata();
+    	matchNBT = filterData.matchNBT();
     }
 
     @Override
