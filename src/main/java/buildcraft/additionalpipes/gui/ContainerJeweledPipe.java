@@ -3,11 +3,16 @@ package buildcraft.additionalpipes.gui;
 import java.util.ArrayList;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import buildcraft.additionalpipes.network.PacketHandler;
+import buildcraft.additionalpipes.network.message.MessageJeweledPipeOptionsClient;
 import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 
 public class ContainerJeweledPipe extends Container
 {
@@ -15,9 +20,9 @@ public class ContainerJeweledPipe extends Container
     private final int PLAYER_INVENTORY_COLUMNS = 9;
     
     //x coordinate where the slots start
-    private final int SLOT_START_X = 20;
+    private final int SLOT_START_X = 21;
     	
-	int currentSide = 1;
+	byte currentSide = 1;
 		
 	/*
 	 * Mapping:
@@ -64,19 +69,26 @@ public class ContainerJeweledPipe extends Container
         {
             for (int inventoryColumnIndex = 0; inventoryColumnIndex < PLAYER_INVENTORY_COLUMNS; ++inventoryColumnIndex)
             {
-                this.addSlotToContainer(new Slot(inventoryPlayer, inventoryColumnIndex + inventoryRowIndex * 9 + 9, SLOT_START_X + inventoryColumnIndex * 18, 130 + inventoryRowIndex * 18));
+                this.addSlotToContainer(new Slot(inventoryPlayer, inventoryColumnIndex + inventoryRowIndex * 9 + 9, SLOT_START_X + inventoryColumnIndex * 18, 128 + inventoryRowIndex * 18));
             }
         }
 
         // Add the player's action bar slots to the container
         for (int actionBarSlotIndex = 0; actionBarSlotIndex < PLAYER_INVENTORY_COLUMNS; ++actionBarSlotIndex)
         {
-            this.addSlotToContainer(new Slot(inventoryPlayer, actionBarSlotIndex, SLOT_START_X + actionBarSlotIndex * 18, 188));
+            this.addSlotToContainer(new Slot(inventoryPlayer, actionBarSlotIndex, SLOT_START_X + actionBarSlotIndex * 18, 186));
         }
         
         pipeItemsJeweled = pipe;
         
         setFilterTab((byte) 1);
+        
+        //send the options to the client, since they are only loaded from NBT on the server
+		if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+		{	
+			MessageJeweledPipeOptionsClient message = new MessageJeweledPipeOptionsClient(pipe.container.xCoord, pipe.container.yCoord, pipe.container.zCoord, pipe.filterData);
+			PacketHandler.INSTANCE.sendTo(message, (EntityPlayerMP) inventoryPlayer.player);
+		}
     }
 	
 	
@@ -114,7 +126,7 @@ public class ContainerJeweledPipe extends Container
             {
             	Slot currentSlot = newTabSlots.get(9 * filterRowIndex + filterColumnIndex);
                 currentSlot.xDisplayPosition = SLOT_START_X + filterColumnIndex * 18;
-                currentSlot.yDisplayPosition = 34 + filterRowIndex * 18;
+                currentSlot.yDisplayPosition = 33 + filterRowIndex * 18;
             }
 	    }
 			

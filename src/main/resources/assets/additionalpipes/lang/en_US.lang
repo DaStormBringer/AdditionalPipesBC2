@@ -29,6 +29,10 @@ gui.tab.south=South
 gui.tab.east=East
 gui.tab.west=West
 
+gui.match=Match:
+gui.NBT=Tag
+gui.metadata=Meta
+gui.acceptUnsorted=Accept Unsorted
 
 gate.pipeClosed=Pipe Closed (Storing Items)
 

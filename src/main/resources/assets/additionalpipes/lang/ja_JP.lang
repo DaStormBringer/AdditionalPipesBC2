@@ -17,6 +17,14 @@ gui.pipeItemsDistributor=はいふの輸送パイプ
 gui.pipeItemsPriorityInsertion=優先のパイプ
 gui.PipeItemsAdvancedWood=ハイテクの木の輸送パイプ
 
+#tab names for the Jeweled Pipe GUI
+gui.tab.up=上
+gui.tab.down=下
+gui.tab.north=北
+gui.tab.south=南
+gui.tab.east=東
+gui.tab.west=西
+
 key.lasers=Toggle chunk loading boundaries display
 
 tip.ItemPipeAP=No more long pipelines!

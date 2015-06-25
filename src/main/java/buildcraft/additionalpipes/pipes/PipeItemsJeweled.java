@@ -9,6 +9,7 @@
 package buildcraft.additionalpipes.pipes;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -19,16 +20,24 @@ import net.minecraftforge.common.util.ForgeDirection;
 import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
+import buildcraft.additionalpipes.gui.GuiJeweledPipe;
+import buildcraft.api.tiles.IDebuggable;
+import buildcraft.core.lib.inventory.InvUtils;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.pipes.events.PipeEventItem;
 
-public class PipeItemsJeweled extends APPipe<PipeTransportItems> {
+public class PipeItemsJeweled extends APPipe<PipeTransportItems> implements IDebuggable {
 
 	//looks ugly but actually initializes things cleanly
-	public SideFilterData[] filterData = {new SideFilterData(), new SideFilterData(), new SideFilterData(), new SideFilterData(), new SideFilterData(), new SideFilterData()};
+	public SideFilterData[] filterData = new SideFilterData[GuiJeweledPipe.NUM_TABS];
 	public PipeItemsJeweled(Item item) 
 	{
 		super(new PipeTransportItems(), item);
+		
+		for(int index = 0; index < filterData.length; ++index)
+		{
+			filterData[index] = new SideFilterData();
+		}
 	}
 
 	@Override
@@ -131,9 +140,28 @@ public class PipeItemsJeweled extends APPipe<PipeTransportItems> {
 		for(int index = 0; index < filterData.length; ++index)
 		{
 			NBTTagCompound filterTag = filterList.getCompoundTagAt(index);
-			filterData[index] = new SideFilterData();
 			filterData[index].readFromNBT(filterTag);
 		}
+	}
+	
+	@Override
+	public void dropContents() 
+	{
+		super.dropContents();
+		for(SideFilterData sideFilter : filterData)
+		{
+			InvUtils.dropItems(getWorld(), sideFilter, container.xCoord, container.yCoord, container.zCoord);
+		}
+	}
+
+	@Override
+	public void getDebugInfo(List<String> info, ForgeDirection side,
+			ItemStack debugger, EntityPlayer player)
+	{
+		SideFilterData clickedSide = filterData[side.ordinal()];
+		info.add("Accepts unsorted items: " + clickedSide.acceptsUnsortedItems());
+		info.add("Matches NBT: " + clickedSide.matchNBT());
+		info.add("Matches metadata: " + clickedSide.matchMetadata());
 	}
 
 }
