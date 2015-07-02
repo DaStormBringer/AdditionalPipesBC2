@@ -15,11 +15,9 @@ Compiled binaries can be found in `build/libs`.
 3. In Eclipse, go to File > Import... > Genral > Existing Projects into Workspace
 4. Hit Next.  Click Browse... in the top right, and select the directory you cloned Additional Pipes into.  Check the box next to AdditionalPipesBC in the Projects list.
 5. Hit Finish, and the mod project should be imported.
-6. We need to work around an annoying bug in Forge.  Expand the "Referenced Libraries" section of your project in the package explorer, find `lwjgl-2.9.1.jar` near the bottom, right click it, and select properties.
-7. Go to the Native Library tab, press the External Folder button, and browse to `path-to/.gradle/caches/minecraft/net/minecraft/minecraft_natives/1.7.10`.  Hit OK.
 6. Set up the run configuration.  Click the dropdown next to the play button on the top bar, and select Run Configurations...
 7. Hit the New icon in the top left.  Type AP Client as the name, and `net.minecraft.launchwrapper.Launch` as the main class.
-8. Go to the Arguments tab.  In the VM arguments box put `-Dfml.ignoreInvalidMinecraftCertificates=true`
+8. Go to the Arguments tab.  In the VM arguments box put `-Dfml.ignoreInvalidMinecraftCertificates=true -Dorg.lwjgl.librarypath=path-to/.gradle/caches/minecraft/net/minecraft/minecraft_natives/1.7.10`
 9. In the program arguments box, put for a 1.7.10 version:
 ``` --version 1.7 --tweakClass cpw.mods.fml.common.launcher.FMLTweaker --accessToken modstest --username YourMCUsername --userProperties {} --assetIndex 1.7.10 --assetsDir path-to/.gradle/caches/minecraft/assets```
 
