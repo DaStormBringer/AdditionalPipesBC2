@@ -30,9 +30,10 @@ public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 	
 	public void eventHandler(PipeEventItem.Entered event)
 	{
-		/*if(!AdditionalPipes.proxy.isServer(getWorld())) {
+		if(getWorld().isRemote) 
+		{
 			return;
-		}*/
+		}
 		
 		List<PipeTeleport<?>> connectedTeleportPipes = TeleportManager.instance.getConnectedPipes(this, false, true);
 		
