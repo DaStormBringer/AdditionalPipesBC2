@@ -22,6 +22,7 @@ import buildcraft.additionalpipes.chunkloader.TileChunkLoader;
 import buildcraft.additionalpipes.gates.GateProvider;
 import buildcraft.additionalpipes.gates.TriggerPipeClosed;
 import buildcraft.additionalpipes.gui.GuiHandler;
+import buildcraft.additionalpipes.item.ItemDogDeaggravator;
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.pipes.APPipe;
 import buildcraft.additionalpipes.pipes.PipeItemsAddition;
@@ -132,6 +133,9 @@ public class AdditionalPipes {
 	// chunk loader
 	public Block blockChunkLoader;
 	
+	//dog deaggravator
+	public Item dogDeaggravator;
+	
 	public ITriggerInternal triggerPipeClosed;
 
 	@EventHandler
@@ -206,10 +210,13 @@ public class AdditionalPipes {
 
 		// ChunkLoader
 		blockChunkLoader = new BlockChunkLoader();
-		blockChunkLoader.setBlockName("TeleportTether");
+		blockChunkLoader.setBlockName("teleportTether");
 		GameRegistry.registerBlock(blockChunkLoader, ItemBlock.class, "chunkLoader");
 		GameRegistry.registerTileEntity(TileChunkLoader.class, "TeleportTether");
 		GameRegistry.addRecipe(new ItemStack(blockChunkLoader), new Object[] { "iii", "iLi", "iii", 'i', Items.iron_ingot, 'L', new ItemStack(Items.dye, 1, 4) });
+		
+		dogDeaggravator = new ItemDogDeaggravator();
+		GameRegistry.registerItem(dogDeaggravator, ItemDogDeaggravator.NAME);
 		
 		Log.info("Running Teleport Manager Tests");
 		TeleportManagerTest.runAllTests();

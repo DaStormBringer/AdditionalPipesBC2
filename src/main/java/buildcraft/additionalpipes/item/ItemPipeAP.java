@@ -29,7 +29,7 @@ public class ItemPipeAP extends ItemPipe
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean advanced) {
 		super.addInformation(stack, player, list, advanced);
-		String key = "tip." + stack.getItem().getClass().getSimpleName();
+		String key = "tooltip." + stack.getItem().getClass().getSimpleName();
 		
 		list.add(StatCollector.translateToLocal(key));
 	}

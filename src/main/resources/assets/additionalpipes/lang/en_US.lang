@@ -16,6 +16,10 @@ item.PipeItemsAddition.name=Addition Transport Pipe
 item.PipeLiquidsObsidian.name=Obsidian Fluid Pipe
 item.PipeItemsJeweled.name=Jeweled Transport Pipe
 
+#regular items & blocks
+item.dogDeaggravator.name=Dog Deaggravator
+block.teleportTether.name=Teleport Tether
+
 gui.pipeItemsDistributor=Distribution Pipe
 gui.pipeItemsPriorityInsertion=Priority Insertion Pipe
 gui.PipeItemsAdvancedWood=Advanced Wooden Pipe
@@ -39,7 +43,9 @@ gate.pipeClosed=Pipe Closed (Storing Items)
 key.lasers=Toggle chunk loading boundaries display
 
 #tooltip for teleport pipes
-tip.ItemPipeAP=No more long pipelines!
+tooltip.ItemPipeAP=No more long pipelines!
+
+tooltip.dogDeaggravator=Calms down attacking wolves
 
 itemGroup.buildcraft.apcreativetab=Additional Pipes
 
