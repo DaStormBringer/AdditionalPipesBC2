@@ -155,6 +155,8 @@ public class AdditionalPipes {
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
+		//EntityList.addMapping(EntityBetterCat.class, "betterCat", 79, 0xEDCE21, 0x564434);
+		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 	
 		Log.info("Registering chunk load handler");
