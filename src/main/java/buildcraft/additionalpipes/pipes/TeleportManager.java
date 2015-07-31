@@ -161,9 +161,15 @@ public class TeleportManager extends TeleportManagerBase
 
 			// pipe is open or includeReceive &&
 			// both public or same owner
-			if((((other.state & 0x2) > 0 && includeReceive) || ((other.state & 0x1) > 0 && includeSend)) && (pipe.isPublic ? other.isPublic : (other.ownerUUID != null && other.ownerUUID.equals(pipe.ownerUUID))))
+			if(other != pipe)
 			{
-				connected.add(other);
+                if(((other.state & 0x2) > 0 && includeReceive) || ((other.state & 0x1) > 0 && includeSend))
+                {
+                    if(pipe.isPublic ? other.isPublic : (other.ownerUUID != null && other.ownerUUID.equals(pipe.ownerUUID)))
+        			{
+        				connected.add(other);
+        			}
+                }
 			}
 		}
 		return connected;
