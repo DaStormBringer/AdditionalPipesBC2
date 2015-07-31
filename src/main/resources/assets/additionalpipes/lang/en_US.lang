@@ -18,7 +18,7 @@ item.PipeItemsJeweled.name=Jeweled Transport Pipe
 
 #regular items & blocks
 item.dogDeaggravator.name=Dog Deaggravator
-block.teleportTether.name=Teleport Tether
+tile.teleportTether.name=Teleport Tether
 
 gui.pipeItemsDistributor=Distribution Pipe
 gui.pipeItemsPriorityInsertion=Priority Insertion Pipe

@@ -22,6 +22,7 @@ public class ItemDogDeaggravator extends Item
 		setUnlocalizedName(NAME);
 		setTextureName(AdditionalPipes.MODID + ':' + NAME);
 		setCreativeTab(AdditionalPipes.instance.creativeTab);
+		setMaxStackSize(1);
 	}
 	
 	@Override

@@ -108,7 +108,7 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 	
 	@Override
 	public boolean blockActivated(EntityPlayer player) {
-		if(!AdditionalPipes.proxy.isServer(player.worldObj))
+		if(player.worldObj.isRemote)
 			return true;
 		if(ownerUUID == null)
 		{

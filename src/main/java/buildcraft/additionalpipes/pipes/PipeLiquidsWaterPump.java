@@ -7,7 +7,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import buildcraft.additionalpipes.APConfiguration;
-import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.transport.PipeTransportFluids;
 
 public class PipeLiquidsWaterPump extends APPipe<PipeTransportFluids> {
@@ -26,7 +25,7 @@ public class PipeLiquidsWaterPump extends APPipe<PipeTransportFluids> {
 	public void updateEntity() 
 	{
 		super.updateEntity();
-		if(AdditionalPipes.proxy.isServer(getWorld()) && getWorld().getBlock(container.xCoord, container.yCoord - 1, container.zCoord) == water)
+		if(getWorld().getBlock(container.xCoord, container.yCoord - 1, container.zCoord) == water)
 		{
 			transport.fill(ForgeDirection.UNKNOWN, new FluidStack(FluidRegistry.WATER, APConfiguration.waterPumpWaterPerTick), true);
 		}

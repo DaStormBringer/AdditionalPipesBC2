@@ -28,7 +28,6 @@ import buildcraft.transport.pipes.events.PipeEventItem;
 
 public class PipeItemsJeweled extends APPipe<PipeTransportItems> implements IDebuggable {
 
-	//looks ugly but actually initializes things cleanly
 	public SideFilterData[] filterData = new SideFilterData[GuiJeweledPipe.NUM_TABS];
 	public PipeItemsJeweled(Item item) 
 	{
@@ -45,18 +44,18 @@ public class PipeItemsJeweled extends APPipe<PipeTransportItems> implements IDeb
 	{
 		switch(connection) {
 		case DOWN: // -y
-			return 10;
+			return 35;
 		case UP: // +y
-			return 11;
+			return 36;
 		case NORTH: // -z
-			return 12;
+			return 37;
 		case SOUTH: // +z
-			return 13;
+			return 38;
 		case WEST: // -x
-			return 14;
+			return 39;
 		case EAST: // +x
 		default:
-			return 9;
+			return 34;
 		}
 	}
 	
