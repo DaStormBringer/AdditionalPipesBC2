@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "4.6.0"
+version = "4.6.1"
 group= "com.buildcraft.additionalpipes" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "additionalpipes"
 
@@ -73,9 +73,4 @@ processResources
 task deobfJar(type: Jar) {
     from sourceSets.main.output
     classifier = 'dev'
-}
-
-task apiJar(type: Jar) {
-    from sourceSets.api.java.srcDirs
-    classifier = 'sources'
 }

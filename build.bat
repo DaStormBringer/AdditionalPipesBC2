@@ -3,6 +3,6 @@ rem enable extended ASCII
 chcp 1252 >nul
 
 echo » Invoking gradle...
-call gradle build apiJar deobfJar
+call gradle build deobfJar
 
 pause
