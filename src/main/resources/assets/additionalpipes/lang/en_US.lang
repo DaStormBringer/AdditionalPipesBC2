@@ -40,7 +40,7 @@ gui.acceptUnsorted=Accept Unsorted
 
 gate.pipeClosed=Pipe Closed (Storing Items)
 
-key.lasers=Chunk load boundaries
+key.lasers=Show chunk load boundaries
 
 #tooltip for teleport pipes
 tooltip.ItemPipeAP=No more long pipelines!
