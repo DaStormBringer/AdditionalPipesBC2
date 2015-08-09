@@ -10,7 +10,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.api.core.Position;
-import buildcraft.api.tools.IToolWrench;
 import buildcraft.core.CoreConstants;
 import buildcraft.core.lib.inventory.InvUtils;
 import buildcraft.core.lib.utils.Utils;
@@ -136,13 +135,7 @@ public class PipeItemsGravityFeed extends APPipe<PipeTransportItems>
 	@Override
 	public boolean blockActivated(EntityPlayer entityplayer)
 	{
-		Item equipped = entityplayer.getCurrentEquippedItem() != null ? entityplayer.getCurrentEquippedItem().getItem() : null;
-		if(equipped instanceof IToolWrench && ((IToolWrench) equipped).canWrench(entityplayer, container.xCoord, container.yCoord, container.zCoord)) {
-			((PipeTransportAdvancedWood) transport).switchSource();
-			((IToolWrench) equipped).wrenchUsed(entityplayer, container.xCoord, container.yCoord, container.zCoord);
-			return true;
-		}
-		
+		//do nothing.
 		return false;
 	}
 
