@@ -13,7 +13,7 @@ import java.util.List;
 
 import net.minecraft.item.Item;
 import net.minecraftforge.common.util.ForgeDirection;
-import buildcraft.additionalpipes.api.PipeTeleport;
+import buildcraft.additionalpipes.api.PipeType;
 import buildcraft.additionalpipes.utils.Log;
 import buildcraft.api.core.Position;
 import buildcraft.transport.PipeTransportItems;
