@@ -23,17 +23,24 @@ archivesBaseName = "additionalpipes"
 
 minecraft {
     version = "1.7.10-10.13.3.1388-1.7.10"
-    runDir = "eclipse/assets"
+    runDir = "minecraft"
 }
 
 dependencies {
 		compile name: 'buildcraft', version: "7.0.8", classifier: "dev", ext: 'jar'
+		compile name: 'buildcraft-compat', version: "7.0.9", classifier: "dev", ext: 'jar'
+		compile files("lib/logisticspipes-0.9.2.32-dev.jar")
 }
 
 repositories {
 	ivy {
 		name "BuildCraft"
 		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
+	}
+	
+	ivy {
+		name "BuildCraftCompat"
+		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraftCompat/[revision]/[module]-[revision]-[classifier].[ext]"
 	}
 }
 
