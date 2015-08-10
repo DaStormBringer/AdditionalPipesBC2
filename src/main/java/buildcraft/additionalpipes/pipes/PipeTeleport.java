@@ -163,6 +163,11 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 				ownerName = player.getCommandSenderName();
 			}
 		}
+		else
+		{
+			//access denied
+			return false;
+		}
 		
 		if(APConfiguration.filterRightclicks)
 		{
