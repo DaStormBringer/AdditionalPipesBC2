@@ -31,6 +31,8 @@ public class TeleportManager extends TeleportManagerBase
 
 	public final Multimap<Integer, PipeTeleport<PipeTransportPower>> powerPipes;
 
+	public final Multimap<Integer, PipeTeleport<PipeTransportItemsLogistics>> logisticsPipes;
+
 	public final Map<Integer, String> frequencyNames;
 
 	private TeleportManager() 
@@ -41,6 +43,8 @@ public class TeleportManager extends TeleportManagerBase
 		fluidPipes = LinkedListMultimap.<Integer, PipeTeleport<PipeTransportFluids>>create();
 		
 		powerPipes = LinkedListMultimap.<Integer, PipeTeleport<PipeTransportPower>>create();
+		
+		logisticsPipes = LinkedListMultimap.<Integer, PipeTeleport<PipeTransportItemsLogistics>>create();
 		
 		frequencyNames = new HashMap<Integer, String>();
 	}
@@ -64,6 +68,8 @@ public class TeleportManager extends TeleportManagerBase
 			return fluidPipes.get(frequency);
 		case POWER:
 			return powerPipes.get(frequency);
+		case LOGISTICS:
+			return logisticsPipes.get(frequency);
 		}
 		
 		return null;
@@ -89,14 +95,17 @@ public class TeleportManager extends TeleportManagerBase
 		case POWER:
 			powerPipes.put(frequency, (PipeTeleport<PipeTransportPower>) pipe);
 			break;
+		case LOGISTICS:
+			logisticsPipes.put(frequency, (PipeTeleport<PipeTransportItemsLogistics>) pipe);
+			break;
 		}
 
 		//if unit tests are being run, pipe.container will be null.
-//		if(pipe.container != null)
-//		{
-//			Log.debug(String.format("[TeleportManager] Pipe added: %s @ (%d, %d, %d), %d pipes in channel", pipe.type.toString(), pipe.container.xCoord, pipe.container.yCoord,
-//					pipe.container.zCoord, getPipesInChannel(frequency, pipe.type).size()));
-//		}
+		if(pipe.getContainer() != null)
+		{
+			Log.debug(String.format("[TeleportManager] Pipe added: %s @ (%d, %d, %d), %d pipes in channel", pipe.getType().toString().toLowerCase(),
+					pipe.getPosition().x, pipe.getPosition().y, pipe.getPosition().z, getPipesInChannel(frequency, pipe.getType()).size()));
+		}
 	}
 
 	@SuppressWarnings("unchecked")	
@@ -118,14 +127,17 @@ public class TeleportManager extends TeleportManagerBase
 		case POWER:
 			powerPipes.remove(frequency, (PipeTeleport<PipeTransportPower>) pipe);
 			break;
+		case LOGISTICS:
+			logisticsPipes.remove(frequency, (PipeTeleport<PipeTransportItemsLogistics>) pipe);
+			break;
 		}
 
 		//if unit tests are being run, pipe.container will be null.
-//		if(pipe.container != null)
-//		{
-//			Log.debug(String.format("[TeleportManager] Pipe removed: %s @ (%d, %d, %d), %d pipes in channel", pipe.type.toString(), pipe.container.xCoord, pipe.container.yCoord,
-//				pipe.container.zCoord, getPipesInChannel(frequency, pipe.type).size()));
-//		}
+		if(pipe.getContainer() != null)
+		{
+			Log.debug(String.format("[TeleportManager] Pipe removed: %s @ (%d, %d, %d), %d pipes in channel", pipe.getType().toString().toLowerCase(),
+					pipe.getPosition().x, pipe.getPosition().y, pipe.getPosition().z, getPipesInChannel(frequency, pipe.getType()).size()));
+		}
 	}
 
 	@Override
@@ -133,6 +145,7 @@ public class TeleportManager extends TeleportManagerBase
 		itemPipes.clear();
 		fluidPipes.clear();
 		powerPipes.clear();
+		logisticsPipes.clear();
 
 		frequencyNames.clear();
 		Log.info("Reset teleport manager.");
@@ -196,6 +209,11 @@ public class TeleportManager extends TeleportManagerBase
 	public Collection<PipeTeleport<PipeTransportPower>> getAllPowerPipesInNetwork() 
 	{
 		return powerPipes.values();
+	}
+	
+	public Collection<PipeTeleport<PipeTransportItemsLogistics>> getAllLogisticsPipesInNetwork() 
+	{
+		return logisticsPipes.values();
 	}
 
 	/**

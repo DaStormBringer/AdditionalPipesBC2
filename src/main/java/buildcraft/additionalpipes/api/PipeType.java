@@ -4,6 +4,6 @@ public enum PipeType
 {
 	ITEMS,
 	FLUIDS,
-	POWER
-	
+	POWER,
+	LOGISTICS
 }

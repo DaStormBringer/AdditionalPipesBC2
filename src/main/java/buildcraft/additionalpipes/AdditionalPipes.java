@@ -2,7 +2,15 @@ package buildcraft.additionalpipes;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
 
+import logisticspipes.interfaces.routing.ISpecialPipedConnection;
+import logisticspipes.proxy.SimpleServiceLocator;
+import logisticspipes.proxy.specialconnection.SpecialPipeConnection.ConnectionInformation;
+import logisticspipes.routing.PipeRoutingConnectionType;
+import logisticspipes.routing.pathfinder.IPipeInformationProvider;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -12,9 +20,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.ForgeDirection;
 import buildcraft.BuildCraftCore;
 import buildcraft.BuildCraftSilicon;
 import buildcraft.BuildCraftTransport;
+import buildcraft.additionalpipes.api.ITeleportPipe;
 import buildcraft.additionalpipes.api.TeleportManagerBase;
 import buildcraft.additionalpipes.chunkloader.BlockChunkLoader;
 import buildcraft.additionalpipes.chunkloader.ChunkLoadingHandler;
@@ -37,6 +47,7 @@ import buildcraft.additionalpipes.pipes.PipeItemsTeleport;
 import buildcraft.additionalpipes.pipes.PipeLiquidsObsidian;
 import buildcraft.additionalpipes.pipes.PipeLiquidsTeleport;
 import buildcraft.additionalpipes.pipes.PipeLiquidsWaterPump;
+import buildcraft.additionalpipes.pipes.PipeLogisticsTeleport;
 import buildcraft.additionalpipes.pipes.PipePowerTeleport;
 import buildcraft.additionalpipes.pipes.PipeSwitchFluids;
 import buildcraft.additionalpipes.pipes.PipeSwitchItems;
@@ -63,6 +74,7 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -225,6 +237,46 @@ public class AdditionalPipes {
 		
 		//set the reference in the API
 		TeleportManagerBase.INSTANCE = TeleportManager.instance;
+	}
+	
+	@EventHandler
+	public void postInit(FMLPostInitializationEvent event) {
+		// For Logistics Pipes compatibility
+		SimpleServiceLocator.specialpipeconnection.registerHandler(new ISpecialPipedConnection() {
+
+			@Override
+			public boolean init() {
+				return true;
+			}
+
+			@Override
+			public boolean isType(IPipeInformationProvider startPipe)
+			{
+				return startPipe instanceof PipeLogisticsTeleport;
+			}
+
+			@Override
+			public List<ConnectionInformation> getConnections(
+					IPipeInformationProvider startPipe,
+					EnumSet<PipeRoutingConnectionType> connection,
+					ForgeDirection side)
+			{
+				EnumSet<PipeRoutingConnectionType> flags = EnumSet.<PipeRoutingConnectionType>of(PipeRoutingConnectionType.canRequestFrom, PipeRoutingConnectionType.canRouteTo);
+				PipeLogisticsTeleport connectedPipe = (PipeLogisticsTeleport)(TeleportManager.instance.getConnectedPipes((ITeleportPipe)startPipe, true, true).get(0));
+				
+				ConnectionInformation connectionInfo = new ConnectionInformation(connectedPipe,
+						flags,
+						ForgeDirection.UNKNOWN,
+						connectedPipe.getOpenOrientation(),
+						Short.MAX_VALUE); //TODO: calculate this somehow?  Or is it too laggy?
+				
+				ArrayList<ConnectionInformation> connectionList = new ArrayList<ConnectionInformation>();
+				connectionList.add(connectionInfo);
+				
+				return connectionList;
+			}
+
+		});
 	}
 
 	@EventHandler
