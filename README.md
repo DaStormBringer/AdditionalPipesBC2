@@ -12,22 +12,21 @@ Compiled binaries can be found in `build/libs`.
 ### Setting Up Eclipse ###
 1. Install Eclipse JDK.
 2. Run the command `gradle setupDecompWorkspace --refresh-dependencies eclipse`
-3. In Eclipse, go to File > Import... > Genral > Existing Projects into Workspace
+3. In Eclipse, go to `File > Import... > General > Existing Projects into Workspace`
 4. Hit Next.  Click Browse... in the top right, and select the directory you cloned Additional Pipes into.  Check the box next to AdditionalPipesBC in the Projects list.
 5. Hit Finish, and the mod project should be imported.
-6. Set up the run configuration.  Click the dropdown next to the play button on the top bar, and select Run Configurations...
-7. Hit the New icon in the top left.  Type AP Client as the name, and `net.minecraft.launchwrapper.Launch` as the main class.
-8. Go to the Arguments tab.  In the VM arguments box put `-Dfml.ignoreInvalidMinecraftCertificates=true -Dorg.lwjgl.librarypath=path-to/.gradle/caches/minecraft/net/minecraft/minecraft_natives/1.7.10`
-9. In the program arguments box, put for a 1.7.10 version:
-``` --version 1.7 --tweakClass cpw.mods.fml.common.launcher.FMLTweaker --accessToken modstest --username YourMCUsername --userProperties {} --assetIndex 1.7.10 --assetsDir path-to/.gradle/caches/minecraft/assets```
-
-and for 1.8.0:
-
-``` --version 1.8 --tweakClass net.minecraftforge.fml.common.launcher.FMLTweaker --accessToken modstest --username YourMCUsername --userProperties {} --assetIndex 1.8 --assetsDir path-to/.gradle/caches/minecraft/assets```
-
-Replace YourMCUsername with your Minecraft username, and fill in the path to your .gradle folder.
+6. Set up the run configuration.  Go to `File > Import... > Run/Debug > Launch Configurations` and hit next.
+7. Click the Browse... button and select the directory you cloned Additional Pipes into.  Check the box next to `Run AP Client.launch` in the right pane.
+8. Hit finish.
+9. Click the arrow next to the play button on the top bar, select `Run Configurations...`, and click on Run AP Client in the left pane.
+10. If you want to set your usrname, go to the arguments tab and replace `APDev` with your Minecraft username in the `Program Arguments` box.
+11.  Hit run.  If it works, you're done!
+12.  If it doesn't, it's probably because your `.gradle` folder is not in your home directory, or you have unusual environment variables defined.  Either way, in the Arguments tab, replace both
+ instances of `${env_var:userprofile}${env_var:HOME}/.gradle` with the full path to your `.gradle` folder.
 
 *Done!*
+
+*Look ma, no LWJGL native library errors!*  
 
 ### Download: [latest releases](https://github.com/tcooc/AdditionalPipesBC/releases) ####
 To install, place in the standard minecraft/mods folder.
