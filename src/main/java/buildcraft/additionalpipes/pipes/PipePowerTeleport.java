@@ -49,7 +49,7 @@ public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implemen
 			return requested;
 		}
 
-		List<PipeTeleport<?>> pipeList = TeleportManager.instance.getConnectedPipes(this, true, false);
+		List<PipePowerTeleport> pipeList = TeleportManager.instance.getConnectedPipes(this, true, false);
 
 		if(pipeList.size() <= 0) {
 			return requested;
@@ -73,15 +73,15 @@ public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implemen
 
 	@Override
 	public int receiveEnergy(ForgeDirection from, int energy) {
-		List<PipeTeleport<?>> connectedPipes = TeleportManager.instance.getConnectedPipes(this, false, true);
-		List<PipeTeleport<?>> sendingToList = new LinkedList<PipeTeleport<?>>();
+		List<PipePowerTeleport> connectedPipes = TeleportManager.instance.getConnectedPipes(this, false, true);
+		List<PipePowerTeleport> sendingToList = new LinkedList<PipePowerTeleport>();
 
 		// no connected pipes, leave!
 		if(connectedPipes.size() <= 0 || (state & 0x1) == 0) {
 			return 0;
 		}
 
-		for(PipeTeleport<?> pipe : connectedPipes) {
+		for(PipePowerTeleport pipe : connectedPipes) {
 			if(getPipesNeedsPower(pipe).size() > 0) {
 				sendingToList.add(pipe);
 			}
@@ -95,7 +95,7 @@ public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implemen
 		// TODO proportional power relay
 		double powerToSend = APConfiguration.powerTransmittanceCfg * energy / sendingToList.size();
 
-		for(PipeTeleport<?> receiver : sendingToList) {
+		for(PipePowerTeleport receiver : sendingToList) {
 			List<PowerRequest> needsPower = getPipesNeedsPower(receiver);
 
 			if(needsPower.size() <= 0) {
@@ -112,7 +112,7 @@ public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implemen
 		return energy;
 	}
 
-	private List<PowerRequest> getPipesNeedsPower(PipeTeleport<?> pipe) {
+	private List<PowerRequest> getPipesNeedsPower(PipePowerTeleport pipe) {
 		LinkedList<ForgeDirection> possibleMovements = getRealPossibleMovements(pipe);
 		List<PowerRequest> needsPower = new LinkedList<PowerRequest>();
 

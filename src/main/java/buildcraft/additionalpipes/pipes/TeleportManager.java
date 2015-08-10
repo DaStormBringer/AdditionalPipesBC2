@@ -152,48 +152,38 @@ public class TeleportManager extends TeleportManagerBase
 	}
 
 	/**
-	 * Get pipes connected to the provided one.
+	 * Get pipes connected to the provided one. (template function version)
 	 * @param pipe
 	 * @param includeSend whether or not to return connected pipes that send stuff.
 	 * @param includeReceive whether or not to return connected pipes that receive stuff.
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<PipeTeleport<?>> getConnectedPipes(ITeleportPipe pipe, boolean includeSend, boolean includeReceive) 
+	public <T extends ITeleportPipe> ArrayList<T> getConnectedPipes(T pipe, boolean includeSend, boolean includeReceive) 
 	{
-		Collection<PipeTeleport<?>> channel = getPipesInChannel(pipe.getFrequency(), pipe.getType());
+		Collection<T> channel = getPipesInChannel(pipe.getFrequency(), pipe.getType());
 		
-		ArrayList<PipeTeleport<?>> connected = new ArrayList<PipeTeleport<?>>();
+		ArrayList<T> connected = new ArrayList<T>();
 		
-		for(PipeTeleport<?> other : channel)
+		for(T other : channel)
 		{
-			if(other.container != null && other.container.isInvalid())
+			if(other.getContainer() != null && other.getContainer().isInvalid())
 			{
 				continue;
 			}
 
 			// pipe is open or includeReceive &&
 			// both public or same owner
-			if((((other.state & 0x2) > 0 && includeReceive) || ((other.state & 0x1) > 0 && includeSend)) && (pipe.isPublic() ? other.isPublic : (other.ownerUUID != null && other.ownerUUID.equals(pipe.getOwnerUUID()))))
+			if(pipe != other &&
+					((other.canReceive() && includeReceive) || (other.canSend() && includeSend)) && 
+					(pipe.isPublic() 
+					? other.isPublic() 
+					: (other.getOwnerUUID() != null && other.getOwnerUUID().equals(pipe.getOwnerUUID()))));
 			{
 				connected.add(other);
 			}
 		}
 		return connected;
-	}
-	
-	/**
-	 * Get pipes connected to the provided one. (API-safe version, since it does not use PipeTeleport, only ITeleportPipe)
-	 * @param pipe
-	 * @param includeSend whether or not to return connected pipes that send stuff.
-	 * @param includeReceive whether or not to return connected pipes that receive stuff.
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public ArrayList<ITeleportPipe> getConnectedPipesAPI(ITeleportPipe pipe, boolean includeSend, boolean includeReceive) 
-	{
-		return (ArrayList<ITeleportPipe>)((ArrayList<?>)getConnectedPipes(pipe, includeSend, includeReceive));
 	}
 	
 	public Collection<PipeTeleport<PipeTransportItems>> getAllItemPipesInNetwork() 

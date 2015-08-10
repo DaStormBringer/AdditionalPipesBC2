@@ -218,7 +218,7 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 	@Override
 	public void updateSignalState() 
 	{
-		ArrayList<PipeTeleport<?>> otherTeleportPipes = TeleportManager.instance.getConnectedPipes(this, true, true);
+		ArrayList<PipeTeleport<?>> otherTeleportPipes = TeleportManager.instance.<PipeTeleport<?>>getConnectedPipes(this, true, true);
 		
 		for (PipeWire c : PipeWire.values()) 
 		{
@@ -407,5 +407,15 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 
 	public Position getPosition() {
 		return new Position(container.xCoord, container.yCoord, container.zCoord);
+	}
+	
+	public boolean canReceive()
+	{
+		return (state & 0x2) > 0;
+	}
+	
+	public boolean canSend()
+	{
+		return (state & 0x1) > 0;
 	}
 }

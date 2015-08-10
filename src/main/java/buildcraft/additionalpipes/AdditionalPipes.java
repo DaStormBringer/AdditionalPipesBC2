@@ -24,7 +24,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 import buildcraft.BuildCraftCore;
 import buildcraft.BuildCraftSilicon;
 import buildcraft.BuildCraftTransport;
-import buildcraft.additionalpipes.api.ITeleportPipe;
 import buildcraft.additionalpipes.api.TeleportManagerBase;
 import buildcraft.additionalpipes.chunkloader.BlockChunkLoader;
 import buildcraft.additionalpipes.chunkloader.ChunkLoadingHandler;
@@ -52,6 +51,7 @@ import buildcraft.additionalpipes.pipes.PipePowerTeleport;
 import buildcraft.additionalpipes.pipes.PipeSwitchFluids;
 import buildcraft.additionalpipes.pipes.PipeSwitchItems;
 import buildcraft.additionalpipes.pipes.PipeSwitchPower;
+import buildcraft.additionalpipes.pipes.PipeTeleportInformationProvider;
 import buildcraft.additionalpipes.pipes.TeleportManager;
 import buildcraft.additionalpipes.test.TeleportManagerTest;
 import buildcraft.additionalpipes.textures.Textures;
@@ -244,6 +244,8 @@ public class AdditionalPipes {
 		// For Logistics Pipes compatibility
 		SimpleServiceLocator.specialpipeconnection.registerHandler(new ISpecialPipedConnection() {
 
+			EnumSet<PipeRoutingConnectionType> flags = EnumSet.<PipeRoutingConnectionType>of(PipeRoutingConnectionType.canRequestFrom, PipeRoutingConnectionType.canRouteTo);
+
 			@Override
 			public boolean init() {
 				return true;
@@ -257,21 +259,26 @@ public class AdditionalPipes {
 
 			@Override
 			public List<ConnectionInformation> getConnections(
-					IPipeInformationProvider startPipe,
+					IPipeInformationProvider startPipeInfoGeneric,
 					EnumSet<PipeRoutingConnectionType> connection,
 					ForgeDirection side)
 			{
-				EnumSet<PipeRoutingConnectionType> flags = EnumSet.<PipeRoutingConnectionType>of(PipeRoutingConnectionType.canRequestFrom, PipeRoutingConnectionType.canRouteTo);
-				PipeLogisticsTeleport connectedPipe = (PipeLogisticsTeleport)(TeleportManager.instance.getConnectedPipes((ITeleportPipe)startPipe, true, true).get(0));
-				
-				ConnectionInformation connectionInfo = new ConnectionInformation(connectedPipe,
-						flags,
-						ForgeDirection.UNKNOWN,
-						connectedPipe.getOpenOrientation(),
-						Short.MAX_VALUE); //TODO: calculate this somehow?  Or is it too laggy?
-				
+				PipeTeleportInformationProvider startPipeInfo = ((PipeTeleportInformationProvider)startPipeInfoGeneric);
+				PipeLogisticsTeleport connectedPipe = startPipeInfo.pipe.getConnectedPipe();				
+								
 				ArrayList<ConnectionInformation> connectionList = new ArrayList<ConnectionInformation>();
-				connectionList.add(connectionInfo);
+				
+				if(connectedPipe != null)
+				{
+					ConnectionInformation connectionInfo = new ConnectionInformation(new PipeTeleportInformationProvider(connectedPipe),
+							flags,
+							ForgeDirection.UNKNOWN,
+							connectedPipe.getOpenOrientation(),
+							Short.MAX_VALUE
+							); 
+					connectionList.add(connectionInfo);
+					
+				}
 				
 				return connectionList;
 			}

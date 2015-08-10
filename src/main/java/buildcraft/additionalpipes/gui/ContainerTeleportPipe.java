@@ -41,11 +41,11 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 		isPublic = !pipe.isPublic;
 		freq = -1;
 		
-		isSendingPipe = (pipe.state & 0x1) > 1;
+		isSendingPipe = pipe.canSend();
 		
 		if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 		{			
-			List<PipeTeleport<?>> connectedPipes = TeleportManager.instance.getConnectedPipes(pipe, !isSendingPipe, isSendingPipe);
+			List<PipeTeleport<?>> connectedPipes = TeleportManager.instance.<PipeTeleport<?>>getConnectedPipes(pipe, !isSendingPipe, isSendingPipe);
 			int[] locations = new int[connectedPipes.size() * 3];
 			for(int i = 0; i < connectedPipes.size() && i < 9; i++) {
 				PipeTeleport<?> connectedPipe = connectedPipes.get(i);

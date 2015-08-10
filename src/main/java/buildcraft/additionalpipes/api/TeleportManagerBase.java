@@ -39,13 +39,13 @@ public abstract class TeleportManagerBase
 	public abstract void reset();
 	
 	/**
-	 * Get pipes connected to (aka linked with) the provided one.
+	 * Get pipes connected to the provided one. (template function version)
 	 * @param pipe
 	 * @param includeSend whether or not to return connected pipes that send stuff.
 	 * @param includeReceive whether or not to return connected pipes that receive stuff.
 	 * @return
 	 */
-	public abstract ArrayList<ITeleportPipe> getConnectedPipesAPI(ITeleportPipe pipe, boolean includeSend, boolean includeReceive);
+	public abstract <T extends ITeleportPipe> ArrayList<T> getConnectedPipes(T pipe, boolean includeSend, boolean includeReceive);
 	
 	/**
 	 * Get the name of the provided frequency.

@@ -36,6 +36,10 @@ public interface ITeleportPipe
 	public PipeType getType();
 	
 	public Position getPosition();
+	
+	public boolean canReceive();
+	
+	public boolean canSend();
 
 	public UUID getOwnerUUID();
 	

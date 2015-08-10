@@ -61,7 +61,7 @@ public class PipeTransportItemsLogistics extends PipeTransportItems
 			}
 			
 			//another BC pipe
-			if(currentTile instanceof IPipeTile)
+			else if(currentTile instanceof IPipeTile)
 			{
 				Pipe<?> pipe = (Pipe<?>) ((IPipeTile) currentTile).getPipe();
 				if(!BlockGenericPipe.isValid(pipe) || !(pipe.transport instanceof PipeTransportItems))
@@ -79,6 +79,13 @@ public class PipeTransportItemsLogistics extends PipeTransportItems
 				//move to next pipe
 				currentTile = pipe.container.getTile(pipe.getOpenOrientation());
 			}
+			
+			else
+			{
+				//trying to connect to anything besides a BC or LP pipe
+				return false;
+			}
+			
 		}
 		
 		Log.warn("Wow, that's a long, straight pipeline! Gave up looking for logistics pipes after " + DISTANCE_TO_SEARCH_FOR_LOGISTICS_PIPES + " pipes.");

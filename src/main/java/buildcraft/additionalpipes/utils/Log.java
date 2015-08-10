@@ -31,6 +31,11 @@ public class Log
     {
         log(Level.ERROR, object);
     }
+    
+    public static void unexpected(Object object)
+    {
+        log(Level.ERROR, "...what? " + object);
+    }
 
     public static void fatal(Object object)
     {
