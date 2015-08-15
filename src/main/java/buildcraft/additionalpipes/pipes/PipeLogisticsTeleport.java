@@ -21,7 +21,7 @@ import buildcraft.transport.pipes.events.PipeEventItem;
 import buildcraft.transport.utils.TransportUtils;
 
 public class PipeLogisticsTeleport extends PipeTeleport<PipeTransportItemsLogistics>  {
-	private static final int ICON = 0;
+	private static final int ICON = 40;
 
 	public PipeLogisticsTeleport(Item items) {
 		super(new PipeTransportItemsLogistics(), items, PipeType.ITEMS);

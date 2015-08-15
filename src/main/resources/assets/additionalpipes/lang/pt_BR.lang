@@ -15,4 +15,4 @@ item.PipeLiquidsWaterPump.name=Tubo da Bomba d'água
 
 key.lasers=Alterna a exibição dos 'chunks' carregados
 
-tip.ItemPipeAP=Transporta seu material sem a necessidade para uma longa tubulação
+tip.teleportPipe=Transporta seu material sem a necessidade para uma longa tubulação

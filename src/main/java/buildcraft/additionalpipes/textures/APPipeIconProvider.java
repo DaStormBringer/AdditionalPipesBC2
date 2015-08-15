@@ -10,7 +10,7 @@ public class APPipeIconProvider implements IIconProvider {
 	private IIcon icons[];
 	
 	//1 more than highest-numbered icon
-	private final int iconCount = 40;
+	private final int iconCount = 41;
 
 	public APPipeIconProvider() {
 		icons = new IIcon[iconCount];

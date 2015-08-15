@@ -2,15 +2,8 @@ package buildcraft.additionalpipes;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
 
-import logisticspipes.interfaces.routing.ISpecialPipedConnection;
 import logisticspipes.proxy.SimpleServiceLocator;
-import logisticspipes.proxy.specialconnection.SpecialPipeConnection.ConnectionInformation;
-import logisticspipes.routing.PipeRoutingConnectionType;
-import logisticspipes.routing.pathfinder.IPipeInformationProvider;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -20,7 +13,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.ForgeDirection;
 import buildcraft.BuildCraftCore;
 import buildcraft.BuildCraftSilicon;
 import buildcraft.BuildCraftTransport;
@@ -34,6 +26,7 @@ import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.additionalpipes.item.ItemDogDeaggravator;
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.pipes.APPipe;
+import buildcraft.additionalpipes.pipes.APSpecialPipedConnection;
 import buildcraft.additionalpipes.pipes.PipeItemsAddition;
 import buildcraft.additionalpipes.pipes.PipeItemsAdvancedInsertion;
 import buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
@@ -51,7 +44,6 @@ import buildcraft.additionalpipes.pipes.PipePowerTeleport;
 import buildcraft.additionalpipes.pipes.PipeSwitchFluids;
 import buildcraft.additionalpipes.pipes.PipeSwitchItems;
 import buildcraft.additionalpipes.pipes.PipeSwitchPower;
-import buildcraft.additionalpipes.pipes.PipeTeleportInformationProvider;
 import buildcraft.additionalpipes.pipes.TeleportManager;
 import buildcraft.additionalpipes.test.TeleportManagerTest;
 import buildcraft.additionalpipes.textures.Textures;
@@ -204,6 +196,11 @@ public class AdditionalPipes {
 			GameRegistry.addShapelessRecipe(new ItemStack(pipeItemsTeleport), new Object[] {pipePowerTeleport});
 			GameRegistry.addShapelessRecipe(new ItemStack(pipeItemsTeleport), new Object[] {pipeLiquidsTeleport});
 			
+			if(logisticsPipesInstalled)
+			{
+				GameRegistry.addShapelessRecipe(new ItemStack(pipeItemsTeleport), new Object[] {pipeLogisticsTeleport});
+			}
+			
 			GameRegistry.addShapelessRecipe(new ItemStack(pipeItemsSwitch), new Object[] {pipeLiquidsSwitch});
 			GameRegistry.addShapelessRecipe(new ItemStack(pipeItemsSwitch), new Object[] {pipePowerSwitch});
 			
@@ -249,48 +246,11 @@ public class AdditionalPipes {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		// For Logistics Pipes compatibility
-		SimpleServiceLocator.specialpipeconnection.registerHandler(new ISpecialPipedConnection() {
-
-			EnumSet<PipeRoutingConnectionType> flags = EnumSet.<PipeRoutingConnectionType>of(PipeRoutingConnectionType.canRequestFrom, PipeRoutingConnectionType.canRouteTo);
-
-			@Override
-			public boolean init() {
-				return true;
-			}
-
-			@Override
-			public boolean isType(IPipeInformationProvider startPipe)
-			{
-				return startPipe instanceof PipeLogisticsTeleport;
-			}
-
-			@Override
-			public List<ConnectionInformation> getConnections(
-					IPipeInformationProvider startPipeInfoGeneric,
-					EnumSet<PipeRoutingConnectionType> connection,
-					ForgeDirection side)
-			{
-				PipeTeleportInformationProvider startPipeInfo = ((PipeTeleportInformationProvider)startPipeInfoGeneric);
-				PipeLogisticsTeleport connectedPipe = startPipeInfo.pipe.getConnectedPipe();				
-								
-				ArrayList<ConnectionInformation> connectionList = new ArrayList<ConnectionInformation>();
-				
-				if(connectedPipe != null)
-				{
-					ConnectionInformation connectionInfo = new ConnectionInformation(new PipeTeleportInformationProvider(connectedPipe),
-							flags,
-							ForgeDirection.UNKNOWN,
-							connectedPipe.getOpenOrientation(),
-							1
-							); 
-					connectionList.add(connectionInfo);
-					
-				}
-				
-				return connectionList;
-			}
-
-		});
+		
+		if(logisticsPipesInstalled)
+		{
+			SimpleServiceLocator.specialpipeconnection.registerHandler(new APSpecialPipedConnection());
+		}
 	}
 
 	@EventHandler
@@ -302,7 +262,7 @@ public class AdditionalPipes {
 	
 	private void loadPipes() {
 		// Item Teleport Pipe
-		pipeItemsTeleport = PipeCreator.createPipeTooltip((Class<? extends APPipe<?>>) PipeItemsTeleport.class);
+		pipeItemsTeleport = PipeCreator.createPipeTooltip((Class<? extends APPipe<?>>) PipeItemsTeleport.class, "tip.teleportPipe");
 		
 		GameRegistry.addRecipe(new ItemStack(pipeItemsTeleport, 4), new Object[] { "dgd", 'd', BuildCraftCore.diamondGearItem, 'g', Blocks.glass });
 		AssemblyRecipeManager.INSTANCE.addRecipe("teleportPipe", 10000, new ItemStack(pipeItemsTeleport, 8), new Object[] { new ItemStack(BuildCraftSilicon.redstoneChipset, 1, 4), new ItemStack(BuildCraftTransport.pipeItemsDiamond, 8),
@@ -310,14 +270,14 @@ public class AdditionalPipes {
 
 
 		// Liquid Teleport Pipe
-		pipeLiquidsTeleport = PipeCreator.createPipeTooltip((Class<? extends APPipe<?>>) PipeLiquidsTeleport.class);
+		pipeLiquidsTeleport = PipeCreator.createPipeTooltip((Class<? extends APPipe<?>>) PipeLiquidsTeleport.class, "tip.teleportPipe");
 		if(pipeItemsTeleport != null) {
 			GameRegistry.addShapelessRecipe(new ItemStack(pipeLiquidsTeleport), new Object[] {BuildCraftTransport.pipeWaterproof, pipeItemsTeleport});
 		}
 
 		// Power Teleport Pipe
 		
-		pipePowerTeleport = PipeCreator.createPipeTooltip((Class<? extends APPipe<?>>) PipePowerTeleport.class);
+		pipePowerTeleport = PipeCreator.createPipeTooltip((Class<? extends APPipe<?>>) PipePowerTeleport.class, "tip.teleportPipe");
 		if(pipeItemsTeleport != null) {
 			GameRegistry.addShapelessRecipe(new ItemStack(pipePowerTeleport), new Object[] {Items.redstone, pipeItemsTeleport});
 		}
@@ -325,9 +285,9 @@ public class AdditionalPipes {
 		if(logisticsPipesInstalled)
 		{
 			// Logistics Teleport Pipe
-			pipeLogisticsTeleport = PipeCreator.createPipeTooltip((Class<? extends APPipe<?>>) PipeLogisticsTeleport.class);
+			pipeLogisticsTeleport = PipeCreator.createPipeTooltip((Class<? extends APPipe<?>>) PipeLogisticsTeleport.class, "tip.teleportLogisticsPipe");
 			if(pipeItemsTeleport != null) {
-				GameRegistry.addShapelessRecipe(new ItemStack(pipeLogisticsTeleport), new Object[] {pipeItemsTeleport});
+				GameRegistry.addShapelessRecipe(new ItemStack(pipeLogisticsTeleport), new Object[] {pipeItemsTeleport, BuildCraftSilicon.redstoneChipset});
 			}
 		}
 

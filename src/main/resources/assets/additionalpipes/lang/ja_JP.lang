@@ -45,4 +45,4 @@ itemGroup.buildcraft.apcreativetab=Additional Pipes
 
 key.lasers=Chunk load boundaries
 
-tooltip.ItemPipeAP=長い管路が必要じゃない！
+tip.teleportPipe=長い管路が必要じゃない！

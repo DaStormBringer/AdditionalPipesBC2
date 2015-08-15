@@ -14,8 +14,16 @@ import cpw.mods.fml.relauncher.SideOnly;
 //special pipe code
 public class ItemPipeAP extends ItemPipe
 {
-	public ItemPipeAP() {
+	String tooltip;
+	
+	/**
+	 * 
+	 * @param tooltip unlocalized key for the tooltip string
+	 */
+	public ItemPipeAP(String tooltip) {
 		super(AdditionalPipes.instance.creativeTab);
+		this.tooltip = tooltip;
+		
 	}
 
 	@Override
@@ -28,9 +36,7 @@ public class ItemPipeAP extends ItemPipe
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean advanced) {
-		super.addInformation(stack, player, list, advanced);
-		String key = "tooltip." + stack.getItem().getClass().getSimpleName();
-		
-		list.add(StatCollector.translateToLocal(key));
+		super.addInformation(stack, player, list, advanced);		
+		list.add(StatCollector.translateToLocal(tooltip));
 	}
 }

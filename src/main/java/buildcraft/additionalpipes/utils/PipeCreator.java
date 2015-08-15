@@ -54,9 +54,9 @@ public class PipeCreator
 		return res;
 	}
 
-	public static Item createPipeTooltip(Class<? extends APPipe<?>> clas)
+	public static Item createPipeTooltip(Class<? extends APPipe<?>> clas, String tooltip)
 	{
-		ItemPipe item = new ItemPipeAP();
+		ItemPipe item = new ItemPipeAP(tooltip);
 		item.setUnlocalizedName(clas.getSimpleName());
 		AdditionalPipes.proxy.registerPipeRendering(item);
 		BlockGenericPipe.pipes.put(item, clas);

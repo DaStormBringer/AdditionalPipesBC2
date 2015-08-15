@@ -43,8 +43,9 @@ gate.pipeClosed=Pipe Closed (Storing Items)
 
 key.lasers=Show chunk load boundaries
 
-#tooltip for teleport pipes
-tooltip.ItemPipeAP=No more long pipelines!
+#tooltips for teleport pipes
+tip.teleportPipe=No more long pipelines!
+tip.teleportLogisticsPipe=Connects to Logistics Pipes!
 
 tooltip.dogDeaggravator=Calms down attacking wolves
 

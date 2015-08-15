@@ -26,6 +26,6 @@ gate.phasedSignalYellow=Жёлтый переключаемый сигнал
 
 key.lasers=Переключает отображение загрузки границ чанков
 
-tip.ItemPipeAP=Больше никаких труб!
+tip.teleportPipe=Больше никаких труб!
 
 command.ap.usage=/additionalpipes teleport [items|fluids|power]
