@@ -31,7 +31,7 @@ import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.TravelingItem;
 import cofh.api.energy.IEnergyHandler;
 
-public class PipeItemsAdvancedWood extends APPipe<PipeTransportItems> implements IEnergyHandler
+public class PipeItemsAdvancedWood extends APPipe<PipeTransportAdvancedWood> implements IEnergyHandler
 {
 	
 	protected RFBattery battery = new RFBattery(640, 640, 0);
@@ -206,7 +206,7 @@ public class PipeItemsAdvancedWood extends APPipe<PipeTransportItems> implements
 	{
 		Item equipped = entityplayer.getCurrentEquippedItem() != null ? entityplayer.getCurrentEquippedItem().getItem() : null;
 		if(equipped instanceof IToolWrench && ((IToolWrench) equipped).canWrench(entityplayer, container.xCoord, container.yCoord, container.zCoord)) {
-			((PipeTransportAdvancedWood) transport).switchSource();
+			transport.switchSource();
 			((IToolWrench) equipped).wrenchUsed(entityplayer, container.xCoord, container.yCoord, container.zCoord);
 			return true;
 		}
