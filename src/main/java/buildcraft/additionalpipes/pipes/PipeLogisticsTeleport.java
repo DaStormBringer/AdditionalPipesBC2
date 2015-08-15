@@ -10,17 +10,22 @@ package buildcraft.additionalpipes.pipes;
 
 import java.util.List;
 
+import logisticspipes.api.ILPPipeTile;
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import buildcraft.additionalpipes.api.PipeType;
 import buildcraft.additionalpipes.utils.Log;
 import buildcraft.api.core.Position;
+import buildcraft.api.transport.IPipeTile;
+import buildcraft.transport.BlockGenericPipe;
+import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.TileGenericPipe;
 import buildcraft.transport.pipes.events.PipeEventItem;
 import buildcraft.transport.utils.TransportUtils;
 
-public class PipeLogisticsTeleport extends PipeTeleport<PipeTransportItems>  {
+public class PipeLogisticsTeleport extends PipeTeleport<PipeTransportItemsLogistics>  {
 	private static final int ICON = 0;
 
 	public PipeLogisticsTeleport(Item items) {
@@ -80,5 +85,46 @@ public class PipeLogisticsTeleport extends PipeTeleport<PipeTransportItems>  {
 		return connectedPipes.get(0);
 	}
 
-
+	
+	/**
+	 * Recursive function for checking valid pipelines
+	 * @param start
+	 * @param sideConnectedToPrevPipe
+	 * @return
+	 */
+	public boolean pipelineEndsinLogisticsPipe(TileEntity start, ForgeDirection sideConnectedToPrevPipe)
+	{
+		//found one!
+		if(start instanceof ILPPipeTile)
+		{
+			return true;
+		}
+		
+		//another BC pipe
+		else if(start instanceof IPipeTile)
+		{
+			Pipe<?> pipe = (Pipe<?>) ((IPipeTile) start).getPipe();
+			if(!BlockGenericPipe.isValid(pipe) || !(pipe.transport instanceof PipeTransportItems))
+			{
+				//or not?
+				return false;
+			}
+			
+			//if it branches off, then this pipeline isn't valid
+			if(PipeTransportItemsLogistics.getNumConnectedPipes(pipe.container) != 1)
+			{
+				return false;
+			}
+			
+			//move to next pipe
+			for (ForgeDirection o : ForgeDirection.VALID_DIRECTIONS) {
+				if (pipe.container.isPipeConnected(o) || o != sideConnectedToPrevPipe) {
+					
+					return pipelineEndsinLogisticsPipe(((IPipeTile) start).getNeighborTile(o), o.getOpposite());
+				}
+			}
+		}
+		//trying to connect to anything besides a BC or LP pipe
+		return false;
+	}
 }

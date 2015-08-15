@@ -1,12 +1,8 @@
 package buildcraft.additionalpipes.pipes;
 
-import logisticspipes.api.ILPPipeTile;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-import buildcraft.additionalpipes.utils.Log;
 import buildcraft.api.transport.IPipeTile;
-import buildcraft.transport.BlockGenericPipe;
-import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransportItems;
 
 /**
@@ -16,14 +12,12 @@ import buildcraft.transport.PipeTransportItems;
  */
 public class PipeTransportItemsLogistics extends PipeTransportItems
 {
-	final static int DISTANCE_TO_SEARCH_FOR_LOGISTICS_PIPES = 256;
-
 	/**
 	 * Get the number of pipes that are connected to a pipe tile.
 	 * @param tile
 	 * @return
 	 */
-	private static int getNumConnectedPipes(IPipeTile tile)
+	public static int getNumConnectedPipes(IPipeTile tile)
 	{
 		int count = 0;
 		
@@ -42,54 +36,18 @@ public class PipeTransportItemsLogistics extends PipeTransportItems
 	 */
 	public boolean canPipeConnect(TileEntity tile, ForgeDirection side)
 	{
-		//only one connection allowed
-		if(getNumConnectedPipes(container) > 0)
+		
+		ForgeDirection currentlyConnectedSide = container.pipe.getOpenOrientation().getOpposite();
+		if(currentlyConnectedSide.equals(side))
 		{
-			return false;
+			return true;
 		}
-
-		
-		//search for logistics pipes
-		TileEntity currentTile = tile;
-		
-		for(int pipeNum = 0; pipeNum < DISTANCE_TO_SEARCH_FOR_LOGISTICS_PIPES; ++pipeNum)
+		else if(getNumConnectedPipes(container) == 0)
 		{
-			//found one!
-			if(currentTile instanceof ILPPipeTile)
-			{
-				return true;
-			}
-			
-			//another BC pipe
-			else if(currentTile instanceof IPipeTile)
-			{
-				Pipe<?> pipe = (Pipe<?>) ((IPipeTile) currentTile).getPipe();
-				if(!BlockGenericPipe.isValid(pipe) || !(pipe.transport instanceof PipeTransportItems))
-				{
-					//or not?
-					return false;
-				}
-				
-				//if it branches off, then this pipeline isn't valid
-				if(getNumConnectedPipes(pipe.container) != 1)
-				{
-					return false;
-				}
-				
-				//move to next pipe
-				currentTile = pipe.container.getTile(pipe.getOpenOrientation());
-			}
-			
-			else
-			{
-				//trying to connect to anything besides a BC or LP pipe
-				return false;
-			}
-			
+			return true;
 		}
 		
-		Log.warn("Wow, that's a long, straight pipeline! Gave up looking for logistics pipes after " + DISTANCE_TO_SEARCH_FOR_LOGISTICS_PIPES + " pipes.");
-		
+		//Log.warn("Wow, that's a long, straight pipeline! Gave up looking for logistics pipes!");
 
 		return false;
 	}
