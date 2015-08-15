@@ -21,7 +21,6 @@ import buildcraft.api.transport.IPipeTile;
 import buildcraft.transport.BlockGenericPipe;
 import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransportItems;
-import buildcraft.transport.TileGenericPipe;
 import buildcraft.transport.pipes.events.PipeEventItem;
 import buildcraft.transport.utils.TransportUtils;
 
@@ -46,19 +45,39 @@ public class PipeLogisticsTeleport extends PipeTeleport<PipeTransportItemsLogist
 			return;
 		}
 
-		ForgeDirection newOrientation = otherPipe.getOpenOrientation();
-		TileGenericPipe destination = (TileGenericPipe) otherPipe.container.getTile(newOrientation);
-
-		if(destination == null) {
-			return;
-		}
-		
-		Position insertPoint = new Position(destination.xCoord + 0.5, destination.yCoord + TransportUtils.getPipeFloorOf(event.item.getItemStack()), destination.zCoord + 0.5, newOrientation.getOpposite());
+		Position insertPoint = otherPipe.getPosition();
+		insertPoint.x += 0.5;
+		insertPoint.y += TransportUtils.getPipeFloorOf(event.item.getItemStack());
+		insertPoint.z += 0.5;
 		insertPoint.moveForwards(0.5);
 		event.item.setPosition(insertPoint.x, insertPoint.y, insertPoint.z);
 		
-		((PipeTransportItems) destination.pipe.transport).injectItem(event.item, newOrientation);
-
+		ForgeDirection newOrientation = otherPipe.getOpenOrientation().getOpposite();
+		otherPipe.transport.injectItem(event.item, newOrientation);
+		
+//		ForgeDirection newOrientation = otherPipe.getOpenOrientation().getOpposite();
+//		TileEntity destinationGeneric = otherPipe.container.getTile(newOrientation);
+//
+//		if(destinationGeneric instanceof IPipeTile)
+//		{
+//			TileGenericPipe destination = (TileGenericPipe)destinationGeneric;
+//			
+//			Position insertPoint = new Position(destination.xCoord + 0.5, destination.yCoord + TransportUtils.getPipeFloorOf(event.item.getItemStack()), destination.zCoord + 0.5, newOrientation.getOpposite());
+//			insertPoint.moveForwards(0.5);
+//			event.item.setPosition(insertPoint.x, insertPoint.y, insertPoint.z);
+//			
+//			((PipeTransportItems) destination.pipe.transport).injectItem(event.item, newOrientation);
+//			
+//		}
+//		else if(destinationGeneric instanceof ILPPipeTile)
+//		{
+//			
+//		}
+//		else
+//		{
+//			return;
+//		}
+			
 		Log.debug(event.item + " from " + getPosition() + " to " + otherPipe.getPosition() + " " + newOrientation);
 		event.cancelled = true;
 	}

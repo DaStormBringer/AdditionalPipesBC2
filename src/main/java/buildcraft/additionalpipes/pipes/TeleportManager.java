@@ -103,7 +103,7 @@ public class TeleportManager extends TeleportManagerBase
 		//if unit tests are being run, pipe.container will be null.
 		if(pipe.getContainer() != null)
 		{
-			Log.debug(String.format("[TeleportManager] Pipe added: %s @ (%d, %d, %d), %d pipes in channel", pipe.getType().toString().toLowerCase(),
+			Log.debug(String.format("[TeleportManager] Pipe added: %s @ (%.1f, %.1f, %.1f), %d pipes in channel", pipe.getType().toString().toLowerCase(),
 					pipe.getPosition().x, pipe.getPosition().y, pipe.getPosition().z, getPipesInChannel(frequency, pipe.getType()).size()));
 		}
 	}
@@ -135,7 +135,7 @@ public class TeleportManager extends TeleportManagerBase
 		//if unit tests are being run, pipe.container will be null.
 		if(pipe.getContainer() != null)
 		{
-			Log.debug(String.format("[TeleportManager] Pipe removed: %s @ (%d, %d, %d), %d pipes in channel", pipe.getType().toString().toLowerCase(),
+			Log.debug(String.format("[TeleportManager] Pipe removed: %s @ (%.1f, %.1f, %.1f), %d pipes in channel", pipe.getType().toString().toLowerCase(),
 					pipe.getPosition().x, pipe.getPosition().y, pipe.getPosition().z, getPipesInChannel(frequency, pipe.getType()).size()));
 		}
 	}
@@ -171,17 +171,20 @@ public class TeleportManager extends TeleportManagerBase
 			{
 				continue;
 			}
-
+			
 			// pipe is open or includeReceive &&
 			// both public or same owner
-			if(pipe != other &&
-					((other.canReceive() && includeReceive) || (other.canSend() && includeSend)) && 
-					(pipe.isPublic() 
-					? other.isPublic() 
-					: (other.getOwnerUUID() != null && other.getOwnerUUID().equals(pipe.getOwnerUUID()))));
+			if(pipe != other)
 			{
-				connected.add(other);
+				if((other.canReceive() && includeReceive) || (other.canSend() && includeSend))
+				{
+					if(pipe.isPublic() ? other.isPublic() : (other.getOwnerUUID() != null && other.getOwnerUUID().equals(pipe.getOwnerUUID())))
+					{
+						connected.add(other);
+					}	
+				}
 			}
+
 		}
 		return connected;
 	}

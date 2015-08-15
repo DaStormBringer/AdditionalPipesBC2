@@ -158,7 +158,7 @@ public class PipeTeleportInformationProvider implements IPipeInformationProvider
 	@Override
 	public boolean isPowerPipe()
 	{
-		return false;
+		return true;
 	}
 
 	@Override

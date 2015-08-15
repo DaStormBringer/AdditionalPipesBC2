@@ -69,6 +69,7 @@ import buildcraft.transport.pipes.PipeFluidsIron;
 import buildcraft.transport.pipes.PipePowerGold;
 import buildcraft.transport.pipes.PipePowerIron;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -83,11 +84,11 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@Mod(modid = AdditionalPipes.MODID, name = AdditionalPipes.NAME, dependencies = "after:BuildCraft|Transport[7.0.6,);after:BuildCraft|Silicon;after:BuildCraft|Transport;after:BuildCraft|Factory", version = AdditionalPipes.VERSION)
+@Mod(modid = AdditionalPipes.MODID, name = AdditionalPipes.NAME, dependencies = "after:BuildCraft|Transport[7.0.6,);after:BuildCraft|Silicon;after:BuildCraft|Transport;after:BuildCraft|Factory;after:LogisticsPipes", version = AdditionalPipes.VERSION)
 public class AdditionalPipes {
 	public static final String MODID = "additionalpipes";
 	public static final String NAME = "Additional Pipes";
-	public static final String VERSION = "4.6.0";
+	public static final String VERSION = "4.7.0";
 
 	@Instance(MODID)
 	public static AdditionalPipes instance;
@@ -96,6 +97,8 @@ public class AdditionalPipes {
 	public static MultiPlayerProxy proxy;
 
 	public File configFile;
+	
+	public boolean logisticsPipesInstalled;
 
 	// chunk load boundaries
 	public ChunkLoadViewDataProxy chunkLoadViewer;
@@ -132,6 +135,8 @@ public class AdditionalPipes {
 	public Item pipeLiquidsTeleport;
 	// Power Teleport
 	public Item pipePowerTeleport;
+	// Logistics Teleport
+	public Item pipeLogisticsTeleport;
 	// Items Closed
 	public Item pipeItemsClosed;
 	// Switch pipes
@@ -167,6 +172,8 @@ public class AdditionalPipes {
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
+		
+		logisticsPipesInstalled = Loader.isModLoaded("LogisticsPipes");
 		//EntityList.addMapping(EntityBetterCat.class, "betterCat", 79, 0xEDCE21, 0x564434);
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
@@ -274,7 +281,7 @@ public class AdditionalPipes {
 							flags,
 							ForgeDirection.UNKNOWN,
 							connectedPipe.getOpenOrientation(),
-							Short.MAX_VALUE
+							1
 							); 
 					connectionList.add(connectionInfo);
 					
@@ -314,9 +321,17 @@ public class AdditionalPipes {
 		if(pipeItemsTeleport != null) {
 			GameRegistry.addShapelessRecipe(new ItemStack(pipePowerTeleport), new Object[] {Items.redstone, pipeItemsTeleport});
 		}
+		
+		if(logisticsPipesInstalled)
+		{
+			// Logistics Teleport Pipe
+			pipeLogisticsTeleport = PipeCreator.createPipeTooltip((Class<? extends APPipe<?>>) PipeLogisticsTeleport.class);
+			if(pipeItemsTeleport != null) {
+				GameRegistry.addShapelessRecipe(new ItemStack(pipeLogisticsTeleport), new Object[] {pipeItemsTeleport});
+			}
+		}
 
 		//Jeweled Pipe
-		//disabled since I can't get the GUI to work
 		pipeItemsJeweled = PipeCreator.createPipeAndRecipe(2, PipeItemsJeweled.class, new Object[] { " D ", "DGD", " D ", 'D', BuildCraftTransport.pipeItemsDiamond, 'G', BuildCraftCore.goldGearItem}, false);
 		
 		// Distributor Pipe

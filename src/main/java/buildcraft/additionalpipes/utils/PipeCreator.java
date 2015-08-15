@@ -54,10 +54,6 @@ public class PipeCreator
 		return res;
 	}
 
-	/*
-	 * I... really cannot figure out what this does differently from createPipe().
-	 * It was here when I got here, and "special" isn't very descriptive. -JS
-	 */
 	public static Item createPipeTooltip(Class<? extends APPipe<?>> clas)
 	{
 		ItemPipe item = new ItemPipeAP();
