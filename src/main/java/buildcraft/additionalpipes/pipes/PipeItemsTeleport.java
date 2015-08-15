@@ -17,7 +17,6 @@ import buildcraft.additionalpipes.api.PipeType;
 import buildcraft.additionalpipes.utils.Log;
 import buildcraft.api.core.Position;
 import buildcraft.transport.PipeTransportItems;
-import buildcraft.transport.TileGenericPipe;
 import buildcraft.transport.pipes.events.PipeEventItem;
 import buildcraft.transport.utils.TransportUtils;
 
@@ -91,18 +90,16 @@ public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 			return;
 		}
 
-		ForgeDirection newOrientation = outputOrientations.get(rand.nextInt(outputOrientations.size()));
-		TileGenericPipe destination = (TileGenericPipe) otherPipe.container.getTile(newOrientation);
-
-		if(destination == null) {
-			return;
-		}
-		
-		Position insertPoint = new Position(destination.xCoord + 0.5, destination.yCoord + TransportUtils.getPipeFloorOf(event.item.getItemStack()), destination.zCoord + 0.5, newOrientation.getOpposite());
+		Position insertPoint = otherPipe.getPosition();
+		insertPoint.x += 0.5;
+		insertPoint.y += TransportUtils.getPipeFloorOf(event.item.getItemStack());
+		insertPoint.z += 0.5;
 		insertPoint.moveForwards(0.5);
 		event.item.setPosition(insertPoint.x, insertPoint.y, insertPoint.z);
 		
-		((PipeTransportItems) destination.pipe.transport).injectItem(event.item, newOrientation);
+		ForgeDirection newOrientation = otherPipe.getOpenOrientation().getOpposite();
+		((PipeTransportItems)otherPipe.transport).injectItem(event.item, newOrientation);
+		
 
 		Log.debug(event.item + " from " + getPosition() + " to " + otherPipe.getPosition() + " " + newOrientation);
 		event.cancelled = true;

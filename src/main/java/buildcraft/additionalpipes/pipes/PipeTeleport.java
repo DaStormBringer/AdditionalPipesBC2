@@ -204,7 +204,8 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 		}
 		if(pipe != null && pipe instanceof PipeTeleport)
 			return false;
-		return pipe != null;
+
+		return super.canPipeConnect(tile, side);
 	}
 
 	@Override
