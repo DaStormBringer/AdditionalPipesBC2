@@ -1,14 +1,13 @@
 package buildcraft.additionalpipes.pipes;
 
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidStack;
 import buildcraft.api.transport.IPipeTile;
-import buildcraft.transport.IPipeTransportFluidsHook;
 import buildcraft.transport.PipeTransportFluids;
 
 
-public class PipeSwitchFluids extends PipeSwitch<PipeTransportFluids> implements IPipeTransportFluidsHook
+public class PipeSwitchFluids extends PipeSwitch<PipeTransportFluids>
 {
 
 	public PipeSwitchFluids(Item item) {
@@ -19,13 +18,8 @@ public class PipeSwitchFluids extends PipeSwitch<PipeTransportFluids> implements
 	}
 	
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) 
+	public boolean canPipeConnect(TileEntity tile, ForgeDirection side)
 	{
-		if (!(container.getTile(from) instanceof IPipeTile)) {
-			return 0;
-		} else {
-			return transport.fill(from, resource, doFill);
-		}
+		return tile instanceof IPipeTile;
 	}
-
 }
