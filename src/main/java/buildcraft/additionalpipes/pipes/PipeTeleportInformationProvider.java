@@ -111,7 +111,7 @@ public class PipeTeleportInformationProvider implements IPipeInformationProvider
 	@Override
 	public boolean isOnewayPipe()
 	{
-		return pipe.getState() == 0x2 || pipe.getState() == 0x3;
+		return pipe.canReceive() ^ pipe.canSend();
 	}
 
 	@Override

@@ -20,6 +20,6 @@ public class PipeSwitchFluids extends PipeSwitch<PipeTransportFluids>
 	@Override
 	public boolean canPipeConnect(TileEntity tile, ForgeDirection side)
 	{
-		return tile instanceof IPipeTile;
+		return tile instanceof IPipeTile && super.canPipeConnect(tile, side);
 	}
 }

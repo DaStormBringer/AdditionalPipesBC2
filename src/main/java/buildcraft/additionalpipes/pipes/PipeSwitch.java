@@ -30,6 +30,11 @@ public class PipeSwitch<pipeType extends PipeTransport> extends APPipe<pipeType>
 	public void initialize() {
 		super.initialize();
 	}
+	
+	@Override
+	public void updateEntity() {
+		
+	}
 
 	@Override
 	public void onNeighborBlockChange(int blockId) {
