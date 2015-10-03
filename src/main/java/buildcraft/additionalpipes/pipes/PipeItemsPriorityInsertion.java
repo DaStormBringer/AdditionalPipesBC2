@@ -92,7 +92,7 @@ public class PipeItemsPriorityInsertion extends APPipe<PipeTransportItems> {
 	}
 
 	@Override
-	public boolean blockActivated(EntityPlayer player) {
+	public boolean blockActivated(EntityPlayer player, ForgeDirection direction) {
 		if(player.isSneaking()) {
 			return false;
 		}

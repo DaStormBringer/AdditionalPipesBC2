@@ -101,7 +101,7 @@ public class PipeLogisticsTeleport extends PipeTeleport<PipeTransportItemsLogist
 	}
 	
 	@Override
-	public boolean blockActivated(EntityPlayer entityplayer)
+	public boolean blockActivated(EntityPlayer entityplayer, ForgeDirection direction)
 	{
 		Item equipped = entityplayer.getCurrentEquippedItem() != null ? entityplayer.getCurrentEquippedItem().getItem() : null;
 		if(equipped instanceof IToolWrench && ((IToolWrench) equipped).canWrench(entityplayer, container.xCoord, container.yCoord, container.zCoord)) {
@@ -111,7 +111,7 @@ public class PipeLogisticsTeleport extends PipeTeleport<PipeTransportItemsLogist
 		}
 		else
 		{
-			return super.blockActivated(entityplayer);
+			return super.blockActivated(entityplayer, direction);
 		}
 		
 	}

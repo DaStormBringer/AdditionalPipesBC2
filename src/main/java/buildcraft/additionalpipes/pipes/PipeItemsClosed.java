@@ -25,7 +25,7 @@ public class PipeItemsClosed extends APPipe<PipeTransportItems> implements IInve
 	}
 
 	@Override
-	public boolean blockActivated(EntityPlayer player) {
+	public boolean blockActivated(EntityPlayer player, ForgeDirection direction) {
 		ItemStack equippedItem = player.getCurrentEquippedItem();
 		if(equippedItem != null && AdditionalPipes.isPipe(equippedItem.getItem())) {
 			return false;

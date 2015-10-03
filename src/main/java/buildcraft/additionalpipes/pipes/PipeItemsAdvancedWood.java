@@ -202,7 +202,7 @@ public class PipeItemsAdvancedWood extends APPipe<PipeTransportAdvancedWood> imp
 	}
 	
 	@Override
-	public boolean blockActivated(EntityPlayer entityplayer)
+	public boolean blockActivated(EntityPlayer entityplayer, ForgeDirection direction)
 	{
 		Item equipped = entityplayer.getCurrentEquippedItem() != null ? entityplayer.getCurrentEquippedItem().getItem() : null;
 		if(equipped instanceof IToolWrench && ((IToolWrench) equipped).canWrench(entityplayer, container.xCoord, container.yCoord, container.zCoord)) {

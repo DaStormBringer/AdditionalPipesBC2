@@ -1,6 +1,5 @@
 package buildcraft.additionalpipes.pipes;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
@@ -132,12 +131,6 @@ public class PipeItemsGravityFeed extends APPipe<PipeTransportItems>
 		return 32;
 	}
 	
-	@Override
-	public boolean blockActivated(EntityPlayer entityplayer)
-	{
-		//do nothing.
-		return false;
-	}
 
 	@Override
 	public boolean doDrop() {

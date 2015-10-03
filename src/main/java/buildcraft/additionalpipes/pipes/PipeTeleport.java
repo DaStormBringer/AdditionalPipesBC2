@@ -1,6 +1,5 @@
 package buildcraft.additionalpipes.pipes;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -22,7 +21,6 @@ import buildcraft.additionalpipes.utils.PlayerUtils;
 import buildcraft.api.core.Position;
 import buildcraft.api.transport.IPipeTile;
 import buildcraft.api.transport.PipeWire;
-import buildcraft.transport.BlockGenericPipe;
 import buildcraft.transport.Gate;
 import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransport;
@@ -50,25 +48,16 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 		
 		
 		//initialize the static reflection fields
-		if(receiveSignal == null)
+		if(updateSignalState == null)
 		{	
 			try
 			{				
 				//go up from PipeTeleportX to Pipe
 				Class<?> pipeClass = getClass().getSuperclass().getSuperclass().getSuperclass();
-				
-				for(Field field : pipeClass.getDeclaredFields())
-				{
-					if(field.getName().equals("internalUpdateScheduled"))
-					{
-						field.setAccessible(true);
-						internalUpdateScheduled = field;
-					}
-				}
 	
-				receiveSignal = pipeClass.getDeclaredMethod("receiveSignal", new Class<?>[]{int.class, PipeWire.class});
+				updateSignalState = pipeClass.getDeclaredMethod("updateSignalState", new Class<?>[]{PipeWire.class});
 				
-				receiveSignal.setAccessible(true);
+				updateSignalState.setAccessible(true);
 			}
 			catch (NoSuchMethodException e)
 			{
@@ -145,7 +134,7 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 	}
 	
 	@Override
-	public boolean blockActivated(EntityPlayer player) {
+	public boolean blockActivated(EntityPlayer player, ForgeDirection direction) {
 		if(player.worldObj.isRemote)
 			return true;
 		if(ownerUUID == null)
@@ -216,19 +205,20 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 	// Teleport Gates stuff
 	// ---------------------------------------------
 	
-	//we need to access stuff private to Pipe, so we use reflection to do it.
-	static Field internalUpdateScheduled;
-	
-	static Method receiveSignal;
+	//we need to access stuff private to Pipe, so we use reflection to do it.	
+	static Method updateSignalState;
 
 	@Override
 	public void updateSignalState() 
 	{
 		ArrayList<PipeTeleport<?>> otherTeleportPipes = TeleportManager.instance.<PipeTeleport<?>>getConnectedPipes(this, true, true);
 		
-		for (PipeWire c : PipeWire.values()) 
+		for (PipeWire wire : PipeWire.values()) 
 		{
-			myUpdateSignalStateForColor(c, otherTeleportPipes);
+			if(wireSet[wire.ordinal()])
+			{
+				myUpdateSignalStateForColor(wire, otherTeleportPipes);
+			}
 		}
 	}
 
@@ -236,56 +226,87 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 	//so we override the function that calls it and invoke our version.
 	private void myUpdateSignalStateForColor(PipeWire wire, ArrayList<PipeTeleport<?>> otherTeleportPipes)
 	{
-		if (!wireSet[wire.ordinal()]) {
-			return;
-		}
 		try
 		{
-			
-			// STEP 1: compute internal signal strength
+			int prevStrength = wireSignalStrength[wire.ordinal()];
+			boolean isBroadcast = false;
 
-			boolean readNearbySignal = true;
-			for (Gate gate : gates) 
-			{
-				if (gate != null && gate.broadcastSignal.get(wire.ordinal()))
-				{
-					receiveSignal.invoke(this, 255, wire);
-					readNearbySignal = false;
+			for (Gate g : gates) {
+				if (g != null && (g.broadcastSignal & (1 << wire.ordinal())) != 0) {
+					isBroadcast = true;
+					break;
 				}
 			}
 			
-			if (readNearbySignal)
-			{
-				myReadNearbyPipesSignal(wire, otherTeleportPipes);
-			}
+			//find connected pipes
+			ArrayList<Pipe<?>> connectedPipes = new ArrayList<Pipe<?>>();
+			int maxStrength = 0;
 
-			// STEP 2: transmit signal in nearby blocks
-
-			if (signalStrength[wire.ordinal()] > 1)
-			{
-				for (ForgeDirection o : ForgeDirection.VALID_DIRECTIONS) {
-					TileEntity tile = container.getTile(o);
-
-					if (tile instanceof IPipeTile) {
-						IPipeTile tilePipe = (IPipeTile) tile;
-						Pipe<?> pipe = (Pipe<?>) tilePipe.getPipe();
-
-						if (BlockGenericPipe.isFullyDefined(pipe) && pipe.wireSet[wire.ordinal()]) {
-							if (isWireConnectedTo(tile, wire, o)) {
-								receiveSignal.invoke(pipe, signalStrength[wire.ordinal()] - 1, wire);
-							}
+			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+				TileEntity tile = container.getTile(dir);
+				if (tile instanceof IPipeTile)
+				{
+					Pipe<?> pipe = (Pipe<?>) ((IPipeTile) tile).getPipe();
+					if (isWireConnectedTo(tile, pipe, wire, dir))
+					{
+						connectedPipes.add(pipe);
+						
+						//may as well do this now instead of looping back through again later
+						int pipeStrength = pipe.wireSignalStrength[wire.ordinal()];
+						if (pipeStrength > maxStrength) 
+						{
+							maxStrength = pipeStrength;
 						}
 					}
 				}
-				
-				for(PipeTeleport<?> pipe : otherTeleportPipes)
+			}
+			
+			connectedPipes.addAll(otherTeleportPipes);
+
+			if (isBroadcast) {
+				if (prevStrength < 255)
 				{
-					if (BlockGenericPipe.isFullyDefined(pipe) && pipe.wireSet[wire.ordinal()])
+					myPropagateSignalState(wire, 255, connectedPipes);
+				}
+			} else
+			{
+				//look for a signal
+				
+				
+				for (Pipe<?> pipe : otherTeleportPipes)
+				{
+					int pipeStrength = pipe.wireSignalStrength[wire.ordinal()];
+					if (pipeStrength > maxStrength) {
+						maxStrength = pipeStrength;
+					}
+				}
+
+				if (maxStrength > prevStrength && maxStrength > 1) {
+					wireSignalStrength[wire.ordinal()] = maxStrength - 1;
+				} else {
+					wireSignalStrength[wire.ordinal()] = 0;
+				}
+
+				if (prevStrength != wireSignalStrength[wire.ordinal()]) {
+					container.scheduleRenderUpdate();
+				}
+
+				if (wireSignalStrength[wire.ordinal()] == 0) {
+					for (Pipe<?> p : connectedPipes) 
 					{
-						receiveSignal.invoke(pipe, signalStrength[wire.ordinal()] - 1, wire);
+						if (p.wireSignalStrength[wire.ordinal()] > 0) {
+							updateSignalState.invoke(p, wire);
+						}
+					}
+				} else {
+					for (Pipe<?> p : connectedPipes) {
+						if (p.wireSignalStrength[wire.ordinal()] < (wireSignalStrength[wire.ordinal()] - 1)) {
+							updateSignalState.invoke(p, wire);
+						}
 					}
 				}
 			}
+			
 		}
 		
 		//Man, I really want to be able to use Multi-Catch here
@@ -301,81 +322,29 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 		{	
 			e.printStackTrace();
 		}
+		
+		
 	}
 	
-	private void myReadNearbyPipesSignal(PipeWire color, ArrayList<PipeTeleport<?>> otherTeleportPipes) 
+	private void myPropagateSignalState(PipeWire wire, int strength, ArrayList<Pipe<?>> connectedPipes) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException 
 	{
-		boolean foundBiggerSignal = false;
-
-		try
+		wireSignalStrength[wire.ordinal()] = strength;
+		for (Pipe<?> pipe : connectedPipes)
 		{
-			
-			for (ForgeDirection o : ForgeDirection.VALID_DIRECTIONS) {
-				TileEntity tile = container.getTile(o);
-	
-				if (tile instanceof IPipeTile) {
-					IPipeTile tilePipe = (IPipeTile) tile;
-					Pipe<?> pipe = (Pipe<?>) tilePipe.getPipe();
-	
-					if (BlockGenericPipe.isFullyDefined(pipe))
-					{
-						if (isWireConnectedTo(tile, color, o)) {
-							foundBiggerSignal |= ((Boolean)receiveSignal.invoke(this, pipe.signalStrength[color.ordinal()] - 1, color)).booleanValue();
-						}
-					}
-				}
-			}
-			
-			//receive ACROSS THE BOUNDS OF SPACE AND TIME!!!!!
-			for(PipeTeleport<?> pipe : otherTeleportPipes)
+			if (strength == 0)
 			{
-				if (BlockGenericPipe.isFullyDefined(pipe))
+				if (pipe.wireSignalStrength[wire.ordinal()] > 0)
 				{
-					foundBiggerSignal |= ((Boolean)receiveSignal.invoke(this, pipe.signalStrength[color.ordinal()] - 1, color));
+					updateSignalState.invoke(pipe, wire);
+				}
+			} 
+			else
+			{
+				if (pipe.wireSignalStrength[wire.ordinal()] < strength) 
+				{
+					updateSignalState.invoke(pipe, wire);
 				}
 			}
-	
-			if (!foundBiggerSignal && signalStrength[color.ordinal()] != 0) {
-				signalStrength[color.ordinal()] = 0;
-				// worldObj.markBlockNeedsUpdate(container.xCoord, container.yCoord, zCoord);
-				container.scheduleRenderUpdate();
-	
-				for (ForgeDirection o : ForgeDirection.VALID_DIRECTIONS) {
-					TileEntity tile = container.getTile(o);
-	
-					if (tile instanceof IPipeTile) {
-						IPipeTile tilePipe = (IPipeTile) tile;
-						Pipe<?> pipe = (Pipe<?>) tilePipe.getPipe();
-	
-						if (BlockGenericPipe.isFullyDefined(pipe)) {
-							
-								internalUpdateScheduled.set(pipe, Boolean.TRUE);
-	
-						}
-					}
-				}
-				
-				for(PipeTeleport<?> pipe : otherTeleportPipes)
-				{
-					if (BlockGenericPipe.isFullyDefined(pipe))
-					{
-						internalUpdateScheduled.set(pipe, Boolean.TRUE);
-					}
-				}
-			}
-		
-		} 
-		catch (IllegalArgumentException e)
-		{
-			e.printStackTrace();
-		}
-		catch (IllegalAccessException e)
-		{
-			e.printStackTrace();
-		}
-		catch (InvocationTargetException e)
-		{
-			e.printStackTrace();
 		}
 	}
 
