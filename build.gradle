@@ -30,6 +30,7 @@ dependencies {
 		compile name: 'buildcraft', version: "7.1.5", classifier: "dev", ext: 'jar'
 		compile name: 'buildcraft-compat', version: "7.1.0", classifier: "dev", ext: 'jar'
 		compile files("lib/logisticspipes-0.9.3.52-dev.jar")
+		compile files("lib/OpenComputers-api.jar")
 }
 
 repositories {

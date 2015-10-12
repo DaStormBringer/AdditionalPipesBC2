@@ -2,8 +2,10 @@ package buildcraft.additionalpipes;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
-import logisticspipes.proxy.SimpleServiceLocator;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -26,7 +28,6 @@ import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.additionalpipes.item.ItemDogDeaggravator;
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.pipes.APPipe;
-import buildcraft.additionalpipes.pipes.APSpecialPipedConnection;
 import buildcraft.additionalpipes.pipes.PipeItemsAddition;
 import buildcraft.additionalpipes.pipes.PipeItemsAdvancedInsertion;
 import buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
@@ -249,7 +250,70 @@ public class AdditionalPipes {
 		
 		if(logisticsPipesInstalled)
 		{
-			SimpleServiceLocator.specialpipeconnection.registerHandler(new APSpecialPipedConnection());
+			//would like to do this, but it causes a NoClassDefFoundError if LP is not installed
+			//SimpleServiceLocator.specialpipeconnection.registerHandler(new APSpecialPipedConnection());
+
+			Log.info("Commencing morass of reflection to try and integrate with Logistics Pipes");
+			boolean success = false; //no way I'm putting an error message in each of those catch blocks
+			try
+			{
+				//all of this to call ONE function
+				//in a class which may or may not be present
+				Class<?> SimpleServiceLocator = Class.forName("logisticspipes.proxy.SimpleServiceLocator");
+				Class<?> SpecialPipeConnection = Class.forName("logisticspipes.proxy.specialconnection.SpecialPipeConnection");
+				Class<?> ISpecialPipedConnection = Class.forName("logisticspipes.interfaces.routing.ISpecialPipedConnection");
+				Class<?> APSpecialPipedConnection = Class.forName("buildcraft.additionalpipes.pipes.APSpecialPipedConnection");
+				
+				Field specialpipeconnectionField = SimpleServiceLocator.getDeclaredField("specialpipeconnection");
+				Object specialpipeconnection = specialpipeconnectionField.get(null);
+				Method registerHandler = SpecialPipeConnection.getDeclaredMethod("registerHandler", ISpecialPipedConnection);
+				Object apSpecialPC = APSpecialPipedConnection.newInstance();
+				registerHandler.invoke(specialpipeconnection, apSpecialPC);
+				
+				success = true;
+			}
+			
+			// HOLY CATCH BLOCKS, BATMAN!!!
+			// I think 8 is a new record
+			// Java's mandatory exceptions are the worst
+			catch(NoSuchFieldException e)
+			{
+				e.printStackTrace();
+			}
+			catch(SecurityException e)
+			{
+				e.printStackTrace();
+			}
+			catch(ClassNotFoundException e)
+			{
+				e.printStackTrace();
+			}
+			catch(IllegalArgumentException e)
+			{
+				e.printStackTrace();
+			}
+			catch(IllegalAccessException e)
+			{
+				e.printStackTrace();
+			}
+			catch(NoSuchMethodException e)
+			{
+				e.printStackTrace();
+			}
+			catch(InvocationTargetException e)
+			{
+				e.printStackTrace();
+			}
+			catch(InstantiationException e)
+			{
+				e.printStackTrace();
+			}
+			
+			Log.info("Integration " + (success ? "succeeded" : "failed"));
+		}
+		else
+		{
+			Log.info("Logistics Pipes not detected");
 		}
 	}
 
