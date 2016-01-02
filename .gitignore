@@ -13,6 +13,4 @@ MinecraftForge-*.txt
 /build
 /.settings
 /.gradle
-/src/main/java/buildcraft/*
 
-!/src/main/java/buildcraft/additionalpipes
