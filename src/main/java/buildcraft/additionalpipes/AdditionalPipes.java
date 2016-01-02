@@ -58,7 +58,6 @@ import buildcraft.transport.BlockGenericPipe;
 import buildcraft.transport.PipeTransportFluids;
 import buildcraft.transport.PipeTransportPower;
 import buildcraft.transport.pipes.PipeFluidsGold;
-import buildcraft.transport.pipes.PipeFluidsIron;
 import buildcraft.transport.pipes.PipePowerGold;
 import buildcraft.transport.pipes.PipePowerIron;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -236,6 +235,7 @@ public class AdditionalPipes {
 		
 		dogDeaggravator = new ItemDogDeaggravator();
 		GameRegistry.registerItem(dogDeaggravator, ItemDogDeaggravator.NAME);
+		GameRegistry.addRecipe(new ItemStack(dogDeaggravator), new Object[] { "gsg", "gig", "g g", 'i', Items.iron_ingot, 'g', Items.gold_ingot, 's', Items.stick});
 		
 		Log.info("Running Teleport Manager Tests");
 		TeleportManagerTest.runAllTests();
@@ -328,7 +328,6 @@ public class AdditionalPipes {
 		// Item Teleport Pipe
 		pipeItemsTeleport = PipeCreator.createPipeTooltip((Class<? extends APPipe<?>>) PipeItemsTeleport.class, "tip.teleportPipe");
 		
-		GameRegistry.addRecipe(new ItemStack(pipeItemsTeleport, 4), new Object[] { "dgd", 'd', BuildCraftCore.diamondGearItem, 'g', Blocks.glass });
 		AssemblyRecipeManager.INSTANCE.addRecipe("teleportPipe", 10000, new ItemStack(pipeItemsTeleport, 8), new Object[] { new ItemStack(BuildCraftSilicon.redstoneChipset, 1, 4), new ItemStack(BuildCraftTransport.pipeItemsDiamond, 8),
 				new ItemStack(BuildCraftSilicon.redstoneChipset, 1, 3) });
 
@@ -389,7 +388,8 @@ public class AdditionalPipes {
 		pipePowerSwitch = PipeCreator.createPipeAndRecipe(1, PipeSwitchPower.class, new Object[] {pipeItemsSwitch, Items.redstone }, true);
 		
 		//set fluid capacity to the average between iron and gold
-		int switchFluidCapacity = (PipeTransportFluids.fluidCapacities.get(PipeFluidsGold.class) + PipeTransportFluids.fluidCapacities.get(PipeFluidsIron.class))/ 2;
+		//int switchFluidCapacity = (PipeTransportFluids.fluidCapacities.get(PipeFluidsGold.class) + PipeTransportFluids.fluidCapacities.get(PipeFluidsIron.class))/ 2;
+		int switchFluidCapacity = PipeTransportFluids.fluidCapacities.get(PipeFluidsGold.class);
 		
 		PipeTransportFluids.fluidCapacities.put(PipeSwitchFluids.class, switchFluidCapacity);
 		pipeLiquidsSwitch = PipeCreator.createPipeAndRecipe(1, PipeSwitchFluids.class, new Object[] {pipeItemsSwitch, BuildCraftTransport.pipeWaterproof }, true);

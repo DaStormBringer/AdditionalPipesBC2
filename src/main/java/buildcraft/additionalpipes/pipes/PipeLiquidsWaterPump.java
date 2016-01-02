@@ -3,6 +3,7 @@ package buildcraft.additionalpipes.pipes;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -27,7 +28,7 @@ public class PipeLiquidsWaterPump extends APPipe<PipeTransportFluids> {
 		super.updateEntity();
 		if(getWorld().getBlock(container.xCoord, container.yCoord - 1, container.zCoord) == water)
 		{
-			transport.fill(ForgeDirection.UNKNOWN, new FluidStack(FluidRegistry.WATER, APConfiguration.waterPumpWaterPerTick), true);
+			transport.fill(ForgeDirection.DOWN, new FluidStack(FluidRegistry.WATER, APConfiguration.waterPumpWaterPerTick), true);
 		}
 	}
 
@@ -35,6 +36,12 @@ public class PipeLiquidsWaterPump extends APPipe<PipeTransportFluids> {
 	public int getIconIndex(ForgeDirection direction)
 	{
 		return ICON;
+	}
+	
+	@Override
+	public boolean canPipeConnect(TileEntity tile, ForgeDirection side)
+	{
+		return side != ForgeDirection.DOWN && super.canPipeConnect(tile, side);
 	}
 
 }

@@ -18,8 +18,6 @@ import buildcraft.additionalpipes.utils.InventoryUtils;
 import buildcraft.core.lib.inventory.ITransactor;
 import buildcraft.core.lib.inventory.Transactor;
 import buildcraft.transport.PipeTransportItems;
-import buildcraft.transport.TransportConstants;
-import buildcraft.transport.TravelingItem;
 import buildcraft.transport.pipes.events.PipeEventItem;
 
 public class PipeItemsAddition extends APPipe<PipeTransportItems>
@@ -77,16 +75,6 @@ public class PipeItemsAddition extends APPipe<PipeTransportItems>
 		else 
 		{
 			
-		}
-	}
-	
-	public void readjustSpeed(TravelingItem item) 
-	{
-		if (item.getSpeed() > TransportConstants.PIPE_NORMAL_SPEED) {
-			item.setSpeed(item.getSpeed() - TransportConstants.PIPE_NORMAL_SPEED / 2.0F);
-		}
-		if (item.getSpeed() < TransportConstants.PIPE_NORMAL_SPEED) {
-			item.setSpeed(TransportConstants.PIPE_NORMAL_SPEED);
 		}
 	}
 

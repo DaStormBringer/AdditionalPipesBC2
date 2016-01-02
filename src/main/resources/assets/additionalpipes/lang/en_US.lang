@@ -47,7 +47,7 @@ key.lasers=Show chunk load boundaries
 tip.teleportPipe=No more long pipelines!
 tip.teleportLogisticsPipe=Connects to Logistics Pipes!
 
-tooltip.dogDeaggravator=Calms down attacking wolves
+tooltip.dogDeaggravator=Calms down your dogs
 
 itemGroup.buildcraft.apcreativetab=Additional Pipes
 

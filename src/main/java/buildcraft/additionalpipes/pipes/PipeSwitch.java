@@ -18,22 +18,18 @@ public class PipeSwitch<pipeType extends PipeTransport> extends APPipe<pipeType>
 
 	@Override
 	public int getIconIndex(ForgeDirection direction) {
-		return textureIndex + (canPipeConnect(null, direction) ? 0 : 1);
+		
+		if(direction == ForgeDirection.UNKNOWN)
+		{
+			return textureIndex;
+		}
+		
+		return textureIndex + (canPipeConnect(container.getNeighborTile(direction), direction) ? 0 : 1);
 	}
 
 	@Override
 	public boolean canConnectRedstone() {
 		return true;
-	}
-
-	@Override
-	public void initialize() {
-		super.initialize();
-	}
-	
-	@Override
-	public void updateEntity() {
-		
 	}
 
 	@Override
@@ -52,7 +48,8 @@ public class PipeSwitch<pipeType extends PipeTransport> extends APPipe<pipeType>
 	public boolean canPipeConnect(TileEntity tile, ForgeDirection side) {
 		if(container == null) return false;
 		World world = getWorld();
-		return world != null && !world.isBlockIndirectlyGettingPowered(container.xCoord, container.yCoord, container.zCoord);
+		return world != null && super.canPipeConnect(tile, side) && !world.isBlockIndirectlyGettingPowered(container.xCoord, container.yCoord, container.zCoord);
+
 	}
 
 }
