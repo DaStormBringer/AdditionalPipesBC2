@@ -2,8 +2,7 @@ package buildcraft.additionalpipes.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
@@ -12,6 +11,7 @@ import buildcraft.additionalpipes.network.message.MessageDistPipe;
 import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
 import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.transport.TileGenericPipe;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiDistributionPipe extends GuiContainer {
@@ -26,7 +26,7 @@ public class GuiDistributionPipe extends GuiContainer {
 	public GuiDistributionPipe(TileGenericPipe container) {
 		super(new ContainerDistributionPipe(container));
 		pipe = (PipeItemsDistributor) container.pipe;
-		xSize = 175;
+		xSize = 117;
 		ySize = 130;
 	}
 
@@ -72,6 +72,8 @@ public class GuiDistributionPipe extends GuiContainer {
 		buttons[10].displayString = "" + pipe.distData[3];
 		buttons[13].displayString = "" + pipe.distData[4];
 		buttons[16].displayString = "" + pipe.distData[5];
+		
+		fontRendererObj.drawString(StatCollector.translateToLocal("gui.pipeItemsDistributor"), guiX + 42, guiY + 22, 4210752);
 	}
 
 	@Override

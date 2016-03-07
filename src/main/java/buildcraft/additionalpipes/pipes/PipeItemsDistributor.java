@@ -15,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.transport.PipeTransportItems;
@@ -24,7 +25,7 @@ public class PipeItemsDistributor extends APPipe<PipeTransportItems> {
 
 	public int distData[] = { 1, 1, 1, 1, 1, 1 };
 	public int distSide = 0;
-	public int curTick = 0;
+	public int curTick = Integer.MAX_VALUE;
 
 	public PipeItemsDistributor(Item item) {
 		super(new PipeTransportItems(), item);
@@ -59,7 +60,11 @@ public class PipeItemsDistributor extends APPipe<PipeTransportItems> {
 	{
 		LinkedList<EnumFacing> result = new LinkedList<EnumFacing>();
 
-		if(curTick >= distData[distSide]) {
+		//curTick used to be initialized to 0
+		//but the issue was that when the first item stack passes through the pipe, it always sent it downward whether or not anything was connected
+		//so I changed curTick to be initialized to Integer.MAX_VALUE so that it will look for the correct output. -JS
+		if(curTick >= distData[distSide]) 
+		{
 			toNextOpenSide();
 		}
 
@@ -82,14 +87,14 @@ public class PipeItemsDistributor extends APPipe<PipeTransportItems> {
 	}
 
 	@Override
-	public boolean blockActivated(EntityPlayer player) {
+	public boolean blockActivated(EntityPlayer player, EnumFacing direction) {
 		if(player.isSneaking()) {
 			return false;
 		}
 
 		Item equipped = player.getCurrentEquippedItem() != null ? player.getCurrentEquippedItem().getItem() : null;
 		if(equipped != null) {
-			if(AdditionalPipes.instance.filterRightclicks && AdditionalPipes.isPipe(equipped)) {
+			if(APConfiguration.filterRightclicks && AdditionalPipes.isPipe(equipped)) {
 				return false;
 			}
 		}
@@ -99,7 +104,8 @@ public class PipeItemsDistributor extends APPipe<PipeTransportItems> {
 		return true;
 	}
 
-	private void sanityCheck() {
+	private void sanityCheck()
+	{
 		for(int d : distData) {
 			if(d > 0) {
 				return;

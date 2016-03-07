@@ -1,26 +1,16 @@
 .project
 .classpath
 **.class
-release.sh
 CREDITS-fml.txt
 forge-*.txt
 /LICENSE-fml.txt
 MinecraftForge-*.txt
 /bin
 /eclipse
-usernamecache.json
 
-/config/*
-/logs/*
-/options.txt
-/saves/*
-/resourcepacks
-/crash-reports
-/mods
+/minecraft/*
+!/minecraft/mods
 /build
 /.settings
 /.gradle
-/source.bak
-/src/main/java/buildcraft/*
 
-!/src/main/java/buildcraft/additionalpipes

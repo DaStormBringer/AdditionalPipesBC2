@@ -15,23 +15,22 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
-import buildcraft.api.core.Position;
 import buildcraft.api.tools.IToolWrench;
-import buildcraft.core.CoreConstants;
-import buildcraft.core.RFBattery;
-import buildcraft.core.inventory.InvUtils;
-import buildcraft.core.utils.Utils;
+import buildcraft.core.lib.RFBattery;
+import buildcraft.core.lib.inventory.InvUtils;
+import buildcraft.core.lib.utils.Utils;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.TravelingItem;
 import cofh.api.energy.IEnergyHandler;
 
-public class PipeItemsAdvancedWood extends APPipe<PipeTransportItems> implements IEnergyHandler
+public class PipeItemsAdvancedWood extends APPipe<PipeTransportAdvancedWood> implements IEnergyHandler
 {
 	
 	protected RFBattery battery = new RFBattery(640, 640, 0);
@@ -76,9 +75,11 @@ public class PipeItemsAdvancedWood extends APPipe<PipeTransportItems> implements
 			{
 				return;
 			}
+	        EnumFacing side = EnumFacing.getFront(meta);
 				
-			BlockPos tileBlock = container.getPos().offset(EnumFacing.values()[meta]);
-			TileEntity tile = w.getTileEntity(tileBlock);
+	        TileEntity tile = container.getTile(side);
+
+
 			
 			ticksSincePull = 0;
 
@@ -93,10 +94,10 @@ public class PipeItemsAdvancedWood extends APPipe<PipeTransportItems> implements
 					return;
 				}
 
-				Position entityPos = new Position(tileBlock.getX() + 0.5, tileBlock.getY() + CoreConstants.PIPE_MIN_POS, tileBlock.getZ() + 0.5, EnumFacing.values()[meta].getOpposite());
-				entityPos.moveForwards(0.5);
-				TravelingItem entity = TravelingItem.make(entityPos.x, entityPos.y, entityPos.z, extracted);
-				((PipeTransportItems) transport).injectItem(entity, entityPos.orientation);
+                Vec3 entPos = Utils.convertMiddle(tile.getPos()).add(Utils.convert(side, -0.6));
+
+				TravelingItem entity = TravelingItem.make(entPos, extracted);
+				((PipeTransportItems) transport).injectItem(entity, side);
 			}
 
 			battery.setEnergy(0);
@@ -198,7 +199,7 @@ public class PipeItemsAdvancedWood extends APPipe<PipeTransportItems> implements
 	}
 	
 	@Override
-	public boolean blockActivated(EntityPlayer entityplayer)
+	public boolean blockActivated(EntityPlayer entityplayer, EnumFacing direction)
 	{
 		Item equipped = entityplayer.getCurrentEquippedItem() != null ? entityplayer.getCurrentEquippedItem().getItem() : null;
 		if(equipped instanceof IToolWrench && ((IToolWrench) equipped).canWrench(entityplayer, container.getPos())) {
@@ -206,7 +207,7 @@ public class PipeItemsAdvancedWood extends APPipe<PipeTransportItems> implements
 			((IToolWrench) equipped).wrenchUsed(entityplayer, container.getPos());
 			return true;
 		}
-		if(AdditionalPipes.instance.filterRightclicks && AdditionalPipes.isPipe(equipped))
+		if(APConfiguration.filterRightclicks && AdditionalPipes.isPipe(equipped))
 		{
 			return false;
 		}
@@ -218,7 +219,7 @@ public class PipeItemsAdvancedWood extends APPipe<PipeTransportItems> implements
 	@Override
 	public boolean doDrop()
 	{
-		Utils.preDestroyBlock(getWorld(), container.getPos(), container.getWorld().getBlockState(container.getPos()));
+		Utils.preDestroyBlock(getWorld(), container.getPos());
 		return true;
 	}
 
@@ -228,15 +229,6 @@ public class PipeItemsAdvancedWood extends APPipe<PipeTransportItems> implements
 		return true;
 	}
 
-	@Override
-	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
-		return battery.receiveEnergy(maxReceive, simulate);
-	}
-
-	@Override
-	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
-		return 0;
-	}
 
 	@Override
 	public int getEnergyStored(EnumFacing from)
@@ -249,4 +241,5 @@ public class PipeItemsAdvancedWood extends APPipe<PipeTransportItems> implements
 	{
 		return battery.getMaxEnergyStored();
 	}
+
 }

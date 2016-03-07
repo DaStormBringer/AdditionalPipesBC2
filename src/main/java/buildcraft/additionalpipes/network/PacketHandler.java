@@ -8,8 +8,12 @@ import buildcraft.additionalpipes.network.message.MessageAdvWoodPipe;
 import buildcraft.additionalpipes.network.message.MessageChunkloadData;
 import buildcraft.additionalpipes.network.message.MessageChunkloadRequest;
 import buildcraft.additionalpipes.network.message.MessageDistPipe;
+import buildcraft.additionalpipes.network.message.MessageJeweledPipeOptionsClient;
+import buildcraft.additionalpipes.network.message.MessageJeweledPipeOptionsServer;
+import buildcraft.additionalpipes.network.message.MessagePriorityPipe;
 import buildcraft.additionalpipes.network.message.MessageTelePipeData;
 import buildcraft.additionalpipes.network.message.MessageTelePipeUpdate;
+
 
 public class PacketHandler
 {
@@ -23,5 +27,9 @@ public class PacketHandler
         INSTANCE.registerMessage(MessageTelePipeData.class, MessageTelePipeData.class, 3, Side.CLIENT);
         INSTANCE.registerMessage(MessageChunkloadRequest.class, MessageChunkloadRequest.class, 4, Side.SERVER);
         INSTANCE.registerMessage(MessageChunkloadData.class, MessageChunkloadData.class, 5, Side.CLIENT);
+        INSTANCE.registerMessage(MessagePriorityPipe.class, MessagePriorityPipe.class, 6, Side.SERVER);
+        INSTANCE.registerMessage(MessageJeweledPipeOptionsServer.class, MessageJeweledPipeOptionsServer.class, 7, Side.SERVER);
+        INSTANCE.registerMessage(MessageJeweledPipeOptionsClient.class, MessageJeweledPipeOptionsClient.class, 8, Side.CLIENT);
+
     }
 }

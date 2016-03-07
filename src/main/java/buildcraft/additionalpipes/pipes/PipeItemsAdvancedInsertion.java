@@ -14,8 +14,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import buildcraft.core.inventory.ITransactor;
-import buildcraft.core.inventory.Transactor;
+import buildcraft.core.lib.inventory.ITransactor;
+import buildcraft.core.lib.inventory.Transactor;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.TransportConstants;
 import buildcraft.transport.TravelingItem;
@@ -36,24 +36,20 @@ public class PipeItemsAdvancedInsertion extends APPipe<PipeTransportItems> {
 		{
 			EnumFacing orientation = EnumFacing.values()[o];
 			
-			//commented out during port from BC 4.2 to 6.1
-			//I don't know what the equivalent to the Position argument to filterPossibleMovements() is in the new eventHandler system
-			//if(orientation != pos.orientation.getOpposite())
+			TileEntity entity = container.getTile(orientation);
+			if (entity instanceof IInventory)
 			{
-				TileEntity entity = container.getTile(orientation);
-				if (entity instanceof IInventory)
+				if (event.item.output == orientation.getOpposite())
 				{
-					if (event.item.output == orientation.getOpposite())
-					{
-						// continue;
-					}
-					ITransactor transactor = Transactor.getTransactorFor(entity);
-					if (transactor.add(event.item.getItemStack(), orientation.getOpposite(), false).stackSize > 0)
-					{
-						newOris.add(orientation);
-					}
+					// continue;
+				}
+				ITransactor transactor = Transactor.getTransactorFor(entity);
+				if (transactor.add(event.item.getItemStack(), orientation.getOpposite(), false).stackSize > 0)
+				{
+					newOris.add(orientation);
 				}
 			}
+		
 		}
 
 		if (!newOris.isEmpty())
@@ -69,11 +65,11 @@ public class PipeItemsAdvancedInsertion extends APPipe<PipeTransportItems> {
 	
 	public void readjustSpeed(TravelingItem item) 
 	{
-		if (item.getSpeed() > TransportConstants.PIPE_NORMAL_SPEED) {
-			item.setSpeed(item.getSpeed() - TransportConstants.PIPE_NORMAL_SPEED / 2.0F);
+		if (item.getSpeed() > TransportConstants.PIPE_DEFAULT_SPEED) {
+			item.setSpeed(item.getSpeed() - TransportConstants.PIPE_DEFAULT_SPEED / 2.0F);
 		}
-		if (item.getSpeed() < TransportConstants.PIPE_NORMAL_SPEED) {
-			item.setSpeed(TransportConstants.PIPE_NORMAL_SPEED);
+		if (item.getSpeed() < TransportConstants.PIPE_DEFAULT_SPEED) {
+			item.setSpeed(TransportConstants.PIPE_DEFAULT_SPEED);
 		}
 	}
 

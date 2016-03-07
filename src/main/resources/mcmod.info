@@ -1,10 +1,10 @@
 [{
-  "modid": "APUnofficial",
+  "modid": "additionalpipes",
   "name": "Additional Pipes",
-  "version": "@AP_VERSION@",
+  "version": "${version}",
   "url": "https://github.com/tcooc/AdditionalPipesBC/",
   "updateUrl": "",
   "description": "Teleport, insertion, extraction, and other pipes.",
   "credits": "Credits to Zeldo and DaStormBringer.",
-  "authors": [ "Zeldo", "DaStormBringer", "MultipleMonomials", "Additional Pipes Contributors" ]
+  "authorList": [ "Zeldo", "DaStormBringer", "MultipleMonomials", "Additional Pipes Contributors" ]
 }]

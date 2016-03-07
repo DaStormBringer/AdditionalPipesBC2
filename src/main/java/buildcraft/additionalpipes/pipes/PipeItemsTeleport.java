@@ -12,11 +12,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.item.Item;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.api.core.Position;
+import buildcraft.additionalpipes.api.PipeType;
+import buildcraft.additionalpipes.utils.Log;
 import buildcraft.transport.PipeTransportItems;
-import buildcraft.transport.TileGenericPipe;
 import buildcraft.transport.pipes.events.PipeEventItem;
 import buildcraft.transport.utils.TransportUtils;
 
@@ -24,16 +24,18 @@ public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 	private static final int ICON = 0;
 
 	public PipeItemsTeleport(Item items) {
-		super(new PipeTransportItems(), items);
+		super(new PipeTransportItems(), items, PipeType.ITEMS);
 	}
 	
 	public void eventHandler(PipeEventItem.Entered event)
 	{
-		/*if(!AdditionalPipes.proxy.isServer(getWorld())) {
+		if(getWorld().isRemote) 
+		{
 			return;
-		}*/
+		}
 		
-		List<PipeTeleport<?>> connectedTeleportPipes = TeleportManager.instance.getConnectedPipes(this, false);
+		List<PipeItemsTeleport> connectedTeleportPipes = TeleportManager.instance.getConnectedPipes(this, false, true);
+		
 		// no teleport pipes connected, use default
 		if(connectedTeleportPipes.size() <= 0 || (state & 0x1) == 0) {
 			return;
@@ -41,32 +43,65 @@ public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 
 		// output to random pipe
 		LinkedList<EnumFacing> outputOrientations = new LinkedList<EnumFacing>();
-		PipeTeleport<?> otherPipe = connectedTeleportPipes.get(rand.nextInt(connectedTeleportPipes.size()));
-
-		// find possible output orientations
-		for(EnumFacing o : EnumFacing.values()) {
-			if(otherPipe.outputOpen(o))
-				outputOrientations.add(o);
-		}
-		// no outputs found, default behaviour
-		if(outputOrientations.size() <= 0) {
-			return;
-		}
-
-		EnumFacing newOrientation = outputOrientations.get(rand.nextInt(outputOrientations.size()));
-		TileGenericPipe destination = (TileGenericPipe) otherPipe.container.getTile(newOrientation);
-
-		if(destination == null) {
-			return;
-		}
+		PipeTeleport<?> otherPipe;
 		
-		Position insertPoint = new Position(destination.getPos().getX() + 0.5, destination.getPos().getY() + TransportUtils.getPipeFloorOf(event.item.getItemStack()), destination.getPos().getZ() + 0.5, newOrientation.getOpposite());
+		int originalPipeNumber = rand.nextInt(connectedTeleportPipes.size());
+		int currentPipeNumber = originalPipeNumber;
+		
+		boolean found = false;
+		int numberOfTries = 0;
+		
+		// find a pipe with something connected to it
+		// The logic for this is... pretty complicated, actually.
+		do
+		{
+			++numberOfTries;
+			otherPipe = connectedTeleportPipes.get(currentPipeNumber);
+			
+			for(EnumFacing o : EnumFacing.values())
+			{
+				if(otherPipe.outputOpen(o))
+				{
+					outputOrientations.add(o);
+				}
+			}
+			
+			// no outputs found, try again
+			if(outputOrientations.size() <= 0) 
+			{
+				++currentPipeNumber;
+				
+				//loop back to the start
+				if(currentPipeNumber >= connectedTeleportPipes.size())
+				{
+					currentPipeNumber = 0;
+				}
+			}
+			else
+			{
+				found = true;
+			}
+		}
+		while(numberOfTries < connectedTeleportPipes.size() && !found);
+
+		//couldn't find any, so give up
+		if(!found)
+		{
+			return;
+		}
+
+		BlockPos insertPoint = otherPipe.getPosition();
+		insertPoint.x += 0.5;
+		insertPoint.y += TransportUtils.getPipeFloorOf(event.item.getItemStack());
+		insertPoint.z += 0.5;
 		insertPoint.moveForwards(0.5);
 		event.item.setPosition(insertPoint.x, insertPoint.y, insertPoint.z);
 		
-		((PipeTransportItems) destination.pipe.transport).injectItem(event.item, newOrientation);
+		EnumFacing newOrientation = otherPipe.getOpenOrientation().getOpposite();
+		((PipeTransportItems)otherPipe.transport).injectItem(event.item, newOrientation);
+		
 
-		AdditionalPipes.instance.logger.info(event.item + " from " + getPosition() + " to " + otherPipe.getPosition() + " " + newOrientation);
+		Log.debug(event.item + " from " + getPosition() + " to " + otherPipe.getPosition() + " " + newOrientation);
 		event.cancelled = true;
 	}
 

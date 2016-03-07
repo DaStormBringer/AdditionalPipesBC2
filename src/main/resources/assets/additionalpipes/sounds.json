@@ -1,0 +1,9 @@
+{
+	"bellRing": {
+		"category": "master",
+		"sounds": [{
+			"name": "copper-bell",
+			"stream": false
+		}]
+	}
+}

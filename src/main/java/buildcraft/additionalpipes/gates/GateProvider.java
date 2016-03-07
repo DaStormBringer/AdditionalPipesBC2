@@ -24,18 +24,13 @@ public class GateProvider implements ITriggerProvider {
 		Pipe<?> pipe = ((TileGenericPipe)container.getTile()).pipe;
 		
 		LinkedList<ITriggerInternal> list = new LinkedList<ITriggerInternal>();
-		if(pipe instanceof PipeItemsClosed) {
+		if(pipe instanceof PipeItemsClosed)
+		{
 			list.add(AdditionalPipes.instance.triggerPipeClosed);
 		}
-		if(pipe instanceof PipeTeleport) {
+		if(pipe instanceof PipeTeleport)
+		{
 			
-			
-			//TODO write the code for these.
-			//they never seem to have been implemented
-			//list.add(AdditionalPipes.instance.triggerPhasedSignalRed);
-			//list.add(AdditionalPipes.instance.triggerPhasedSignalGreen);
-			//list.add(AdditionalPipes.instance.triggerPhasedSignalBlue);
-			//list.add(AdditionalPipes.instance.triggerPhasedSignalYellow);
 		}
 		return list;
 	}

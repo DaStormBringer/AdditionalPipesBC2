@@ -4,14 +4,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessageTelePipeUpdate;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.additionalpipes.textures.Textures;
-import buildcraft.api.core.SheetIcon;
-import buildcraft.core.gui.GuiBuildCraft;
+import buildcraft.core.lib.gui.GuiBuildCraft;
+import buildcraft.core.lib.gui.GuiBuildCraft.Ledger;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiTeleportPipe extends GuiBuildCraft {
@@ -22,13 +21,21 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 		int subheaderColour = 0xaaafb8;
 		int textColour = 0x000000;
 
+		String networkTitle;
+		
 		public TeleportPipeLedger() {
 			maxHeight = 99;
 			overlayColor = 0xd46c1f;
 		}
 
 		@Override
-		public void draw(int x, int y) {
+		public void draw(int x, int y) 
+		{
+			//we have to initialize this here since pipe is not yet set when the constructor is run
+			if(networkTitle == null)
+			{
+				networkTitle = ((pipe.state & 0x1) >= 1) ? "Outputs:" : "Inputs:";
+			}
 
 			// Draw background
 			drawBackground(x, y);
@@ -43,7 +50,7 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 			fontRendererObj.drawString("Teleport Pipe", x + 22, y + 8, headerColour);
 			fontRendererObj.drawString("Owner:", x + 22, y + 20, subheaderColour);
 			fontRendererObj.drawString(pipe.ownerName, x + 22, y + 32, textColour);
-			fontRendererObj.drawString("Outputs: ", x + 22, y + 44, subheaderColour);
+			fontRendererObj.drawStringWithShadow(networkTitle, x + 22, y + 44, subheaderColour);
 			fontRendererObj.drawString(String.valueOf(container.connectedPipes), x + 66, y + 45, textColour);
 			int[] net = pipe.network;
 			if(net.length > 0) {

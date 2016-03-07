@@ -1,7 +1,5 @@
 package buildcraft.additionalpipes;
 
-import java.util.logging.Level;
-
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
@@ -11,20 +9,21 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import buildcraft.additionalpipes.keyboard.KeyInputEventHandler;
 import buildcraft.additionalpipes.keyboard.Keybindings;
+import buildcraft.additionalpipes.utils.Log;
 import buildcraft.transport.ItemPipe;
 import buildcraft.transport.Pipe;
 
 @SideOnly(Side.CLIENT)
-public class MutiPlayerProxyClient extends MultiPlayerProxy
+public class MultiPlayerProxyClient extends MultiPlayerProxy
 {
 
 	@Override
 	public void registerKeyHandler()
 	{
 		
-		AdditionalPipes.instance.logger.info("Registering key handler(s)");
+		Log.info("Registering key handler(s)");
 
-		Keybindings.lasers = new KeyBinding("key.lasers", AdditionalPipes.laserKeyCode, AdditionalPipes.NAME);
+		Keybindings.lasers = new KeyBinding("key.lasers", APConfiguration.laserKeyCode, AdditionalPipes.NAME);
 		ClientRegistry.registerKeyBinding(Keybindings.lasers);
 		
 		FMLCommonHandler.instance().bus().register(new KeyInputEventHandler());
@@ -52,7 +51,7 @@ public class MutiPlayerProxyClient extends MultiPlayerProxy
 		} 
 		catch(Exception e)
 		{
-			AdditionalPipes.instance.logger.log(Level.SEVERE, "MultiPlayerProxyClient.createPipeSpecial() failed with exception!");
+			Log.error("MultiPlayerProxyClient.createPipeSpecial() failed with exception!");
 			
 			e.printStackTrace();
 		}

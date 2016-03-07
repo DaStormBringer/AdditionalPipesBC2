@@ -15,8 +15,9 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
-import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.core.utils.Utils;
+import buildcraft.additionalpipes.APConfiguration;
+import buildcraft.additionalpipes.api.PipeType;
+import buildcraft.core.lib.utils.Utils;
 import buildcraft.transport.IPipeTransportPowerHook;
 import buildcraft.transport.PipeTransportPower;
 import buildcraft.transport.TileGenericPipe;
@@ -36,7 +37,7 @@ public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implemen
 	}
 
 	public PipePowerTeleport(Item item) {
-		super(new PipeTransportPower(), item);
+		super(new PipeTransportPower(), item, PipeType.POWER);
 		((PipeTransportPower) transport).initFromPipe(PipePowerDiamond.class);
 	}
 
@@ -48,7 +49,7 @@ public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implemen
 			return requested;
 		}
 
-		List<PipeTeleport<?>> pipeList = TeleportManager.instance.getConnectedPipes(this, true);
+		List<PipePowerTeleport> pipeList = TeleportManager.instance.getConnectedPipes(this, true, false);
 
 		if(pipeList.size() <= 0) {
 			return requested;
@@ -72,15 +73,15 @@ public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implemen
 
 	@Override
 	public int receiveEnergy(EnumFacing from, int energy) {
-		List<PipeTeleport<?>> connectedPipes = TeleportManager.instance.getConnectedPipes(this, false);
-		List<PipeTeleport<?>> sendingToList = new LinkedList<PipeTeleport<?>>();
+		List<PipePowerTeleport> connectedPipes = TeleportManager.instance.<PipePowerTeleport>getConnectedPipes(this, false, true);
+		List<PipePowerTeleport> sendingToList = new LinkedList<PipePowerTeleport>();
 
 		// no connected pipes, leave!
 		if(connectedPipes.size() <= 0 || (state & 0x1) == 0) {
 			return 0;
 		}
 
-		for(PipeTeleport<?> pipe : connectedPipes) {
+		for(PipePowerTeleport pipe : connectedPipes) {
 			if(getPipesNeedsPower(pipe).size() > 0) {
 				sendingToList.add(pipe);
 			}
@@ -92,9 +93,9 @@ public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implemen
 		}
 
 		// TODO proportional power relay
-		double powerToSend = AdditionalPipes.instance.powerLossCfg * energy / sendingToList.size();
+		double powerToSend = APConfiguration.powerTransmittanceCfg * energy / sendingToList.size();
 
-		for(PipeTeleport<?> receiver : sendingToList) {
+		for(PipePowerTeleport receiver : sendingToList) {
 			List<PowerRequest> needsPower = getPipesNeedsPower(receiver);
 
 			if(needsPower.size() <= 0) {

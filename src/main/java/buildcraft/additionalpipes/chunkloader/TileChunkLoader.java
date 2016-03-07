@@ -10,6 +10,7 @@ import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
 import buildcraft.additionalpipes.AdditionalPipes;
+import buildcraft.additionalpipes.utils.Log;
 
 public class TileChunkLoader extends TileEntity {
 
@@ -56,7 +57,7 @@ public class TileChunkLoader extends TileEntity {
 		stopChunkLoading();
 		chunkTicket = ticket;
 		for(ChunkCoordIntPair coord : getLoadArea()) {
-			AdditionalPipes.instance.logger.info(String.format("Force loading chunk %s in %s", coord, worldObj.provider.getClass()));
+			Log.info(String.format("Force loading chunk %s in %s", coord, worldObj.provider.getClass()));
 			ForgeChunkManager.forceChunk(chunkTicket, coord);
 		}
 	}

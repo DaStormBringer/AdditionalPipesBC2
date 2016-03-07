@@ -15,21 +15,25 @@ import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
+import buildcraft.additionalpipes.api.PipeType;
 import buildcraft.transport.IPipeTransportFluidsHook;
 import buildcraft.transport.PipeTransportFluids;
+import buildcraft.transport.pipes.PipeFluidsDiamond;
 
 public class PipeLiquidsTeleport extends PipeTeleport<PipeTransportFluids> implements IPipeTransportFluidsHook {
 	private static final int ICON = 2;
 
-	public PipeLiquidsTeleport(Item item) {
-		super(new PipeTransportFluids(), item);
-		transport.flowRate = 220;
-		transport.travelDelay = 3;
+	public PipeLiquidsTeleport(Item item)
+	{
+		super(new PipeTransportFluids(), item, PipeType.FLUIDS);
+		
+		//load the fluid capacities set in mod init
+		transport.initFromPipe(PipeFluidsDiamond.class);
 	}
 
 	@Override
 	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
-		List<PipeTeleport<?>> pipeList = TeleportManager.instance.getConnectedPipes(this, false);
+		List<PipeLiquidsTeleport> pipeList = TeleportManager.instance.getConnectedPipes(this, false, true);
 
 		if(pipeList.size() == 0 || (state & 0x1) == 0) {
 			return 0;

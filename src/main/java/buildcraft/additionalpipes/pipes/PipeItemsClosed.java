@@ -10,9 +10,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IChatComponent;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
-import buildcraft.core.inventory.Transactor;
-import buildcraft.core.inventory.TransactorSimple;
-import buildcraft.core.utils.Utils;
+import buildcraft.core.lib.inventory.Transactor;
+import buildcraft.core.lib.inventory.TransactorSimple;
+import buildcraft.core.lib.utils.Utils;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.pipes.events.PipeEventItem;
 
@@ -26,7 +26,7 @@ public class PipeItemsClosed extends APPipe<PipeTransportItems> implements IInve
 	}
 
 	@Override
-	public boolean blockActivated(EntityPlayer player)
+	public boolean blockActivated(EntityPlayer player, EnumFacing side)
 	{
 		ItemStack equippedItem = player.getCurrentEquippedItem();
 		if(equippedItem != null && AdditionalPipes.isPipe(equippedItem.getItem()))
@@ -40,7 +40,7 @@ public class PipeItemsClosed extends APPipe<PipeTransportItems> implements IInve
 	@Override
 	public void dropContents() {
 		super.dropContents();
-		Utils.preDestroyBlock(getWorld(), container.getPos(), container.getWorld().getBlockState(container.getPos()));
+		Utils.preDestroyBlock(getWorld(), container.getPos());
 	}
 	
 	public void eventHandler(PipeEventItem.DropItem event)
@@ -109,13 +109,6 @@ public class PipeItemsClosed extends APPipe<PipeTransportItems> implements IInve
 		if(inventory[i].stackSize == 0) {
 			inventory[i] = null;
 		}
-		return stack;
-	}
-
-	@Override
-	public ItemStack getStackInSlotOnClosing(int i) {
-		ItemStack stack = inventory[i];
-		inventory[i] = null;
 		return stack;
 	}
 
@@ -197,6 +190,16 @@ public class PipeItemsClosed extends APPipe<PipeTransportItems> implements IInve
 	public void clear()
 	{
 
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index)
+	{
+		ItemStack requestedItem = inventory[index];
+		
+		inventory[index] = null;
+		
+		return requestedItem;
 	}
 
 }

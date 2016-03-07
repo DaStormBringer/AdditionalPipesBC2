@@ -18,17 +18,13 @@ public class PipeSwitch<pipeType extends PipeTransport> extends APPipe<pipeType>
 
 	@Override
 	public int getIconIndex(EnumFacing direction) {
-		return textureIndex + (canPipeConnect(null, direction) ? 0 : 1);
+		
+		return textureIndex + (canPipeConnect(container.getNeighborTile(direction), direction) ? 0 : 1);
 	}
 
 	@Override
 	public boolean canConnectRedstone() {
 		return true;
-	}
-
-	@Override
-	public void initialize() {
-		super.initialize();
 	}
 
 	@Override
@@ -47,7 +43,8 @@ public class PipeSwitch<pipeType extends PipeTransport> extends APPipe<pipeType>
 	public boolean canPipeConnect(TileEntity tile, EnumFacing side) {
 		if(container == null && side == null) return false;
 		World world = getWorld();
-		return world != null && !world.isBlockPowered(container.getPos());
+		return world != null && super.canPipeConnect(tile, side) && !world.isBlockPowered(container.getPos());
+
 	}
 
 }

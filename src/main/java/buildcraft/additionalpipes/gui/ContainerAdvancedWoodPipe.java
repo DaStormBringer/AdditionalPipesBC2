@@ -13,7 +13,7 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import buildcraft.additionalpipes.pipes.PipeTransportAdvancedWood;
-import buildcraft.core.gui.BuildCraftContainer;
+import buildcraft.core.lib.gui.BuildCraftContainer;
 
 public class ContainerAdvancedWoodPipe extends BuildCraftContainer {
 
