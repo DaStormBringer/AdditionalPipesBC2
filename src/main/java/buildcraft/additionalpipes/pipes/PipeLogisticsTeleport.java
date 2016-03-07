@@ -24,7 +24,7 @@ public class PipeLogisticsTeleport extends PipeTeleport<PipeTransportItemsLogist
 	private static final int ICON = 40;
 
 	public PipeLogisticsTeleport(Item items) {
-		super(new PipeTransportItemsLogistics(), items, PipeType.ITEMS);
+		super(new PipeTransportItemsLogistics(), items, PipeType.LOGISTICS);
 	}
 	
 	public void eventHandler(PipeEventItem.Entered event)
@@ -83,10 +83,9 @@ public class PipeLogisticsTeleport extends PipeTeleport<PipeTransportItemsLogist
 		return ICON;
 	}
 
-	@SuppressWarnings("unchecked")
 	public PipeLogisticsTeleport getConnectedPipe()
 	{
-		List<PipeLogisticsTeleport> connectedPipes = (List<PipeLogisticsTeleport>)((List<?>)TeleportManager.instance.getConnectedPipes(this, true, true));
+		List<PipeLogisticsTeleport> connectedPipes = TeleportManager.instance.<PipeLogisticsTeleport>getConnectedPipes(this, true, true);
 		if(connectedPipes.size() == 0)
 		{
 			return null;
