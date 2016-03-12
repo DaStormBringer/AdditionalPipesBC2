@@ -9,7 +9,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
-import buildcraft.additionalpipes.utils.DataUtils;
 import buildcraft.transport.TileGenericPipe;
 
 /**
@@ -39,7 +38,7 @@ public class MessageTelePipeUpdate implements IMessage, IMessageHandler<MessageT
     @Override
     public void fromBytes(ByteBuf buf)
     {
-    	position = DataUtils.readPosition(buf);
+    	position = BlockPos.fromLong(buf.readLong());
         _freq = buf.readInt();
         _isPublic = buf.readBoolean();
         _state = buf.readByte();
@@ -48,7 +47,7 @@ public class MessageTelePipeUpdate implements IMessage, IMessageHandler<MessageT
     @Override
     public void toBytes(ByteBuf buf)
     {
-    	DataUtils.writePosition(position, buf);
+    	buf.writeLong(position.toLong());
         buf.writeInt(_freq);
         buf.writeBoolean(_isPublic);
         buf.writeByte(_state);

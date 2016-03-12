@@ -12,7 +12,7 @@ public class EntityBetterCat extends EntityOcelot
 	public EntityBetterCat(World world)
 	{
 		super(world);
-        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityCreeper.class, 0, true));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget<EntityCreeper>(this, EntityCreeper.class, true));
         System.out.println(this.getEntityAttribute(SharedMonsterAttributes.followRange).getAttributeValue());
 	}
 	

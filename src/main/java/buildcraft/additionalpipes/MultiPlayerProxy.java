@@ -1,16 +1,12 @@
 package buildcraft.additionalpipes;
 
 import net.minecraft.item.Item;
-<<<<<<< HEAD
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
-=======
->>>>>>> master
 import buildcraft.transport.ItemPipe;
 import buildcraft.transport.Pipe;
 
 public class MultiPlayerProxy {
+
+	//none of these methods do anything on the server
 
 	public void registerKeyHandler() {
 	}

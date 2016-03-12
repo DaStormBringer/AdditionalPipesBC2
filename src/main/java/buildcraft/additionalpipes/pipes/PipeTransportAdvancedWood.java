@@ -8,7 +8,6 @@
 
 package buildcraft.additionalpipes.pipes;
 
-import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -19,6 +18,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IChatComponent;
+import buildcraft.api.properties.BuildCraftProperties;
+import buildcraft.core.lib.utils.Utils;
 import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.TileGenericPipe;
@@ -26,7 +27,6 @@ import buildcraft.transport.pipes.PipeItemsWood;
 
 public class PipeTransportAdvancedWood extends PipeTransportItems implements IInventory {
 
-    public static final PropertyDirection FACING = PropertyDirection.create("facing");
 	
 	public ItemStack[] items = new ItemStack[9];
 
@@ -34,9 +34,8 @@ public class PipeTransportAdvancedWood extends PipeTransportItems implements IIn
 
 	public void switchSource()
 	{
-        IBlockState iblockstate = container.getWorld().getBlockState(container.getPos());
-		int meta = ((EnumFacing)iblockstate.getValue(FACING)).ordinal();
-		int newMeta = 6;
+		int meta = container.getBlockMetadata();
+		int newMeta = 0;
 
 		for(int i = meta + 1; i <= meta + 6; ++i) {
 			EnumFacing o = EnumFacing.values()[i % 6];
@@ -50,8 +49,8 @@ public class PipeTransportAdvancedWood extends PipeTransportItems implements IIn
 
 		if(newMeta != meta)
 		{
-			getWorld().setBlockState(container.getPos(), iblockstate.withProperty(FACING, EnumFacing.values()[newMeta]), 2);
-			
+            IBlockState iblockstate = container.getWorld().getBlockState(container.getPos());
+            container.getWorld().setBlockState(container.getPos(), iblockstate.withProperty(BuildCraftProperties.GENERIC_PIPE_DATA, newMeta));
 			container.scheduleRenderUpdate();
 		}
 	}
@@ -149,15 +148,6 @@ public class PipeTransportAdvancedWood extends PipeTransportItems implements IIn
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int i) {
-		ItemStack stack = getStackInSlot(i);
-		if(stack != null) {
-			setInventorySlotContents(i, null);
-		}
-		return stack;
-	}
-
-	@Override
 	public void setInventorySlotContents(int i, ItemStack var2) {
 		items[i] = var2;
 	}
@@ -235,8 +225,18 @@ public class PipeTransportAdvancedWood extends PipeTransportItems implements IIn
 	@Override
 	public void clear()
 	{
-		// TODO Auto-generated method stub
-		
+		items = new ItemStack[9];
 	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index)
+	{
+		ItemStack requestedItem = items[index];
+		
+		items[index] = null;
+		
+		return requestedItem;
+	}
+
 
 }

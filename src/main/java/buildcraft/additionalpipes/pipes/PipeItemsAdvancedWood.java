@@ -18,7 +18,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
 import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
@@ -67,8 +66,6 @@ public class PipeItemsAdvancedWood extends APPipe<PipeTransportAdvancedWood> imp
 		if(shouldTick())
 		{
 			
-			World w = getWorld();
-
 			int meta = container.getBlockMetadata();
 
 			if(meta > 5)

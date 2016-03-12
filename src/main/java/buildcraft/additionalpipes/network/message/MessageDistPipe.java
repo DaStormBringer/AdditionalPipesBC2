@@ -8,7 +8,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
-import buildcraft.additionalpipes.utils.DataUtils;
 import buildcraft.transport.TileGenericPipe;
 
 /**
@@ -35,7 +34,7 @@ public class MessageDistPipe implements IMessage, IMessageHandler<MessageDistPip
     @Override
     public void fromBytes(ByteBuf buf)
     {
-    	position = DataUtils.readPosition(buf);
+    	position = BlockPos.fromLong(buf.readLong());
         _index = buf.readByte();
         _newData = buf.readInt();
     }
@@ -43,7 +42,7 @@ public class MessageDistPipe implements IMessage, IMessageHandler<MessageDistPip
     @Override
     public void toBytes(ByteBuf buf)
     {
-    	DataUtils.writePosition(position, buf);
+    	buf.writeLong(position.toLong());
         buf.writeByte(_index);
         buf.writeInt(_newData);
     }

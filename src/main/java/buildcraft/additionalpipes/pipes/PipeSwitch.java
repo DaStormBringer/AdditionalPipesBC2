@@ -17,7 +17,12 @@ public class PipeSwitch<pipeType extends PipeTransport> extends APPipe<pipeType>
 	}
 
 	@Override
-	public int getIconIndex(EnumFacing direction) {
+	public int getIconIndex(EnumFacing direction)
+	{
+		if(direction == null)
+		{
+			return textureIndex;
+		}
 		
 		return textureIndex + (canPipeConnect(container.getNeighborTile(direction), direction) ? 0 : 1);
 	}

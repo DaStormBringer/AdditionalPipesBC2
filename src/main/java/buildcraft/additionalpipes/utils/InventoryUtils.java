@@ -78,11 +78,11 @@ public class InventoryUtils
 				{
 					if(!matchMeta || stack.getItemDamage() == slotStack.getItemDamage())
 					{
-						if(!matchNBT || (slotStack.stackTagCompound == null && stack.stackTagCompound == null))
+						if(!matchNBT || (!slotStack.hasTagCompound() && !stack.hasTagCompound()))
 						{
 							return true;
 						}
-						if((slotStack.stackTagCompound != null && stack.stackTagCompound != null) && slotStack.stackTagCompound.equals(stack.stackTagCompound))
+						if((slotStack.hasTagCompound() && stack.hasTagCompound()) && slotStack.getTagCompound().equals(stack.getTagCompound()))
 						{
 							return true;
 						}

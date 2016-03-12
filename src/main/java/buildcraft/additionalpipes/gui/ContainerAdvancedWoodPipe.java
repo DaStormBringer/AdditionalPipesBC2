@@ -20,8 +20,8 @@ public class ContainerAdvancedWoodPipe extends BuildCraftContainer {
 	private PipeTransportAdvancedWood logic;
 	private boolean exclude;
 
-	public ContainerAdvancedWoodPipe(IInventory playerInventory, PipeTransportAdvancedWood filterInventory) {
-		super(filterInventory.getSizeInventory());
+	public ContainerAdvancedWoodPipe(EntityPlayer player, IInventory playerInventory, PipeTransportAdvancedWood filterInventory) {
+		super(player, filterInventory.getSizeInventory());
 		logic = filterInventory;
 		exclude = !logic.exclude;
 		int k = 0;

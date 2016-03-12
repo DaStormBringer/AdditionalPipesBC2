@@ -16,7 +16,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
@@ -40,8 +41,13 @@ public class PipeItemsJeweled extends APPipe<PipeTransportItems> implements IDeb
 	}
 
 	@Override
-	public int getIconIndex(net.minecraftforge.common.util.ForgeDirection connection)
+	public int getIconIndex(EnumFacing connection)
 	{
+		if(connection == null)
+		{
+			return 34;
+		}
+		
 		switch(connection) {
 		case DOWN: // -y
 			return 35;
@@ -62,13 +68,13 @@ public class PipeItemsJeweled extends APPipe<PipeTransportItems> implements IDeb
 	//adapted from Diamond Pipe code
 	public void eventHandler(PipeEventItem.FindDest event)
 	{
-		LinkedList<ForgeDirection> filteredOrientations = new LinkedList<ForgeDirection>();
-		LinkedList<ForgeDirection> defaultOrientations = new LinkedList<ForgeDirection>();
+		LinkedList<EnumFacing> filteredOrientations = new LinkedList<EnumFacing>();
+		LinkedList<EnumFacing> defaultOrientations = new LinkedList<EnumFacing>();
 
 		ItemStack stack = event.item.getItemStack();
 		
 		// Filtered outputs
-		for (ForgeDirection dir : event.destinations)
+		for (EnumFacing dir : event.destinations)
 		{
 			SideFilterData data = filterData[dir.ordinal()];
 
@@ -95,7 +101,7 @@ public class PipeItemsJeweled extends APPipe<PipeTransportItems> implements IDeb
 	}
 
 	@Override
-	public boolean blockActivated(EntityPlayer player, ForgeDirection direction)
+	public boolean blockActivated(EntityPlayer player, EnumFacing direction)
 	{
 		if(player.isSneaking())
 		{
@@ -109,7 +115,8 @@ public class PipeItemsJeweled extends APPipe<PipeTransportItems> implements IDeb
 			}
 		}
 
-		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_JEWELED, container.getWorldObj(), container.xCoord, container.yCoord, container.zCoord);
+		BlockPos pos = container.getPos();
+		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_JEWELED, container.getWorld(),pos.getX(), pos.getY(), pos.getZ());
 
 		return true;
 	}
@@ -149,13 +156,12 @@ public class PipeItemsJeweled extends APPipe<PipeTransportItems> implements IDeb
 		super.dropContents();
 		for(SideFilterData sideFilter : filterData)
 		{
-			InvUtils.dropItems(getWorld(), sideFilter, container.xCoord, container.yCoord, container.zCoord);
+			InvUtils.dropItems(getWorld(), sideFilter, container.getPos());
 		}
 	}
 
 	@Override
-	public void getDebugInfo(List<String> info, ForgeDirection side,
-			ItemStack debugger, EntityPlayer player)
+	public void getDebugInfo(List<String> info, List<String> param2, EnumFacing side)
 	{
 		SideFilterData clickedSide = filterData[side.ordinal()];
 		info.add("Accepts unsorted items: " + clickedSide.acceptsUnsortedItems());

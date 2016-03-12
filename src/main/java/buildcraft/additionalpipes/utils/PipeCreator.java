@@ -2,13 +2,13 @@ package buildcraft.additionalpipes.utils;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.item.ItemPipeAP;
 import buildcraft.additionalpipes.pipes.APPipe;
 import buildcraft.transport.BlockGenericPipe;
 import buildcraft.transport.ItemPipe;
 import buildcraft.transport.Pipe;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public class PipeCreator
 {

@@ -36,7 +36,7 @@ public class GuiHandler implements IGuiHandler {
 		case PIPE_DIST:
 			return new ContainerDistributionPipe((TileGenericPipe) tile);
 		case PIPE_WOODEN_ADV:
-			return new ContainerAdvancedWoodPipe(player.inventory, (PipeTransportAdvancedWood) ((TileGenericPipe) tile).pipe.transport);
+			return new ContainerAdvancedWoodPipe(player, player.inventory, (PipeTransportAdvancedWood) ((TileGenericPipe) tile).pipe.transport);
 		case PIPE_CLOSED:
 			return new ContainerPipeClosed(player.inventory, ((TileGenericPipe) tile).pipe);
 		case PIPE_PRIORITY:
@@ -64,7 +64,7 @@ public class GuiHandler implements IGuiHandler {
 		case PIPE_DIST:
 			return new GuiDistributionPipe((TileGenericPipe) tile);
 		case PIPE_WOODEN_ADV:
-			return new GuiAdvancedWoodPipe(player.inventory, (TileGenericPipe) tile);
+			return new GuiAdvancedWoodPipe(player, player.inventory, (TileGenericPipe) tile);
 		case PIPE_CLOSED:
 			return new GuiPipeClosed(player.inventory, ((TileGenericPipe) tile).pipe);
 		case PIPE_PRIORITY:

@@ -3,6 +3,8 @@ package buildcraft.additionalpipes.gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.opengl.GL11;
 
@@ -11,8 +13,7 @@ import buildcraft.additionalpipes.network.message.MessagePriorityPipe;
 import buildcraft.additionalpipes.pipes.PipeItemsPriorityInsertion;
 import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.transport.TileGenericPipe;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
 
 @SideOnly(Side.CLIENT)
 public class GuiPriorityInsertionPipe extends GuiContainer {
@@ -31,7 +32,6 @@ public class GuiPriorityInsertionPipe extends GuiContainer {
 		ySize = 130;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 		super.initGui();
@@ -86,23 +86,11 @@ public class GuiPriorityInsertionPipe extends GuiContainer {
 		} else {
 			newData++;
 		}
-		/*
-		 * //Old code switch (guibutton.id) { case 1: index = 0;
-		 * pipeLogic.distData[0] -= 1; break; case 3: index = 0;
-		 * pipeLogic.distData[0] += 1; break; case 4: pipeLogic.distData[1] -=
-		 * 1; break; case 6: pipeLogic.distData[1] += 1; break; case 7:
-		 * pipeLogic.distData[2] -= 1; break; case 9: pipeLogic.distData[2] +=
-		 * 1; break; case 10: pipeLogic.distData[3] -= 1; break; case 12:
-		 * pipeLogic.distData[3] += 1; break; case 13: pipeLogic.distData[4] -=
-		 * 1; break; case 15: pipeLogic.distData[4] += 1; break; case 16:
-		 * pipeLogic.distData[5] -= 1; break; case 18: pipeLogic.distData[5] +=
-		 * 1; break; }
-		 */
 
 		if(newData < 0 || newData > 6)
 			return;
 
-		MessagePriorityPipe message = new MessagePriorityPipe(pipe.container.xCoord, pipe.container.yCoord, pipe.container.zCoord, (byte) index, newData);
+		MessagePriorityPipe message = new MessagePriorityPipe(pipe.container.getPos(), (byte) index, newData);
 		PacketHandler.INSTANCE.sendToServer(message);	
 	}
 

@@ -12,11 +12,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.item.Item;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Vec3;
 import buildcraft.additionalpipes.api.PipeType;
 import buildcraft.additionalpipes.utils.Log;
 import buildcraft.transport.PipeTransportItems;
+import buildcraft.transport.TravelingItem;
 import buildcraft.transport.pipes.events.PipeEventItem;
 import buildcraft.transport.utils.TransportUtils;
 
@@ -90,18 +91,16 @@ public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 			return;
 		}
 
-		BlockPos insertPoint = otherPipe.getPosition();
-		insertPoint.x += 0.5;
-		insertPoint.y += TransportUtils.getPipeFloorOf(event.item.getItemStack());
-		insertPoint.z += 0.5;
-		insertPoint.moveForwards(0.5);
-		event.item.setPosition(insertPoint.x, insertPoint.y, insertPoint.z);
+		Vec3 insertPoint = new Vec3(otherPipe.getPosition());
+		insertPoint.addVector(.5, TransportUtils.getPipeFloorOf(event.item.getItemStack()), .5);
+		
+		//can no longer set position of TravelingItems as of BC 7.2, so we have to make a new one
 		
 		EnumFacing newOrientation = otherPipe.getOpenOrientation().getOpposite();
-		((PipeTransportItems)otherPipe.transport).injectItem(event.item, newOrientation);
+		((PipeTransportItems)otherPipe.transport).injectItem(TravelingItem.make(insertPoint, event.item.getItemStack()), newOrientation);
 		
 
-		Log.debug(event.item + " from " + getPosition() + " to " + otherPipe.getPosition() + " " + newOrientation);
+		Log.debug(event.item + " from " + getPosition() + " to " + otherPipe.getPosition() + ": " + newOrientation.getName2());
 		event.cancelled = true;
 	}
 

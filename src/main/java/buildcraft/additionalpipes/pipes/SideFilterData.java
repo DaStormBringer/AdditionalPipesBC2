@@ -5,6 +5,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.IChatComponent;
 import buildcraft.additionalpipes.utils.Log;
 
 /**
@@ -125,11 +126,11 @@ public class SideFilterData implements IInventory
 				{
 					if(!matchMetadata || stack.getItemDamage() == slotStack.getItemDamage())
 					{
-						if(!matchNBT || (slotStack.stackTagCompound == null && stack.stackTagCompound == null))
+						if(!matchNBT || (!slotStack.hasTagCompound() && !stack.hasTagCompound()))
 						{
 							return true;
 						}
-						if((slotStack.stackTagCompound != null && stack.stackTagCompound != null) && slotStack.stackTagCompound.equals(stack.stackTagCompound))
+						if((slotStack.hasTagCompound() && stack.hasTagCompound()) && slotStack.getTagCompound().equals(stack.getTagCompound()))
 						{
 							return true;
 						}
@@ -176,21 +177,6 @@ public class SideFilterData implements IInventory
     }
 
     @Override
-    public ItemStack getStackInSlotOnClosing(int slotIndex)
-    {
-        if (inventory[slotIndex] != null)
-        {
-            ItemStack itemStack = inventory[slotIndex];
-            inventory[slotIndex] = null;
-            return itemStack;
-        }
-        else
-        {
-            return null;
-        }
-    }
-
-    @Override
     public void setInventorySlotContents(int slotIndex, ItemStack itemStack)
     {
         inventory[slotIndex] = itemStack;
@@ -205,13 +191,13 @@ public class SideFilterData implements IInventory
     }
 
 	@Override
-	public String getInventoryName()
+	public String getName()
 	{
 		return "gui.jeweled_pipe";
 	}
 
 	@Override
-	public boolean hasCustomInventoryName()
+	public boolean hasCustomName()
 	{
 		return false;
 	}
@@ -235,20 +221,66 @@ public class SideFilterData implements IInventory
 	}
 
 	@Override
-	public void openInventory()
-	{
-		//do nothing
-	}
-
-	@Override
-	public void closeInventory()
-	{
-		//do nothing
-	}
-
-	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack)
 	{
 		return true;
+	}
+
+	@Override
+	public IChatComponent getDisplayName()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void openInventory(EntityPlayer player)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void closeInventory(EntityPlayer player)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getField(int id)
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void clear()
+	{
+		inventory = new ItemStack[INVENTORY_SIZE];
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index)
+	{
+		ItemStack requestedItem = inventory[index];
+		
+		inventory[index] = null;
+		
+		return requestedItem;
+	}
+
+	@Override
+	public int getFieldCount()
+	{
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

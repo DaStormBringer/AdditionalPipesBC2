@@ -8,7 +8,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
-import buildcraft.additionalpipes.utils.DataUtils;
 import buildcraft.transport.TileGenericPipe;
 
 /**
@@ -31,13 +30,13 @@ public class MessageAdvWoodPipe implements IMessage, IMessageHandler<MessageAdvW
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        position = DataUtils.readPosition(buf);
+        position = BlockPos.fromLong(buf.readLong());
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
-        DataUtils.writePosition(position, buf);
+        buf.writeLong(position.toLong());
     }
 
     @Override

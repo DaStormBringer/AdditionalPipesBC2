@@ -5,11 +5,14 @@ import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ICrafting;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessageTelePipeData;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.additionalpipes.pipes.TeleportManager;
+import buildcraft.additionalpipes.utils.Log;
 import buildcraft.core.lib.gui.BuildCraftContainer;
-import cpw.mods.fml.common.FMLCommonHandler;
 
 public class ContainerTeleportPipe extends BuildCraftContainer {
 
@@ -30,7 +33,7 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 
 	public ContainerTeleportPipe(EntityPlayer player, PipeTeleport<?> pipe)
 	{
-		super(0);
+		super(player, 0);
 		this.pipe = pipe;
 
 		//set these variables to invalid values so that they will be updated

@@ -42,6 +42,7 @@ import buildcraft.additionalpipes.chunkloader.ChunkLoadingHandler;
 import buildcraft.additionalpipes.chunkloader.TileChunkLoader;
 import buildcraft.additionalpipes.gates.GateProvider;
 import buildcraft.additionalpipes.gates.TriggerPipeClosed;
+import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.additionalpipes.item.ItemDogDeaggravator;
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.pipes.APPipe;
@@ -57,7 +58,6 @@ import buildcraft.additionalpipes.pipes.PipeItemsTeleport;
 import buildcraft.additionalpipes.pipes.PipeLiquidsObsidian;
 import buildcraft.additionalpipes.pipes.PipeLiquidsTeleport;
 import buildcraft.additionalpipes.pipes.PipeLiquidsWaterPump;
-import buildcraft.additionalpipes.pipes.PipeLogisticsTeleport;
 import buildcraft.additionalpipes.pipes.PipePowerTeleport;
 import buildcraft.additionalpipes.pipes.PipeSwitchFluids;
 import buildcraft.additionalpipes.pipes.PipeSwitchItems;
@@ -200,7 +200,7 @@ public class AdditionalPipes {
 			
 			if(logisticsPipesInstalled)
 			{
-				GameRegistry.addShapelessRecipe(new ItemStack(pipeItemsTeleport), new Object[] {pipeLogisticsTeleport});
+				//GameRegistry.addShapelessRecipe(new ItemStack(pipeItemsTeleport), new Object[] {pipeLogisticsTeleport});
 			}
 			
 			GameRegistry.addShapelessRecipe(new ItemStack(pipeItemsSwitch), new Object[] {pipeLiquidsSwitch});
@@ -232,6 +232,10 @@ public class AdditionalPipes {
 		blockChunkLoader = new BlockChunkLoader();
 		blockChunkLoader.setUnlocalizedName("chunkLoader");
 		
+		dogDeaggravator = new ItemDogDeaggravator();
+		GameRegistry.registerItem(dogDeaggravator, ItemDogDeaggravator.NAME);
+		GameRegistry.addRecipe(new ItemStack(dogDeaggravator), new Object[] { "gsg", "gig", "g g", 'i', Items.iron_ingot, 'g', Items.gold_ingot, 's', Items.stick});
+		
 	     //register renders
 	     if(event.getSide() == Side.CLIENT)
 	     {
@@ -239,16 +243,15 @@ public class AdditionalPipes {
 		    
 		     //blocks
 		     renderItem.getItemModelMesher().register(Item.getItemFromBlock(blockChunkLoader), 0, new ModelResourceLocation(MODID + ":" + blockChunkLoader.getUnlocalizedName(), "inventory"));
-		    
+		     renderItem.getItemModelMesher().register(dogDeaggravator, 0, new ModelResourceLocation(MODID + ":" + ItemDogDeaggravator.NAME, "inventory"));
+	     
 	     }		
 
 		GameRegistry.registerBlock(blockChunkLoader, ItemBlock.class, "chunkLoader");
 		GameRegistry.registerTileEntity(TileChunkLoader.class, "TeleportTether");
 		GameRegistry.addRecipe(new ItemStack(blockChunkLoader), new Object[] { "iii", "iLi", "iii", 'i', Items.iron_ingot, 'L', new ItemStack(Items.dye, 1, 4) });
 		
-		dogDeaggravator = new ItemDogDeaggravator();
-		GameRegistry.registerItem(dogDeaggravator, ItemDogDeaggravator.NAME);
-		GameRegistry.addRecipe(new ItemStack(dogDeaggravator), new Object[] { "gsg", "gig", "g g", 'i', Items.iron_ingot, 'g', Items.gold_ingot, 's', Items.stick});
+
 		
 		Log.info("Running Teleport Manager Tests");
 		TeleportManagerTest.runAllTests();
@@ -358,14 +361,14 @@ public class AdditionalPipes {
 			GameRegistry.addShapelessRecipe(new ItemStack(pipePowerTeleport), new Object[] {Items.redstone, pipeItemsTeleport});
 		}
 		
-		if(logisticsPipesInstalled)
-		{
-			// Logistics Teleport Pipe
-			pipeLogisticsTeleport = PipeCreator.createPipeTooltip((Class<? extends APPipe<?>>) PipeLogisticsTeleport.class, "tip.teleportLogisticsPipe");
-			if(pipeItemsTeleport != null) {
-				GameRegistry.addShapelessRecipe(new ItemStack(pipeLogisticsTeleport), new Object[] {pipeItemsTeleport, BuildCraftSilicon.redstoneChipset});
-			}
-		}
+//		if(logisticsPipesInstalled)
+//		{
+//			// Logistics Teleport Pipe
+//			pipeLogisticsTeleport = PipeCreator.createPipeTooltip((Class<? extends APPipe<?>>) PipeLogisticsTeleport.class, "tip.teleportLogisticsPipe");
+//			if(pipeItemsTeleport != null) {
+//				GameRegistry.addShapelessRecipe(new ItemStack(pipeLogisticsTeleport), new Object[] {pipeItemsTeleport, BuildCraftSilicon.redstoneChipset});
+//			}
+//		}
 
 		//Jeweled Pipe
 		pipeItemsJeweled = PipeCreator.createPipeAndRecipe(2, PipeItemsJeweled.class, new Object[] { " D ", "DGD", " D ", 'D', BuildCraftTransport.pipeItemsDiamond, 'G', BuildCraftCore.goldGearItem}, false);

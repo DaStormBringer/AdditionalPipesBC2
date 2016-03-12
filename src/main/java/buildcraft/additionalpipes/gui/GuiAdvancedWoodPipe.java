@@ -10,6 +10,7 @@ package buildcraft.additionalpipes.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -31,9 +32,9 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 	TileGenericPipe container;
 	private GuiButton[] buttons = new GuiButton[1];
 
-	public GuiAdvancedWoodPipe(IInventory playerInventorys, TileGenericPipe container) {
-		super(new ContainerAdvancedWoodPipe(playerInventorys, (PipeTransportAdvancedWood) container.pipe.transport));
-		playerInventory = playerInventorys;
+	public GuiAdvancedWoodPipe(EntityPlayer player, IInventory playerInventory, TileGenericPipe container) {
+		super(new ContainerAdvancedWoodPipe(player, playerInventory, (PipeTransportAdvancedWood) container.pipe.transport));
+		this.playerInventory = playerInventory;
 		filterInventory = (PipeTransportAdvancedWood) container.pipe.transport;
 		this.container = container;
 		// container = theContainer;
@@ -42,7 +43,6 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 		super.initGui();

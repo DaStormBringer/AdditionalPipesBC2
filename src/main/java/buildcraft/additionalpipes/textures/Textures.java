@@ -5,11 +5,11 @@ import net.minecraft.util.ResourceLocation;
 import buildcraft.additionalpipes.gui.GuiJeweledPipe;
 
 public class Textures {
-	//public static final APActionTriggerIconProvider actionIconProvider = new APActionTriggerIconProvider();
-	//public static final APPipeIconProvider pipeIconProvider = new APPipeIconProvider();
+	public static final APPipeIconProvider pipeIconProvider = new APPipeIconProvider();
 
 	public static void registerIcons(TextureMap map)
 	{
+		pipeIconProvider.registerIcons(map);
 	}
 	
 	// textures

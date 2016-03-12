@@ -6,9 +6,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.transport.ItemPipe;
-import cpw.mods.fml.relauncher.SideOnly;
 
 //special pipe code
 public class ItemPipeAP extends ItemPipe

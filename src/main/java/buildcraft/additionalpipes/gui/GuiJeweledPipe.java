@@ -1,11 +1,15 @@
 package buildcraft.additionalpipes.gui;
 
+import java.io.IOException;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.opengl.GL11;
 
@@ -15,8 +19,6 @@ import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
 import buildcraft.additionalpipes.pipes.SideFilterData;
 import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.additionalpipes.utils.Log;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiJeweledPipe extends GuiContainer
@@ -86,7 +88,7 @@ public class GuiJeweledPipe extends GuiContainer
 		//add the tab labels
 		for(int tabNumber = 1; tabNumber <= NUM_TABS; ++tabNumber)
 		{
-			String tabName = StatCollector.translateToLocal("gui.tab." + ForgeDirection.VALID_DIRECTIONS[tabNumber - 1].toString().toLowerCase());
+			String tabName = StatCollector.translateToLocal("gui.tab." + EnumFacing.VALUES[tabNumber - 1].getName2());
 						
 			fontRendererObj.drawString(tabName, tabEndX[tabNumber- 1] + halfSpaceBetweenTabs, tabY + 3, 4210752);
 		}
@@ -107,7 +109,6 @@ public class GuiJeweledPipe extends GuiContainer
         
     }
     
-	@SuppressWarnings("unchecked")
 	public void initGui() 
 	{
 		super.initGui();
@@ -120,7 +121,7 @@ public class GuiJeweledPipe extends GuiContainer
 		//calculate the tab widths
 		for(int tabNumber = 1; tabNumber <= NUM_TABS; ++tabNumber)
 		{
-			String tabName = StatCollector.translateToLocal("gui.tab." + ForgeDirection.VALID_DIRECTIONS[tabNumber - 1].toString().toLowerCase());
+			String tabName = StatCollector.translateToLocal("gui.tab." + EnumFacing.VALUES[tabNumber - 1].toString().toLowerCase());
 						
 			//record the width of this tab
 			tabEndX[tabNumber] = tabEndX[tabNumber- 1] + fontRendererObj.getStringWidth(tabName) - 1 + totalSpaceBetweenTabs;
@@ -140,13 +141,10 @@ public class GuiJeweledPipe extends GuiContainer
 		buttonList.add(buttonMatchMetadata);
 	}
 	
-    /**
-     * Called when the mouse is moved or a mouse button is released.  Signature: (mouseX, mouseY, which) which==-1 is
-     * mouseMove, which==0 or which==1 is mouseUp
-     */
-    protected void mouseMovedOrUp(int x, int y, int type)
+	@Override
+    protected void mouseClicked(int x, int y, int button) throws IOException 
     {
-        if (type == 0)
+        if (button == 0)
         {
             int xDistance = x - (this.guiLeft + tabEndX[0]);
             int yDistance = y - (this.guiTop + tabY);
@@ -170,7 +168,7 @@ public class GuiJeweledPipe extends GuiContainer
             }
         }
 
-        super.mouseMovedOrUp(x, y, type);
+        super.mouseClicked(x, y, button);
     }
     
     /**
@@ -210,8 +208,7 @@ public class GuiJeweledPipe extends GuiContainer
 		((GuiButtonOnOff)button).togglePressed();
 
 		//send the current filter data to the server
-		MessageJeweledPipeOptionsServer message = new MessageJeweledPipeOptionsServer(container.pipeItemsJeweled.container.xCoord,
-				container.pipeItemsJeweled.container.yCoord, container.pipeItemsJeweled.container.zCoord, (byte) container.currentSide, currentSideFilter);
+		MessageJeweledPipeOptionsServer message = new MessageJeweledPipeOptionsServer(container.pipeItemsJeweled.container.getPos(), (byte) container.currentSide, currentSideFilter);
 		PacketHandler.INSTANCE.sendToServer(message);	
 	}
 

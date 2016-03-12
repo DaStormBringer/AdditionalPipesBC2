@@ -12,7 +12,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
-import buildcraft.additionalpipes.utils.DataUtils;
 import buildcraft.transport.TileGenericPipe;
 
 public class MessageTelePipeData implements IMessage, IMessageHandler<MessageTelePipeData, IMessage>
@@ -37,7 +36,7 @@ public class MessageTelePipeData implements IMessage, IMessageHandler<MessageTel
     @Override
     public void fromBytes(ByteBuf buf)
     {
-    	position = DataUtils.readPosition(buf);
+    	position = BlockPos.fromLong(buf.readLong());
         int locationsLength = buf.readInt();
         	
         this.locations = new int[locationsLength];
@@ -54,7 +53,7 @@ public class MessageTelePipeData implements IMessage, IMessageHandler<MessageTel
     @Override
     public void toBytes(ByteBuf buf)
     {
-    	DataUtils.writePosition(position, buf);
+    	buf.writeLong(position.toLong());
         buf.writeInt(locations.length);
         for(int location : locations)
         {

@@ -2,6 +2,7 @@ package buildcraft.additionalpipes.gates;
 
 import net.minecraft.util.StatCollector;
 import buildcraft.additionalpipes.pipes.PipeItemsClosed;
+import buildcraft.additionalpipes.utils.Log;
 import buildcraft.api.statements.IStatement;
 import buildcraft.api.statements.IStatementContainer;
 import buildcraft.api.statements.IStatementParameter;
@@ -12,7 +13,7 @@ public class TriggerPipeClosed extends APTrigger implements ITriggerInternal {
 
 	public TriggerPipeClosed()
 	{
-		super("additionalpipes:trigger.pipeclosed");
+		super("trigger.pipeclosed");
 	}
 
 	@Override
@@ -46,17 +47,6 @@ public class TriggerPipeClosed extends APTrigger implements ITriggerInternal {
 		}
 		return false;
 	}
-	
-	@Override
-	public int getIconIndex() {
-		return 0;
-	}
-
-	@Override
-	public String getUniqueTag() 
-	{
-		return id;
-	}
 
 	@Override
 	public int maxParameters() 
@@ -81,12 +71,6 @@ public class TriggerPipeClosed extends APTrigger implements ITriggerInternal {
 	{
 		return this;
 	}
-
-	@Override
-	public SheetIcon getIcon()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 }

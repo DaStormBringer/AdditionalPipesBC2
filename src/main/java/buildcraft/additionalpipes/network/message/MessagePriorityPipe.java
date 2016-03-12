@@ -2,12 +2,14 @@ package buildcraft.additionalpipes.network.message;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import buildcraft.additionalpipes.pipes.PipeItemsPriorityInsertion;
 import buildcraft.transport.TileGenericPipe;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+
 
 /**
  * Message that sets the properties of a Distribution Pipe from the GUI
@@ -15,7 +17,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
  */
 public class MessagePriorityPipe implements IMessage, IMessageHandler<MessagePriorityPipe, IMessage>
 {
-	public int x, y, z;
+	public BlockPos position;
 	byte _index;
 	int _newData;
 	
@@ -23,11 +25,9 @@ public class MessagePriorityPipe implements IMessage, IMessageHandler<MessagePri
     {
     }
 
-    public MessagePriorityPipe(int x, int y,int z, byte index, int newData)
+    public MessagePriorityPipe(BlockPos position, byte index, int newData)
     {
-    	this.x = x;
-    	this.y = y;
-    	this.z = z;
+    	this.position = position;
     	_index = index;
     	_newData = newData;
     }
@@ -35,9 +35,7 @@ public class MessagePriorityPipe implements IMessage, IMessageHandler<MessagePri
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        x = buf.readInt();
-        y = buf.readInt();
-        z = buf.readInt();
+        position = BlockPos.fromLong(buf.readLong());
         _index = buf.readByte();
         _newData = buf.readInt();
     }
@@ -45,9 +43,7 @@ public class MessagePriorityPipe implements IMessage, IMessageHandler<MessagePri
     @Override
     public void toBytes(ByteBuf buf)
     {
-        buf.writeInt(x);
-        buf.writeInt(y);
-        buf.writeInt(z);
+        buf.writeLong(position.toLong());
         buf.writeByte(_index);
         buf.writeInt(_newData);
     }
@@ -57,7 +53,7 @@ public class MessagePriorityPipe implements IMessage, IMessageHandler<MessagePri
     {
     	
     	World world = ctx.getServerHandler().playerEntity.worldObj;
-    	TileEntity te = world.getTileEntity(message.x, message.y, message.z);
+    	TileEntity te = world.getTileEntity(position);
 		if(te instanceof TileGenericPipe)
 		{
 			PipeItemsPriorityInsertion pipe = (PipeItemsPriorityInsertion) ((TileGenericPipe) te).pipe;

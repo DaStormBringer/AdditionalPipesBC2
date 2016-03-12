@@ -4,17 +4,18 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessageTelePipeUpdate;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.additionalpipes.textures.Textures;
+import buildcraft.core.client.CoreIconProvider;
 import buildcraft.core.lib.gui.GuiBuildCraft;
-import buildcraft.core.lib.gui.GuiBuildCraft.Ledger;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiTeleportPipe extends GuiBuildCraft {
-
+	
 	protected class TeleportPipeLedger extends Ledger {
 
 		int headerColour = 0xe1c92f;
@@ -42,7 +43,7 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 
 			// Draw icon
 			Minecraft.getMinecraft().renderEngine.bindTexture(Textures.ITEMS);
-			drawIcon(new SheetIcon(ICONS_TEXTURE, 0, 0), x + 3, y + 4);
+			drawIcon(CoreIconProvider.ENERGY.getSprite(), x + 3, y + 4);
 
 			if(!isFullyOpened())
 				return;
@@ -82,7 +83,6 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 		ySize = 117;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 		super.initGui();
@@ -171,5 +171,14 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 	protected void initLedgers(IInventory inventory) {
 		super.initLedgers(inventory);
 		ledgerManager.add(new TeleportPipeLedger());
+	}
+
+	@Override
+	protected void drawGuiContainerBackgroundLayer(float partialTicks,
+			int mouseX, int mouseY)
+	{
+		// do nothing
+		
+		
 	}
 }
