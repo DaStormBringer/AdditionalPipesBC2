@@ -161,6 +161,10 @@ public class AdditionalPipes {
 		
 		//create BuildCraft creative tab
 		creativeTab = new BCCreativeTab("apcreativetab");
+		
+		
+		Log.info("Registering pipes");
+		loadPipes();
 	}
 
 	@EventHandler
@@ -182,9 +186,7 @@ public class AdditionalPipes {
 		proxy.registerRendering();
 
 		APConfiguration.loadConfigs(true, configFile);
-		
-		Log.info("Registering pipes");
-		loadPipes();
+
 		
 		//set creative tab icon
 		creativeTab.setIcon(new ItemStack(pipeItemsTeleport));

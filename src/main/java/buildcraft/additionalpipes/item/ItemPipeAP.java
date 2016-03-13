@@ -9,6 +9,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import buildcraft.additionalpipes.AdditionalPipes;
+import buildcraft.additionalpipes.utils.Log;
 import buildcraft.transport.ItemPipe;
 
 //special pipe code
@@ -39,4 +40,11 @@ public class ItemPipeAP extends ItemPipe
 		super.addInformation(stack, player, list, advanced);		
 		list.add(StatCollector.translateToLocal(tooltip));
 	}
+	
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerModels() {
+    	Log.debug("Registering model for AP pipe");
+    	super.registerModels();
+    }
 }

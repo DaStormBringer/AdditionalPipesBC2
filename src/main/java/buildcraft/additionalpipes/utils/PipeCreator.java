@@ -6,6 +6,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.item.ItemPipeAP;
 import buildcraft.additionalpipes.pipes.APPipe;
+import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.transport.BlockGenericPipe;
 import buildcraft.transport.ItemPipe;
 import buildcraft.transport.Pipe;
@@ -46,11 +47,11 @@ public class PipeCreator
 	 * @param clas
 	 * @return
 	 */
-	public static Item createPipe(Class<? extends Pipe<?>> clas)
+	public static ItemPipe createPipe(Class<? extends Pipe<?>> clas)
 	{
-		Item res = BlockGenericPipe.registerPipe(clas, AdditionalPipes.instance.creativeTab);
+		ItemPipe res = BlockGenericPipe.registerPipe(clas, AdditionalPipes.instance.creativeTab);
 		res.setUnlocalizedName(clas.getSimpleName());
-		AdditionalPipes.proxy.registerPipeRendering(res);
+		res.setPipesIcons(Textures.pipeIconProvider);
 		return res;
 	}
 
@@ -58,7 +59,6 @@ public class PipeCreator
 	{
 		ItemPipe item = new ItemPipeAP(tooltip);
 		item.setUnlocalizedName(clas.getSimpleName());
-		AdditionalPipes.proxy.registerPipeRendering(item);
 		BlockGenericPipe.pipes.put(item, clas);
 		
 		GameRegistry.registerItem(item, item.getUnlocalizedName());

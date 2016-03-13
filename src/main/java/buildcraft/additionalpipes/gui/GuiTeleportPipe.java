@@ -1,6 +1,5 @@
 package buildcraft.additionalpipes.gui;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -42,7 +41,6 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 			drawBackground(x, y);
 
 			// Draw icon
-			Minecraft.getMinecraft().renderEngine.bindTexture(Textures.ITEMS);
 			drawIcon(CoreIconProvider.ENERGY.getSprite(), x + 3, y + 4);
 
 			if(!isFullyOpened())
