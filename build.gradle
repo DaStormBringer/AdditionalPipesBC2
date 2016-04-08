@@ -18,13 +18,20 @@ archivesBaseName = "additionalpipes"
 
 minecraft {
     version = "1.8.9-11.15.1.1764"
-    runDir = "eclipse/assets"
+    runDir = "minecraft"
 	mappings = "stable_20"
 
 }
 
+repositories {
+	ivy {
+		name "BuildCraft"
+		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
+	}
+}
+
 dependencies {
-		deobf files('lib/buildcraft-7.2.0-dev.jar')
+	compile name: 'buildcraft', version: "7.2.5", classifier: "dev", ext: 'jar'
 }
 
 sourceSets {

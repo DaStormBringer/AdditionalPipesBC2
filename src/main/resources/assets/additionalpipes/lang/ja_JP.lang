@@ -36,12 +36,14 @@ gui.tab.south=南
 gui.tab.east=東
 gui.tab.west=西
 
-gui.match=
+trigger.pipeClosed=パイプ閉まっている
+
+gui.match=一致
 gui.NBT=タグ 
 gui.metadata= メタデータ
 gui.acceptUnsorted=分けられなかった 
 
-itemGroup.buildcraft.apcreativetab=Additional Pipes
+itemGroup.buildcraft.apcreativetab=Additional Pipes　（別枠パイプ）
 
 key.lasers=Chunk load boundaries
 

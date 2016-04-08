@@ -1,6 +1,5 @@
 package buildcraft.additionalpipes.gates;
 
-import net.minecraft.util.StatCollector;
 import buildcraft.additionalpipes.pipes.PipeItemsClosed;
 import buildcraft.additionalpipes.utils.Log;
 import buildcraft.api.statements.IStatement;
@@ -13,14 +12,10 @@ public class TriggerPipeClosed extends APTrigger implements ITriggerInternal {
 
 	public TriggerPipeClosed()
 	{
-		super("trigger.pipeclosed");
+		super("pipeClosed");
 	}
 
-	@Override
-	public String getDescription()
-	{
-		return StatCollector.translateToLocal("gate.pipeClosed");
-	}
+
 
 	@Override
 	public boolean isTriggerActive(IStatementContainer statement, IStatementParameter[] parameters)

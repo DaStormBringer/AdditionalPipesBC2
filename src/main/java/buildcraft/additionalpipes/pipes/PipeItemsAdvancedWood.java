@@ -24,9 +24,9 @@ import buildcraft.api.tools.IToolWrench;
 import buildcraft.core.lib.RFBattery;
 import buildcraft.core.lib.inventory.InvUtils;
 import buildcraft.core.lib.utils.Utils;
-import cofh.api.energy.IEnergyHandler;
+import cofh.api.energy.IEnergyReceiver;
 
-public class PipeItemsAdvancedWood extends APPipe<PipeTransportAdvancedWood> implements IEnergyHandler
+public class PipeItemsAdvancedWood extends APPipe<PipeTransportAdvancedWood> implements IEnergyReceiver
 {
 	
 	protected RFBattery battery = new RFBattery(640, 640, 0);
@@ -231,6 +231,12 @@ public class PipeItemsAdvancedWood extends APPipe<PipeTransportAdvancedWood> imp
 	public int getMaxEnergyStored(EnumFacing from)
 	{
 		return battery.getMaxEnergyStored();
+	}
+
+	@Override
+	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate)
+	{
+		return battery.receiveEnergy(maxReceive, simulate);
 	}
 
 }

@@ -7,6 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.transport.PipeTransportFluids;
 
 public class PipeLiquidsWaterPump extends APPipe<PipeTransportFluids> {
@@ -27,7 +28,7 @@ public class PipeLiquidsWaterPump extends APPipe<PipeTransportFluids> {
 		super.updateEntity();
         if(getWorld().getBlockState(container.getPos().down()).getBlock() == water)
 		{
-			transport.fill(EnumFacing.DOWN, new FluidStack(FluidRegistry.WATER, 100), true);
+			transport.fill(EnumFacing.DOWN, new FluidStack(FluidRegistry.WATER, APConfiguration.waterPumpWaterPerTick), true);
 
 		}
 	}

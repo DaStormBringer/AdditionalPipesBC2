@@ -39,7 +39,7 @@ gui.NBT=Tag
 gui.metadata=Meta
 gui.acceptUnsorted=Accept Unsorted
 
-gate.pipeClosed=Pipe Closed (Storing Items)
+trigger.pipeClosed=Pipe Closed (Storing Items)
 
 key.lasers=Show chunk load boundaries
 

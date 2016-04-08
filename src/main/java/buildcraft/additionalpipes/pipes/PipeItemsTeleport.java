@@ -90,9 +90,9 @@ public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 		
 		//can no longer set position of TravelingItems as of BC 7.2, so we have to make a new one
 		
-		EnumFacing newOrientation = otherPipe.getOpenOrientation().getOpposite();
+		EnumFacing newOrientation = otherPipe.getOpenOrientation();
 		
-		otherPipe.injectItem(event.item.getItemStack(), newOrientation);		
+		otherPipe.injectItemAtCenter(event.item.getItemStack(), newOrientation);		
 
 		Log.debug(event.item + " from " + getPosition() + " to " + otherPipe.getPosition() + ": " + newOrientation.getName2());
 		event.cancelled = true;
