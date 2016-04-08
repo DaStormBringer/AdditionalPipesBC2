@@ -17,7 +17,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
 import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
@@ -25,8 +24,6 @@ import buildcraft.api.tools.IToolWrench;
 import buildcraft.core.lib.RFBattery;
 import buildcraft.core.lib.inventory.InvUtils;
 import buildcraft.core.lib.utils.Utils;
-import buildcraft.transport.PipeTransportItems;
-import buildcraft.transport.TravelingItem;
 import cofh.api.energy.IEnergyHandler;
 
 public class PipeItemsAdvancedWood extends APPipe<PipeTransportAdvancedWood> implements IEnergyHandler
@@ -91,10 +88,7 @@ public class PipeItemsAdvancedWood extends APPipe<PipeTransportAdvancedWood> imp
 					return;
 				}
 
-                Vec3 entPos = Utils.convertMiddle(tile.getPos()).add(Utils.convert(side, -0.6));
-
-				TravelingItem entity = TravelingItem.make(entPos, extracted);
-				((PipeTransportItems) transport).injectItem(entity, side);
+                injectItem(extracted, side);
 			}
 
 			battery.setEnergy(0);

@@ -73,8 +73,8 @@ public class PipeItemsPriorityInsertion extends APPipe<PipeTransportItems> {
 					TileEntity entity = container.getTile(side);
 					if (entity instanceof IInventory)
 					{
-						ITransactor transactor = Transactor.getTransactorFor(entity);
-						if (transactor.add(event.item.getItemStack(), side.getOpposite(), false).stackSize > 0)
+						ITransactor transactor = Transactor.getTransactorFor(entity, side.getOpposite());
+						if (transactor.add(event.item.getItemStack(), true).stackSize > 0)
 						{
 							result.add(side);
 						}

@@ -53,8 +53,8 @@ public class PipeItemsAddition extends APPipe<PipeTransportItems>
 					
 					if(InventoryUtils.containsItem(true, false, event.item.getItemStack(), inventory))
 					{
-						ITransactor transactor = Transactor.getTransactorFor(entity);
-						if (transactor.add(event.item.getItemStack(), orientation.getOpposite(), false).stackSize > 0)
+						ITransactor transactor = Transactor.getTransactorFor(entity, orientation.getOpposite());
+						if (transactor.add(event.item.getItemStack(), false).stackSize > 0)
 						{
 							newOris.add(orientation);
 						}

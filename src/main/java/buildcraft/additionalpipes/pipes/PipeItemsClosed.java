@@ -45,8 +45,8 @@ public class PipeItemsClosed extends APPipe<PipeTransportItems> implements IInve
 	
 	public void eventHandler(PipeEventItem.DropItem event)
 	{
-		Transactor transactor = new TransactorSimple(this);
-		transactor.add(event.item.getItemStack().copy(), event.direction, true);
+		Transactor transactor = new TransactorSimple(this, event.direction);
+		transactor.add(event.item.getItemStack().copy(), true);
 		if(inventory[inventory.length - 1] != null)
 		{
 			for(int i = 1; i < inventory.length; i++)

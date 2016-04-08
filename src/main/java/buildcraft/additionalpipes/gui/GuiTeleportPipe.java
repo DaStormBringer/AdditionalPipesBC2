@@ -5,12 +5,16 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import org.lwjgl.opengl.GL11;
+
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessageTelePipeUpdate;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.core.client.CoreIconProvider;
 import buildcraft.core.lib.gui.GuiBuildCraft;
+import buildcraft.core.lib.gui.Ledger;
 
 @SideOnly(Side.CLIENT)
 public class GuiTeleportPipe extends GuiBuildCraft {
@@ -24,6 +28,7 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 		String networkTitle;
 		
 		public TeleportPipeLedger() {
+			super(GuiTeleportPipe.this);
 			maxHeight = 99;
 			overlayColor = 0xd46c1f;
 		}
@@ -175,8 +180,9 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 	protected void drawGuiContainerBackgroundLayer(float partialTicks,
 			int mouseX, int mouseY)
 	{
-		// do nothing
-		
-		
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        mc.renderEngine.bindTexture(texture);
+        drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 	}
+
 }

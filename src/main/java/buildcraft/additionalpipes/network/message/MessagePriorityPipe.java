@@ -53,7 +53,7 @@ public class MessagePriorityPipe implements IMessage, IMessageHandler<MessagePri
     {
     	
     	World world = ctx.getServerHandler().playerEntity.worldObj;
-    	TileEntity te = world.getTileEntity(position);
+    	TileEntity te = world.getTileEntity(message.position);
 		if(te instanceof TileGenericPipe)
 		{
 			PipeItemsPriorityInsertion pipe = (PipeItemsPriorityInsertion) ((TileGenericPipe) te).pipe;

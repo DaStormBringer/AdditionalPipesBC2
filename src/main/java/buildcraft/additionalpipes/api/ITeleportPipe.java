@@ -42,6 +42,8 @@ public interface ITeleportPipe
 	public boolean canSend();
 
 	public UUID getOwnerUUID();
-	
+
+	public String getOwnerName();
+
 	public TileGenericPipe getContainer();
 }

@@ -13,13 +13,10 @@ import java.util.List;
 
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.Vec3;
 import buildcraft.additionalpipes.api.PipeType;
 import buildcraft.additionalpipes.utils.Log;
 import buildcraft.transport.PipeTransportItems;
-import buildcraft.transport.TravelingItem;
 import buildcraft.transport.pipes.events.PipeEventItem;
-import buildcraft.transport.utils.TransportUtils;
 
 public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 	private static final int ICON = 0;
@@ -90,15 +87,12 @@ public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 		{
 			return;
 		}
-
-		Vec3 insertPoint = new Vec3(otherPipe.getPosition());
-		insertPoint.addVector(.5, TransportUtils.getPipeFloorOf(event.item.getItemStack()), .5);
 		
 		//can no longer set position of TravelingItems as of BC 7.2, so we have to make a new one
 		
 		EnumFacing newOrientation = otherPipe.getOpenOrientation().getOpposite();
-		((PipeTransportItems)otherPipe.transport).injectItem(TravelingItem.make(insertPoint, event.item.getItemStack()), newOrientation);
 		
+		otherPipe.injectItem(event.item.getItemStack(), newOrientation);		
 
 		Log.debug(event.item + " from " + getPosition() + " to " + otherPipe.getPosition() + ": " + newOrientation.getName2());
 		event.cancelled = true;

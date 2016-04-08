@@ -6,13 +6,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.core.lib.inventory.InvUtils;
 import buildcraft.core.lib.utils.Utils;
 import buildcraft.transport.PipeTransportItems;
-import buildcraft.transport.TravelingItem;
 
 public class PipeItemsGravityFeed extends APPipe<PipeTransportItems>
 {
@@ -58,11 +56,7 @@ public class PipeItemsGravityFeed extends APPipe<PipeTransportItems>
 					return;
 				}
 				
-				Vec3 entityPos = new Vec3(container.getPos());
-				entityPos.subtract(0, .5, 0);
-
-				TravelingItem entity = TravelingItem.make(entityPos, extracted);
-				((PipeTransportItems) transport).injectItem(entity, EnumFacing.DOWN);
+				injectItem(extracted, EnumFacing.UP);
 			}
 
 		}
