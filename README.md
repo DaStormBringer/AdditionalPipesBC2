@@ -11,8 +11,6 @@ since it hasn't updated to 1.8.
 
 If you're looking for documentation on the mod, [an archived version of the forum thread is here](https://web.archive.org/web/20150919105906/http://mod-buildcraft.com/forums/showthread.php?tid=1467).
 
-# And asie, if you're reading this, I don't CARE that the forum passwords were leaked!  You're causing far more damage by taking down the forums!  Just let everybody change their passwords and get on with their lives!
-
 ### Cloning and Compiling ###
 First, install [Gradle](https://gradle.org/) and put it on your path.
 
@@ -29,13 +27,13 @@ Compiled binaries can be found in `build/libs`.
 4. Hit Next.  Click Browse... in the top right, and select the directory you cloned Additional Pipes into.  Check the box next to AdditionalPipesBC in the Projects list.
 5. Hit Finish, and the mod project should be imported.
 6. Set up the run configuration.  Go to `File > Import... > Run/Debug > Launch Configurations` and hit next.
-7. Click the Browse... button and select the directory you cloned Additional Pipes into.  Check the box next to `Run AP Client.launch` in the right pane.
+7. Click the Browse... button and select the directory you cloned Additional Pipes into.  Check the box next to `AP Client 1.8.launch` in the right pane.
 8. Hit finish.
-9. Click the arrow next to the play button on the top bar, select `Run Configurations...`, and click on Run AP Client in the left pane.
-10. If you want to set your username, go to the arguments tab and replace `APDev` with your Minecraft username in the `Program Arguments` box.
+9. Click the down arrow next to the play button on the top bar, select `Run Configurations...`, and click on AP Client 1.8 in the left pane.
+10. Click on `AP Client 1.8` in the left pane and go to the arguments tab.
+11. Replace `username` with your Mojang account email, and `<password>` with your Mojang account password
 11.  Hit run.  If it works, you're done!
-12.  If it doesn't, it's probably because your `.gradle` folder is not in your home directory, or you have unusual environment variables defined.  Either way, in the Arguments tab, replace both
- instances of `${env_var:userprofile}${env_var:HOME}/.gradle` with the full path to your `.gradle` folder.
+12.  If it doesn't, it's probably because your `.gradle` folder is not in your home directory, or you have unusual environment variables defined.  Either way, in the Arguments tab, replace `${env_var:userprofile}${env_var:HOME}/.gradle` with the full path to the folder containing your `.gradle` folder.
 
 *Done!*
 
