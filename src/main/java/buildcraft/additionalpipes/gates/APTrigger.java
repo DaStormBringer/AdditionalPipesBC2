@@ -9,7 +9,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.additionalpipes.utils.Log;
 import buildcraft.api.statements.IStatement;
 import buildcraft.api.statements.StatementManager;
 
@@ -32,9 +31,10 @@ public abstract class APTrigger implements IStatement {
 		
 		this.id = "additionalpipes:" + descriptionKey;
 		StatementManager.statements.put(this.id, this);
-		texture = new ResourceLocation(AdditionalPipes.MODID, "textures/items/triggers/" + idWithoutPrefix);
+		texture = new ResourceLocation(AdditionalPipes.MODID, "items/triggers/" + idWithoutPrefix);
 		
-        MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(this);		
+
 	}
 
     @SubscribeEvent
@@ -42,7 +42,11 @@ public abstract class APTrigger implements IStatement {
     public void stitchTextures(TextureStitchEvent.Pre event) {
         sprite = event.map.getTextureExtry(texture.toString());
         
-        Log.debug("resource location: " + texture.toString());
+        if (sprite == null)
+    	{
+    		sprite = event.map.registerSprite(texture);
+    	}
+
     }
 
     @Override
