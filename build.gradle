@@ -13,7 +13,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "5.0.0"
-group= "com.buildcraft.additionalpipes" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group= "com.buildcraft.additionalpipes" 
 archivesBaseName = "additionalpipes"
 
 minecraft {
@@ -22,7 +22,7 @@ minecraft {
 	mappings = "stable_20"
 
 }
-
+// http://maven.apache.org/guides/mini/guide-naming-conventions.html
 repositories {
 	ivy {
 		name "BuildCraft"
@@ -31,7 +31,7 @@ repositories {
 }
 
 dependencies {
-	compile name: 'buildcraft', version: "7.2.5", classifier: "dev", ext: 'jar'
+	compile name: 'buildcraft', version: "7.2.7", classifier: "dev", ext: 'jar'
 }
 
 sourceSets {
