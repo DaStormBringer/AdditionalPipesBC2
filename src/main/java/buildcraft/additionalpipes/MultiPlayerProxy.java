@@ -15,4 +15,13 @@ public class MultiPlayerProxy {
 
 	public void createPipeSpecial(ItemPipe item, Class<? extends Pipe<?>> clas) {
 	}
+	
+	/**
+	 * Sets the pipe item's icon provider to the Additional Pipes one
+	 * @param pipeItem
+	 */
+	public void setPipeTextureProvider(ItemPipe pipeItem)
+	{
+		//do nothing
+	}
 }

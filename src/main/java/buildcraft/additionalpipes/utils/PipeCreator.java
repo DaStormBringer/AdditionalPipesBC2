@@ -6,7 +6,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.item.ItemPipeAP;
 import buildcraft.additionalpipes.pipes.APPipe;
-import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.transport.BlockGenericPipe;
 import buildcraft.transport.ItemPipe;
 import buildcraft.transport.Pipe;
@@ -51,7 +50,7 @@ public class PipeCreator
 	{
 		ItemPipe res = BlockGenericPipe.registerPipe(clas, AdditionalPipes.instance.creativeTab);
 		res.setUnlocalizedName(clas.getSimpleName());
-		res.setPipesIcons(Textures.pipeIconProvider);
+		AdditionalPipes.proxy.setPipeTextureProvider(res);
 		return res;
 	}
 

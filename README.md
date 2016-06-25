@@ -31,7 +31,7 @@ Compiled binaries can be found in `build/libs`.
 8. Hit finish.
 9. Click the down arrow next to the play button on the top bar, select `Run Configurations...`, and click on AP Client 1.8 in the left pane.
 10. Click on `AP Client 1.8` in the left pane and go to the arguments tab.
-11. Replace `username` with your Mojang account email, and `<password>` with your Mojang account password
+11. Replace `<username>` with your Mojang account email, and `<password>` with your Mojang account password
 11.  Hit run.  If it works, you're done!
 12.  If it doesn't, it's probably because your `.gradle` folder is not in your home directory, or you have unusual environment variables defined.  Either way, in the Arguments tab, replace `${env_var:userprofile}${env_var:HOME}/.gradle` with the full path to the folder containing your `.gradle` folder.
 

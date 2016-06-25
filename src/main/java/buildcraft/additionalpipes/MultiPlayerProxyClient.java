@@ -9,6 +9,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import buildcraft.additionalpipes.keyboard.KeyInputEventHandler;
 import buildcraft.additionalpipes.keyboard.Keybindings;
+import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.additionalpipes.utils.Log;
 import buildcraft.core.proxy.CoreProxy;
 import buildcraft.transport.ItemPipe;
@@ -51,5 +52,11 @@ public class MultiPlayerProxyClient extends MultiPlayerProxy
 			
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public void setPipeTextureProvider(ItemPipe pipeItem)
+	{
+		pipeItem.setPipesIcons(Textures.pipeIconProvider);
 	}
 }

@@ -11,7 +11,7 @@ public class APPipeIconProvider implements IIconProvider {
 	private TextureAtlasSprite icons[];
 	
 	//1 more than highest-numbered icon
-	private final int iconCount = 41;
+	private final static int iconCount = 41;
 
 	public APPipeIconProvider() {
 		icons = new TextureAtlasSprite[iconCount];

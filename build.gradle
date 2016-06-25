@@ -12,7 +12,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "5.0.0"
+version = "5.0.1"
 group= "com.buildcraft.additionalpipes" 
 archivesBaseName = "additionalpipes"
 
