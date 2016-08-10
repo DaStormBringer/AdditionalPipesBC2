@@ -2,7 +2,7 @@ package buildcraft.additionalpipes.api;
 
 import java.util.UUID;
 
-import buildcraft.api.core.Position;
+import net.minecraft.util.BlockPos;
 import buildcraft.transport.TileGenericPipe;
 
 /**
@@ -35,13 +35,15 @@ public interface ITeleportPipe
 
 	public PipeType getType();
 	
-	public Position getPosition();
+	public BlockPos getPosition();
 	
 	public boolean canReceive();
 	
 	public boolean canSend();
 
 	public UUID getOwnerUUID();
-	
+
+	public String getOwnerName();
+
 	public TileGenericPipe getContainer();
 }

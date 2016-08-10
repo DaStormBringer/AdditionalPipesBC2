@@ -15,7 +15,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
@@ -33,8 +34,13 @@ public class PipeItemsPriorityInsertion extends APPipe<PipeTransportItems> {
 	}
 
 	@Override
-	public int getIconIndex(net.minecraftforge.common.util.ForgeDirection connection)
+	public int getIconIndex(EnumFacing connection)
 	{
+		if(connection == null)
+		{
+			return 25;
+		}
+		
 		switch(connection) {
 		case DOWN: // -y
 			return 26;
@@ -54,21 +60,21 @@ public class PipeItemsPriorityInsertion extends APPipe<PipeTransportItems> {
 	
 	public void eventHandler(PipeEventItem.FindDest event)
 	{
-		ArrayList<ForgeDirection> result = new ArrayList<ForgeDirection>();
+		ArrayList<EnumFacing> result = new ArrayList<EnumFacing>();
 
 		for(int checkingPriority = 6; checkingPriority >= 1; --checkingPriority)
 		{
 			boolean foundAny = false;
 			
-			for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
+			for(EnumFacing side : EnumFacing.VALUES)
 			{
 				if(sidePriorities[side.ordinal()] == checkingPriority)
 				{
 					TileEntity entity = container.getTile(side);
 					if (entity instanceof IInventory)
 					{
-						ITransactor transactor = Transactor.getTransactorFor(entity);
-						if (transactor.add(event.item.getItemStack(), side.getOpposite(), false).stackSize > 0)
+						ITransactor transactor = Transactor.getTransactorFor(entity, side.getOpposite());
+						if (transactor.add(event.item.getItemStack(), true).stackSize > 0)
 						{
 							result.add(side);
 						}
@@ -92,7 +98,7 @@ public class PipeItemsPriorityInsertion extends APPipe<PipeTransportItems> {
 	}
 
 	@Override
-	public boolean blockActivated(EntityPlayer player, ForgeDirection direction) {
+	public boolean blockActivated(EntityPlayer player, EnumFacing direction) {
 		if(player.isSneaking()) {
 			return false;
 		}
@@ -104,7 +110,8 @@ public class PipeItemsPriorityInsertion extends APPipe<PipeTransportItems> {
 			}
 		}
 
-		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_PRIORITY, container.getWorldObj(), container.xCoord, container.yCoord, container.zCoord);
+		BlockPos pos = container.getPos();
+		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_PRIORITY, container.getWorld(),pos.getX(), pos.getY(), pos.getZ());
 
 		return true;
 	}

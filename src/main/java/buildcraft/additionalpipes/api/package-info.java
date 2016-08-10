@@ -4,6 +4,7 @@
 @API(apiVersion = "2", owner = "additionalpipes", provides = "apAPI")
 package buildcraft.additionalpipes.api;
 
-import cpw.mods.fml.common.API;
+import net.minecraftforge.fml.common.API;
+
 
 

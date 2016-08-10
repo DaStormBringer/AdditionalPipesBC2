@@ -1,48 +1,37 @@
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
         maven {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
     }
 }
+apply plugin: 'net.minecraftforge.gradle.forge'
 
-apply plugin: 'forge'
-
-version = "4.7.2"
-group= "com.buildcraft.additionalpipes" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+version = "5.0.1"
+group= "com.buildcraft.additionalpipes" 
 archivesBaseName = "additionalpipes"
 
 minecraft {
-    version = "1.7.10-10.13.3.1388-1.7.10"
+    version = "1.8.9-11.15.1.1764"
     runDir = "minecraft"
-}
+	mappings = "stable_20"
 
-dependencies {
-		compile name: 'buildcraft', version: "7.1.14", classifier: "dev", ext: 'jar'
-		compile name: 'buildcraft-compat', version: "7.1.3", classifier: "dev", ext: 'jar'
-		compile files("lib/logisticspipes-0.9.3.70-dev.jar")
-		compile files("lib/OpenComputers-api.jar")
 }
-
+// http://maven.apache.org/guides/mini/guide-naming-conventions.html
 repositories {
 	ivy {
 		name "BuildCraft"
 		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
 	}
-	
-	ivy {
-		name "BuildCraftCompat"
-		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraftCompat/[revision]/[module]-[revision]-[classifier].[ext]"
-	}
+}
+
+dependencies {
+	compile name: 'buildcraft', version: "7.2.7", classifier: "dev", ext: 'jar'
 }
 
 sourceSets {

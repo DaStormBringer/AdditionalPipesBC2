@@ -13,10 +13,12 @@ import java.util.LinkedList;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import buildcraft.core.lib.inventory.ITransactor;
 import buildcraft.core.lib.inventory.Transactor;
 import buildcraft.transport.PipeTransportItems;
+import buildcraft.transport.TransportConstants;
+import buildcraft.transport.TravelingItem;
 import buildcraft.transport.pipes.events.PipeEventItem;
 
 public class PipeItemsAdvancedInsertion extends APPipe<PipeTransportItems> {
@@ -25,19 +27,14 @@ public class PipeItemsAdvancedInsertion extends APPipe<PipeTransportItems> {
 	public PipeItemsAdvancedInsertion(Item item) {
 		super(new PipeTransportItems(), item);
 	}
-
-	@Override
-	public int getIconIndex(ForgeDirection direction) {
-		return ICON;
-	}
 	
 	public void eventHandler(PipeEventItem.FindDest event)
 	{
-		LinkedList<ForgeDirection> newOris = new LinkedList<ForgeDirection>();
+		LinkedList<EnumFacing> newOris = new LinkedList<EnumFacing>();
 
 		for (int o = 0; o < 6; ++o) 
 		{
-			ForgeDirection orientation = ForgeDirection.VALID_DIRECTIONS[o];
+			EnumFacing orientation = EnumFacing.values()[o];
 			
 			TileEntity entity = container.getTile(orientation);
 			if (entity instanceof IInventory)
@@ -46,8 +43,8 @@ public class PipeItemsAdvancedInsertion extends APPipe<PipeTransportItems> {
 				{
 					// continue;
 				}
-				ITransactor transactor = Transactor.getTransactorFor(entity);
-				if (transactor.add(event.item.getItemStack(), orientation.getOpposite(), false).stackSize > 0)
+				ITransactor transactor = Transactor.getTransactorFor(entity, orientation.getOpposite());
+				if (transactor.add(event.item.getItemStack(), false).stackSize > 0)
 				{
 					newOris.add(orientation);
 				}
@@ -66,4 +63,20 @@ public class PipeItemsAdvancedInsertion extends APPipe<PipeTransportItems> {
 		}
 	}
 	
+	public void readjustSpeed(TravelingItem item) 
+	{
+		if (item.getSpeed() > TransportConstants.PIPE_DEFAULT_SPEED) {
+			item.setSpeed(item.getSpeed() - TransportConstants.PIPE_DEFAULT_SPEED / 2.0F);
+		}
+		if (item.getSpeed() < TransportConstants.PIPE_DEFAULT_SPEED) {
+			item.setSpeed(TransportConstants.PIPE_DEFAULT_SPEED);
+		}
+	}
+
+	@Override
+	public int getIconIndex(EnumFacing direction)
+	{
+		return ICON;
+	}
+
 }

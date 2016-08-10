@@ -6,26 +6,25 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessageChunkloadData;
 import buildcraft.additionalpipes.network.message.MessageChunkloadRequest;
 import buildcraft.additionalpipes.utils.Log;
-import buildcraft.core.lib.EntityBlock;
-import buildcraft.core.lib.utils.LaserUtils;
+import buildcraft.core.EntityLaser;
+import buildcraft.core.lib.utils.Utils;
 
 import com.google.common.collect.SetMultimap;
-
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class ChunkLoadViewDataProxy implements Comparator<ChunkCoordIntPair> {
 	public static final int MAX_SIGHT_RANGE = 31;
@@ -34,20 +33,20 @@ public class ChunkLoadViewDataProxy implements Comparator<ChunkCoordIntPair> {
 	private int sightRange;
 
 	// used by client
-	private List<EntityBlock> lasers;
+	private List<EntityLaser> lasers;
 	private List<ChunkCoordIntPair> persistentChunks;
 	private boolean active = false;
 
 	public ChunkLoadViewDataProxy(int chunkSightRange) {
 		setSightRange(chunkSightRange);
-		lasers = new ArrayList<EntityBlock>();
+		lasers = new ArrayList<EntityLaser>();
 		persistentChunks = new ArrayList<ChunkCoordIntPair>();
 		active = false;
 	}
 	
-	private void addLasersToList(EntityBlock[] entityBlocks)
+	private void addLasersToList(EntityLaser[] entityBlocks)
 	{
-		for(EntityBlock laser : entityBlocks)
+		for(EntityLaser laser : entityBlocks)
 		{
 			lasers.add(laser);
 		}
@@ -67,20 +66,20 @@ public class ChunkLoadViewDataProxy implements Comparator<ChunkCoordIntPair> {
 	@SideOnly(Side.CLIENT)
 	public void activateLasers() {
 		deactivateLasers();
-		EntityClientPlayerMP player = FMLClientHandler.instance().getClient().thePlayer;
+		EntityPlayerSP player = FMLClientHandler.instance().getClient().thePlayer;
 		int playerY = (int) player.posY - 1;
 		for(ChunkCoordIntPair coords : persistentChunks) {
 			int xCoord = coords.chunkXPos * 16;
 			int zCoord = coords.chunkZPos * 16;
 
 			
-			addLasersToList(LaserUtils.createLaserBox(player.worldObj, xCoord, playerY, zCoord, xCoord + 16, playerY, zCoord + 16, buildcraft.core.LaserKind.Blue));
-			addLasersToList(LaserUtils.createLaserBox(player.worldObj, xCoord, playerY - 20, zCoord, xCoord + 16, playerY - 20, zCoord + 16, buildcraft.core.LaserKind.Blue));
-			addLasersToList(LaserUtils.createLaserBox(player.worldObj, xCoord, playerY + 20, zCoord, xCoord + 16, playerY + 20, zCoord + 16, buildcraft.core.LaserKind.Blue));
+			addLasersToList(Utils.createLaserBox(player.worldObj, xCoord, playerY, zCoord, xCoord + 16, playerY, zCoord + 16, buildcraft.core.LaserKind.Blue));
+			addLasersToList(Utils.createLaserBox(player.worldObj, xCoord, playerY - 20, zCoord, xCoord + 16, playerY - 20, zCoord + 16, buildcraft.core.LaserKind.Blue));
+			addLasersToList(Utils.createLaserBox(player.worldObj, xCoord, playerY + 20, zCoord, xCoord + 16, playerY + 20, zCoord + 16, buildcraft.core.LaserKind.Blue));
 
-			addLasersToList(LaserUtils.createLaserBox(player.worldObj, xCoord + 7, playerY, zCoord + 7, xCoord + 9, playerY, zCoord + 9, buildcraft.core.LaserKind.Red));
-			addLasersToList(LaserUtils.createLaserBox(player.worldObj, xCoord + 7, playerY - 20, zCoord + 7, xCoord + 9, playerY - 20, zCoord + 9, buildcraft.core.LaserKind.Red));
-			addLasersToList(LaserUtils.createLaserBox(player.worldObj, xCoord + 7, playerY + 20, zCoord + 7, xCoord + 9, playerY + 20, zCoord + 9, buildcraft.core.LaserKind.Red));
+			addLasersToList(Utils.createLaserBox(player.worldObj, xCoord + 7, playerY, zCoord + 7, xCoord + 9, playerY, zCoord + 9, buildcraft.core.LaserKind.Red));
+			addLasersToList(Utils.createLaserBox(player.worldObj, xCoord + 7, playerY - 20, zCoord + 7, xCoord + 9, playerY - 20, zCoord + 9, buildcraft.core.LaserKind.Red));
+			addLasersToList(Utils.createLaserBox(player.worldObj, xCoord + 7, playerY + 20, zCoord + 7, xCoord + 9, playerY + 20, zCoord + 9, buildcraft.core.LaserKind.Red));
 
 		
 
@@ -90,7 +89,7 @@ public class ChunkLoadViewDataProxy implements Comparator<ChunkCoordIntPair> {
 
 	@SideOnly(Side.CLIENT)
 	public void deactivateLasers() {
-		for(EntityBlock laser : lasers) {
+		for(EntityLaser laser : lasers) {
 			laser.setDead();
 		}
 		lasers.clear();

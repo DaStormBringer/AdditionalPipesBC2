@@ -8,11 +8,12 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessageJeweledPipeOptionsClient;
 import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
+
 
 public class ContainerJeweledPipe extends Container
 {
@@ -86,7 +87,7 @@ public class ContainerJeweledPipe extends Container
         //send the options to the client, since they are only loaded from NBT on the server
 		if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 		{	
-			MessageJeweledPipeOptionsClient message = new MessageJeweledPipeOptionsClient(pipe.container.xCoord, pipe.container.yCoord, pipe.container.zCoord, pipe.filterData);
+			MessageJeweledPipeOptionsClient message = new MessageJeweledPipeOptionsClient(pipe.container.getPos(), pipe.filterData);
 			PacketHandler.INSTANCE.sendTo(message, (EntityPlayerMP) inventoryPlayer.player);
 		}
     }

@@ -2,18 +2,18 @@ package buildcraft.additionalpipes;
 
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.Item;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import buildcraft.additionalpipes.keyboard.KeyInputEventHandler;
 import buildcraft.additionalpipes.keyboard.Keybindings;
+import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.additionalpipes.utils.Log;
+import buildcraft.core.proxy.CoreProxy;
 import buildcraft.transport.ItemPipe;
 import buildcraft.transport.Pipe;
-import buildcraft.transport.TransportProxyClient;
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class MultiPlayerProxyClient extends MultiPlayerProxy
@@ -28,13 +28,7 @@ public class MultiPlayerProxyClient extends MultiPlayerProxy
 		Keybindings.lasers = new KeyBinding("key.lasers", APConfiguration.laserKeyCode, AdditionalPipes.NAME);
 		ClientRegistry.registerKeyBinding(Keybindings.lasers);
 		
-		FMLCommonHandler.instance().bus().register(new KeyInputEventHandler());
-	}
-
-	@Override
-	public void registerPipeRendering(Item res)
-	{
-		MinecraftForgeClient.registerItemRenderer(res, TransportProxyClient.pipeItemRenderer);
+		MinecraftForge.EVENT_BUS.register(new KeyInputEventHandler());
 	}
 
 	@Override
@@ -47,9 +41,10 @@ public class MultiPlayerProxyClient extends MultiPlayerProxy
 			{
 				item.setPipesIcons(dummyPipe.getIconProvider());
 				// TODO look around
-				item.setPipeIconIndex(dummyPipe.getIconIndex(ForgeDirection.VALID_DIRECTIONS[0]));
-				// item.setTextureIndex(dummyPipe.getTextureIndexForItem());
+				item.setPipeIconIndex(dummyPipe.getIconIndex(EnumFacing.DOWN));
 			}
+			
+			CoreProxy.proxy.postRegisterItem(item);
 		} 
 		catch(Exception e)
 		{
@@ -57,5 +52,11 @@ public class MultiPlayerProxyClient extends MultiPlayerProxy
 			
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public void setPipeTextureProvider(ItemPipe pipeItem)
+	{
+		pipeItem.setPipesIcons(Textures.pipeIconProvider);
 	}
 }

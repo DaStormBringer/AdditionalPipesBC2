@@ -1,9 +1,6 @@
 package buildcraft.additionalpipes.pipes;
 
 import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
-import buildcraft.api.transport.IPipeTile;
 import buildcraft.transport.PipeTransportFluids;
 
 
@@ -15,11 +12,5 @@ public class PipeSwitchFluids extends PipeSwitch<PipeTransportFluids>
 		
 		//load the fluid capacities set in mod init
 		transport.initFromPipe(getClass());
-	}
-	
-	@Override
-	public boolean canPipeConnect(TileEntity tile, ForgeDirection side)
-	{
-		return tile instanceof IPipeTile && super.canPipeConnect(tile, side);
 	}
 }

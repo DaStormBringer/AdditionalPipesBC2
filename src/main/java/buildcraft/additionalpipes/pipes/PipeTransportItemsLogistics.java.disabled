@@ -1,8 +1,7 @@
 package buildcraft.additionalpipes.pipes;
 
-import logisticspipes.api.ILPPipeTile;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import buildcraft.additionalpipes.utils.Log;
 import buildcraft.api.transport.IPipeTile;
 import buildcraft.transport.BlockGenericPipe;
@@ -25,7 +24,7 @@ public class PipeTransportItemsLogistics extends PipeTransportItems
 	{
 		int count = 0;
 		
-		for (ForgeDirection o : ForgeDirection.VALID_DIRECTIONS) {
+		for (EnumFacing o : EnumFacing.VALUES) {
 			if (tile.isPipeConnected(o)) {
 				++count;
 			}
@@ -39,11 +38,11 @@ public class PipeTransportItemsLogistics extends PipeTransportItems
 	 * @param tile
 	 * @return
 	 */
-	public static int getNumConnectedPipesExceptSide(IPipeTile tile, ForgeDirection sideToExclude)
+	public static int getNumConnectedPipesExceptSide(IPipeTile tile, EnumFacing sideToExclude)
 	{
 		int count = 0;
 		
-		for (ForgeDirection o : ForgeDirection.VALID_DIRECTIONS) {
+		for (EnumFacing o : EnumFacing.VALUES) {
 			if (sideToExclude != o && tile.isPipeConnected(o)) {
 				++count;
 			}
@@ -53,10 +52,10 @@ public class PipeTransportItemsLogistics extends PipeTransportItems
 	}
 	
 	@Override
-	public boolean canPipeConnect(TileEntity tile, ForgeDirection side)
+	public boolean canPipeConnect(TileEntity tile, EnumFacing side)
 	{
 		
-		ForgeDirection currentlyConnectedSide = container.pipe.getOpenOrientation().getOpposite();
+		EnumFacing currentlyConnectedSide = container.pipe.getOpenOrientation().getOpposite();
 		if(!(currentlyConnectedSide.equals(side) || getNumConnectedPipes(container) == 0))
 		{
 			return false;
@@ -67,7 +66,7 @@ public class PipeTransportItemsLogistics extends PipeTransportItems
 			return pipelineEndsinLogisticsPipe(tile, side.getOpposite());
 		}
 		//can this actually happen?
-		//I'm just trying to make sure that it doesn't corrupt your world if it doesn't.
+		//I'm just trying to make sure that it doesn't corrupt your world if it does
 		catch(StackOverflowError err)
 		{
 			Log.warn("Wow, that's a long, straight pipeline! Gave up looking for logistics pipes!");
@@ -81,7 +80,7 @@ public class PipeTransportItemsLogistics extends PipeTransportItems
 		int newSide = 6;
 
 		for(int i = connectedSide + 1; i <= connectedSide + 6; ++i) {
-			ForgeDirection o = ForgeDirection.VALID_DIRECTIONS[i % 6];
+			EnumFacing o = EnumFacing.VALUES[i % 6];
 			TileEntity tile = container.getTile(o);
 			
 			try
@@ -100,7 +99,7 @@ public class PipeTransportItemsLogistics extends PipeTransportItems
 			}
 		}
 
-		if(newSide != ForgeDirection.UNKNOWN.ordinal() && connectedSide != ForgeDirection.UNKNOWN.ordinal() && connectedSide != newSide) {
+		if(connectedSide != newSide) {
 			container.pipeConnectionsBuffer[connectedSide] = false;
 			container.pipeConnectionsBuffer[newSide] = true;
 
@@ -115,7 +114,7 @@ public class PipeTransportItemsLogistics extends PipeTransportItems
 	 * @param sideConnectedToPrevPipe
 	 * @return
 	 */
-	public boolean pipelineEndsinLogisticsPipe(TileEntity start, ForgeDirection sideConnectedToPrevPipe)
+	public boolean pipelineEndsinLogisticsPipe(TileEntity start, EnumFacing sideConnectedToPrevPipe)
 	{
 		//found one!
 		if(start instanceof ILPPipeTile)
@@ -140,7 +139,7 @@ public class PipeTransportItemsLogistics extends PipeTransportItems
 			}
 			
 			//move to next pipe
-			for (ForgeDirection o : ForgeDirection.VALID_DIRECTIONS) {
+			for (EnumFacing o : EnumFacing.VALUES) {
 				if (pipe.container.isPipeConnected(o) && o != sideConnectedToPrevPipe) {
 					
 					return pipelineEndsinLogisticsPipe(((IPipeTile) start).getNeighborTile(o), o.getOpposite());

@@ -3,6 +3,7 @@ package buildcraft.additionalpipes.item;
 import java.util.Iterator;
 import java.util.List;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -10,6 +11,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.utils.Log;
 
@@ -20,7 +23,6 @@ public class ItemDogDeaggravator extends Item
 	public ItemDogDeaggravator()
 	{
 		setUnlocalizedName(NAME);
-		setTextureName(AdditionalPipes.MODID + ':' + NAME);
 		setCreativeTab(AdditionalPipes.instance.creativeTab);
 		setMaxStackSize(1);
 	}
@@ -30,7 +32,7 @@ public class ItemDogDeaggravator extends Item
     {
 		//this code adapted from EntityAIHurtByTarget.startExecuting()
 		double horizontalRange = 16;
-        List<?> list = world.getEntitiesWithinAABB(EntityWolf.class, AxisAlignedBB.getBoundingBox(player.posX, player.posY, player.posZ,
+        List<?> list = world.getEntitiesWithinAABB(EntityWolf.class, AxisAlignedBB.fromBounds(player.posX, player.posY, player.posZ,
         		player.posX + 1.0D, player.posY + 1.0D, player.posZ + 1.0D).expand(horizontalRange, 10.0D, horizontalRange));
         Iterator<?> iterator = list.iterator();
         int wolfCounter = 0;
@@ -59,4 +61,16 @@ public class ItemDogDeaggravator extends Item
 	{
 		list.add(StatCollector.translateToLocal("tooltip.dogDeaggravator"));
 	}
+	
+
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+    @SideOnly(Side.CLIENT)
+    public void getSubItems(Item parItem, CreativeTabs parTab, List parListSubItems)
+    {
+        parListSubItems.add(new ItemStack(this, 1));
+    }
+
+
 }

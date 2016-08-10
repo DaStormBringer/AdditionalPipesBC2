@@ -12,10 +12,9 @@ import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import buildcraft.additionalpipes.api.PipeType;
 import buildcraft.additionalpipes.utils.Log;
-import buildcraft.api.core.Position;
 import buildcraft.api.tools.IToolWrench;
 import buildcraft.transport.pipes.events.PipeEventItem;
 import buildcraft.transport.utils.TransportUtils;
@@ -48,7 +47,7 @@ public class PipeLogisticsTeleport extends PipeTeleport<PipeTransportItemsLogist
 		insertPoint.moveForwards(0.5);
 		event.item.setPosition(insertPoint.x, insertPoint.y, insertPoint.z);
 		
-		ForgeDirection newOrientation = otherPipe.getOpenOrientation().getOpposite();
+		EnumFacing newOrientation = otherPipe.getOpenOrientation().getOpposite();
 		otherPipe.transport.injectItem(event.item, newOrientation);
 		
 //		ForgeDirection newOrientation = otherPipe.getOpenOrientation().getOpposite();
@@ -79,7 +78,7 @@ public class PipeLogisticsTeleport extends PipeTeleport<PipeTransportItemsLogist
 	}
 
 	@Override
-	public int getIconIndex(ForgeDirection direction) {
+	public int getIconIndex(EnumFacing direction) {
 		return ICON;
 	}
 
@@ -100,7 +99,7 @@ public class PipeLogisticsTeleport extends PipeTeleport<PipeTransportItemsLogist
 	}
 	
 	@Override
-	public boolean blockActivated(EntityPlayer entityplayer, ForgeDirection direction)
+	public boolean blockActivated(EntityPlayer entityplayer, EnumFacing direction)
 	{
 		Item equipped = entityplayer.getCurrentEquippedItem() != null ? entityplayer.getCurrentEquippedItem().getItem() : null;
 		if(equipped instanceof IToolWrench && ((IToolWrench) equipped).canWrench(entityplayer, container.xCoord, container.yCoord, container.zCoord)) {

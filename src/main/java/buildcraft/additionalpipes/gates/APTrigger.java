@@ -1,32 +1,70 @@
 package buildcraft.additionalpipes.gates;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.util.IIcon;
-import buildcraft.additionalpipes.textures.Textures;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.api.statements.IStatement;
 import buildcraft.api.statements.StatementManager;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class APTrigger implements IStatement {
 
-	protected String id;
+	protected String id; //used as unique key in BC registry
+	protected String descriptionKey; //used for description translations
+    protected ResourceLocation texture;
 
-	public APTrigger(String id)
+    @SideOnly(Side.CLIENT)
+    private TextureAtlasSprite sprite;
+
+    /**
+     * 
+     * @param id the name of the trigger, without the "additionalpipes:" prefix.  Also the name of the texture.
+     */
+	public APTrigger(String idWithoutPrefix)
 	{
-		this.id = id;
-		StatementManager.statements.put(id, this);
+		descriptionKey = "trigger." + idWithoutPrefix;
+		
+		this.id = "additionalpipes:" + descriptionKey;
+		StatementManager.statements.put(this.id, this);
+		texture = new ResourceLocation(AdditionalPipes.MODID, "items/triggers/" + idWithoutPrefix);
+		
+        MinecraftForge.EVENT_BUS.register(this);		
+
 	}
 
-	protected abstract int getIconIndex();
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public void stitchTextures(TextureStitchEvent.Pre event) {
+        sprite = event.map.getTextureExtry(texture.toString());
+        
+        if (sprite == null)
+    	{
+    		sprite = event.map.registerSprite(texture);
+    	}
 
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon() {
-		return Textures.actionIconProvider.getIcon(getIconIndex());
-	}
+    }
 
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister iconRegister)
+    @Override
+    @SideOnly(Side.CLIENT)
+    public TextureAtlasSprite getGuiSprite() {
+        return sprite;
+    }
+    
+    @Override
+    public String getUniqueTag()
+    {
+    	return id;
+    }
+    
+	@Override
+	public String getDescription()
 	{
+		return StatCollector.translateToLocal(descriptionKey);
 	}
+
 }

@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import buildcraft.additionalpipes.api.ITeleportPipe;
 import buildcraft.additionalpipes.api.PipeType;
 import buildcraft.additionalpipes.api.TeleportManagerBase;
@@ -18,8 +20,6 @@ import buildcraft.transport.PipeTransportPower;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
 
 public class TeleportManager extends TeleportManagerBase
 {
@@ -31,7 +31,7 @@ public class TeleportManager extends TeleportManagerBase
 
 	public final Multimap<Integer, PipeTeleport<PipeTransportPower>> powerPipes;
 
-	public final Multimap<Integer, PipeTeleport<PipeTransportItemsLogistics>> logisticsPipes;
+	//public final Multimap<Integer, PipeTeleport<PipeTransportItemsLogistics>> logisticsPipes;
 
 	public final Map<Integer, String> frequencyNames;
 
@@ -44,7 +44,7 @@ public class TeleportManager extends TeleportManagerBase
 		
 		powerPipes = LinkedListMultimap.<Integer, PipeTeleport<PipeTransportPower>>create();
 		
-		logisticsPipes = LinkedListMultimap.<Integer, PipeTeleport<PipeTransportItemsLogistics>>create();
+		//logisticsPipes = LinkedListMultimap.<Integer, PipeTeleport<PipeTransportItemsLogistics>>create();
 		
 		frequencyNames = new HashMap<Integer, String>();
 	}
@@ -69,7 +69,8 @@ public class TeleportManager extends TeleportManagerBase
 		case POWER:
 			return powerPipes.get(frequency);
 		case LOGISTICS:
-			return logisticsPipes.get(frequency);
+			
+			//return logisticsPipes.get(frequency);
 		}
 		
 		return null;
@@ -96,15 +97,15 @@ public class TeleportManager extends TeleportManagerBase
 			powerPipes.put(frequency, (PipeTeleport<PipeTransportPower>) pipe);
 			break;
 		case LOGISTICS:
-			logisticsPipes.put(frequency, (PipeTeleport<PipeTransportItemsLogistics>) pipe);
+			//logisticsPipes.put(frequency, (PipeTeleport<PipeTransportItemsLogistics>) pipe);
 			break;
 		}
 
 		//if unit tests are being run, pipe.container will be null.
 		if(pipe.getContainer() != null)
 		{
-			Log.debug(String.format("[TeleportManager] Pipe added: %s @ (%.1f, %.1f, %.1f), %d pipes in channel", pipe.getType().toString().toLowerCase(),
-					pipe.getPosition().x, pipe.getPosition().y, pipe.getPosition().z, getPipesInChannel(frequency, pipe.getType()).size()));
+			Log.debug(String.format("[TeleportManager] Pipe added: %s @ (%s), %d pipes in channel", pipe.getType().toString().toLowerCase(),
+					pipe.getPosition().toString(), getPipesInChannel(frequency, pipe.getType()).size()));
 		}
 	}
 
@@ -115,6 +116,7 @@ public class TeleportManager extends TeleportManagerBase
 		if(FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
 		{
 			return;
+
 		}
 		switch(pipe.getType())
 		{
@@ -128,15 +130,15 @@ public class TeleportManager extends TeleportManagerBase
 			powerPipes.remove(frequency, (PipeTeleport<PipeTransportPower>) pipe);
 			break;
 		case LOGISTICS:
-			logisticsPipes.remove(frequency, (PipeTeleport<PipeTransportItemsLogistics>) pipe);
+			//logisticsPipes.remove(frequency, (PipeTeleport<PipeTransportItemsLogistics>) pipe);
 			break;
 		}
 
 		//if unit tests are being run, pipe.container will be null.
 		if(pipe.getContainer() != null)
 		{
-			Log.debug(String.format("[TeleportManager] Pipe removed: %s @ (%.1f, %.1f, %.1f), %d pipes in channel", pipe.getType().toString().toLowerCase(),
-					pipe.getPosition().x, pipe.getPosition().y, pipe.getPosition().z, getPipesInChannel(frequency, pipe.getType()).size()));
+			Log.debug(String.format("[TeleportManager] Pipe removed: %s @ (%s), %d pipes in channel", pipe.getType().toString().toLowerCase(),
+					pipe.getPosition().toString(), getPipesInChannel(frequency, pipe.getType()).size()));
 		}
 	}
 
@@ -145,7 +147,7 @@ public class TeleportManager extends TeleportManagerBase
 		itemPipes.clear();
 		fluidPipes.clear();
 		powerPipes.clear();
-		logisticsPipes.clear();
+		//logisticsPipes.clear();
 
 		frequencyNames.clear();
 		Log.info("Reset teleport manager.");
@@ -204,10 +206,10 @@ public class TeleportManager extends TeleportManagerBase
 		return powerPipes.values();
 	}
 	
-	public Collection<PipeTeleport<PipeTransportItemsLogistics>> getAllLogisticsPipesInNetwork() 
-	{
-		return logisticsPipes.values();
-	}
+//	public Collection<PipeTeleport<PipeTransportItemsLogistics>> getAllLogisticsPipesInNetwork() 
+//	{
+//		return logisticsPipes.values();
+//	}
 
 	/**
 	 * Get the name of the provided frequency.

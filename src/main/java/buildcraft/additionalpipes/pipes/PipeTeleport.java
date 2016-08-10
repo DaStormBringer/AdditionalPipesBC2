@@ -11,14 +11,15 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumFacing;
 import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.api.ITeleportPipe;
 import buildcraft.additionalpipes.api.PipeType;
 import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.additionalpipes.utils.PlayerUtils;
-import buildcraft.api.core.Position;
 import buildcraft.api.transport.IPipeTile;
 import buildcraft.api.transport.PipeWire;
 import buildcraft.transport.Gate;
@@ -70,16 +71,19 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 		}
 	}
 	
+	@Override
 	public byte getState()
 	{
 		return state;
 	}
 
+	@Override
 	public void setState(byte state)
 	{
 		this.state = state;
 	}
 
+	@Override
 	public UUID getOwnerUUID()
 	{
 		return ownerUUID;
@@ -90,6 +94,7 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 		this.ownerUUID = ownerUUID;
 	}
 
+	@Override
 	public String getOwnerName()
 	{
 		return ownerName;
@@ -100,16 +105,19 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 		this.ownerName = ownerName;
 	}
 
+	@Override
 	public boolean isPublic()
 	{
 		return isPublic;
 	}
 
+	@Override
 	public void setPublic(boolean isPublic)
 	{
 		this.isPublic = isPublic;
 	}
-
+	
+	@Override
 	public PipeType getType()
 	{
 		return type;
@@ -134,28 +142,34 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 	}
 	
 	@Override
-	public boolean blockActivated(EntityPlayer player, ForgeDirection direction) {
+	public boolean blockActivated(EntityPlayer player, EnumFacing direction) {
 		if(player.worldObj.isRemote)
-			return true;
-		if(ownerUUID == null)
 		{
-			//                   getUUIDFromProfile()
-			ownerUUID = PlayerUtils.getUUID(player);
-			ownerName = player.getCommandSenderName();
+			return true;
 		}
 		
-		//test for player name change
-		if(PlayerUtils.getUUID(player).equals(ownerUUID))
+		if(ownerUUID == null)
 		{
-			if(!player.getCommandSenderName().equals(ownerName))
-			{
-				ownerName = player.getCommandSenderName();
-			}
+			ownerUUID = PlayerUtils.getUUID(player);
+			ownerName = player.getName();
 		}
-		else
+		
+		if(!isPublic)
 		{
-			//access denied
-			return false;
+			//test for player name change
+			if(PlayerUtils.getUUID(player).equals(ownerUUID))
+			{
+				if(!player.getName().equals(ownerName))
+				{
+					ownerName = player.getName();
+				}
+			}
+			else
+			{
+				//access denied
+				player.addChatMessage(new ChatComponentText("Access denied!  This pipe belongs to " + ownerName));
+				return false;
+			}
 		}
 		
 		if(APConfiguration.filterRightclicks)
@@ -168,7 +182,7 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 			}
 		}
 		
-		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_TP, getWorld(), container.xCoord, container.yCoord, container.zCoord);
+		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_TP, getWorld(), container.getPos().getX(), container.getPos().getY(), container.getPos().getZ());
 		return true;
 	}
 
@@ -186,7 +200,7 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 	}
 
 	@Override
-	public boolean canPipeConnect(TileEntity tile, ForgeDirection side) {
+	public boolean canPipeConnect(TileEntity tile, EnumFacing side) {
 		Pipe<?> pipe = null;
 		if(tile instanceof TileGenericPipe) {
 			pipe = ((TileGenericPipe) tile).pipe;
@@ -198,7 +212,7 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 	}
 
 	@Override
-	public boolean outputOpen(ForgeDirection to) {
+	public boolean outputOpen(EnumFacing to) {
 		return container.isPipeConnected(to);
 	}
 	
@@ -206,6 +220,8 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 	// ---------------------------------------------
 	
 	//we need to access stuff private to Pipe, so we use reflection to do it.	
+	
+	//TODO update for 1.8
 	static Method updateSignalState;
 
 	@Override
@@ -228,7 +244,7 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 	{
 		try
 		{
-			int prevStrength = wireSignalStrength[wire.ordinal()];
+			int prevStrength = signalStrength[wire.ordinal()];
 			boolean isBroadcast = false;
 
 			for (Gate g : gates) {
@@ -242,7 +258,7 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 			ArrayList<Pipe<?>> connectedPipes = new ArrayList<Pipe<?>>();
 			int maxStrength = 0;
 
-			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+			for (EnumFacing dir : EnumFacing.VALUES) {
 				TileEntity tile = container.getTile(dir);
 				if (tile instanceof IPipeTile)
 				{
@@ -252,7 +268,7 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 						connectedPipes.add(pipe);
 						
 						//may as well do this now instead of looping back through again later
-						int pipeStrength = pipe.wireSignalStrength[wire.ordinal()];
+						int pipeStrength = pipe.signalStrength[wire.ordinal()];
 						if (pipeStrength > maxStrength) 
 						{
 							maxStrength = pipeStrength;
@@ -275,32 +291,32 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 				
 				for (Pipe<?> pipe : otherTeleportPipes)
 				{
-					int pipeStrength = pipe.wireSignalStrength[wire.ordinal()];
+					int pipeStrength = pipe.signalStrength[wire.ordinal()];
 					if (pipeStrength > maxStrength) {
 						maxStrength = pipeStrength;
 					}
 				}
 
 				if (maxStrength > prevStrength && maxStrength > 1) {
-					wireSignalStrength[wire.ordinal()] = maxStrength - 1;
+					signalStrength[wire.ordinal()] = maxStrength - 1;
 				} else {
-					wireSignalStrength[wire.ordinal()] = 0;
+					signalStrength[wire.ordinal()] = 0;
 				}
 
-				if (prevStrength != wireSignalStrength[wire.ordinal()]) {
+				if (prevStrength != signalStrength[wire.ordinal()]) {
 					container.scheduleRenderUpdate();
 				}
 
-				if (wireSignalStrength[wire.ordinal()] == 0) {
+				if (signalStrength[wire.ordinal()] == 0) {
 					for (Pipe<?> p : connectedPipes) 
 					{
-						if (p.wireSignalStrength[wire.ordinal()] > 0) {
+						if (p.signalStrength[wire.ordinal()] > 0) {
 							updateSignalState.invoke(p, wire);
 						}
 					}
 				} else {
 					for (Pipe<?> p : connectedPipes) {
-						if (p.wireSignalStrength[wire.ordinal()] < (wireSignalStrength[wire.ordinal()] - 1)) {
+						if (p.signalStrength[wire.ordinal()] < (signalStrength[wire.ordinal()] - 1)) {
 							updateSignalState.invoke(p, wire);
 						}
 					}
@@ -328,19 +344,19 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 	
 	private void myPropagateSignalState(PipeWire wire, int strength, ArrayList<Pipe<?>> connectedPipes) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException 
 	{
-		wireSignalStrength[wire.ordinal()] = strength;
+		signalStrength[wire.ordinal()] = strength;
 		for (Pipe<?> pipe : connectedPipes)
 		{
 			if (strength == 0)
 			{
-				if (pipe.wireSignalStrength[wire.ordinal()] > 0)
+				if (pipe.signalStrength[wire.ordinal()] > 0)
 				{
 					updateSignalState.invoke(pipe, wire);
 				}
 			} 
 			else
 			{
-				if (pipe.wireSignalStrength[wire.ordinal()] < strength) 
+				if (pipe.signalStrength[wire.ordinal()] < strength) 
 				{
 					updateSignalState.invoke(pipe, wire);
 				}
@@ -380,8 +396,8 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 		return false;
 	}
 
-	public Position getPosition() {
-		return new Position(container.xCoord, container.yCoord, container.zCoord);
+	public BlockPos getPosition() {
+		return container.getPos();
 	}
 	
 	public boolean canReceive()

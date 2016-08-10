@@ -1,11 +1,12 @@
 package buildcraft.additionalpipes.utils;
 
 
+import net.minecraftforge.fml.common.FMLLog;
+
 import org.apache.logging.log4j.Level;
 
 import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.AdditionalPipes;
-import cpw.mods.fml.common.FMLLog;
 
 public class Log
 {

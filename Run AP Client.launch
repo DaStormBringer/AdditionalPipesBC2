@@ -8,8 +8,8 @@
 </listAttribute>
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="net.minecraft.launchwrapper.Launch"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="${build_files}--version 1.7 --tweakClass cpw.mods.fml.common.launcher.FMLTweaker --accessToken modstest --username APDev --userProperties {} --assetIndex 1.7.10 --assetsDir ${env_var:userprofile}${env_var:HOME}/.gradle/caches/minecraft/assets"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="${build_files}--version 1.8 --tweakClass net.minecraftforge.fml.common.launcher.FMLTweaker --accessToken modstest --username APDev --userProperties {} --assetIndex 1.8 --assetsDir ${env_var:userprofile}${env_var:HOME}/.gradle/caches/minecraft/assets"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="AdditionalPipesBC"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dfml.ignoreInvalidMinecraftCertificates=true -Dorg.lwjgl.librarypath=${env_var:userprofile}${env_var:HOME}\.gradle\caches\minecraft\net\minecraft\minecraft_natives\1.7.10"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dfml.ignoreInvalidMinecraftCertificates=true -Dorg.lwjgl.librarypath=${env_var:userprofile}${env_var:HOME}\.gradle\caches\minecraft\net\minecraft\minecraft_natives\1.8"/>
 <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:AdditionalPipesBC/minecraft}"/>
 </launchConfiguration>

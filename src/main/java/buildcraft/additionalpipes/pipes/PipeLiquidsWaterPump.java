@@ -4,7 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import buildcraft.additionalpipes.APConfiguration;
@@ -26,22 +26,23 @@ public class PipeLiquidsWaterPump extends APPipe<PipeTransportFluids> {
 	public void updateEntity() 
 	{
 		super.updateEntity();
-		if(getWorld().getBlock(container.xCoord, container.yCoord - 1, container.zCoord) == water)
+        if(getWorld().getBlockState(container.getPos().down()).getBlock() == water)
 		{
-			transport.fill(ForgeDirection.DOWN, new FluidStack(FluidRegistry.WATER, APConfiguration.waterPumpWaterPerTick), true);
+			transport.fill(EnumFacing.DOWN, new FluidStack(FluidRegistry.WATER, APConfiguration.waterPumpWaterPerTick), true);
+
 		}
 	}
 
 	@Override
-	public int getIconIndex(ForgeDirection direction)
-	{
+	public int getIconIndex(EnumFacing direction) {
+
 		return ICON;
 	}
 	
 	@Override
-	public boolean canPipeConnect(TileEntity tile, ForgeDirection side)
+	public boolean canPipeConnect(TileEntity tile, EnumFacing side)
 	{
-		return side != ForgeDirection.DOWN && super.canPipeConnect(tile, side);
+		return side != EnumFacing.DOWN && super.canPipeConnect(tile, side);
 	}
 
 }

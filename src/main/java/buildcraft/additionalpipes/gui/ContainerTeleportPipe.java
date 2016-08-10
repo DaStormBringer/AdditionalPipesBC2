@@ -5,14 +5,14 @@ import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ICrafting;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessageTelePipeData;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.additionalpipes.pipes.TeleportManager;
 import buildcraft.additionalpipes.utils.Log;
 import buildcraft.core.lib.gui.BuildCraftContainer;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
 
 public class ContainerTeleportPipe extends BuildCraftContainer {
 
@@ -33,7 +33,7 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 
 	public ContainerTeleportPipe(EntityPlayer player, PipeTeleport<?> pipe)
 	{
-		super(0);
+		super(player, 0);
 		this.pipe = pipe;
 
 		//set these variables to invalid values so that they will be updated
@@ -49,12 +49,12 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 			int[] locations = new int[connectedPipes.size() * 3];
 			for(int i = 0; i < connectedPipes.size() && i < 9; i++) {
 				PipeTeleport<?> connectedPipe = connectedPipes.get(i);
-				locations[3 * i] = connectedPipe.container.xCoord;
-				locations[3 * i + 1] = connectedPipe.container.yCoord;
-				locations[3 * i + 2] = connectedPipe.container.zCoord;
+				locations[3 * i] = connectedPipe.container.getPos().getX();
+				locations[3 * i + 1] = connectedPipe.container.getPos().getY();
+				locations[3 * i + 2] = connectedPipe.container.getPos().getZ();
 			}
 			
-			MessageTelePipeData message = new MessageTelePipeData(pipe.container.xCoord, pipe.container.yCoord, pipe.container.zCoord, locations, pipe.ownerUUID, pipe.ownerName);
+			MessageTelePipeData message = new MessageTelePipeData(pipe.container.getPos(), locations, pipe.ownerUUID, pipe.ownerName);
 			PacketHandler.INSTANCE.sendTo(message, (EntityPlayerMP) player);
 			
 			//save the pipe's old frequency so it can be removed later

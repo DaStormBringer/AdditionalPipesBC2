@@ -9,13 +9,15 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Vec3;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import buildcraft.additionalpipes.utils.Log;
-import buildcraft.api.core.Position;
 import buildcraft.core.lib.RFBattery;
+import buildcraft.core.lib.utils.Utils;
 import buildcraft.core.proxy.CoreProxy;
 import buildcraft.transport.PipeTransportFluids;
 import buildcraft.transport.TransportProxy;
@@ -25,6 +27,8 @@ import cofh.api.energy.IEnergyHandler;
 
 public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements IEnergyHandler 
 {
+	// 		return battery.receiveEnergy(maxReceive, simulate);
+
 	private static final int ICON = 31;
 	
 	AxisAlignedBB searchBox;
@@ -52,7 +56,7 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 	}
 
 	@Override
-	public int getIconIndex(ForgeDirection direction)
+	public int getIconIndex(EnumFacing direction)
 	{
 		return ICON;
 	}
@@ -75,70 +79,64 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 		}
 	}
 
-	private AxisAlignedBB getSuckingBox(ForgeDirection orientation, int distance) {
-		if (orientation == ForgeDirection.UNKNOWN) {
-			return null;
-		}
-		Position p1 = new Position(container.xCoord, container.yCoord, container.zCoord, orientation);
-		Position p2 = new Position(container.xCoord, container.yCoord, container.zCoord, orientation);
+	private AxisAlignedBB getSuckingBox(EnumFacing orientation, int distance) {
+		Vec3 p1 = new Vec3(container.getPos());
+		Vec3 p2 = new Vec3(container.getPos());
 
 		switch (orientation) {
 			case EAST:
-				p1.x += distance;
-				p2.x += 1 + distance;
+				p1.addVector(distance, 0, 0);
+				p2.addVector(distance + 1, 0, 0);
+
 				break;
 			case WEST:
-			p1.x -= distance - 1;
-				p2.x -= distance;
+				p1.subtract(distance - 1, 0, 0);
+				p2.addVector(distance, 0, 0);
 				break;
 			case UP:
 			case DOWN:
-				p1.x += distance + 1;
-				p2.x -= distance;
-				p1.z += distance + 1;
-				p2.z -= distance;
+				p1.addVector(distance + 1, 0, distance + 1);
+				p2.subtract(distance, 0, distance);
 				break;
 			case SOUTH:
-				p1.z += distance;
-				p2.z += distance + 1;
+				p1.addVector(0, 0, distance);
+				p2.addVector(0, 0, distance + 1);
 				break;
 			case NORTH:
 			default:
-			p1.z -= distance - 1;
-				p2.z -= distance;
+				p1.subtract(0, 0, distance - 1);
+				p2.subtract(0, 0, distance);
 				break;
 		}
 
 		switch (orientation) {
 			case EAST:
 			case WEST:
-				p1.y += distance + 1;
-				p2.y -= distance;
-				p1.z += distance + 1;
-				p2.z -= distance;
+				
+				p1.addVector(0, distance + 1, distance + 1);
+				p2.subtract(0, distance, distance);
 				break;
 			case UP:
-				p1.y += distance + 1;
-				p2.y += distance;
+				p1.addVector(0, distance + 1, 0);
+				p2.addVector(0, distance, 0);
 				break;
 			case DOWN:
-			p1.y -= distance - 1;
-				p2.y -= distance;
+				p1.subtract(0, distance - 1, 0);
+				p2.subtract(0, distance, 0);
 				break;
 			case SOUTH:
 			case NORTH:
 			default:
-				p1.y += distance + 1;
-				p2.y -= distance;
-				p1.x += distance + 1;
-				p2.x -= distance;
+				
+				p1.addVector(distance + 1, distance + 1, 0);
+				p2.subtract(distance, distance, 0);
 				break;
 		}
 
-		Position min = p1.min(p2);
-		Position max = p1.max(p2);
+		Vec3 min = Utils.min(p1, p2);
+		Vec3 max = Utils.max(p1, p2);
 
-		return AxisAlignedBB.getBoundingBox(min.x, min.y, min.z, max.x, max.y, max.z);
+		return AxisAlignedBB.fromBounds(min.xCoord, min.yCoord, min.zCoord, max.xCoord, max.yCoord, max.zCoord);
 	}
 
 	@Override
@@ -149,11 +147,21 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 		//empty the fluid buffer, if it exists
 		if(fluidInItem != null)
 		{
-			fluidInItem.amount -= transport.fill(ForgeDirection.UNKNOWN, fluidInItem, true);
+			EnumFacing fillOrientation = getOpenOrientation();
+			if(fillOrientation != null)
+			{
+				fillOrientation = fillOrientation.getOpposite();
+			}
+			else
+			{
+				fillOrientation = EnumFacing.DOWN; // If we are connectged on multiple sides, it's not clear which side to fill from.  //May as well just pick one.
+			}
+			
+			fluidInItem.amount -= transport.fill(fillOrientation, fluidInItem, true);
 			
 			if(fluidInItem.amount <= 0)
 			{
-				TravelingItem travelingItem = TravelingItem.make(container.x(), container.y(), container.z(), currentItem);
+				TravelingItem travelingItem = TravelingItem.make(new Vec3(container.getPos()), currentItem);
 				travelingItem.setContainer(container);
 				dropItem(travelingItem);
 				
@@ -178,7 +186,6 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private boolean suckItem(int distance)
 	{
 		AxisAlignedBB box = getSuckingBox(getOpenOrientation(), distance);
@@ -187,7 +194,7 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 			return false;
 		}
 
-		List<EntityItem> discoveredEntities = container.getWorldObj().getEntitiesWithinAABB(EntityItem.class, box);
+		List<EntityItem> discoveredEntities = container.getWorld().getEntitiesWithinAABB(EntityItem.class, box);
 
 		for (EntityItem entity : discoveredEntities) 
 		{
@@ -203,11 +210,11 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 
 	public void pullItemIntoPipe(EntityItem entity, int distance) 
 	{
-		if (container.getWorldObj().isRemote) {
+		if (container.getWorld().isRemote) {
 			return;
 		}
 
-		container.getWorldObj().playSoundAtEntity(entity, "random.pop", 0.2F, ((container.getWorldObj().rand.nextFloat() - container.getWorldObj().rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
+		container.getWorld().playSoundAtEntity(entity, "random.pop", 0.2F, ((container.getWorld().rand.nextFloat() - container.getWorld().rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
 
 		ItemStack stack = null;
 
@@ -219,7 +226,7 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 			return;
 		}
 		
-		TransportProxy.proxy.obsidianPipePickup(container.getWorldObj(), entity, this.container);
+		TransportProxy.proxy.obsidianPipePickup(container.getWorld(), entity, this.container);
 
 		int energyUsed = Math.min(10 * contained.stackSize * distance, battery.getEnergyStored());
 
@@ -289,33 +296,36 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 	//this pipe uses a fluid transport, so I have to copy-paste it.
 	private void dropItem(TravelingItem item) 
 	{
-		if (container.getWorldObj().isRemote) {
-			return;
-		}
-		
-		PipeEventItem.DropItem event = new PipeEventItem.DropItem(container.pipe, item, item.toEntityItem());
-		container.pipe.eventBus.handleEvent(PipeEventItem.DropItem.class, event);
-		
-		if(event.entity == null)
-		{
-			return;
-		}
-		
-		final EntityItem entity = event.entity;
+        if (container.getWorld().isRemote) {
+            return;
+        }
 
-		ForgeDirection direction = item.input;
-		entity.setPosition(entity.posX + direction.offsetX * 0.5d,
-				entity.posY + direction.offsetY * 0.5d,
-				entity.posZ + direction.offsetZ * 0.5d);
+        PipeEventItem.DropItem event = new PipeEventItem.DropItem(container.pipe, item, item.toEntityItem());
+        container.pipe.eventBus.handleEvent(event);
 
-		entity.motionX = direction.offsetX * item.getSpeed() * 5
-				+ getWorld().rand.nextGaussian() * 0.1d;
-		entity.motionY = direction.offsetY * item.getSpeed() * 5
-				+ getWorld().rand.nextGaussian() * 0.1d;
-		entity.motionZ = direction.offsetZ * item.getSpeed() * 5
-				+ getWorld().rand.nextGaussian() * 0.1d;
+        if (event.entity == null) {
+            return;
+        }
 
-		container.getWorldObj().spawnEntityInWorld(entity);
+        final EntityItem entity = event.entity;
+        
+        EnumFacing direction = getOpenOrientation();
+        if(direction != null)
+        {
+        	direction = direction.getOpposite();
+        }
+        else
+        {
+        	direction = EnumFacing.UP;
+        }
+        entity.setPosition(entity.posX + direction.getFrontOffsetX() * 0.5d, entity.posY + direction.getFrontOffsetY() * 0.5d, entity.posZ + direction
+                .getFrontOffsetZ() * 0.5d);
+
+        entity.motionX = direction.getFrontOffsetX() * item.getSpeed() * 5 + getWorld().rand.nextGaussian() * 0.1d;
+        entity.motionY = direction.getFrontOffsetY() * item.getSpeed() * 5 + getWorld().rand.nextGaussian() * 0.1d;
+        entity.motionZ = direction.getFrontOffsetZ() * item.getSpeed() * 5 + getWorld().rand.nextGaussian() * 0.1d;
+
+        container.getWorld().spawnEntityInWorld(entity);
 	}
 
 	public void eventHandler(PipeEventItem.DropItem event)
@@ -351,22 +361,22 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 		Item fluidItem = item.getEntityItem().getItem();
 		
 		//this is an Integer so that we can check if it is null/uninitialized
-		Integer fluidID = null;
+		Fluid fluid = null;
 		
 		if(fluidItem instanceof IFluidContainerItem)
 		{	
 			FluidStack containedFluid = ((IFluidContainerItem)fluidItem).getFluid(item.getEntityItem());
 			if(containedFluid != null)
 			{
-				fluidID = containedFluid.getFluidID();
+				fluid = containedFluid.getFluid();
 			}
 		}
 		else if(FluidContainerRegistry.isFilledContainer(item.getEntityItem()))
 		{
-			fluidID = FluidContainerRegistry.getFluidForFilledItem(item.getEntityItem()).getFluidID();
+			fluid = FluidContainerRegistry.getFluidForFilledItem(item.getEntityItem()).getFluid();
 		}
 		
-		if(fluidID == null || (transport.fluidType != null && fluidID.intValue() != transport.fluidType.amount))
+		if(fluid == null || (transport.fluidType != null && !fluid.equals(transport.fluidType.getFluid())))
 		{
 			return false;
 		}
@@ -384,29 +394,19 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 	}
 
 	@Override
-	public boolean canConnectEnergy(ForgeDirection from)
+	public boolean canConnectEnergy(EnumFacing from)
 	{
 		return true;
 	}
 
-	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
-		return battery.receiveEnergy(maxReceive, simulate);
-	}
 
 	@Override
-	public int extractEnergy(ForgeDirection from, int maxExtract,
-			boolean simulate) {
-		return 0;
-	}
-
-	@Override
-	public int getEnergyStored(ForgeDirection from) {
+	public int getEnergyStored(EnumFacing from) {
 		return battery.getEnergyStored();
 	}
 
 	@Override
-	public int getMaxEnergyStored(ForgeDirection from) {
+	public int getMaxEnergyStored(EnumFacing from) {
 		return battery.getMaxEnergyStored();
 	}
 	

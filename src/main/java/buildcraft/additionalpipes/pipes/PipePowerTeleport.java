@@ -13,8 +13,8 @@ import java.util.List;
 
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
-import net.minecraftforge.common.util.ForgeDirection;
 import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.api.PipeType;
 import buildcraft.core.lib.utils.Utils;
@@ -28,9 +28,9 @@ public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implemen
 
 	private static class PowerRequest {
 		public final TileGenericPipe tile;
-		public final ForgeDirection orientation;
+		public final EnumFacing orientation;
 
-		public PowerRequest(TileGenericPipe te, ForgeDirection o) {
+		public PowerRequest(TileGenericPipe te, EnumFacing o) {
 			tile = te;
 			orientation = o;
 		}
@@ -42,7 +42,7 @@ public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implemen
 	}
 
 	@Override
-	public int requestEnergy(ForgeDirection from, int value ) {
+	public int requestEnergy(EnumFacing from, int value ) {
 		int requested = 0;
 
 		if((state & 0x2) == 0) { // No need to waste CPU
@@ -56,8 +56,8 @@ public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implemen
 		}
 
 		for(PipeTeleport<?> pipe : pipeList) {
-			LinkedList<ForgeDirection> possibleMovements = getRealPossibleMovements(pipe);
-			for(ForgeDirection orientation : possibleMovements) {
+			LinkedList<EnumFacing> possibleMovements = getRealPossibleMovements(pipe);
+			for(EnumFacing orientation : possibleMovements) {
 				TileEntity tile = pipe.container.getTile(orientation);
 				if(tile instanceof TileGenericPipe) {
 					TileGenericPipe adjacentTile = (TileGenericPipe) tile;
@@ -72,8 +72,8 @@ public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implemen
 	}
 
 	@Override
-	public int receiveEnergy(ForgeDirection from, int energy) {
-		List<PipePowerTeleport> connectedPipes = TeleportManager.instance.getConnectedPipes(this, false, true);
+	public int receiveEnergy(EnumFacing from, int energy) {
+		List<PipePowerTeleport> connectedPipes = TeleportManager.instance.<PipePowerTeleport>getConnectedPipes(this, false, true);
 		List<PipePowerTeleport> sendingToList = new LinkedList<PipePowerTeleport>();
 
 		// no connected pipes, leave!
@@ -112,12 +112,12 @@ public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implemen
 		return energy;
 	}
 
-	private List<PowerRequest> getPipesNeedsPower(PipePowerTeleport pipe) {
-		LinkedList<ForgeDirection> possibleMovements = getRealPossibleMovements(pipe);
+	private List<PowerRequest> getPipesNeedsPower(PipeTeleport<?> pipe) {
+		LinkedList<EnumFacing> possibleMovements = getRealPossibleMovements(pipe);
 		List<PowerRequest> needsPower = new LinkedList<PowerRequest>();
 
 		if(possibleMovements.size() > 0) {
-			for(ForgeDirection orientation : possibleMovements) {
+			for(EnumFacing orientation : possibleMovements) {
 				TileEntity tile = pipe.container.getTile(orientation);
 				if(tile instanceof TileGenericPipe) {
 					TileGenericPipe adjacentPipe = (TileGenericPipe) tile;
@@ -144,10 +144,10 @@ public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implemen
 	}
 
 	// returns all adjacent pipes
-	private static LinkedList<ForgeDirection> getRealPossibleMovements(PipeTeleport<?> pipe) {
-		LinkedList<ForgeDirection> result = new LinkedList<ForgeDirection>();
+	private static LinkedList<EnumFacing> getRealPossibleMovements(PipeTeleport<?> pipe) {
+		LinkedList<EnumFacing> result = new LinkedList<EnumFacing>();
 
-		for(ForgeDirection orientation : ForgeDirection.VALID_DIRECTIONS) {
+		for(EnumFacing orientation : EnumFacing.values()) {
 			if(pipe.outputOpen(orientation)) {
 				TileEntity te = pipe.container.getTile(orientation);
 				if((te instanceof TileGenericPipe) && Utils.checkPipesConnections(pipe.container, te)) {
@@ -160,7 +160,7 @@ public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implemen
 	}
 
 	@Override
-	public int getIconIndex(ForgeDirection direction)
+	public int getIconIndex(EnumFacing direction)
 	{
 		return ICON;
 	}

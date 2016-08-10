@@ -1,22 +1,15 @@
 package buildcraft.additionalpipes.textures;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.util.IIcon;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
 import buildcraft.additionalpipes.gui.GuiJeweledPipe;
 
 public class Textures {
-	public static final APActionTriggerIconProvider actionIconProvider = new APActionTriggerIconProvider();
 	public static final APPipeIconProvider pipeIconProvider = new APPipeIconProvider();
-	public static IIcon tetherTexture;
 
-	public static void registerIcons(IIconRegister iconRegister, int textureType) {
-		if(textureType == 0) {
-			pipeIconProvider.registerIcons(iconRegister);
-			tetherTexture = iconRegister.registerIcon("additionalpipes:tether");
-		} else if(textureType == 1) {
-			actionIconProvider.registerIcons(iconRegister);
-		}
+	public static void registerIcons(TextureMap map)
+	{
+		pipeIconProvider.registerIcons(map);
 	}
 	
 	// textures
@@ -29,7 +22,7 @@ public class Textures {
 	public static final ResourceLocation GUI_ADVANCEDWOOD = new ResourceLocation("additionalpipes", TEXTURE_PATH + "/gui/advancedWoodGui.png");
 	public static final ResourceLocation GUI_DISTRIBUTION = new ResourceLocation("additionalpipes", TEXTURE_PATH + "/gui/distributionGui.png");
 	public static final ResourceLocation GUI_PRIORITY = new ResourceLocation("additionalpipes", TEXTURE_PATH + "/gui/priorityGui.png");
-	public static final ResourceLocation GUI_JEWELED = new ResourceLocation("additionalpipes", TEXTURE_PATH + "/gui/jeweledPipeGui.png");
+	public static final ResourceLocation GUI_JEWELED = new ResourceLocation("additionalpipes", TEXTURE_PATH + "/gui/jeweledGui.png");
 	
 	public static final ResourceLocation GUI_OUTLINE_JEWELED[] = new ResourceLocation[GuiJeweledPipe.NUM_TABS];
 	

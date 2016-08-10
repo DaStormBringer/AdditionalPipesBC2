@@ -6,10 +6,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import buildcraft.additionalpipes.AdditionalPipes;
+import buildcraft.additionalpipes.utils.Log;
 import buildcraft.transport.ItemPipe;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 //special pipe code
 public class ItemPipeAP extends ItemPipe
@@ -29,7 +30,7 @@ public class ItemPipeAP extends ItemPipe
 	@Override
 	@SideOnly(Side.CLIENT)
 	public EnumRarity getRarity(ItemStack stack) {
-		return EnumRarity.rare;
+		return EnumRarity.RARE;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -39,4 +40,11 @@ public class ItemPipeAP extends ItemPipe
 		super.addInformation(stack, player, list, advanced);		
 		list.add(StatCollector.translateToLocal(tooltip));
 	}
+	
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerModels() {
+    	Log.debug("Registering model for AP pipe");
+    	super.registerModels();
+    }
 }

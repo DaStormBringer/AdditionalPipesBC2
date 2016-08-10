@@ -8,13 +8,17 @@
 
 package buildcraft.additionalpipes.pipes;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IChatComponent;
+import buildcraft.api.properties.BuildCraftProperties;
 import buildcraft.core.lib.utils.Utils;
 import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransportItems;
@@ -23,16 +27,18 @@ import buildcraft.transport.pipes.PipeItemsWood;
 
 public class PipeTransportAdvancedWood extends PipeTransportItems implements IInventory {
 
+	
 	public ItemStack[] items = new ItemStack[9];
 
 	public boolean exclude = false;
 
-	public void switchSource() {
+	public void switchSource()
+	{
 		int meta = container.getBlockMetadata();
-		int newMeta = 6;
+		int newMeta = 0;
 
 		for(int i = meta + 1; i <= meta + 6; ++i) {
-			ForgeDirection o = ForgeDirection.VALID_DIRECTIONS[i % 6];
+			EnumFacing o = EnumFacing.values()[i % 6];
 			TileEntity tile = container.getTile(o);
 			if(isInput(tile))
 			{
@@ -41,10 +47,11 @@ public class PipeTransportAdvancedWood extends PipeTransportItems implements IIn
 			}
 		}
 
-		if(newMeta != meta) {
-			getWorld().setBlockMetadataWithNotify(container.xCoord, container.yCoord, container.zCoord, newMeta, 2);
+		if(newMeta != meta)
+		{
+            IBlockState iblockstate = container.getWorld().getBlockState(container.getPos());
+            container.getWorld().setBlockState(container.getPos(), iblockstate.withProperty(BuildCraftProperties.GENERIC_PIPE_DATA, newMeta));
 			container.scheduleRenderUpdate();
-			// worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 
@@ -53,7 +60,7 @@ public class PipeTransportAdvancedWood extends PipeTransportItems implements IIn
 	}
 
 	@Override
-	public boolean canPipeConnect(TileEntity tile, ForgeDirection side) {
+	public boolean canPipeConnect(TileEntity tile, EnumFacing side) {
 		Pipe<?> pipe2 = null;
 
 		if(tile instanceof TileGenericPipe) {
@@ -75,7 +82,7 @@ public class PipeTransportAdvancedWood extends PipeTransportItems implements IIn
 		if(meta > 5)
 			switchSource();
 		else {
-			TileEntity tile = container.getTile(ForgeDirection.VALID_DIRECTIONS[meta]);
+			TileEntity tile = container.getTile(EnumFacing.values()[meta]);
 			if(!isInput(tile))
 				switchSource();
 		}
@@ -141,21 +148,12 @@ public class PipeTransportAdvancedWood extends PipeTransportItems implements IIn
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int i) {
-		ItemStack stack = getStackInSlot(i);
-		if(stack != null) {
-			setInventorySlotContents(i, null);
-		}
-		return stack;
-	}
-
-	@Override
 	public void setInventorySlotContents(int i, ItemStack var2) {
 		items[i] = var2;
 	}
 
 	@Override
-	public String getInventoryName() {
+	public String getName() {
 		return "gui.PipeItemsAdvancedWood";
 	}
 
@@ -175,7 +173,8 @@ public class PipeTransportAdvancedWood extends PipeTransportItems implements IIn
 	}
 
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomName()
+	{
 		return false;
 	}
 
@@ -185,13 +184,59 @@ public class PipeTransportAdvancedWood extends PipeTransportItems implements IIn
 	}
 
 	@Override
-	public void openInventory() {
+	public void openInventory(EntityPlayer playerIn)
+	{
+
+	}
+
+	@Override
+	public void closeInventory(EntityPlayer playerIn)
+	{
+
+	}
+
+	@Override
+	public IChatComponent getDisplayName()
+	{
+		return new ChatComponentText(getName());
+	}
+
+	@Override
+	public int getField(int id)
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value)
+	{
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void closeInventory() {
-		
+	public int getFieldCount()
+	{
+		// TODO Auto-generated method stub
+		return 0;
 	}
+
+	@Override
+	public void clear()
+	{
+		items = new ItemStack[9];
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index)
+	{
+		ItemStack requestedItem = items[index];
+		
+		items[index] = null;
+		
+		return requestedItem;
+	}
+
 
 }

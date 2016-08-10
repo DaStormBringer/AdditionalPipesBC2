@@ -2,8 +2,8 @@ package buildcraft.additionalpipes.pipes;
 
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import buildcraft.transport.PipeTransport;
 import buildcraft.transport.TileGenericPipe;
 
@@ -17,9 +17,9 @@ public class PipeSwitch<pipeType extends PipeTransport> extends APPipe<pipeType>
 	}
 
 	@Override
-	public int getIconIndex(ForgeDirection direction) {
-		
-		if(direction == ForgeDirection.UNKNOWN)
+	public int getIconIndex(EnumFacing direction)
+	{
+		if(direction == null)
 		{
 			return textureIndex;
 		}
@@ -36,7 +36,7 @@ public class PipeSwitch<pipeType extends PipeTransport> extends APPipe<pipeType>
 	public void onNeighborBlockChange(int blockId) {
 		super.onNeighborBlockChange(blockId);
 		container.scheduleNeighborChange();
-		for(ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
+		for(EnumFacing direction : EnumFacing.values()) {
 			TileEntity tile = container.getTile(direction);
 			if(tile instanceof TileGenericPipe) {
 				((TileGenericPipe) tile).scheduleNeighborChange();
@@ -45,10 +45,10 @@ public class PipeSwitch<pipeType extends PipeTransport> extends APPipe<pipeType>
 	}
 
 	@Override
-	public boolean canPipeConnect(TileEntity tile, ForgeDirection side) {
-		if(container == null) return false;
+	public boolean canPipeConnect(TileEntity tile, EnumFacing side) {
+		if(container == null && side == null) return false;
 		World world = getWorld();
-		return world != null && super.canPipeConnect(tile, side) && !world.isBlockIndirectlyGettingPowered(container.xCoord, container.yCoord, container.zCoord);
+		return world != null && super.canPipeConnect(tile, side) && !world.isBlockPowered(container.getPos());
 
 	}
 

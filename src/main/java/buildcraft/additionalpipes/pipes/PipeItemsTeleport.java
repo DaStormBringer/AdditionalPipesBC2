@@ -12,13 +12,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.item.Item;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import buildcraft.additionalpipes.api.PipeType;
 import buildcraft.additionalpipes.utils.Log;
-import buildcraft.api.core.Position;
 import buildcraft.transport.PipeTransportItems;
 import buildcraft.transport.pipes.events.PipeEventItem;
-import buildcraft.transport.utils.TransportUtils;
 
 public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 	private static final int ICON = 0;
@@ -42,7 +40,7 @@ public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 		}
 
 		// output to random pipe
-		LinkedList<ForgeDirection> outputOrientations = new LinkedList<ForgeDirection>();
+		LinkedList<EnumFacing> outputOrientations = new LinkedList<EnumFacing>();
 		PipeTeleport<?> otherPipe;
 		
 		int originalPipeNumber = rand.nextInt(connectedTeleportPipes.size());
@@ -58,7 +56,7 @@ public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 			++numberOfTries;
 			otherPipe = connectedTeleportPipes.get(currentPipeNumber);
 			
-			for(ForgeDirection o : ForgeDirection.VALID_DIRECTIONS)
+			for(EnumFacing o : EnumFacing.values())
 			{
 				if(otherPipe.outputOpen(o))
 				{
@@ -89,24 +87,19 @@ public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 		{
 			return;
 		}
-
-		Position insertPoint = otherPipe.getPosition();
-		insertPoint.x += 0.5;
-		insertPoint.y += TransportUtils.getPipeFloorOf(event.item.getItemStack());
-		insertPoint.z += 0.5;
-		insertPoint.moveForwards(0.5);
-		event.item.setPosition(insertPoint.x, insertPoint.y, insertPoint.z);
 		
-		ForgeDirection newOrientation = otherPipe.getOpenOrientation().getOpposite();
-		((PipeTransportItems)otherPipe.transport).injectItem(event.item, newOrientation);
+		//can no longer set position of TravelingItems as of BC 7.2, so we have to make a new one
 		
+		EnumFacing newOrientation = otherPipe.getOpenOrientation();
+		
+		otherPipe.injectItemAtCenter(event.item.getItemStack(), newOrientation);		
 
-		Log.debug(event.item + " from " + getPosition() + " to " + otherPipe.getPosition() + " " + newOrientation);
+		Log.debug(event.item + " from " + getPosition() + " to " + otherPipe.getPosition() + ": " + newOrientation.getName2());
 		event.cancelled = true;
 	}
 
 	@Override
-	public int getIconIndex(ForgeDirection direction) {
+	public int getIconIndex(EnumFacing direction) {
 		return ICON;
 	}
 

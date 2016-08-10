@@ -1,5 +1,8 @@
 package buildcraft.additionalpipes.network;
 
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.network.message.MessageAdvWoodPipe;
 import buildcraft.additionalpipes.network.message.MessageChunkloadData;
@@ -10,9 +13,7 @@ import buildcraft.additionalpipes.network.message.MessageJeweledPipeOptionsServe
 import buildcraft.additionalpipes.network.message.MessagePriorityPipe;
 import buildcraft.additionalpipes.network.message.MessageTelePipeData;
 import buildcraft.additionalpipes.network.message.MessageTelePipeUpdate;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.relauncher.Side;
+
 
 public class PacketHandler
 {
