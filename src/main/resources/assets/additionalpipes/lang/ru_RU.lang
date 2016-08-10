@@ -1,0 +1,31 @@
+tile.TeleportTether.name=Телепорт тизер
+item.PipeItemsPriorityInsertion.name=Приоритетная вводящая труба
+item.PipeItemsAdvancedInsertion.name=[Устаревшая] Вводящая транспортная труба
+item.PipeItemsAdvancedWood.name=Продвинутая деревянная транспортная труба
+item.PipeItemsDistributor.name=Распределяющая транспортная труба
+item.PipeItemsClosed.name=Закрытая транспортная труба
+item.PipeItemsTeleport.name=Предметная телепортирующая труба
+item.PipeLiquidsTeleport.name=Жидкостная телепортирующая труба
+item.PipePowerTeleport.name=Энергетическая телепортирующая труба
+item.PipeSwitchPower.name=Переключающая энергетическая труба
+item.PipeSwitchFluids.name=Переключающая жидкостная труба
+item.PipeSwitchItems.name=Переключающая транспортная труба
+item.PipeLiquidsWaterPump.name=Водяная помповая труба
+item.PipeItemsAddition.name=Дополнительная транспортная труба
+
+gui.pipeItemsDistributor=Распределяющая труба
+gui.pipeItemsPriorityInsertion=Приоритетная вводящая труба
+gui.PipeItemsAdvancedWood=Продвинутая деревянная труба
+gui.jeweled_pipe=Драгоценная труба
+
+trigger.pipeClosed=Труба закрыта (Накапливает предметы)
+gate.phasedSignalRed=Красный переключаемый сигнал
+gate.phasedSignalBlue=Синий переключаемый сигнал
+gate.phasedSignalGreen=Зелёный переключаемый сигнал
+gate.phasedSignalYellow=Жёлтый переключаемый сигнал
+
+key.lasers=Переключает отображение загрузки границ чанков
+
+tip.teleportPipe=Больше никаких труб!
+
+command.ap.usage=/additionalpipes teleport [items|fluids|power]

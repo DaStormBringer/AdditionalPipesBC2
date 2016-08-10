@@ -1,0 +1,50 @@
+tile.TeleportTether.name=テレポートの絆
+item.PipeItemsAdvancedInsertion.name=挿入の輸送パイプ
+item.PipeItemsAdvancedWood.name=拡張された木の輸送パイプ
+item.PipeItemsDistributor.name=分配の輸送パイプ
+item.PipeItemsClosed.name=閉める輸送パイプ
+item.PipeItemsTeleport.name=アイテムのテレポートパイプ
+item.PipeLiquidsTeleport.name=液体のテレポートパイプ
+item.PipePowerTeleport.name=動力のテレポートパイプ
+item.PipeSwitchPower.name=スイッチの伝道パイプ
+item.PipeSwitchFluids.name=スイッチの防水パイプ
+item.PipeSwitchItems.name=スイッチの輸送パイプ
+item.PipeLiquidsWaterPump.name=水ポンプパイプ
+item.PipeItemsAddition.name=増加のパイプ
+item.PipeItemsPriorityInsertion.name=優先のパイプ
+item.PipeItemsGravityFeed.name=重力の輸送パイプ
+item.PipeItemsAddition.name=追加の輸送パイプ
+item.PipeLiquidsObsidian.name=黒曜石の防水パイプ
+item.PipeItemsJeweled.name=宝石の輸送パイプ
+
+#regular items & blocks
+#no idea how to translate "deaggravator".  Maybe "落ち着く物"?
+item.dogDeaggravator.name=犬 Deaggravator
+tile.teleportTether.name=テレポートテザー
+
+
+gui.pipeItemsDistributor=はいふの輸送パイプ
+gui.pipeItemsPriorityInsertion=優先のパイプ
+gui.PipeItemsAdvancedWood=ハイテクの木の輸送パイプ
+gui.jeweled_pipe=宝石のパイプ
+
+#tab names for the Jeweled Pipe GUI
+gui.tab.up=上
+gui.tab.down=下
+gui.tab.north=北
+gui.tab.south=南
+gui.tab.east=東
+gui.tab.west=西
+
+trigger.pipeClosed=パイプ閉まっている
+
+gui.match=一致
+gui.NBT=タグ 
+gui.metadata= メタデータ
+gui.acceptUnsorted=分けられなかった 
+
+itemGroup.buildcraft.apcreativetab=Additional Pipes　（別枠パイプ）
+
+key.lasers=Chunk load boundaries
+
+tip.teleportPipe=長い管路が必要じゃない！

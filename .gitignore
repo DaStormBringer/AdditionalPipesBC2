@@ -1,0 +1,17 @@
+.project
+.classpath
+**.class
+CREDITS-fml.txt
+forge-*.txt
+/LICENSE-fml.txt
+MinecraftForge-*.txt
+/bin
+/eclipse
+
+/minecraft/*
+/minecraft.1.7.10
+!/minecraft/mods
+/build
+/.settings
+/.gradle
+

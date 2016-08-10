@@ -1,0 +1,73 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
+    }
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = "5.0.1"
+group= "com.buildcraft.additionalpipes" 
+archivesBaseName = "additionalpipes"
+
+minecraft {
+    version = "1.8.9-11.15.1.1764"
+    runDir = "minecraft"
+	mappings = "stable_20"
+
+}
+// http://maven.apache.org/guides/mini/guide-naming-conventions.html
+repositories {
+	ivy {
+		name "BuildCraft"
+		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
+	}
+}
+
+dependencies {
+	compile name: 'buildcraft', version: "7.2.7", classifier: "dev", ext: 'jar'
+}
+
+sourceSets {
+    api {
+        java {
+            srcDir 'src/java/buildcraft/additionalpipes/api'
+        }
+    }
+}
+
+processResources
+{
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+		
+		//exclude Paint.NET pdn files
+		exclude '**/*.pdn'
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        
+		include 'mcmod.info'
+		include 'AdditionalPipes.java'
+                
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+        
+    // copy everything else, that's not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'dev'
+}
