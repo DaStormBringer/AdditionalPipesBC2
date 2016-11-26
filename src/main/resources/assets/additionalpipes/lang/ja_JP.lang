@@ -50,3 +50,4 @@ itemGroup.buildcraft.apcreativetab=Additional Pipes　（別枠パイプ）
 key.lasers=チャンク境界を出す
 
 tip.teleportPipe=長い管路が必要じゃない！
+tooltip.dogDeaggravator=攻撃している犬をおちつく
