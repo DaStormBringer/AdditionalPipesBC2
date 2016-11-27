@@ -6,12 +6,6 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
 import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.api.ITeleportPipe;
@@ -25,6 +19,13 @@ import buildcraft.transport.Gate;
 import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransport;
 import buildcraft.transport.TileGenericPipe;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPipe<pipeType> implements ITeleportPipe {
 	protected static final Random rand = new Random();
@@ -137,26 +138,33 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 	public boolean blockActivated(EntityPlayer player, ForgeDirection direction) {
 		if(player.worldObj.isRemote)
 			return true;
+		
 		if(ownerUUID == null)
 		{
-			//                   getUUIDFromProfile()
 			ownerUUID = PlayerUtils.getUUID(player);
 			ownerName = player.getCommandSenderName();
 		}
 		
-		//test for player name change
-		if(PlayerUtils.getUUID(player).equals(ownerUUID))
+		if(!isPublic)
 		{
-			if(!player.getCommandSenderName().equals(ownerName))
+			//test for player name change
+			if(PlayerUtils.getUUID(player).equals(ownerUUID))
 			{
-				ownerName = player.getCommandSenderName();
+				if(!player.getCommandSenderName().equals(ownerName))
+				{
+					ownerName = player.getCommandSenderName();
+				}
+			}
+			else
+			{
+				//access denied
+				player.addChatMessage(new ChatComponentText("Access denied!  This pipe belongs to " + ownerName));
+				
+				//if we return false, this method can get called again with a different side, and it will show the message again
+				return true;
 			}
 		}
-		else
-		{
-			//access denied
-			return false;
-		}
+			
 		
 		if(APConfiguration.filterRightclicks)
 		{

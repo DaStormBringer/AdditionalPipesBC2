@@ -1,7 +1,5 @@
 package buildcraft.additionalpipes.utils;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.item.ItemPipeAP;
 import buildcraft.additionalpipes.pipes.APPipe;
@@ -9,6 +7,8 @@ import buildcraft.transport.BlockGenericPipe;
 import buildcraft.transport.ItemPipe;
 import buildcraft.transport.Pipe;
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 public class PipeCreator
 {
@@ -56,6 +56,7 @@ public class PipeCreator
 
 	public static Item createPipeTooltip(Class<? extends APPipe<?>> clas, String tooltip)
 	{
+		//we need to use our own version of ItemPipe with tooltip support
 		ItemPipe item = new ItemPipeAP(tooltip);
 		item.setUnlocalizedName(clas.getSimpleName());
 		AdditionalPipes.proxy.registerPipeRendering(item);
