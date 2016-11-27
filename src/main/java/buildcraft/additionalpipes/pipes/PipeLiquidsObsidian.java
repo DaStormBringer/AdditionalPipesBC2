@@ -1,6 +1,6 @@
 package buildcraft.additionalpipes.pipes;
 
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import buildcraft.additionalpipes.utils.Log;
@@ -30,8 +30,8 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 	AxisAlignedBB searchBox;
 	private RFBattery battery = new RFBattery(2560, 640, 0);
 
-	//rolling queue of entity IDs to avoid picking up
-	private int[] entitiesDropped;
+	//set of entity IDs to avoid picking up
+	private HashSet<Integer> entitiesDropped;
 	private int entitiesDroppedIndex = 0;
 	
 	//used to output fluids over time to the pipe system
@@ -47,8 +47,7 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 		//load the fluid capacities set in mod init
 		transport.initFromPipe(getClass());
 		
-		entitiesDropped = new int[32];
-		Arrays.fill(entitiesDropped, -1);
+		entitiesDropped = new HashSet<Integer>();
 	}
 
 	@Override
@@ -61,7 +60,7 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 	public void onEntityCollidedWithBlock(Entity entity) {
 		super.onEntityCollidedWithBlock(entity);
 
-		if (entity.isDead) {
+		if (entity.isDead || entity.worldObj.isRemote) {
 			return;
 		}
 		
@@ -147,22 +146,14 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 		super.updateEntity();
 		
 		//empty the fluid buffer, if it exists
-		if(fluidInItem != null)
+		if(fluidInItem == null)
 		{
-			fluidInItem.amount -= transport.fill(ForgeDirection.UNKNOWN, fluidInItem, true);
-			
-			if(fluidInItem.amount <= 0)
+			//you'd think this is paranoia, but it seems to actually happen sometimes
+			if(currentItem != null)
 			{
-				TravelingItem travelingItem = TravelingItem.make(container.x(), container.y(), container.z(), currentItem);
-				travelingItem.setContainer(container);
-				dropItem(travelingItem);
-				
-				fluidInItem = null;
-				currentItem = null;
+				dropCurrentItem();
 			}
-		}
-		else
-		{
+
 			//suck in a new item
 			if (battery.getEnergyStored() > 0) {
 				for (int j = 1; j < 5; ++j) {
@@ -174,6 +165,18 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 			}
 			
 			battery.useEnergy(0, 5, false);
+		}
+		else
+		{
+			fluidInItem.amount -= transport.fill(ForgeDirection.UNKNOWN, fluidInItem, true);
+			
+			if(fluidInItem.amount <= 0)
+			{
+				
+				fluidInItem = null;
+				
+				dropCurrentItem();
+			}
 
 		}
 	}
@@ -278,7 +281,7 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 			TravelingItem travelingItem = TravelingItem.make(container.x(), container.y(), container.z(), currentItem);
 			travelingItem.setContainer(container);
 			
-			dropItem(travelingItem);
+			dropCurrentItem();
 		}
 		else
 		{
@@ -298,11 +301,14 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 	
 	//copy of PipeTransportItems.dropItem()
 	//this pipe uses a fluid transport, so I have to copy-paste it.
-	private void dropItem(TravelingItem item) 
+	private void dropCurrentItem() 
 	{
 		if (container.getWorldObj().isRemote) {
 			return;
 		}
+		
+		TravelingItem item = TravelingItem.make(container.x(), container.y(), container.z(), currentItem);
+		item.setContainer(container);
 		
 		PipeEventItem.DropItem event = new PipeEventItem.DropItem(container.pipe, item, item.toEntityItem());
 		container.pipe.eventBus.handleEvent(PipeEventItem.DropItem.class, event);
@@ -327,19 +333,13 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 				+ getWorld().rand.nextGaussian() * 0.1d;
 
 		container.getWorldObj().spawnEntityInWorld(entity);
+		
+		currentItem = null;
 	}
 
 	public void eventHandler(PipeEventItem.DropItem event)
 	{
-		if (entitiesDroppedIndex + 1 >= entitiesDropped.length)
-		{
-			entitiesDroppedIndex = 0;
-		}
-		else 
-		{
-			entitiesDroppedIndex++;
-		}
-		entitiesDropped[entitiesDroppedIndex] = event.entity.getEntityId();
+		entitiesDropped.add(event.entity.getEntityId());
 	}
 
 	public boolean canSuck(EntityItem item, int distance) 
@@ -389,11 +389,11 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 		//-------------------------------------------------------------------------------
 
 		//check that the item was not one we already dropped
-		for (int element : entitiesDropped) {
-			if(item.getEntityId() == element) {
-				return false;
-			}
+		if(entitiesDropped.contains(item.getEntityId()))
+		{
+			return false;
 		}
+		
 
 		return true;
 	}
@@ -436,7 +436,10 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 			NBTTagCompound fluidInItemTag = new NBTTagCompound();
 			fluidInItem.writeToNBT(fluidInItemTag);
 			nbt.setTag("fluidInItemTag", fluidInItemTag);
-			
+		}
+		
+		if(currentItem != null)
+		{
 			//store the current item
 			NBTTagCompound currentItemTag = new NBTTagCompound();
 			currentItem.writeToNBT(currentItemTag);
@@ -452,6 +455,9 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 		if(nbt.hasKey("fluidInItemTag"))
 		{
 			fluidInItem = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("fluidInItemTag"));
+		}
+		if(nbt.hasKey("currentItemTag"))
+		{
 			currentItem = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("currentItemTag"));
 		}
 	}
