@@ -18,8 +18,8 @@ item.PipeLiquidsObsidian.name=黒曜石の防水パイプ
 item.PipeItemsJeweled.name=宝石の輸送パイプ
 
 #regular items & blocks
-#no idea how to translate "deaggravator".  Maybe "落ち着く物"?
-item.dogDeaggravator.name=犬 Deaggravator
+#not sure how to translate "deaggravator".
+item.dogDeaggravator.name=犬を冷やすもの
 tile.teleportTether.name=テレポートテザー
 
 
@@ -46,3 +46,4 @@ itemGroup.buildcraft.apcreativetab=Additional Pipes
 key.lasers=Chunk load boundaries
 
 tip.teleportPipe=長い管路が必要じゃない！
+tooltip.dogDeaggravator=攻撃している犬をおちつく

@@ -3,6 +3,15 @@ package buildcraft.additionalpipes.pipes;
 import java.util.Arrays;
 import java.util.List;
 
+import buildcraft.additionalpipes.utils.Log;
+import buildcraft.api.core.Position;
+import buildcraft.core.lib.RFBattery;
+import buildcraft.core.proxy.CoreProxy;
+import buildcraft.transport.PipeTransportFluids;
+import buildcraft.transport.TransportProxy;
+import buildcraft.transport.TravelingItem;
+import buildcraft.transport.pipes.events.PipeEventItem;
+import cofh.api.energy.IEnergyHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
@@ -13,15 +22,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
-import buildcraft.additionalpipes.utils.Log;
-import buildcraft.api.core.Position;
-import buildcraft.core.lib.RFBattery;
-import buildcraft.core.proxy.CoreProxy;
-import buildcraft.transport.PipeTransportFluids;
-import buildcraft.transport.TransportProxy;
-import buildcraft.transport.TravelingItem;
-import buildcraft.transport.pipes.events.PipeEventItem;
-import cofh.api.energy.IEnergyHandler;
 
 public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements IEnergyHandler 
 {
@@ -271,17 +271,28 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 			currentItem = stack;			
 		}
 		
-		Log.debug("Storing " + drainedLiquid.amount + "MB of fluid in buffer.");
-
-		
-		//add liquid to buffer
-		if(fluidInItem != null && fluidInItem.isFluidEqual(drainedLiquid))
+		if(drainedLiquid == null || drainedLiquid.amount <= 0)
 		{
-			fluidInItem.amount += drainedLiquid.amount;
+			//didn't get the fluid we thought we'd get
+			//spit it back out
+			TravelingItem travelingItem = TravelingItem.make(container.x(), container.y(), container.z(), currentItem);
+			travelingItem.setContainer(container);
+			
+			dropItem(travelingItem);
 		}
 		else
 		{
-			fluidInItem = drainedLiquid;
+			Log.debug("Storing " + drainedLiquid.amount + "MB of fluid in buffer.");
+			
+			//add liquid to buffer
+			if(fluidInItem != null && fluidInItem.isFluidEqual(drainedLiquid))
+			{
+				fluidInItem.amount += drainedLiquid.amount;
+			}
+			else
+			{
+				fluidInItem = drainedLiquid;
+			}
 		}
 	}
 	
@@ -333,6 +344,10 @@ public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements 
 
 	public boolean canSuck(EntityItem item, int distance) 
 	{
+		if(currentItem != null)
+		{
+			return false;
+		}
 		
 		//glitched item
 		if (item.getEntityItem().stackSize <= 0) {
