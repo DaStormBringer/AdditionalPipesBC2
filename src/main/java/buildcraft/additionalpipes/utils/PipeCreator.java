@@ -9,6 +9,8 @@ import buildcraft.transport.Pipe;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 public class PipeCreator
 {
@@ -22,7 +24,7 @@ public class PipeCreator
 	 * @param shapeless whether or not the recipe is shapeless
 	 * @return
 	 */
-	public static Item createPipeAndRecipe(int output, Class<? extends Pipe<?>> clas, Object[] recipe, boolean shapeless) 
+	public static Item createPipeAndRecipe(int output, Class<? extends Pipe<?>> clas, boolean shapeless, Object... recipe) 
 	{
 	
 		Item pipe = createPipe(clas);
@@ -32,11 +34,11 @@ public class PipeCreator
 		}
 		if(shapeless)
 		{
-			GameRegistry.addShapelessRecipe(new ItemStack(pipe, output), recipe);
+			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(pipe, output), recipe));
 		}
 		else
 		{
-			GameRegistry.addRecipe(new ItemStack(pipe, output), recipe);
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(pipe, output), recipe));
 		}
 		return pipe;
 	}

@@ -3,18 +3,8 @@ package buildcraft.additionalpipes;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.common.ForgeChunkManager;
-import net.minecraftforge.common.MinecraftForge;
 import buildcraft.BuildCraftCore;
 import buildcraft.BuildCraftSilicon;
 import buildcraft.BuildCraftTransport;
@@ -75,8 +65,17 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
-@Mod(modid = AdditionalPipes.MODID, name = AdditionalPipes.NAME, dependencies = "after:BuildCraft|Transport[7.1.5,);after:BuildCraft|Silicon;after:BuildCraft|Transport;after:BuildCraft|Factory;after:LogisticsPipes", version = AdditionalPipes.VERSION)
+@Mod(modid = AdditionalPipes.MODID, name = AdditionalPipes.NAME, dependencies = "after:BuildCraft|Transport[7.1.18,);after:BuildCraft|Silicon;after:BuildCraft|Transport;after:BuildCraft|Factory;after:LogisticsPipes", version = AdditionalPipes.VERSION)
 public class AdditionalPipes {
 	public static final String MODID = "additionalpipes";
 	public static final String NAME = "Additional Pipes";
@@ -231,11 +230,11 @@ public class AdditionalPipes {
 		blockChunkLoader.setBlockName("teleportTether");
 		GameRegistry.registerBlock(blockChunkLoader, ItemBlock.class, "chunkLoader");
 		GameRegistry.registerTileEntity(TileChunkLoader.class, "TeleportTether");
-		GameRegistry.addRecipe(new ItemStack(blockChunkLoader), new Object[] { "iii", "iLi", "iii", 'i', Items.iron_ingot, 'L', new ItemStack(Items.dye, 1, 4) });
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockChunkLoader, "iii", "iLi", "ici", 'i', "ingotIron", 'L', "gemLapis", 'c', BuildCraftSilicon.redstoneChipset));
 		
 		dogDeaggravator = new ItemDogDeaggravator();
 		GameRegistry.registerItem(dogDeaggravator, ItemDogDeaggravator.NAME);
-		GameRegistry.addRecipe(new ItemStack(dogDeaggravator), new Object[] { "gsg", "gig", "g g", 'i', Items.iron_ingot, 'g', Items.gold_ingot, 's', Items.stick});
+		GameRegistry.addRecipe(new ShapedOreRecipe(dogDeaggravator, "gsg", "gig", "g g", 'i', "ingotIron", 'g', "ingotGold", 's', "stickWood"));
 		
 		Log.info("Running Teleport Manager Tests");
 		TeleportManagerTest.runAllTests();
@@ -272,39 +271,7 @@ public class AdditionalPipes {
 				
 				success = true;
 			}
-			
-			// HOLY CATCH BLOCKS, BATMAN!!!
-			// I think 8 is a new record
-			// Java's mandatory exceptions are the worst
-			catch(NoSuchFieldException e)
-			{
-				e.printStackTrace();
-			}
-			catch(SecurityException e)
-			{
-				e.printStackTrace();
-			}
-			catch(ClassNotFoundException e)
-			{
-				e.printStackTrace();
-			}
-			catch(IllegalArgumentException e)
-			{
-				e.printStackTrace();
-			}
-			catch(IllegalAccessException e)
-			{
-				e.printStackTrace();
-			}
-			catch(NoSuchMethodException e)
-			{
-				e.printStackTrace();
-			}
-			catch(InvocationTargetException e)
-			{
-				e.printStackTrace();
-			}
-			catch(InstantiationException e)
+			catch(Exception e)
 			{
 				e.printStackTrace();
 			}
@@ -355,55 +322,52 @@ public class AdditionalPipes {
 		}
 
 		//Jeweled Pipe
-		pipeItemsJeweled = PipeCreator.createPipeAndRecipe(2, PipeItemsJeweled.class, new Object[] { " D ", "DGD", " D ", 'D', BuildCraftTransport.pipeItemsDiamond, 'G', BuildCraftCore.goldGearItem}, false);
+		pipeItemsJeweled = PipeCreator.createPipeAndRecipe(2, PipeItemsJeweled.class, false, " D ", "DGD", " D ", 'D', BuildCraftTransport.pipeItemsDiamond, 'G', BuildCraftCore.goldGearItem);
 		
 		// Distributor Pipe
-		pipeItemsDistributor = PipeCreator.createPipeAndRecipe(1, PipeItemsDistributor.class, new Object[] { " r ", "IgI", 'r', Items.redstone, 'I', Items.iron_ingot, 'g', Blocks.glass }, false);
+		pipeItemsDistributor = PipeCreator.createPipeAndRecipe(1, PipeItemsDistributor.class, false, " r ", "IgI", 'r', "dustRedstone", 'I', "ingotIron", 'g', "blockGlass");
 
 		// Advanced Insertion Pipe
-		pipeItemsAdvancedInsertion = PipeCreator.createPipeAndRecipe(8, PipeItemsAdvancedInsertion.class,
-				new Object[] { "IgI", 'I', BuildCraftCore.ironGearItem, 'g', Blocks.glass }, false);
+		pipeItemsAdvancedInsertion = PipeCreator.createPipeAndRecipe(8, PipeItemsAdvancedInsertion.class, false, "IgI", 'I', BuildCraftCore.ironGearItem, 'g', "blockGlass");
 		
 		// Advanced Insertion Pipe
-		pipeItemsAddition = PipeCreator.createPipeAndRecipe(1, PipeItemsAddition.class,
-				new Object[] { " R ", "RIR", " R ", 'I', pipeItemsAdvancedInsertion, 'R', Items.redstone}, false);
+		pipeItemsAddition = PipeCreator.createPipeAndRecipe(1, PipeItemsAddition.class, false, " R ", "RIR", " R ", 'I', pipeItemsAdvancedInsertion, 'R', "dustRedstone");
 		
-		pipeItemsPriority = PipeCreator.createPipeAndRecipe(2, PipeItemsPriorityInsertion.class, new Object[] {pipeItemsDistributor, pipeItemsAdvancedInsertion}, true);
+		pipeItemsPriority = PipeCreator.createPipeAndRecipe(2, PipeItemsPriorityInsertion.class, true, pipeItemsDistributor, pipeItemsAdvancedInsertion);
 		
 		// Advanced Wooden Pipe
-		pipeItemsAdvancedWood = PipeCreator.createPipeAndRecipe(8, PipeItemsAdvancedWood.class, new Object[] { "WgW", 'W', BuildCraftCore.woodenGearItem, 'g', Blocks.glass }, false);
+		pipeItemsAdvancedWood = PipeCreator.createPipeAndRecipe(8, PipeItemsAdvancedWood.class, false, "WgW", 'W', BuildCraftCore.woodenGearItem, 'g', "blockGlass");
 
 		// Gravity Feed Pipe
-		pipeItemsGravityFeed = PipeCreator.createPipeAndRecipe(1, PipeItemsGravityFeed.class, new Object[] { "   ", "IgI", " I ", 'S', Blocks.stone, 'I', Items.iron_ingot, 'g', Blocks.glass }, false);
+		pipeItemsGravityFeed = PipeCreator.createPipeAndRecipe(1, PipeItemsGravityFeed.class, false, "   ", "IgI", " I ", 'S', "stone", 'I', "ingotIron", 'g', "blockGlass");
 		
 		// Closed Items Pipe
-		pipeItemsClosed = PipeCreator.createPipeAndRecipe(1, PipeItemsClosed.class, new Object[] {BuildCraftTransport.pipeItemsVoid, BuildCraftCore.ironGearItem}, true);
+		pipeItemsClosed = PipeCreator.createPipeAndRecipe(1, PipeItemsClosed.class, true, BuildCraftTransport.pipeItemsVoid, BuildCraftCore.ironGearItem);
+		
 		// switch pipes
-		pipeItemsSwitch = PipeCreator.createPipeAndRecipe(8, PipeSwitchItems.class, new Object[] { "GgI", 'g', Blocks.glass, 'G', BuildCraftCore.goldGearItem, 'I', BuildCraftCore.ironGearItem}, false);
+		pipeItemsSwitch = PipeCreator.createPipeAndRecipe(8, PipeSwitchItems.class, false, "GgI", 'g', "blockGlass", 'G', BuildCraftCore.goldGearItem, 'I', BuildCraftCore.ironGearItem);
 		
 		//set power capacity to the average between iron and gold
 		int switchPowerCapacity = (PipeTransportPower.powerCapacities.get(PipePowerGold.class) + PipeTransportPower.powerCapacities.get(PipePowerIron.class))/ 2;
 		
 		PipeTransportPower.powerCapacities.put(PipeSwitchPower.class, switchPowerCapacity);
-		pipePowerSwitch = PipeCreator.createPipeAndRecipe(1, PipeSwitchPower.class, new Object[] {pipeItemsSwitch, Items.redstone }, true);
+		pipePowerSwitch = PipeCreator.createPipeAndRecipe(1, PipeSwitchPower.class, true, pipeItemsSwitch, "dustRedstone");
 		
-		//set fluid capacity to the average between iron and gold
-		//int switchFluidCapacity = (PipeTransportFluids.fluidCapacities.get(PipeFluidsGold.class) + PipeTransportFluids.fluidCapacities.get(PipeFluidsIron.class))/ 2;
 		int switchFluidCapacity = PipeTransportFluids.fluidCapacities.get(PipeFluidsGold.class);
 		
 		PipeTransportFluids.fluidCapacities.put(PipeSwitchFluids.class, switchFluidCapacity);
-		pipeLiquidsSwitch = PipeCreator.createPipeAndRecipe(1, PipeSwitchFluids.class, new Object[] {pipeItemsSwitch, BuildCraftTransport.pipeWaterproof }, true);
+		pipeLiquidsSwitch = PipeCreator.createPipeAndRecipe(1, PipeSwitchFluids.class, true, pipeItemsSwitch, BuildCraftTransport.pipeWaterproof);
 
 		// water pump pipe
 		//set fluid capacity
 		PipeTransportFluids.fluidCapacities.put(PipeLiquidsWaterPump.class, APConfiguration.waterPumpWaterPerTick);
-		pipeLiquidsWaterPump = PipeCreator.createPipeAndRecipe(1, PipeLiquidsWaterPump.class, new Object[] { " L ", "rPr", " W ", 'r', Items.redstone, 'P', BuildCraftCore.ironGearItem, 'L',
-				BuildCraftTransport.pipeFluidsGold, 'w', BuildCraftTransport.pipeWaterproof, 'W', BuildCraftTransport.pipeFluidsWood }, false);
+		pipeLiquidsWaterPump = PipeCreator.createPipeAndRecipe(1, PipeLiquidsWaterPump.class, false, " L ", "rPr", " W ", 'r', "dustRedstone", 'P', BuildCraftCore.ironGearItem, 'L',
+				BuildCraftTransport.pipeFluidsGold, 'w', BuildCraftTransport.pipeWaterproof, 'W', BuildCraftTransport.pipeFluidsWood);
 		
 		// obsidian fluid pipe
 		//set fluid capacity
 		PipeTransportFluids.fluidCapacities.put(PipeLiquidsObsidian.class, 100);
-		pipeLiquidsObsidian = PipeCreator.createPipeAndRecipe(1, PipeLiquidsObsidian.class, new Object[] {BuildCraftTransport.pipeItemsObsidian, BuildCraftTransport.pipeWaterproof}, true);
+		pipeLiquidsObsidian = PipeCreator.createPipeAndRecipe(1, PipeLiquidsObsidian.class, true, BuildCraftTransport.pipeItemsObsidian, BuildCraftTransport.pipeWaterproof);
 	}
 
 	// legacy method
