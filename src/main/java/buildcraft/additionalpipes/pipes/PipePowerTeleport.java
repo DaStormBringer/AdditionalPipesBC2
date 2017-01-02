@@ -173,7 +173,7 @@ public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implemen
 
 	// precondition: power pipe that isn't tp
 	private static boolean pipeNeedsPower(TileGenericPipe tile) {
-		if(tile instanceof TileGenericPipe) {
+		if(tile.pipe.transport instanceof PipeTransportPower) {
 			PipeTransportPower ttb = (PipeTransportPower) tile.pipe.transport;
 			for(int i = 0; i < ttb.nextPowerQuery.length; i++)
 				if(ttb.nextPowerQuery[i] > 0) {
