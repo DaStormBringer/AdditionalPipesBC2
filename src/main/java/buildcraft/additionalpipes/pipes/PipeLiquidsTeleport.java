@@ -11,14 +11,16 @@ package buildcraft.additionalpipes.pipes;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.minecraft.item.Item;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidHandler;
+import org.apache.commons.lang3.tuple.Pair;
+
 import buildcraft.additionalpipes.api.PipeType;
 import buildcraft.transport.IPipeTransportFluidsHook;
 import buildcraft.transport.PipeTransportFluids;
 import buildcraft.transport.pipes.PipeFluidsDiamond;
+import net.minecraft.item.Item;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidHandler;
 
 public class PipeLiquidsTeleport extends PipeTeleport<PipeTransportFluids> implements IPipeTransportFluidsHook {
 	private static final int ICON = 2;
@@ -40,7 +42,7 @@ public class PipeLiquidsTeleport extends PipeTeleport<PipeTransportFluids> imple
 		}
 
 		int i = getWorld().rand.nextInt(pipeList.size());
-		List<IFluidHandler> possibleMovements = getPossibleLiquidMovements(pipeList.get(i));
+		List<Pair<ForgeDirection, IFluidHandler>> possibleMovements = getPossibleLiquidMovements(pipeList.get(i));
 
 		if(possibleMovements.size() <= 0) {
 			return 0;
@@ -49,21 +51,23 @@ public class PipeLiquidsTeleport extends PipeTeleport<PipeTransportFluids> imple
 		int used = 0;
 		while(possibleMovements.size() > 0 && used <= 0) {
 			int a = rand.nextInt(possibleMovements.size());
-			used = possibleMovements.get(a).fill(ForgeDirection.UNKNOWN, resource, doFill);
+			Pair<ForgeDirection, IFluidHandler> outputData = possibleMovements.get(a);
+			
+			used = outputData.getRight().fill(outputData.getLeft().getOpposite(), resource, doFill);
 			possibleMovements.remove(a);
 		}
 
 		return used;
 	}
 
-	private static List<IFluidHandler> getPossibleLiquidMovements(PipeTeleport<?> pipe) {
-		List<IFluidHandler> result = new LinkedList<IFluidHandler>();
+	private static List<Pair<ForgeDirection, IFluidHandler>> getPossibleLiquidMovements(PipeTeleport<?> pipe) {
+		List<Pair<ForgeDirection, IFluidHandler>> result = new LinkedList<Pair<ForgeDirection, IFluidHandler>>();
 
 		for(ForgeDirection o : ForgeDirection.VALID_DIRECTIONS) {
-			if(pipe.outputOpen(o)) {
+			if(pipe.outputOpen(o) && pipe.container.getTile(o) instanceof IFluidHandler) {
 				IFluidHandler te = (IFluidHandler) pipe.container.getTile(o);
 				if (te != null) {
-					result.add(te);
+					result.add(Pair.<ForgeDirection, IFluidHandler>of(o, te));
 				}
 			}
 		}
