@@ -252,7 +252,7 @@ public class AdditionalPipes {
 			//SimpleServiceLocator.specialpipeconnection.registerHandler(new APSpecialPipedConnection());
 
 			Log.info("Commencing morass of reflection to try and integrate with Logistics Pipes");
-			boolean success = false; //no way I'm putting an error message in each of those catch blocks
+			boolean success = false;
 			try
 			{
 				//all of this to call ONE function
@@ -335,7 +335,7 @@ public class AdditionalPipes {
 		pipeItemsPriority = PipeCreator.createPipeAndRecipe(2, PipeItemsPriorityInsertion.class, true, pipeItemsDistributor, pipeItemsAdvancedInsertion);
 		
 		// Advanced Wooden Pipe
-		pipeItemsAdvancedWood = PipeCreator.createPipeAndRecipe(8, PipeItemsAdvancedWood.class, false, "WgW", 'W', "gearWooden", 'g', "blockGlass");
+		pipeItemsAdvancedWood = PipeCreator.createPipeAndRecipe(8, PipeItemsAdvancedWood.class, false, "WgW", 'W', "gearWood", 'g', "blockGlass");
 
 		// Gravity Feed Pipe
 		pipeItemsGravityFeed = PipeCreator.createPipeAndRecipe(1, PipeItemsGravityFeed.class, false, "   ", "IgI", " I ", 'S', "stone", 'I', "ingotIron", 'g', "blockGlass");

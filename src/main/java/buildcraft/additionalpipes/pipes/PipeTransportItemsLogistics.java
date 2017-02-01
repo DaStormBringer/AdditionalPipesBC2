@@ -1,13 +1,13 @@
 package buildcraft.additionalpipes.pipes;
 
-import logisticspipes.api.ILPPipeTile;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
 import buildcraft.additionalpipes.utils.Log;
 import buildcraft.api.transport.IPipeTile;
 import buildcraft.transport.BlockGenericPipe;
 import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransportItems;
+import logisticspipes.api.ILPPipeTile;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Pipe transport for Logistics Teleport Pipes
@@ -134,7 +134,7 @@ public class PipeTransportItemsLogistics extends PipeTransportItems
 			}
 			
 			//if it branches off, then this pipeline isn't valid
-			if(PipeTransportItemsLogistics.getNumConnectedPipesExceptSide(pipe.container, sideConnectedToPrevPipe) != 1)
+			if(getNumConnectedPipesExceptSide(pipe.container, sideConnectedToPrevPipe) != 1)
 			{
 				return false;
 			}

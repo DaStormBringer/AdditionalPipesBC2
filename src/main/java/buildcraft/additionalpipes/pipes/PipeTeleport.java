@@ -189,6 +189,7 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 		frequency = freq;
 	}
 
+	@Override
 	public int getFrequency() {
 		return frequency;
 	}
@@ -392,11 +393,13 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 		return new Position(container.xCoord, container.yCoord, container.zCoord);
 	}
 	
+	@Override
 	public boolean canReceive()
 	{
 		return (state & 0x2) > 0;
 	}
 	
+	@Override
 	public boolean canSend()
 	{
 		return (state & 0x1) > 0;
