@@ -168,12 +168,24 @@ public class AdditionalPipes {
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 	
-		Log.info("Registering chunk load handler");
-		ForgeChunkManager.setForcedChunkLoadingCallback(this, new ChunkLoadingHandler());
-		chunkLoadViewer = new ChunkLoadViewDataProxy(APConfiguration.chunkSightRange);
-		FMLCommonHandler.instance().bus().register(chunkLoadViewer);
-		
-		proxy.registerKeyHandler();
+		if(APConfiguration.enableChunkloader)
+		{
+			Log.info("Registering chunk load handler");
+			ForgeChunkManager.setForcedChunkLoadingCallback(this, new ChunkLoadingHandler());
+			chunkLoadViewer = new ChunkLoadViewDataProxy(APConfiguration.chunkSightRange);
+			FMLCommonHandler.instance().bus().register(chunkLoadViewer);
+			
+			// register Teleport Tether block
+			blockChunkLoader = new BlockChunkLoader();
+			blockChunkLoader.setBlockName("teleportTether");
+			GameRegistry.registerBlock(blockChunkLoader, ItemBlock.class, "chunkLoader");
+			GameRegistry.registerTileEntity(TileChunkLoader.class, "TeleportTether");
+			GameRegistry.addRecipe(new ShapedOreRecipe(blockChunkLoader, "iii", "iLi", "ici", 'i', "ingotIron", 'L', "gemLapis", 'c', BuildCraftSilicon.redstoneChipset));
+			
+			// the lasers key function depends on the chunk loading code, so it can only be enabled if the chunk loader is
+			proxy.registerKeyHandler();
+
+		}
 		
 		proxy.registerRendering();
 
@@ -224,13 +236,6 @@ public class AdditionalPipes {
 
 		}
 
-		// ChunkLoader
-		blockChunkLoader = new BlockChunkLoader();
-		blockChunkLoader.setBlockName("teleportTether");
-		GameRegistry.registerBlock(blockChunkLoader, ItemBlock.class, "chunkLoader");
-		GameRegistry.registerTileEntity(TileChunkLoader.class, "TeleportTether");
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockChunkLoader, "iii", "iLi", "ici", 'i', "ingotIron", 'L', "gemLapis", 'c', BuildCraftSilicon.redstoneChipset));
-		
 		dogDeaggravator = new ItemDogDeaggravator();
 		GameRegistry.registerItem(dogDeaggravator, ItemDogDeaggravator.NAME);
 		GameRegistry.addRecipe(new ShapedOreRecipe(dogDeaggravator, "gsg", "gig", "g g", 'i', "ingotIron", 'g', "ingotGold", 's', "stickWood"));
