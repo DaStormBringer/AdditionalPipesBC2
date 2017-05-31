@@ -14,6 +14,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import buildcraft.additionalpipes.pipes.PipeTransportAdvancedWood;
 import buildcraft.core.lib.gui.BuildCraftContainer;
+import buildcraft.transport.TileGenericPipe;
 
 public class ContainerAdvancedWoodPipe extends BuildCraftContainer {
 
@@ -44,6 +45,9 @@ public class ContainerAdvancedWoodPipe extends BuildCraftContainer {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer) {
+		TileGenericPipe tile = logic.container;
+		if(tile.getWorldObj().getTileEntity(tile.xCoord, tile.yCoord, tile.zCoord) != tile) return false;
+		if(entityplayer.getDistanceSq(tile.xCoord + 0.5D, tile.yCoord + 0.5D, tile.zCoord + 0.5D) > 64) return false;
 		return true;
 	}
 
