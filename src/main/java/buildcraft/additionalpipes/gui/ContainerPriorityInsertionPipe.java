@@ -20,6 +20,9 @@ public class ContainerPriorityInsertionPipe extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
+		TileGenericPipe tile = pipe.container;
+		if(tile.getWorldObj().getTileEntity(tile.xCoord, tile.yCoord, tile.zCoord) != tile) return false;
+		if(player.getDistanceSq(tile.xCoord + 0.5D, tile.yCoord + 0.5D, tile.zCoord + 0.5D) > 64) return false;
 		return true;
 	}
 

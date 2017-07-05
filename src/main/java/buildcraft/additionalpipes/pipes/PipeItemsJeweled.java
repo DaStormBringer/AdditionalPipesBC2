@@ -109,6 +109,7 @@ public class PipeItemsJeweled extends APPipe<PipeTransportItems> implements IDeb
 			}
 		}
 
+		if(player.worldObj.isRemote) return true;
 		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_JEWELED, container.getWorldObj(), container.xCoord, container.yCoord, container.zCoord);
 
 		return true;

@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessageJeweledPipeOptionsClient;
 import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
+import buildcraft.transport.TileGenericPipe;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
@@ -136,6 +137,9 @@ public class ContainerJeweledPipe extends Container
     @Override
     public boolean canInteractWith(EntityPlayer entityPlayer)
     {
+		TileGenericPipe tile = pipeItemsJeweled.container;
+		if(tile.getWorldObj().getTileEntity(tile.xCoord, tile.yCoord, tile.zCoord) != tile) return false;
+		if(entityPlayer.getDistanceSq(tile.xCoord + 0.5D, tile.yCoord + 0.5D, tile.zCoord + 0.5D) > 64) return false;
         return true;
     }
 
