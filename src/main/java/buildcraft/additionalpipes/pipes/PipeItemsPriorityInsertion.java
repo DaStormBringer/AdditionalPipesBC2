@@ -104,6 +104,7 @@ public class PipeItemsPriorityInsertion extends APPipe<PipeTransportItems> {
 			}
 		}
 
+		if(player.worldObj.isRemote) return true;
 		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_PRIORITY, container.getWorldObj(), container.xCoord, container.yCoord, container.zCoord);
 
 		return true;

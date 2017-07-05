@@ -93,6 +93,7 @@ public class PipeItemsDistributor extends APPipe<PipeTransportItems> {
 			}
 		}
 
+		if(player.worldObj.isRemote) return true;
 		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_DIST, container.getWorldObj(), container.xCoord, container.yCoord, container.zCoord);
 
 		return true;
