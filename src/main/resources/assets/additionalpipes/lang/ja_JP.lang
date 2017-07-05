@@ -1,34 +1,33 @@
-tile.TeleportTether.name=テレポートの絆
-item.PipeItemsAdvancedInsertion.name=挿入の輸送パイプ
-item.PipeItemsAdvancedWood.name=拡張された木の輸送パイプ
-item.PipeItemsDistributor.name=分配の輸送パイプ
-item.PipeItemsClosed.name=閉める輸送パイプ
-item.PipeItemsTeleport.name=アイテムのテレポートパイプ
-item.PipeLiquidsTeleport.name=液体のテレポートパイプ
-item.PipePowerTeleport.name=動力のテレポートパイプ
-item.PipeSwitchPower.name=スイッチの伝道パイプ
-item.PipeSwitchFluids.name=スイッチの防水パイプ
-item.PipeSwitchItems.name=スイッチの輸送パイプ
-item.PipeLiquidsWaterPump.name=水ポンプパイプ
-item.PipeItemsAddition.name=増加のパイプ
-item.PipeItemsPriorityInsertion.name=優先のパイプ
-item.PipeItemsGravityFeed.name=重力の輸送パイプ
-item.PipeItemsAddition.name=追加の輸送パイプ
-item.PipeLiquidsObsidian.name=黒曜石の防水パイプ
-item.PipeItemsJeweled.name=宝石の輸送パイプ
+#AdditionalPipes ver.4.7.6-jp by Ellen Kasacon
+tile.TeleportTether.name=テレポートテザー
+item.PipeItemsPriorityInsertion.name=分配挿入パイプ(アイテム)
+item.PipeItemsAdvancedInsertion.name=[非推奨] 挿入パイプ(アイテム)
+item.PipeItemsAdvancedWood.name=木パイプ改(アイテム)
+item.PipeItemsGravityFeed.name=重力パイプ(アイテム)
+item.PipeItemsDistributor.name=分配パイプ(アイテム)
+item.PipeItemsClosed.name=閉鎖パイプ(アイテム)
+item.PipeItemsTeleport.name=テレポートパイプ(アイテム)
+item.PipeLiquidsTeleport.name=テレポートパイプ(液体)
+item.PipePowerTeleport.name=テレポートパイプ(エネルギー)
+item.PipeLogisticsTeleport.name=Logistics接続パイプ [テスト版]
+item.PipeSwitchPower.name=絶縁パイプ(エネルギー)
+item.PipeSwitchFluids.name=絶縁パイプ(液体)
+item.PipeSwitchItems.name=絶縁パイプ(アイテム)
+item.PipeLiquidsWaterPump.name=ポンプパイプ
+item.PipeItemsAddition.name=同種挿入パイプ(アイテム)
+item.PipeLiquidsObsidian.name=黒曜石パイプ(液体)
+item.PipeItemsJeweled.name=宝石パイプ(アイテム)
 
-#regular items & blocks
-#not sure how to translate "deaggravator".
-item.dogDeaggravator.name=犬を冷やすもの
+#その他のアイテム/ブロック
+item.dogDeaggravator.name=オオカミ威嚇装置
 tile.teleportTether.name=テレポートテザー
 
+gui.pipeItemsDistributor=分配パイプ
+gui.pipeItemsPriorityInsertion=分配挿入パイプ
+gui.PipeItemsAdvancedWood=木パイプ改
+gui.jeweled_pipe=宝石パイプ
 
-gui.pipeItemsDistributor=はいふの輸送パイプ
-gui.pipeItemsPriorityInsertion=優先のパイプ
-gui.PipeItemsAdvancedWood=ハイテクの木の輸送パイプ
-gui.jeweled_pipe=宝石のパイプ
-
-#tab names for the Jeweled Pipe GUI
+#宝石パイプGUIのタブ名
 gui.tab.up=上
 gui.tab.down=下
 gui.tab.north=北
@@ -36,14 +35,21 @@ gui.tab.south=南
 gui.tab.east=東
 gui.tab.west=西
 
-gui.match=
-gui.NBT=タグ 
-gui.metadata= メタデータ
-gui.acceptUnsorted=分けられなかった 
+gui.match=一致:
+gui.NBT=タグ
+gui.metadata=メタ
+gui.acceptUnsorted=未指定を許可
+
+gate.pipeClosed=パイプが閉鎖(内部にアイテムを貯蔵)
+
+key.lasers=チャンクの境界を表示
+
+#ツールチップ
+tip.teleportPipe=長い配管ともおさらば！
+tip.teleportLogisticsPipe=Logistics Pipesと接続します。
+
+tooltip.dogDeaggravator=攻撃的なオオカミをおとなしくさせます
 
 itemGroup.buildcraft.apcreativetab=Additional Pipes
 
-key.lasers=Chunk load boundaries
-
-tip.teleportPipe=長い管路が必要じゃない！
-tooltip.dogDeaggravator=攻撃している犬をおちつく
+command.ap.usage=/additionalpipes teleport <アイテム|液体|エネルギー>
