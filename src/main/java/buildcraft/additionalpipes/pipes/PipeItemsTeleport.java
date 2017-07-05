@@ -34,6 +34,16 @@ public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 			return;
 		}
 		
+		if(event.item.hasExtraData())
+		{
+			if(event.item.getExtraData().hasKey("justTeleported"))
+			{
+				// this was sent to us by another teleport pipe
+				event.item.getExtraData().removeTag("justTeleported");
+				return;
+			}
+		}
+		
 		List<PipeItemsTeleport> connectedTeleportPipes = TeleportManager.instance.getConnectedPipes(this, false, true);
 		
 		// no teleport pipes connected, use default
@@ -96,6 +106,9 @@ public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 		insertPoint.z += 0.5;
 		insertPoint.moveForwards(0.5);
 		event.item.setPosition(insertPoint.x, insertPoint.y, insertPoint.z);
+		
+		// add the NBT tag to the item to let the receiving pipe know not to send the item back
+		event.item.getExtraData().setInteger("justTeleported", getFrequency());
 		
 		ForgeDirection newOrientation = otherPipe.getOpenOrientation().getOpposite();
 		((PipeTransportItems)otherPipe.transport).injectItem(event.item, newOrientation);
