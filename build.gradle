@@ -27,22 +27,10 @@ minecraft {
 }
 
 dependencies {
-		compile name: 'buildcraft', version: "7.1.18", classifier: "dev", ext: 'jar'
-		compile name: 'buildcraft-compat', version: "7.1.5", classifier: "dev", ext: 'jar'
+		compile files("lib/buildcraft-7.1.22-dev.jar")
+		compile files("lib/buildcraft-compat-7.1.6-dev.jar")
 		compile files("lib/logisticspipes-0.9.3.70-dev.jar")
 		compile files("lib/OpenComputers-api.jar")
-}
-
-repositories {
-	ivy {
-		name "BuildCraft"
-		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
-	}
-	
-	ivy {
-		name "BuildCraftCompat"
-		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraftCompat/[revision]/[module]-[revision]-[classifier].[ext]"
-	}
 }
 
 sourceSets {
