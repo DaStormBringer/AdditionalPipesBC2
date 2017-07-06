@@ -2,21 +2,22 @@ package buildcraft.additionalpipes.chunkloader;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import buildcraft.additionalpipes.AdditionalPipes;
 
-public class BlockChunkLoader extends BlockContainer {
+public class BlockTeleportTether extends BlockContainer {
 
-	public BlockChunkLoader()
+	public BlockTeleportTether()
 	{
 		super(Material.cloth);
-		setCreativeTab(CreativeTabs.tabRedstone);
+		setCreativeTab(AdditionalPipes.instance.creativeTab);
+		setUnlocalizedName("teleportTether");
 	}
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta)
 	{
-		return new TileChunkLoader();
+		return new TileTeleportTether();
 	}
 }

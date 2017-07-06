@@ -1,5 +1,8 @@
 package buildcraft.additionalpipes;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
@@ -7,6 +10,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import buildcraft.additionalpipes.item.ItemDogDeaggravator;
 import buildcraft.additionalpipes.keyboard.KeyInputEventHandler;
 import buildcraft.additionalpipes.keyboard.Keybindings;
 import buildcraft.additionalpipes.textures.Textures;
@@ -58,5 +62,21 @@ public class MultiPlayerProxyClient extends MultiPlayerProxy
 	public void setPipeTextureProvider(ItemPipe pipeItem)
 	{
 		pipeItem.setPipesIcons(Textures.pipeIconProvider);
+	}
+	
+	@Override
+	public void registerRendering()
+	{
+		RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
+		
+		if(APConfiguration.enableChunkloader)
+		{
+			renderItem.getItemModelMesher().register(Item.getItemFromBlock(AdditionalPipes.instance.blockTeleportTether), 0, 
+					new ModelResourceLocation(AdditionalPipes.instance.blockTeleportTether.getRegistryName(), "inventory"));
+		}
+		
+	     renderItem.getItemModelMesher().register(AdditionalPipes.instance.dogDeaggravator, 0, 
+	    		 new ModelResourceLocation(AdditionalPipes.MODID + ":" + ItemDogDeaggravator.NAME, "inventory"));
+
 	}
 }

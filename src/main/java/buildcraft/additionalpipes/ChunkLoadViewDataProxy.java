@@ -3,6 +3,7 @@ package buildcraft.additionalpipes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.ConcurrentModificationException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -64,27 +65,37 @@ public class ChunkLoadViewDataProxy implements Comparator<ChunkCoordIntPair> {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void activateLasers() {
-		deactivateLasers();
-		EntityPlayerSP player = FMLClientHandler.instance().getClient().thePlayer;
-		int playerY = (int) player.posY - 1;
-		for(ChunkCoordIntPair coords : persistentChunks) {
-			int xCoord = coords.chunkXPos * 16;
-			int zCoord = coords.chunkZPos * 16;
-
+	public void activateLasers()
+	{
+		try
+		{
+			deactivateLasers();
+			EntityPlayerSP player = FMLClientHandler.instance().getClient().thePlayer;
+			int playerY = (int) player.posY - 1;
+			for(ChunkCoordIntPair coords : persistentChunks) {
+				int xCoord = coords.chunkXPos * 16;
+				int zCoord = coords.chunkZPos * 16;
+	
+				
+				addLasersToList(Utils.createLaserBox(player.worldObj, xCoord, playerY, zCoord, xCoord + 16, playerY, zCoord + 16, buildcraft.core.LaserKind.Blue));
+				addLasersToList(Utils.createLaserBox(player.worldObj, xCoord, playerY - 20, zCoord, xCoord + 16, playerY - 20, zCoord + 16, buildcraft.core.LaserKind.Blue));
+				addLasersToList(Utils.createLaserBox(player.worldObj, xCoord, playerY + 20, zCoord, xCoord + 16, playerY + 20, zCoord + 16, buildcraft.core.LaserKind.Blue));
+	
+				addLasersToList(Utils.createLaserBox(player.worldObj, xCoord + 7, playerY, zCoord + 7, xCoord + 9, playerY, zCoord + 9, buildcraft.core.LaserKind.Red));
+				addLasersToList(Utils.createLaserBox(player.worldObj, xCoord + 7, playerY - 20, zCoord + 7, xCoord + 9, playerY - 20, zCoord + 9, buildcraft.core.LaserKind.Red));
+				addLasersToList(Utils.createLaserBox(player.worldObj, xCoord + 7, playerY + 20, zCoord + 7, xCoord + 9, playerY + 20, zCoord + 9, buildcraft.core.LaserKind.Red));
+	
 			
-			addLasersToList(Utils.createLaserBox(player.worldObj, xCoord, playerY, zCoord, xCoord + 16, playerY, zCoord + 16, buildcraft.core.LaserKind.Blue));
-			addLasersToList(Utils.createLaserBox(player.worldObj, xCoord, playerY - 20, zCoord, xCoord + 16, playerY - 20, zCoord + 16, buildcraft.core.LaserKind.Blue));
-			addLasersToList(Utils.createLaserBox(player.worldObj, xCoord, playerY + 20, zCoord, xCoord + 16, playerY + 20, zCoord + 16, buildcraft.core.LaserKind.Blue));
-
-			addLasersToList(Utils.createLaserBox(player.worldObj, xCoord + 7, playerY, zCoord + 7, xCoord + 9, playerY, zCoord + 9, buildcraft.core.LaserKind.Red));
-			addLasersToList(Utils.createLaserBox(player.worldObj, xCoord + 7, playerY - 20, zCoord + 7, xCoord + 9, playerY - 20, zCoord + 9, buildcraft.core.LaserKind.Red));
-			addLasersToList(Utils.createLaserBox(player.worldObj, xCoord + 7, playerY + 20, zCoord + 7, xCoord + 9, playerY + 20, zCoord + 9, buildcraft.core.LaserKind.Red));
-
-		
-
+	
+			}
+			active = true;
 		}
-		active = true;
+		catch(ConcurrentModificationException ex)
+		{
+			// it seems like updates and reads of persistentChunks can crash together sometimes.
+			// we catch that here to prevent a game crash
+			Log.error("ConcurrentModificationException activating lasers");
+		}
 	}
 
 	@SideOnly(Side.CLIENT)

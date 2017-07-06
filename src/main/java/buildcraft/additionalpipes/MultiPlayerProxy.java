@@ -10,7 +10,9 @@ public class MultiPlayerProxy {
 	public void registerKeyHandler() {
 	}
 
-	public void registerRendering() {
+	public void registerRendering() 
+	{
+		// do nothing
 	}
 
 	public void createPipeSpecial(ItemPipe item, Class<? extends Pipe<?>> clas) {
@@ -24,4 +26,5 @@ public class MultiPlayerProxy {
 	{
 		//do nothing
 	}
+
 }

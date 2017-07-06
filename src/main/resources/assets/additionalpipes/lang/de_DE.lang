@@ -1,4 +1,4 @@
-tile.TeleportTether.name=Teleport-Synchronisierer
+tile.teleportTether.name=Teleport-Synchronisierer
 item.PipeLiquidsRedstone.name=Redstone-Wasserrohr
 item.PipeItemsRedstone.name=Redstone-Transportrohr
 item.PipeItemsAdvancedInsertion.name=Fortgeschr. Einfügungs-Transportrohr

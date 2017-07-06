@@ -16,8 +16,8 @@ public class ChunkLoadingHandler implements LoadingCallback {
 			int y = ticket.getModData().getInteger("yCoord");
 			int z = ticket.getModData().getInteger("zCoord");
 			TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
-			if(te instanceof TileChunkLoader) {
-				((TileChunkLoader) te).forceChunkLoading(ticket);
+			if(te instanceof TileTeleportTether) {
+				((TileTeleportTether) te).forceChunkLoading(ticket);
 			}
 		}
 	}

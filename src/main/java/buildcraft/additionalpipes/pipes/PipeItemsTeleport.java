@@ -104,7 +104,7 @@ public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 		//can no longer set position of TravelingItems as of BC 7.2, so we have to make a new one
 		EnumFacing fromOrientation = otherPipe.getOpenOrientation().getOpposite();
 		
-		Vec3 travelingItemPos = Utils.convertMiddle(container.getPos()).add(Utils.convert(fromOrientation, -0.5));;		
+		Vec3 travelingItemPos = Utils.convertMiddle(otherPipe.container.getPos());//.add(Utils.convert(fromOrientation, -0.5));;		
 		TravelingItem newItem = TravelingItem.make(travelingItemPos, event.item.getItemStack());
 		
 		// add the NBT tag to the item to let the receiving pipe know not to send the item back
@@ -113,7 +113,7 @@ public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 		// actually inject the item
 		((PipeTransportItems) otherPipe.transport).injectItem(newItem, fromOrientation);
 
-		Log.debug(event.item + " from " + getPosition() + " to " + otherPipe.getPosition() + ": " + fromOrientation.getName2());
+		Log.debug(event.item + " from " + getPosition() + " to " + otherPipe.getPosition() + " insertion point: " + travelingItemPos.toString());
 		event.cancelled = true;
 	}
 

@@ -12,7 +12,7 @@ import net.minecraftforge.common.ForgeChunkManager.Type;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.utils.Log;
 
-public class TileChunkLoader extends TileEntity {
+public class TileTeleportTether extends TileEntity {
 
 	private Ticket chunkTicket;
 	private int loadDistance = 1;

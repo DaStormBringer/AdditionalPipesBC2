@@ -1,5 +1,5 @@
 {
-    "parent": "additionalpipes:blocks/chunkLoader",
+    "parent": "additionalpipes:blocks/teleportTether",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],

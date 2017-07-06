@@ -6,12 +6,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -34,9 +30,9 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import buildcraft.BuildCraftSilicon;
 import buildcraft.BuildCraftTransport;
 import buildcraft.additionalpipes.api.TeleportManagerBase;
-import buildcraft.additionalpipes.chunkloader.BlockChunkLoader;
+import buildcraft.additionalpipes.chunkloader.BlockTeleportTether;
 import buildcraft.additionalpipes.chunkloader.ChunkLoadingHandler;
-import buildcraft.additionalpipes.chunkloader.TileChunkLoader;
+import buildcraft.additionalpipes.chunkloader.TileTeleportTether;
 import buildcraft.additionalpipes.gates.GateProvider;
 import buildcraft.additionalpipes.gates.TriggerPipeClosed;
 import buildcraft.additionalpipes.gui.GuiHandler;
@@ -140,7 +136,7 @@ public class AdditionalPipes {
 	// obsidian fluid pipe
 	public Item pipeLiquidsObsidian;
 	// chunk loader
-	public Block blockChunkLoader;
+	public Block blockTeleportTether;
 	
 	//dog deaggravator
 	public Item dogDeaggravator;
@@ -182,19 +178,17 @@ public class AdditionalPipes {
 			MinecraftForge.EVENT_BUS.register(chunkLoadViewer);
 			
 			// register Teleport Tether block
-			blockChunkLoader = new BlockChunkLoader();
-			blockChunkLoader.setUnlocalizedName("teleportTether");
-			GameRegistry.registerBlock(blockChunkLoader, ItemBlock.class, "chunkLoader");
-			GameRegistry.registerTileEntity(TileChunkLoader.class, "TeleportTether");
-			GameRegistry.addRecipe(new ShapedOreRecipe(blockChunkLoader, "iii", "iLi", "ici", 'i', "ingotIron", 'L', "gemLapis", 'c', BuildCraftSilicon.redstoneChipset));
+			blockTeleportTether = new BlockTeleportTether();
+			blockTeleportTether.setRegistryName("teleportTether");
+			
+			GameRegistry.registerBlock(blockTeleportTether);
+			GameRegistry.registerTileEntity(TileTeleportTether.class, "TeleportTether");
+			GameRegistry.addRecipe(new ShapedOreRecipe(blockTeleportTether, "iii", "iLi", "ici", 'i', "ingotIron", 'L', "gemLapis", 'c', BuildCraftSilicon.redstoneChipset));
 			
 			// the lasers key function depends on the chunk loading code, so it can only be enabled if the chunk loader is
 			proxy.registerKeyHandler();
 
 		}
-		
-		proxy.registerRendering();
-
 		APConfiguration.loadConfigs(true, configFile);
 
 		
@@ -242,24 +236,17 @@ public class AdditionalPipes {
 
 		dogDeaggravator = new ItemDogDeaggravator();
 		GameRegistry.registerItem(dogDeaggravator, ItemDogDeaggravator.NAME);
-		GameRegistry.addRecipe(new ShapedOreRecipe(dogDeaggravator, "gsg", "gig", "g g", 'i', "ingotIron", 'g', "ingotGold", 's', "stickWood"));
-		
-	     //register renders
-	     if(event.getSide() == Side.CLIENT)
-	     {
-		     RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
-		    
-		     //blocks
-		     renderItem.getItemModelMesher().register(Item.getItemFromBlock(blockChunkLoader), 0, new ModelResourceLocation(MODID + ":" + blockChunkLoader.getUnlocalizedName(), "inventory"));
-		     renderItem.getItemModelMesher().register(dogDeaggravator, 0, new ModelResourceLocation(MODID + ":" + ItemDogDeaggravator.NAME, "inventory"));
-	     
-	     }		
+		GameRegistry.addRecipe(new ShapedOreRecipe(dogDeaggravator, "gsg", "gig", "g g", 'i', "ingotIron", 'g', "ingotGold", 's', "stickWood"));	
 		
 		Log.info("Running Teleport Manager Tests");
 		TeleportManagerTest.runAllTests();
 		
 		//set the reference in the API
 		TeleportManagerBase.INSTANCE = TeleportManager.instance;
+		
+		Log.info("Setting up rendering...");
+		proxy.registerRendering();
+
 	}
 	
 	@EventHandler
