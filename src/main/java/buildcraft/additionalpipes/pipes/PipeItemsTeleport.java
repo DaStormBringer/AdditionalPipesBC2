@@ -13,9 +13,12 @@ import java.util.List;
 
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Vec3;
 import buildcraft.additionalpipes.api.PipeType;
 import buildcraft.additionalpipes.utils.Log;
+import buildcraft.core.lib.utils.Utils;
 import buildcraft.transport.PipeTransportItems;
+import buildcraft.transport.TravelingItem;
 import buildcraft.transport.pipes.events.PipeEventItem;
 
 public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
@@ -30,6 +33,16 @@ public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 		if(getWorld().isRemote) 
 		{
 			return;
+		}
+		
+		if(event.item.hasExtraData())
+		{
+			if(event.item.getExtraData().hasKey("justTeleported"))
+			{
+				// this was sent to us by another teleport pipe
+				event.item.getExtraData().removeTag("justTeleported");
+				return;
+			}
 		}
 		
 		List<PipeItemsTeleport> connectedTeleportPipes = TeleportManager.instance.getConnectedPipes(this, false, true);
@@ -89,12 +102,18 @@ public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 		}
 		
 		//can no longer set position of TravelingItems as of BC 7.2, so we have to make a new one
+		EnumFacing fromOrientation = otherPipe.getOpenOrientation().getOpposite();
 		
-		EnumFacing newOrientation = otherPipe.getOpenOrientation();
+		Vec3 travelingItemPos = Utils.convertMiddle(container.getPos()).add(Utils.convert(fromOrientation, -0.5));;		
+		TravelingItem newItem = TravelingItem.make(travelingItemPos, event.item.getItemStack());
 		
-		otherPipe.injectItemAtCenter(event.item.getItemStack(), newOrientation);		
+		// add the NBT tag to the item to let the receiving pipe know not to send the item back
+		newItem.getExtraData().setInteger("justTeleported", getFrequency());
+		
+		// actually inject the item
+		((PipeTransportItems) otherPipe.transport).injectItem(newItem, fromOrientation);
 
-		Log.debug(event.item + " from " + getPosition() + " to " + otherPipe.getPosition() + ": " + newOrientation.getName2());
+		Log.debug(event.item + " from " + getPosition() + " to " + otherPipe.getPosition() + ": " + fromOrientation.getName2());
 		event.cancelled = true;
 	}
 

@@ -33,6 +33,7 @@ public class PipeItemsClosed extends APPipe<PipeTransportItems> implements IInve
 		{
 			return false;
 		}
+		if(player.worldObj.isRemote) return true;
 		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_CLOSED, getWorld(), container.getPos().getX(), container.getPos().getY(), container.getPos().getZ());
 		return true;
 	}

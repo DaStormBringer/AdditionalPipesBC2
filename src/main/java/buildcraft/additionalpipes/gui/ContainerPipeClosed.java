@@ -7,6 +7,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import buildcraft.additionalpipes.pipes.PipeItemsClosed;
 import buildcraft.transport.Pipe;
+import buildcraft.transport.TileGenericPipe;
 
 //from dispenser code
 public class ContainerPipeClosed extends Container {
@@ -36,7 +37,10 @@ public class ContainerPipeClosed extends Container {
 	}
 
 	@Override
-	public boolean canInteractWith(EntityPlayer par1EntityPlayer) {
+	public boolean canInteractWith(EntityPlayer entityplayer) {
+		TileGenericPipe tile = pipe.container;
+		if(tile.getWorld().getTileEntity(tile.getPos()) != tile) return false;
+		if(entityplayer.getDistanceSq(tile.getPos().getX() + 0.5D, tile.getPos().getY() + 0.5D, tile.getPos().getZ() + 0.5D) > 64) return false;
 		return true;
 	}
 

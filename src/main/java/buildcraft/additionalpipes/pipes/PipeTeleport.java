@@ -27,6 +27,7 @@ import buildcraft.transport.Pipe;
 import buildcraft.transport.PipeTransport;
 import buildcraft.transport.TileGenericPipe;
 
+
 public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPipe<pipeType> implements ITeleportPipe {
 	protected static final Random rand = new Random();
 
@@ -168,7 +169,9 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 			{
 				//access denied
 				player.addChatMessage(new ChatComponentText("Access denied!  This pipe belongs to " + ownerName));
-				return false;
+				
+				//if we return false, this method can get called again with a different side, and it will show the message again
+				return true;
 			}
 		}
 		
@@ -195,6 +198,7 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 		frequency = freq;
 	}
 
+	@Override
 	public int getFrequency() {
 		return frequency;
 	}
@@ -400,11 +404,13 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 		return container.getPos();
 	}
 	
+	@Override
 	public boolean canReceive()
 	{
 		return (state & 0x2) > 0;
 	}
 	
+	@Override
 	public boolean canSend()
 	{
 		return (state & 0x1) > 0;

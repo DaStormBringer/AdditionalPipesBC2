@@ -16,7 +16,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.AdditionalPipes;
@@ -115,8 +114,8 @@ public class PipeItemsJeweled extends APPipe<PipeTransportItems> implements IDeb
 			}
 		}
 
-		BlockPos pos = container.getPos();
-		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_JEWELED, container.getWorld(),pos.getX(), pos.getY(), pos.getZ());
+		if(player.worldObj.isRemote) return true;
+		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_JEWELED, container.getWorld(), container.getPos().getX(), container.getPos().getY(), container.getPos().getZ());
 
 		return true;
 	}

@@ -2,9 +2,9 @@ package buildcraft.additionalpipes;
 
 import java.io.File;
 
+import buildcraft.additionalpipes.utils.Log;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
-import buildcraft.additionalpipes.utils.Log;
 
 
 public class APConfiguration
@@ -14,6 +14,8 @@ public class APConfiguration
 	public static boolean chunkSightAutorefresh = true;
 	
 	public static boolean enableDebugLog;
+	
+	public static boolean enableChunkloader;
 	
 	// keybinding
 	public static int laserKeyCode; // config option (& in options menu)
@@ -82,6 +84,10 @@ public class APConfiguration
 			Property gpPullRateProperty = config.get(Configuration.CATEGORY_GENERAL, "gravityFeedPipeTicksPerPull", 48);
 			gpPullRateProperty.comment = "How many ticks the Gravity Feed Pipe needs to extract an item";
 			gravityFeedPipeTicksPerPull = gpPullRateProperty.getInt();
+			
+			Property enableChunkloaderProperty = config.get(Configuration.CATEGORY_GENERAL, "enableChunkloader", true);
+			enableChunkloaderProperty.comment = "Whether or not the chunkloader is added as a block";
+			enableChunkloader = enableChunkloaderProperty.getBoolean();
 		} 
 		catch(Exception e)
 		{

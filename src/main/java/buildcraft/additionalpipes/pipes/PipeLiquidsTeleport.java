@@ -15,6 +15,9 @@ import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import buildcraft.additionalpipes.api.PipeType;
 import buildcraft.transport.IPipeTransportFluidsHook;
 import buildcraft.transport.PipeTransportFluids;
@@ -40,7 +43,7 @@ public class PipeLiquidsTeleport extends PipeTeleport<PipeTransportFluids> imple
 		}
 
 		int i = getWorld().rand.nextInt(pipeList.size());
-		List<IFluidHandler> possibleMovements = getPossibleLiquidMovements(pipeList.get(i));
+		List<Pair<EnumFacing, IFluidHandler>> possibleMovements = getPossibleLiquidMovements(pipeList.get(i));
 
 		if(possibleMovements.size() <= 0) {
 			return 0;
@@ -49,21 +52,23 @@ public class PipeLiquidsTeleport extends PipeTeleport<PipeTransportFluids> imple
 		int used = 0;
 		while(possibleMovements.size() > 0 && used <= 0) {
 			int a = rand.nextInt(possibleMovements.size());
-			used = possibleMovements.get(a).fill(EnumFacing.UP, resource, doFill);
+			Pair<EnumFacing, IFluidHandler> outputData = possibleMovements.get(a);
+			
+			used = outputData.getRight().fill(outputData.getLeft().getOpposite(), resource, doFill);
 			possibleMovements.remove(a);
 		}
 
 		return used;
 	}
 
-	private static List<IFluidHandler> getPossibleLiquidMovements(PipeTeleport<?> pipe) {
-		List<IFluidHandler> result = new LinkedList<IFluidHandler>();
+	private static List<Pair<EnumFacing, IFluidHandler>> getPossibleLiquidMovements(PipeTeleport<?> pipe) {
+		List<Pair<EnumFacing, IFluidHandler>> result = new LinkedList<Pair<EnumFacing, IFluidHandler>>();
 
 		for(EnumFacing o : EnumFacing.values()) {
-			if(pipe.outputOpen(o)) {
+			if(pipe.outputOpen(o) && pipe.container.getTile(o) instanceof IFluidHandler) {
 				IFluidHandler te = (IFluidHandler) pipe.container.getTile(o);
 				if (te != null) {
-					result.add(te);
+					result.add(Pair.<EnumFacing, IFluidHandler>of(o, te));
 				}
 			}
 		}

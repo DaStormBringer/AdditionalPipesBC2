@@ -15,7 +15,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.AdditionalPipes;
@@ -110,8 +109,8 @@ public class PipeItemsPriorityInsertion extends APPipe<PipeTransportItems> {
 			}
 		}
 
-		BlockPos pos = container.getPos();
-		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_PRIORITY, container.getWorld(),pos.getX(), pos.getY(), pos.getZ());
+		if(player.worldObj.isRemote) return true;
+		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_PRIORITY, container.getWorld(), container.getPos().getX(), container.getPos().getY(), container.getPos().getZ());
 
 		return true;
 	}

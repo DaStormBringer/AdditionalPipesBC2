@@ -13,6 +13,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessageJeweledPipeOptionsClient;
 import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
+import buildcraft.transport.TileGenericPipe;
 
 
 public class ContainerJeweledPipe extends Container
@@ -134,11 +135,13 @@ public class ContainerJeweledPipe extends Container
 		currentSide = newTab;
 	}
 
-    @Override
-    public boolean canInteractWith(EntityPlayer entityPlayer)
-    {
-        return true;
-    }
+	@Override
+	public boolean canInteractWith(EntityPlayer entityplayer) {
+		TileGenericPipe tile = pipeItemsJeweled.container;
+		if(tile.getWorld().getTileEntity(tile.getPos()) != tile) return false;
+		if(entityplayer.getDistanceSq(tile.getPos().getX() + 0.5D, tile.getPos().getY() + 0.5D, tile.getPos().getZ() + 0.5D) > 64) return false;
+		return true;
+	}
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer entityPlayer, int slotIndex)

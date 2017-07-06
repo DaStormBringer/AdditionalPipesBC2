@@ -203,6 +203,7 @@ public class PipeItemsAdvancedWood extends APPipe<PipeTransportAdvancedWood> imp
 			return false;
 		}
 
+		if(entityplayer.worldObj.isRemote) return true;
 		entityplayer.openGui(AdditionalPipes.instance, GuiHandler.PIPE_WOODEN_ADV, container.getWorld(), container.getPos().getX(), container.getPos().getY(), container.getPos().getZ());
 		return true;
 	}

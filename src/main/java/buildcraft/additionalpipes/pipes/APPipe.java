@@ -30,14 +30,31 @@ public abstract class APPipe<pipeType extends PipeTransport> extends Pipe<pipeTy
 	 * @param toInject the ItemStack to inject
 	 * @param fromSide the side that the item should come from.
 	 */
-	protected void injectItem(ItemStack toInject, EnumFacing fromSide)
+	protected TravelingItem injectItem(ItemStack toInject, EnumFacing fromSide)
 	{		
 		Vec3 entPos = Utils.convertMiddle(container.getPos()).add(Utils.convert(fromSide.getOpposite(), -0.5));
 		
 		
 		TravelingItem entity = TravelingItem.make(entPos, toInject);
 		((PipeTransportItems) transport).injectItem(entity, fromSide.getOpposite());
+		
+		return entity;
 	}
+	
+	/**
+	 * Make a traveling item suitable for injecting into this pipe from the given side.
+]	 * 
+	 * @param toInject the ItemStack to inject
+	 * @param fromSide the side of the pipe that the item appears on
+	 */
+	protected TravelingItem makeTravelingItem(ItemStack toInject, EnumFacing fromSide)
+	{		
+		Vec3 entPos = Utils.convertMiddle(container.getPos()).add(Utils.convert(fromSide.getOpposite(), -0.5));
+		
+		
+		return TravelingItem.make(entPos, toInject);		
+	}
+	
 	
 	/**
 	 * Inject an item into the pipe.  Don't call this if the pipe isn't an item pipe!
@@ -45,11 +62,13 @@ public abstract class APPipe<pipeType extends PipeTransport> extends Pipe<pipeTy
 	 * @param toInject the ItemStack to inject
 	 * @param fromSide the side that the item should come from.
 	 */
-	protected void injectItemAtCenter(ItemStack toInject, EnumFacing fromSide)
+	protected TravelingItem injectItemAtCenter(ItemStack toInject, EnumFacing fromSide)
 	{		
 		Vec3 entPos = Utils.convertMiddle(container.getPos());
 		
 		TravelingItem entity = TravelingItem.make(entPos, toInject);
 		((PipeTransportItems) transport).injectItem(entity, fromSide.getOpposite());
+		
+		return entity;
 	}
 }

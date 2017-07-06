@@ -13,6 +13,7 @@ import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.additionalpipes.pipes.TeleportManager;
 import buildcraft.additionalpipes.utils.Log;
 import buildcraft.core.lib.gui.BuildCraftContainer;
+import buildcraft.transport.TileGenericPipe;
 
 public class ContainerTeleportPipe extends BuildCraftContainer {
 
@@ -65,6 +66,9 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer) {
+		TileGenericPipe tile = pipe.container;
+		if(tile.getWorld().getTileEntity(tile.getPos()) != tile) return false;
+		if(entityplayer.getDistanceSq(tile.getPos().getX() + 0.5D, tile.getPos().getY() + 0.5D, tile.getPos().getZ() + 0.5D) > 64) return false;
 		return true;
 	}
 

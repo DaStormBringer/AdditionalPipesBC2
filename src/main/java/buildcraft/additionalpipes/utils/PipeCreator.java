@@ -1,7 +1,5 @@
 package buildcraft.additionalpipes.utils;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.item.ItemPipeAP;
@@ -9,6 +7,10 @@ import buildcraft.additionalpipes.pipes.APPipe;
 import buildcraft.transport.BlockGenericPipe;
 import buildcraft.transport.ItemPipe;
 import buildcraft.transport.Pipe;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 public class PipeCreator
 {
@@ -22,7 +24,7 @@ public class PipeCreator
 	 * @param shapeless whether or not the recipe is shapeless
 	 * @return
 	 */
-	public static Item createPipeAndRecipe(int output, Class<? extends Pipe<?>> clas, Object[] recipe, boolean shapeless) 
+	public static Item createPipeAndRecipe(int output, Class<? extends Pipe<?>> clas, boolean shapeless, Object... recipe) 
 	{
 	
 		Item pipe = createPipe(clas);
@@ -32,11 +34,11 @@ public class PipeCreator
 		}
 		if(shapeless)
 		{
-			GameRegistry.addShapelessRecipe(new ItemStack(pipe, output), recipe);
+			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(pipe, output), recipe));
 		}
 		else
 		{
-			GameRegistry.addRecipe(new ItemStack(pipe, output), recipe);
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(pipe, output), recipe));
 		}
 		return pipe;
 	}
@@ -56,6 +58,7 @@ public class PipeCreator
 
 	public static Item createPipeTooltip(Class<? extends APPipe<?>> clas, String tooltip)
 	{
+		//we need to use our own version of ItemPipe with tooltip support
 		ItemPipe item = new ItemPipeAP(tooltip);
 		item.setUnlocalizedName(clas.getSimpleName());
 		BlockGenericPipe.pipes.put(item, clas);
