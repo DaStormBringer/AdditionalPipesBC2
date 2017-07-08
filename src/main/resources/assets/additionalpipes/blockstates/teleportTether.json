@@ -1,5 +1,5 @@
 {
-    "variants": {
-        "normal": { "model": "additionalpipes:teleportTether" }
-    }
+	"variants": {
+		"normal": { "model": "additionalpipes:teleportTether" }
+	}
 }
