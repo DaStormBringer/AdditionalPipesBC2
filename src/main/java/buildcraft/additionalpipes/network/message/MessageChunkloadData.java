@@ -1,25 +1,23 @@
 package buildcraft.additionalpipes.network.message;
 
+import java.util.HashSet;
+
+import buildcraft.additionalpipes.AdditionalPipes;
 import io.netty.buffer.ByteBuf;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import buildcraft.additionalpipes.AdditionalPipes;
 
 public class MessageChunkloadData implements IMessage, IMessageHandler<MessageChunkloadData, IMessage>
 {
-	List<ChunkCoordIntPair> _chunksInRange;
+	HashSet<ChunkCoordIntPair> _chunksInRange;
 	
     public MessageChunkloadData()
     {
     }
     
-    public MessageChunkloadData(List<ChunkCoordIntPair> chunksInRange)
+    public MessageChunkloadData(HashSet<ChunkCoordIntPair> chunksInRange)
     {
     	_chunksInRange = chunksInRange;
     }
@@ -43,7 +41,7 @@ public class MessageChunkloadData implements IMessage, IMessageHandler<MessageCh
 	{
 		int _chunksInRangeLength = buf.readInt();
 		
-		_chunksInRange = new ArrayList<ChunkCoordIntPair>(_chunksInRangeLength);
+		_chunksInRange = new HashSet<ChunkCoordIntPair>(_chunksInRangeLength);
 		
 		for(int counter = 0; counter < _chunksInRangeLength; ++counter)
 		{

@@ -50,7 +50,7 @@ public class APConfiguration
 			powerTransmittanceCfg = powerTransmittance.getInt() / 100.0f;
 			if(powerTransmittanceCfg > 1.00)
 			{
-				powerTransmittanceCfg = 0.99f;
+				powerTransmittanceCfg = 1f;
 			}
 			else if(powerTransmittanceCfg < 0.0)
 			{
