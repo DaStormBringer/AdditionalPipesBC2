@@ -1,11 +1,5 @@
 package buildcraft.additionalpipes.gui;
 
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.opengl.GL11;
 
 import buildcraft.additionalpipes.network.PacketHandler;
@@ -15,11 +9,19 @@ import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.core.client.CoreIconProvider;
 import buildcraft.core.lib.gui.GuiBuildCraft;
 import buildcraft.core.lib.gui.Ledger;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiTeleportPipe extends GuiBuildCraft {
-	
-	protected class TeleportPipeLedger extends Ledger {
+		
+	protected class TeleportPipeLedger extends Ledger 
+	{
 
 		int headerColour = 0xe1c92f;
 		int subheaderColour = 0xaaafb8;
@@ -46,6 +48,7 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 			drawBackground(x, y);
 
 			// Draw icon
+			Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 			drawIcon(CoreIconProvider.ENERGY.getSprite(), x + 3, y + 4);
 
 			if(!isFullyOpened())
