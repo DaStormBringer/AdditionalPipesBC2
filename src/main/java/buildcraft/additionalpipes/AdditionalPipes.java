@@ -136,7 +136,7 @@ public class AdditionalPipes {
 	// obsidian fluid pipe
 	public Item pipeLiquidsObsidian;
 	// chunk loader
-	public Block blockTeleportTether, blockTutorial;
+	public Block blockTeleportTether;
 	
 	//dog deaggravator
 	public Item dogDeaggravator;
@@ -244,7 +244,7 @@ public class AdditionalPipes {
 		//set the reference in the API
 		TeleportManagerBase.INSTANCE = TeleportManager.instance;
 		
-		Log.info("Setting up rendering...");
+		Log.info("Setting up renderings...");
 		proxy.registerRendering();
 
 	}
