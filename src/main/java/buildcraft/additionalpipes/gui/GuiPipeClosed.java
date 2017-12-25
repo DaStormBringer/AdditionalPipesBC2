@@ -1,27 +1,26 @@
 package buildcraft.additionalpipes.gui;
 
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.util.StatCollector;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.opengl.GL11;
 
+import buildcraft.additionalpipes.pipes.PipeItemsClosed;
 import buildcraft.additionalpipes.textures.Textures;
-import buildcraft.transport.Pipe;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiPipeClosed extends GuiContainer {
 
-	public GuiPipeClosed(InventoryPlayer inventory, Pipe<?> pipe) {
+	public GuiPipeClosed(InventoryPlayer inventory, PipeItemsClosed pipe) {
 		super(new ContainerPipeClosed(inventory, pipe));
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-		fontRendererObj.drawString(StatCollector.translateToLocal("Closed Pipe"), 60, 6, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 4210752);
+		fontRendererObj.drawString(I18n.format("gui.closed_pipe.title"), 60, 6, 4210752);
+		fontRendererObj.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
 	}
 
 	/**

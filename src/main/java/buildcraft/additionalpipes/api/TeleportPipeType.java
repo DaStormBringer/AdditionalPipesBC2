@@ -1,9 +1,8 @@
 package buildcraft.additionalpipes.api;
 
-public enum PipeType
+public enum TeleportPipeType
 {
 	ITEMS,
 	FLUIDS,
 	POWER,
-	LOGISTICS
 }

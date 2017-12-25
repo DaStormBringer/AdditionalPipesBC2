@@ -8,74 +8,53 @@
 
 package buildcraft.additionalpipes.pipes;
 
-import java.util.LinkedList;
-
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntity;
+import buildcraft.api.inventory.IItemTransactor;
+import buildcraft.api.transport.pipe.IPipe;
+import buildcraft.api.transport.pipe.IPipe.ConnectedType;
+import buildcraft.api.transport.pipe.PipeEventHandler;
+import buildcraft.api.transport.pipe.PipeEventItem;
+import buildcraft.lib.inventory.ItemTransactorHelper;
+import buildcraft.lib.inventory.filter.ArrayStackFilter;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import buildcraft.additionalpipes.utils.InventoryUtils;
-import buildcraft.core.lib.inventory.ITransactor;
-import buildcraft.core.lib.inventory.Transactor;
-import buildcraft.transport.PipeTransportItems;
-import buildcraft.transport.pipes.events.PipeEventItem;
 
-public class PipeItemsAddition extends APPipe<PipeTransportItems>
+public class PipeItemsAddition extends APPipe
 {
 	//re-use old Redstone Pipe texture
 	private static final int ICON = 4;
 
-	public PipeItemsAddition(Item item) {
-		super(new PipeTransportItems(), item);
-	}
-
-	@Override
-	public int getIconIndex(EnumFacing direction) {
-		return ICON;
+	public PipeItemsAddition(IPipe pipe) {
+		super(pipe);
 	}
 	
-	public void eventHandler(PipeEventItem.FindDest event)
-	{
-		LinkedList<EnumFacing> newOris = new LinkedList<EnumFacing>();
+    public PipeItemsAddition(IPipe pipe, NBTTagCompound nbt) {
+        super(pipe, nbt);
+    }
+	
+    @PipeEventHandler
+    public void orderSides(PipeEventItem.SideCheck ordering) {
+        for (EnumFacing face : EnumFacing.VALUES) 
+        {
+        	if(face != ordering.from)
+        	{
+                ConnectedType type = pipe.getConnectedType(face);
+                if (type == ConnectedType.TILE) 
+                {
+                	IItemTransactor trans = ItemTransactorHelper.getTransactor(pipe.getConnectedTile(face), face.getOpposite());
+                    ItemStack possible = trans.extract(new ArrayStackFilter(ordering.stack), 1, 1, true);
+                	
+                    if(!possible.isEmpty())
+                    {
+                    	// cause the pipe to prefer this face above all others
+                        ordering.increasePriority(face, 100);
+                    }
+                    
 
-		for (int o = 0; o < 6; ++o) 
-		{
-			EnumFacing orientation = EnumFacing.VALUES[o];
-			
-			//commented out during port from BC 4.2 to 6.1
-			//I don't know what the equivalent to the Position argument to filterPossibleMovements() is in the new eventHandler system
-			//if(orientation != pos.orientation.getOpposite())
-			{
-				TileEntity entity = container.getTile(orientation);
-				if (entity instanceof IInventory)
-				{
-					IInventory inventory = (IInventory)entity;
-					
-					if(InventoryUtils.containsItem(true, false, event.item.getItemStack(), inventory))
-					{
-						ITransactor transactor = Transactor.getTransactorFor(entity, orientation.getOpposite());
-						if (transactor.add(event.item.getItemStack(), false).stackSize > 0)
-						{
-							newOris.add(orientation);
-						}
-					}
-					else
-					{
-						event.destinations.remove(orientation);
-					}
-				}
-			}
-		}
+                }
+        	}
 
-		if (!newOris.isEmpty())
-		{
-			event.destinations.clear();
-			event.destinations.addAll(newOris);
-		} 
-		else 
-		{
-			
-		}
-	}
+        }
+    }
 
 }

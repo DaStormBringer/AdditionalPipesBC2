@@ -2,6 +2,8 @@ package buildcraft.additionalpipes.utils;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import net.minecraftforge.items.IItemHandler;
 
 public class InventoryUtils
 {
@@ -34,7 +36,7 @@ public class InventoryUtils
 		int size = inventory.getSizeInventory() - 1;
 		
 		int stackLimit = inventory.getInventoryStackLimit();
-		int itemsLeftToAdd = stack.stackSize;
+		int itemsLeftToAdd = stack.getCount();
 		for(int index = 0; index <= size; ++index)
 		{
 			ItemStack slotStack = inventory.getStackInSlot(index);
@@ -44,13 +46,13 @@ public class InventoryUtils
 			}
 			else if(slotStack.getItem() == stack.getItem() && slotStack.getItemDamage() == stack.getItemDamage())
 			{
-				if(slotStack.stackSize + itemsLeftToAdd <= stackLimit)
+				if(slotStack.getCount() + itemsLeftToAdd <= stackLimit)
 				{
 					return true;
 				}
 				else
 				{
-					itemsLeftToAdd -= stackLimit - slotStack.stackSize;
+					itemsLeftToAdd -= stackLimit - slotStack.getCount();
 				}
 			}
 		}
@@ -66,9 +68,9 @@ public class InventoryUtils
 	 * @param inventory
 	 * @return
 	 */
-	public static boolean containsItem(boolean matchMeta, boolean matchNBT, ItemStack stack, IInventory inventory)
+	public static boolean containsItem(boolean matchMeta, boolean matchNBT, ItemStack stack, IItemHandler inventory)
 	{
-		int size = inventory.getSizeInventory() - 1;
+		int size = inventory.getSlots() - 1;
 		for(int index = 0; index <= size; ++index)
 		{
 			ItemStack slotStack = inventory.getStackInSlot(index);
@@ -91,5 +93,29 @@ public class InventoryUtils
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * Returns an ordered list of all stacks in the ItemHandler
+	 * @param handler
+	 * @return
+	 */
+	public static NonNullList<ItemStack> getItems(IItemHandler handler)
+	{
+		int invSize = handler.getSlots();
+		
+		NonNullList<ItemStack> stacks = NonNullList.withSize(invSize, ItemStack.EMPTY);
+		
+		for(int index = 0; index < invSize; ++index)
+		{
+			ItemStack stack = handler.getStackInSlot(index);
+			
+			if(stack != null)
+			{
+				stacks.add(stack);
+			}
+		}
+		
+		return stacks;
 	}
 }

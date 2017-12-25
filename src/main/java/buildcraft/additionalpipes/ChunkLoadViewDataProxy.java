@@ -13,11 +13,9 @@ import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessageChunkloadData;
 import buildcraft.additionalpipes.network.message.MessageChunkloadRequest;
 import buildcraft.additionalpipes.utils.Log;
-import buildcraft.core.EntityLaser;
-import buildcraft.core.lib.utils.Utils;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -27,7 +25,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ChunkLoadViewDataProxy implements Comparator<ChunkCoordIntPair> {
+public class ChunkLoadViewDataProxy implements Comparator<ChunkPos> {
 	public static final int MAX_SIGHT_RANGE = 31;
 
 	// used by server
@@ -35,13 +33,13 @@ public class ChunkLoadViewDataProxy implements Comparator<ChunkCoordIntPair> {
 
 	// used by client
 	private List<EntityLaser> lasers;
-	private Set<ChunkCoordIntPair> persistentChunks;
+	private Set<ChunkPos> persistentChunks;
 	private boolean active = false;
 
 	public ChunkLoadViewDataProxy(int chunkSightRange) {
 		setSightRange(chunkSightRange);
 		lasers = new ArrayList<EntityLaser>();
-		persistentChunks = new HashSet<ChunkCoordIntPair>();
+		persistentChunks = new HashSet<ChunkPos>();
 		active = false;
 	}
 	
@@ -72,7 +70,7 @@ public class ChunkLoadViewDataProxy implements Comparator<ChunkCoordIntPair> {
 			deactivateLasers();
 			EntityPlayerSP player = FMLClientHandler.instance().getClient().thePlayer;
 			int playerY = (int) player.posY - 1;
-			for(ChunkCoordIntPair coords : persistentChunks) {
+			for(ChunkPos coords : persistentChunks) {
 				int xCoord = coords.chunkXPos * 16;
 				int zCoord = coords.chunkZPos * 16;
 	
@@ -123,7 +121,7 @@ public class ChunkLoadViewDataProxy implements Comparator<ChunkCoordIntPair> {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void receivePersistentChunks(Set<ChunkCoordIntPair> chunks)
+	public void receivePersistentChunks(Set<ChunkPos> chunks)
 	{
 		boolean changed = persistentChunks.equals(chunks);
 
@@ -149,14 +147,14 @@ public class ChunkLoadViewDataProxy implements Comparator<ChunkCoordIntPair> {
 		if(sightRange > MAX_SIGHT_RANGE)
 			sightRange = MAX_SIGHT_RANGE;
 
-		SetMultimap<ChunkCoordIntPair, Ticket> forgePersistentChunks = ForgeChunkManager.getPersistentChunksFor(player.worldObj);
-		HashSet<ChunkCoordIntPair> chunksInRange = new HashSet<ChunkCoordIntPair>();
+		SetMultimap<ChunkPos, Ticket> forgePersistentChunks = ForgeChunkManager.getPersistentChunksFor(player.getEntityWorld());
+		HashSet<ChunkPos> chunksInRange = new HashSet<ChunkPos>();
 		int playerX = (((int) player.posX) >> 4) - sightRange / 2, playerZ = (((int) player.posZ) >> 4) - sightRange / 2;
 
 		// find all chunks in sight range
 		for(int i = -sightRange; i <= sightRange; i++) {
 			for(int j = -sightRange; j <= sightRange; j++) {
-				ChunkCoordIntPair coords = new ChunkCoordIntPair(playerX + i, playerZ + j);
+				ChunkPos coords = new ChunkPos(playerX + i, playerZ + j);
 				if(forgePersistentChunks.containsKey(coords)) {
 					chunksInRange.add(coords);
 				}
@@ -196,7 +194,7 @@ public class ChunkLoadViewDataProxy implements Comparator<ChunkCoordIntPair> {
 	// first - other
 	// assume non-null
 	@Override
-	public int compare(ChunkCoordIntPair first, ChunkCoordIntPair other) {
+	public int compare(ChunkPos first, ChunkPos other) {
 		int dx = first.chunkXPos - other.chunkXPos;
 		return dx != 0 ? dx : first.chunkZPos - other.chunkZPos;
 	}

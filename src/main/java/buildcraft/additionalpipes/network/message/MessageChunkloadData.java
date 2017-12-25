@@ -4,20 +4,20 @@ import java.util.HashSet;
 
 import buildcraft.additionalpipes.AdditionalPipes;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageChunkloadData implements IMessage, IMessageHandler<MessageChunkloadData, IMessage>
 {
-	HashSet<ChunkCoordIntPair> _chunksInRange;
+	HashSet<ChunkPos> _chunksInRange;
 	
     public MessageChunkloadData()
     {
     }
     
-    public MessageChunkloadData(HashSet<ChunkCoordIntPair> chunksInRange)
+    public MessageChunkloadData(HashSet<ChunkPos> chunksInRange)
     {
     	_chunksInRange = chunksInRange;
     }
@@ -41,11 +41,11 @@ public class MessageChunkloadData implements IMessage, IMessageHandler<MessageCh
 	{
 		int _chunksInRangeLength = buf.readInt();
 		
-		_chunksInRange = new HashSet<ChunkCoordIntPair>(_chunksInRangeLength);
+		_chunksInRange = new HashSet<ChunkPos>(_chunksInRangeLength);
 		
 		for(int counter = 0; counter < _chunksInRangeLength; ++counter)
 		{
-			_chunksInRange.add(new ChunkCoordIntPair(buf.readInt(), buf.readInt()));
+			_chunksInRange.add(new ChunkPos(buf.readInt(), buf.readInt()));
 		}
 	}
 
@@ -54,7 +54,7 @@ public class MessageChunkloadData implements IMessage, IMessageHandler<MessageCh
 	{
 		buf.writeInt(_chunksInRange.size());
 		
-		for(ChunkCoordIntPair pair : _chunksInRange)
+		for(ChunkPos pair : _chunksInRange)
 		{
 			buf.writeInt(pair.chunkXPos);
 			buf.writeInt(pair.chunkZPos);

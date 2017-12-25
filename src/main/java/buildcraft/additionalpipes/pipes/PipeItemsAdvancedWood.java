@@ -8,236 +8,129 @@
 
 package buildcraft.additionalpipes.pipes;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
-import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
-import buildcraft.api.tools.IToolWrench;
-import buildcraft.core.lib.RFBattery;
-import buildcraft.core.lib.inventory.InvUtils;
-import buildcraft.core.lib.utils.Utils;
-import cofh.api.energy.IEnergyReceiver;
+import buildcraft.api.core.EnumPipePart;
+import buildcraft.api.core.IStackFilter;
+import buildcraft.api.transport.pipe.IFlowItems;
+import buildcraft.api.transport.pipe.IPipe;
+import buildcraft.api.transport.pipe.IPipeHolder.PipeMessageReceiver;
+import buildcraft.lib.inventory.filter.ArrayStackOrListFilter;
+import buildcraft.lib.inventory.filter.InvertedStackFilter;
+import buildcraft.lib.misc.EntityUtil;
+import buildcraft.transport.pipe.behaviour.PipeBehaviourWood;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import scala.actors.threadpool.Arrays;
 
-public class PipeItemsAdvancedWood extends APPipe<PipeTransportAdvancedWood> implements IEnergyReceiver
-{
+public class PipeItemsAdvancedWood extends PipeBehaviourWood
+{	
+    public PipeItemsAdvancedWood(IPipe pipe) {
+        super(pipe);
+    }
+
+    public PipeItemsAdvancedWood(IPipe pipe, NBTTagCompound nbt) {
+        super(pipe, nbt);
+        readFromNBT(nbt);
+    }	
+    
+    public static final int INVENTORY_SIZE = 9;
+	public ItemStack[] items = new ItemStack[INVENTORY_SIZE];
+	private IStackFilter filter;
 	
-	protected RFBattery battery = new RFBattery(640, 640, 0);
-	
-	public final PipeTransportAdvancedWood transport;
-	
-	private int ticksSincePull = 0;
+	public boolean exclude = false;
 
-	public PipeItemsAdvancedWood(Item item) {
-		super(new PipeTransportAdvancedWood(), item);
-		transport = (PipeTransportAdvancedWood) super.transport;
-	}
-	
-	private boolean shouldTick() {
-		if (battery.getEnergyStored() >= 64 * 10) {
-			return true;
-		} else {
-			return ticksSincePull >= 16 && battery.getEnergyStored() >= 10;
-		}
-	}
-	
-	@Override
-	public void updateEntity()
-	{
-		super.updateEntity();
-
-		if(container.getWorld().isRemote)
-		{
-			return;
-		}
-		
-		ticksSincePull++;
-
-		if(shouldTick())
-		{
-			
-			int meta = container.getBlockMetadata();
-
-			if(meta > 5)
-			{
-				return;
-			}
-	        EnumFacing side = EnumFacing.getFront(meta);
-				
-	        TileEntity tile = container.getTile(side);
-
-
-			
-			ticksSincePull = 0;
-
-			if(tile instanceof IInventory)
-			{
-					
-				IInventory inventory = (IInventory) tile;
-
-				ItemStack extracted = checkExtract(inventory, true, EnumFacing.values()[meta].getOpposite());
-
-				if(extracted == null || extracted.stackSize == 0) {
-					return;
-				}
-
-                injectItem(extracted, side);
-			}
-
-			battery.setEnergy(0);
-		}
-	}
-
-	public ItemStack checkExtract(IInventory inventory, boolean doRemove, EnumFacing from) {
-		IInventory inv = InvUtils.getInventory(inventory);
-		int first = 0;
-		int last = inv.getSizeInventory() - 1;
-		if(inventory instanceof ISidedInventory) {
-			ISidedInventory sidedInv = (ISidedInventory) inventory;
-			int[] accessibleSlots = sidedInv.getSlotsForFace(from);
-			ItemStack result = checkExtractGeneric(inv, doRemove, accessibleSlots);
-			return result;
-		}
-		ItemStack result = checkExtractGeneric(inv, doRemove, first, last);
-		return result;
-	}
-
-	public ItemStack checkExtractGeneric(IInventory inventory, boolean doRemove, int start, int stop) {
-		for(int k = start; k <= stop; ++k) {
-			ItemStack slot = inventory.getStackInSlot(k);
-
-			if(slot != null && slot.stackSize > 0 && canExtract(slot)) {
-				if(doRemove)
-				{
-					int itemsExtracted = battery.getEnergyStored() / 10 >= slot.stackSize ? slot.stackSize : MathHelper.floor_double(battery.getEnergyStored() / 10);
-					
-					battery.extractEnergy(itemsExtracted * 10, false);
-					
-					return inventory.decrStackSize(k, (int) itemsExtracted);
-				}
-				else 
-				{
-					return slot;
-				}
-			}
-		}
-		return null;
-	}
-
-	public ItemStack checkExtractGeneric(IInventory inventory, boolean doRemove, int[] slots) {
-		for(int i : slots)
-		{
-			ItemStack slot = inventory.getStackInSlot(i);
-
-			if(slot != null && slot.stackSize > 0 && canExtract(slot)) {
-				if(doRemove)
-				{
-					int itemsExtracted = battery.getEnergyStored() / 10 >= slot.stackSize ? slot.stackSize : MathHelper.floor_double(battery.getEnergyStored() / 10);
-					
-					battery.extractEnergy(itemsExtracted * 10, false);
-					
-					return inventory.decrStackSize(i, (int) itemsExtracted);
-				}
-				else
-				{
-					return slot;
-				}
-			}
-		}
-		return null;
-	}
-
-	public boolean canExtract(ItemStack item) {
-		for(int i = 0; i < transport.getSizeInventory(); i++) {
-			ItemStack stack = transport.getStackInSlot(i);
-			if(stack != null && stack.getItem() == item.getItem()) {
-				if((stack.getItem().isDamageable())) {
-					return !transport.exclude;
-				} else if(stack.getItemDamage() == item.getItemDamage()) {
-					return !transport.exclude;
-				}
-			}
-		}
-		return transport.exclude;
-	}
-
-
-	@Override
-	public void writeToNBT(NBTTagCompound nbttagcompound) {
-		super.writeToNBT(nbttagcompound);
-	}
-
-	@Override
 	public void readFromNBT(NBTTagCompound nbttagcompound) {
-		super.readFromNBT(nbttagcompound);
+		exclude = nbttagcompound.getBoolean("exclude");
+
+		NBTTagList nbttaglist = nbttagcompound.getTagList("items", 10);
+
+		for(int j = 0; j < nbttaglist.tagCount(); ++j) {
+			NBTTagCompound nbttagcompound2 = (NBTTagCompound) nbttaglist.getCompoundTagAt(j);
+			int index = nbttagcompound2.getInteger("index");
+			items[index] = new ItemStack(nbttagcompound2);
+		}
 	}
 
 	@Override
-	public int getIconIndex(EnumFacing direction) 
+	public NBTTagCompound writeToNbt() 
 	{
-		if(direction != null && container != null && container.getBlockMetadata() == direction.ordinal())
-			return 7;
-		else
-			return 6;
+		NBTTagCompound nbttagcompound = super.writeToNbt();
 		
+		nbttagcompound.setBoolean("exclude", exclude);
+
+		NBTTagList nbttaglist = new NBTTagList();
+
+		for(int j = 0; j < INVENTORY_SIZE; ++j) {
+			if(items[j] != null && items[j].getCount() > 0) {
+				NBTTagCompound nbttagcompound2 = new NBTTagCompound();
+				nbttaglist.appendTag(nbttagcompound2);
+				nbttagcompound2.setInteger("index", j);
+				items[j].writeToNBT(nbttagcompound2);
+			}
+		}
+
+		nbttagcompound.setTag("items", nbttaglist);
+		
+		return nbttagcompound;
 	}
 	
-	@Override
-	public boolean blockActivated(EntityPlayer entityplayer, EnumFacing direction)
-	{
-		Item equipped = entityplayer.getCurrentEquippedItem() != null ? entityplayer.getCurrentEquippedItem().getItem() : null;
-		if(equipped instanceof IToolWrench && ((IToolWrench) equipped).canWrench(entityplayer, container.getPos())) {
-			((PipeTransportAdvancedWood) transport).switchSource();
-			((IToolWrench) equipped).wrenchUsed(entityplayer, container.getPos());
-			return true;
-		}
-		if(APConfiguration.filterRightclicks && AdditionalPipes.isPipe(equipped))
-		{
-			return false;
-		}
+	/**
+	 * Override the wooden pipe's extraction behavior to use our filter
+	 */
+    @Override
+    protected int extractItems(IFlowItems flow, EnumFacing dir, int count, boolean simulate) {
 
-		if(entityplayer.worldObj.isRemote) return true;
-		entityplayer.openGui(AdditionalPipes.instance, GuiHandler.PIPE_WOODEN_ADV, container.getWorld(), container.getPos().getX(), container.getPos().getY(), container.getPos().getZ());
-		return true;
+        int extracted = flow.tryExtractItems(count, dir, null, filter, simulate);
+        if (extracted > 0 && !simulate) {
+            pipe.getHolder().scheduleNetworkUpdate(PipeMessageReceiver.BEHAVIOUR);
+        }
+        return extracted;
+    }
+
+    /**
+     * Call this whenever items or exclude changes to re-create the item filter
+     */
+    public void regenerateFilter()
+    {
+	   if(exclude)
+	   {
+		   filter = new InvertedStackFilter(new ArrayStackOrListFilter(items));
+	   }
+	   else
+	   {
+		   filter = new ArrayStackOrListFilter(items);
+	   }
+    }
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void addDrops(NonNullList<ItemStack> toDrop, int fortune)
+	{
+		super.addDrops(toDrop, fortune);
+		toDrop.addAll(Arrays.asList(items));
 	}
 
 	@Override
-	public boolean doDrop()
+    public boolean onPipeActivate(EntityPlayer player, RayTraceResult trace, float hitX, float hitY, float hitZ, EnumPipePart part) 
 	{
-		Utils.preDestroyBlock(getWorld(), container.getPos());
-		return true;
-	}
-
-	@Override
-	public boolean canConnectEnergy(EnumFacing dir)
-	{
-		return true;
-	}
-
-
-	@Override
-	public int getEnergyStored(EnumFacing from)
-	{
-		return battery.getEnergyStored();
-	}
-
-	@Override
-	public int getMaxEnergyStored(EnumFacing from)
-	{
-		return battery.getMaxEnergyStored();
-	}
-
-	@Override
-	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate)
-	{
-		return battery.receiveEnergy(maxReceive, simulate);
-	}
+        if (EntityUtil.getWrenchHand(player) != null) 
+        {
+            return super.onPipeActivate(player, trace, hitX, hitY, hitZ, part);
+        }
+        
+        if (player.isServerWorld()) 
+        {
+        	BlockPos pipePos = pipe.getHolder().getPipePos();
+        	player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_WOODEN_ADV, pipe.getHolder().getPipeWorld(), pipePos.getX(), pipePos.getY(), pipePos.getZ());
+        }
+        return true;
+    }
 
 }

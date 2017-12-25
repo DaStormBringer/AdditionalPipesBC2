@@ -1,15 +1,18 @@
 package buildcraft.additionalpipes.gui;
 
+import buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
+import buildcraft.additionalpipes.pipes.PipeItemsClosed;
+import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
+import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
+import buildcraft.additionalpipes.pipes.PipeItemsPriorityInsertion;
+import buildcraft.additionalpipes.pipes.PipeTeleport;
+import buildcraft.additionalpipes.utils.Log;
+import buildcraft.transport.tile.TilePipeHolder;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
-import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
-import buildcraft.additionalpipes.pipes.PipeTeleport;
-import buildcraft.additionalpipes.pipes.PipeTransportAdvancedWood;
-import buildcraft.additionalpipes.utils.Log;
-import buildcraft.transport.TileGenericPipe;
 
 public class GuiHandler implements IGuiHandler {
 	// Gui IDs
@@ -32,17 +35,17 @@ public class GuiHandler implements IGuiHandler {
 		
 		switch(ID) {
 		case PIPE_TP:
-			return new ContainerTeleportPipe(player, (PipeTeleport<?>) ((TileGenericPipe) tile).pipe);
+			return new ContainerTeleportPipe(player, (PipeTeleport) ((TilePipeHolder) tile).getPipe().getBehaviour());
 		case PIPE_DIST:
-			return new ContainerDistributionPipe((TileGenericPipe) tile);
+			return new ContainerDistributionPipe((PipeItemsDistributor) ((TilePipeHolder) tile).getPipe().getBehaviour());
 		case PIPE_WOODEN_ADV:
-			return new ContainerAdvancedWoodPipe(player, player.inventory, (PipeTransportAdvancedWood) ((TileGenericPipe) tile).pipe.transport);
+			return new ContainerAdvancedWoodPipe(player, player.inventory, (PipeItemsAdvancedWood) ((TilePipeHolder) tile).getPipe().getBehaviour());
 		case PIPE_CLOSED:
-			return new ContainerPipeClosed(player.inventory, ((TileGenericPipe) tile).pipe);
+			return new ContainerPipeClosed(player.inventory,(PipeItemsClosed) ((TilePipeHolder) tile).getPipe().getBehaviour());
 		case PIPE_PRIORITY:
-			return new ContainerPriorityInsertionPipe((TileGenericPipe) tile);
+			return new ContainerPriorityInsertionPipe((PipeItemsPriorityInsertion) ((TilePipeHolder) tile).getPipe().getBehaviour());
 		case PIPE_JEWELED:
-			return new ContainerJeweledPipe(player.inventory, ((PipeItemsJeweled)((TileGenericPipe) tile).pipe));
+			return new ContainerJeweledPipe(player.inventory, ((PipeItemsJeweled)((TilePipeHolder) tile).getPipe().getBehaviour()));
 		default:
 			return null;
 		}
@@ -60,17 +63,17 @@ public class GuiHandler implements IGuiHandler {
 		switch(ID)
 		{
 		case PIPE_TP:
-			return new GuiTeleportPipe(player, (PipeTeleport<?>) ((TileGenericPipe) tile).pipe);
+			return new GuiTeleportPipe(player, ((PipeTeleport)((TilePipeHolder) tile).getPipe().getBehaviour()));
 		case PIPE_DIST:
-			return new GuiDistributionPipe((TileGenericPipe) tile);
+			return new GuiDistributionPipe((PipeItemsDistributor) ((TilePipeHolder) tile).getPipe().getBehaviour());
 		case PIPE_WOODEN_ADV:
-			return new GuiAdvancedWoodPipe(player, player.inventory, (TileGenericPipe) tile);
+			return new GuiAdvancedWoodPipe(player, player.inventory, (PipeItemsAdvancedWood) ((TilePipeHolder) tile).getPipe().getBehaviour());
 		case PIPE_CLOSED:
-			return new GuiPipeClosed(player.inventory, ((TileGenericPipe) tile).pipe);
+			return new GuiPipeClosed(player.inventory, (PipeItemsClosed) ((TilePipeHolder) tile).getPipe().getBehaviour());
 		case PIPE_PRIORITY:
-			return new GuiPriorityInsertionPipe((TileGenericPipe) tile);
+			return new GuiPriorityInsertionPipe((PipeItemsPriorityInsertion) ((TilePipeHolder) tile).getPipe().getBehaviour());
 		case PIPE_JEWELED:
-			return new GuiJeweledPipe(player.inventory, ((PipeItemsJeweled)((TileGenericPipe) tile).pipe));
+			return new GuiJeweledPipe(player.inventory, ((PipeItemsJeweled)((TilePipeHolder) tile).getPipe().getBehaviour()));
 		default:
 			return null;
 		}

@@ -6,56 +6,47 @@ import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessageTelePipeUpdate;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.additionalpipes.textures.Textures;
-import buildcraft.core.client.CoreIconProvider;
-import buildcraft.core.lib.gui.GuiBuildCraft;
-import buildcraft.core.lib.gui.Ledger;
-import net.minecraft.client.Minecraft;
+import buildcraft.lib.BCLibSprites;
+import buildcraft.lib.gui.GuiBC8;
+import buildcraft.lib.gui.GuiIcon;
+import buildcraft.lib.gui.ledger.Ledger_Neptune;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiTeleportPipe extends GuiBuildCraft {
+public class GuiTeleportPipe extends GuiBC8<ContainerTeleportPipe> {
 		
-	protected class TeleportPipeLedger extends Ledger 
+	protected class TeleportPipeLedger extends Ledger_Neptune
 	{
 
 		int headerColour = 0xe1c92f;
 		int subheaderColour = 0xaaafb8;
 		int textColour = 0x000000;
+		
+		final static int OVERLAY_COLOR = 0xd46c1f;
 
 		String networkTitle;
 		
 		public TeleportPipeLedger() {
-			super(GuiTeleportPipe.this);
+			super(GuiTeleportPipe.this, OVERLAY_COLOR, true);
 			maxHeight = 99;
-			overlayColor = 0xd46c1f;
+			shownElements.add(new TeleportPipeLedger());
 		}
 
 		@Override
-		public void draw(int x, int y) 
+		public void drawForeground(float partialTicks)
 		{
 			//we have to initialize this here since pipe is not yet set when the constructor is run
 			if(networkTitle == null)
 			{
-				networkTitle = ((pipe.state & 0x1) >= 1) ? "Outputs:" : "Inputs:";
+				networkTitle = ((pipe.state & 0x1) >= 1) ? I18n.format("gui.teleport.ledger.outputs") : I18n.format("gui.teleport.ledger.inputs");
 			}
 
-			// Draw background
-			drawBackground(x, y);
-
-			// Draw icon
-			Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
-			drawIcon(CoreIconProvider.ENERGY.getSprite(), x + 3, y + 4);
-
-			if(!isFullyOpened())
-				return;
-
-			fontRendererObj.drawString("Teleport Pipe", x + 22, y + 8, headerColour);
-			fontRendererObj.drawString("Owner:", x + 22, y + 20, subheaderColour);
+			fontRendererObj.drawString(I18n.format("gui.teleport.ledger.title"), x + 22, y + 8, headerColour);
+			fontRendererObj.drawString(I18n.format("gui.teleport.ledger.owner"), x + 22, y + 20, subheaderColour);
 			fontRendererObj.drawString(pipe.ownerName, x + 22, y + 32, textColour);
 			fontRendererObj.drawStringWithShadow(networkTitle, x + 22, y + 44, subheaderColour);
 			fontRendererObj.drawString(String.valueOf(container.connectedPipes), x + 66, y + 45, textColour);
@@ -69,20 +60,24 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 			if(net.length > 6) {
 				fontRendererObj.drawString(new StringBuilder("(").append(net[6]).append(", ").append(net[7]).append(", ").append(net[8]).append(")").toString(), x + 22, y + 80, textColour);
 			}
+			
+			super.drawForeground(partialTicks);
 		}
 
 		@Override
-		public String getTooltip() {
-			return "Owner: " + pipe.ownerName;
+		protected void drawIcon(double x, double y)
+		{
+	        GuiIcon.draw(BCLibSprites.ENGINE_ACTIVE, x, y, x + 16, y + 16);
 		}
+	
 	}
 
-	private final PipeTeleport<?> pipe;
+	private final PipeTeleport pipe;
 	private final ContainerTeleportPipe container;
 	private final GuiButton[] buttons = new GuiButton[8];
 
-	public GuiTeleportPipe(EntityPlayer player, PipeTeleport<?> pipe) {
-		super(new ContainerTeleportPipe(player, pipe), null, Textures.GUI_TELEPORT);
+	public GuiTeleportPipe(EntityPlayer player, PipeTeleport pipe) {
+		super(new ContainerTeleportPipe(player, pipe));
 		this.pipe = pipe;
 		container = (ContainerTeleportPipe) inventorySlots;
 		xSize = 228;
@@ -101,36 +96,36 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 		buttonList.add(buttons[4] = new GuiButton(5, x + 12 + bw * 4 / 6, y + 32, bw / 6, 20, "+10"));
 		buttonList.add(buttons[5] = new GuiButton(6, x + 12 + bw * 5 / 6, y + 32, bw / 6, 20, "+100"));
 
-		buttonList.add(buttons[6] = new GuiButton(7, x + 12, y + 10, bw / 2, 20, "Send Only"));
-		buttonList.add(buttons[7] = new GuiButton(8, x + 12 + bw * 3 / 6, y + 10, bw / 2, 20, "Private"));
+		buttonList.add(buttons[6] = new GuiButton(7, x + 12, y + 10, bw / 2, 20, ""));
+		buttonList.add(buttons[7] = new GuiButton(8, x + 12 + bw * 3 / 6, y + 10, bw / 2, 20, ""));
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int p1, int p2) {
-		super.drawGuiContainerForegroundLayer(p1, p2);
-		fontRendererObj.drawString("Frequency: " + pipe.getFrequency(), 16, 12, 0x404040);
+	protected void drawForegroundLayer() 
+	{
+		fontRendererObj.drawString(I18n.format("gui.teleport.frequency", pipe.getFrequency()), 16, 12, 0x404040);
 		fontRendererObj.drawString(new StringBuilder("(")
-			.append(pipe.container.getPos().getX()).append(", ")
-			.append(pipe.container.getPos().getY()).append(", ")
-			.append(pipe.container.getPos().getZ()).append(")").toString(), 128, 12, 0x404040);
+			.append(pipe.getPos().getX()).append(", ")
+			.append(pipe.getPos().getY()).append(", ")
+			.append(pipe.getPos().getZ()).append(")").toString(), 128, 12, 0x404040);
 		switch(pipe.state) {
 		case 3:
-			buttons[6].displayString = "Send & Receive";
+			buttons[6].displayString = I18n.format("gui.teleport.send_and_receive");
 			break;
 		case 2:
-			buttons[6].displayString = "Receive Only";
+			buttons[6].displayString = I18n.format("gui.teleport.receive_only");
 			break;
 		case 1:
-			buttons[6].displayString = "Send Only";
+			buttons[6].displayString = I18n.format("gui.teleport.send_only");
 			break;
 		default:
-			buttons[6].displayString = "Disabled";
+			buttons[6].displayString = I18n.format("gui.teleport.disabled");
 			break;
 		}
 		if(pipe.isPublic) {
-			buttons[7].displayString = "Public";
+			buttons[7].displayString = I18n.format("gui.teleport.public");
 		} else {
-			buttons[7].displayString = "Private";
+			buttons[7].displayString = I18n.format("gui.teleport.private");
 		}
 	}
 
@@ -169,22 +164,15 @@ public class GuiTeleportPipe extends GuiBuildCraft {
 			freq = 0;
 		}
 
-		MessageTelePipeUpdate packet = new MessageTelePipeUpdate(pipe.container.getPos(), freq, isPublic, state);
+		MessageTelePipeUpdate packet = new MessageTelePipeUpdate(pipe.getPos(), freq, isPublic, state);
 		PacketHandler.INSTANCE.sendToServer(packet);
 	}
 
 	@Override
-	protected void initLedgers(IInventory inventory) {
-		super.initLedgers(inventory);
-		ledgerManager.add(new TeleportPipeLedger());
-	}
-
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTicks,
-			int mouseX, int mouseY)
+	protected void drawBackgroundLayer(float partialTicks)
 	{
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.renderEngine.bindTexture(texture);
+        mc.renderEngine.bindTexture(Textures.GUI_TELEPORT);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 	}
 

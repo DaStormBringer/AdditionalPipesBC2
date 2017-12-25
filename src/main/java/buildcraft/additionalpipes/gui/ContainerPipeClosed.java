@@ -1,44 +1,45 @@
 package buildcraft.additionalpipes.gui;
 
+import buildcraft.additionalpipes.pipes.PipeItemsClosed;
+import buildcraft.transport.tile.TilePipeHolder;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import buildcraft.additionalpipes.pipes.PipeItemsClosed;
-import buildcraft.transport.Pipe;
-import buildcraft.transport.TileGenericPipe;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 //from dispenser code
 public class ContainerPipeClosed extends Container {
 
 	private PipeItemsClosed pipe;
 
-	public ContainerPipeClosed(InventoryPlayer inventory, Pipe<?> pipe) {
+	public ContainerPipeClosed(InventoryPlayer inventory, PipeItemsClosed pipe) {
 		this.pipe = (PipeItemsClosed) pipe;
-		int var3;
-		int var4;
+		int row;
+		int col;
 
-		for(var3 = 0; var3 < 3; ++var3) {
-			for(var4 = 0; var4 < 3; ++var4) {
-				addSlotToContainer(new Slot(this.pipe, var4 + var3 * 3, 62 + var4 * 18, 17 + var3 * 18));
+		for(row = 0; row < 3; ++row) {
+			for(col = 0; col < 3; ++col) {
+				addSlotToContainer(new SlotItemHandler(this.pipe.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null), col + row * 3, 62 + col * 18, 17 + row * 18));
 			}
 		}
 
-		for(var3 = 0; var3 < 3; ++var3) {
-			for(var4 = 0; var4 < 9; ++var4) {
-				addSlotToContainer(new Slot(inventory, var4 + var3 * 9 + 9, 8 + var4 * 18, 84 + var3 * 18));
+		for(row = 0; row < 3; ++row) {
+			for(col = 0; col < 9; ++col) {
+				addSlotToContainer(new Slot(inventory, col + row * 9 + 9, 8 + col * 18, 84 + row * 18));
 			}
 		}
 
-		for(var3 = 0; var3 < 9; ++var3) {
-			addSlotToContainer(new Slot(inventory, var3, 8 + var3 * 18, 142));
+		for(row = 0; row < 9; ++row) {
+			addSlotToContainer(new Slot(inventory, row, 8 + row * 18, 142));
 		}
 	}
 
 	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer) {
-		TileGenericPipe tile = pipe.container;
+		TilePipeHolder tile = (TilePipeHolder) pipe.pipe.getHolder();
 		if(tile.getWorld().getTileEntity(tile.getPos()) != tile) return false;
 		if(entityplayer.getDistanceSq(tile.getPos().getX() + 0.5D, tile.getPos().getY() + 0.5D, tile.getPos().getZ() + 0.5D) > 64) return false;
 		return true;
@@ -49,35 +50,39 @@ public class ContainerPipeClosed extends Container {
 	 * you will crash when someone does that.
 	 */
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2) {
-		ItemStack var3 = null;
-		Slot var4 = (Slot) inventorySlots.get(par2);
+	public ItemStack transferStackInSlot(EntityPlayer player, int slotNum)
+	{
+		ItemStack stack = ItemStack.EMPTY;
+		Slot slot = (Slot) inventorySlots.get(slotNum);
 
-		if(var4 != null && var4.getHasStack()) {
-			ItemStack var5 = var4.getStack();
-			var3 = var5.copy();
+		if(slot != null && slot.getHasStack()) {
+			ItemStack stackInSlot = slot.getStack();
+			stack = stackInSlot.copy();
 
-			if(par2 < 9) {
-				if(!mergeItemStack(var5, 9, 45, true)) {
+			if(slotNum < 9) {
+				if(!mergeItemStack(stackInSlot, 9, 45, true)) {
 					return null;
 				}
-			} else if(!mergeItemStack(var5, 0, 9, false)) {
+			} else if(!mergeItemStack(stackInSlot, 0, 9, false)) {
 				return null;
 			}
 
-			if(var5.stackSize == 0) {
-				var4.putStack((ItemStack) null);
-			} else {
-				var4.onSlotChanged();
+			if(stackInSlot.getCount() == 0) 
+			{
+				slot.putStack((ItemStack) null);
+			}
+			else 
+			{
+				slot.onSlotChanged();
 			}
 
-			if(var5.stackSize == var3.stackSize) {
+			if(stackInSlot.getCount() == stack.getCount()) {
 				return null;
 			}
 
-			var4.onPickupFromSlot(par1EntityPlayer, var5);
+			slot.onTake(player, stackInSlot);
 		}
 
-		return var3;
+		return stack;
 	}
 }

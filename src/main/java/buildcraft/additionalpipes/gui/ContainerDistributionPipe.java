@@ -1,16 +1,16 @@
 package buildcraft.additionalpipes.gui;
 
+import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
+import buildcraft.transport.tile.TilePipeHolder;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
-import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
-import buildcraft.transport.TileGenericPipe;
+import net.minecraft.inventory.IContainerListener;
 
 public class ContainerDistributionPipe extends Container {
 	private PipeItemsDistributor pipe;
 	public int[] lastDistData;
 
-	public ContainerDistributionPipe(TileGenericPipe container) {
+	public ContainerDistributionPipe(PipeItemsDistributor container) {
 		pipe = (PipeItemsDistributor) container.pipe;
 		lastDistData = new int[pipe.distData.length];
 		for(int i = 0; i < lastDistData.length; i++) {
@@ -20,7 +20,7 @@ public class ContainerDistributionPipe extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer) {
-		TileGenericPipe tile = pipe.container;
+		TilePipeHolder tile = (TilePipeHolder) pipe.pipe.getHolder();
 		if(tile.getWorld().getTileEntity(tile.getPos()) != tile) return false;
 		if(entityplayer.getDistanceSq(tile.getPos().getX() + 0.5D, tile.getPos().getY() + 0.5D, tile.getPos().getZ() + 0.5D) > 64) return false;
 		return true;
@@ -30,8 +30,8 @@ public class ContainerDistributionPipe extends Container {
 	public void detectAndSendChanges()
 	{
 		super.detectAndSendChanges();
-		for(Object obj : crafters) {
-			ICrafting crafter = (ICrafting) obj;
+		for(IContainerListener crafter : listeners) 
+		{
 			for(int i = 0; i < lastDistData.length; i++) {
 				if(lastDistData[i] != pipe.distData[i]) {
 					crafter.sendProgressBarUpdate(this, i, pipe.distData[i]);

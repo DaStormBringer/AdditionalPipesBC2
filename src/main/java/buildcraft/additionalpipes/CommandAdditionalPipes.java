@@ -2,64 +2,75 @@ package buildcraft.additionalpipes;
 
 import java.util.Collection;
 
-import net.minecraft.command.CommandBase;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.StatCollector;
+import buildcraft.additionalpipes.api.TeleportPipeType;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.additionalpipes.pipes.TeleportManager;
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.translation.I18n;
 
 public class CommandAdditionalPipes extends CommandBase {
 
 	@Override
-	public String getCommandName() {
+	public String getName() {
 		return AdditionalPipes.MODID.toLowerCase();
 	}
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void processCommand(ICommandSender sender, String[] args)
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		if(args.length > 0 && "teleport".equals(args[0])) 
 		{
 			//let's be a bit lenient with plurals
 			
-			Collection pipes = null;
+			TeleportPipeType type;
 			
 			if(args[1].equals("items") || args[1].equals("item"))
 			{
-				pipes = TeleportManager.instance.getAllItemPipesInNetwork();
+				type = TeleportPipeType.ITEMS;
 			}
 			else if(args[1].equals("fluids") || args[1].equals("fluid"))
 			{
-				pipes = TeleportManager.instance.getAllFluidPipesInNetwork();
+				type = TeleportPipeType.FLUIDS;
 			}
 			else if(args[1].equals("power"))
 			{
-				pipes = TeleportManager.instance.getAllFluidPipesInNetwork();
+				type = TeleportPipeType.POWER;
 			}
 			else
 			{
 				return;
 			}
-			sender.addChatMessage(new ChatComponentText("Teleport pipes: "));
+			
+			Collection pipes = TeleportManager.instance.getAllPipesInNetwork(type);
+			
+			sender.sendMessage((ITextComponent) new TextComponentTranslation("command.ap.pipelist_header"));
 			for(Object pipeObject : pipes)
 			{
 				StringBuffer sb = new StringBuffer();
-				PipeTeleport<?> pipe = (PipeTeleport<?>)pipeObject;
+				PipeTeleport pipe = (PipeTeleport)pipeObject;
 				sb.append('[');
 				sb.append(pipe.getPosition().getX()).append(", ");
 				sb.append(pipe.getPosition().getY()).append(", ");
 				sb.append(pipe.getPosition().getZ()).append("] ");
 				sb.append(pipe.ownerName);
-				sender.addChatMessage(new ChatComponentText(sb.toString()));
+				sender.sendMessage(new TextComponentString(sb.toString()));
 			}
 		}
 	}
 
+
 	@Override
-	public String getCommandUsage(ICommandSender icommandsender) {
-		return StatCollector.translateToLocal("command.ap.usage");
+	public String getUsage(ICommandSender sender)
+	{
+		return I18n.translateToLocal("command.ap.usage");
 	}
+
 
 }

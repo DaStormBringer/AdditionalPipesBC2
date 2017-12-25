@@ -10,8 +10,12 @@ import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -22,17 +26,17 @@ public class ItemDogDeaggravator extends Item
 	
 	public ItemDogDeaggravator()
 	{
-		setUnlocalizedName(NAME);
+		setRegistryName(NAME);
 		setCreativeTab(AdditionalPipes.instance.creativeTab);
 		setMaxStackSize(1);
 	}
 	
 	@Override
-    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player)
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand)
     {
 		//this code adapted from EntityAIHurtByTarget.startExecuting()
 		double horizontalRange = 16;
-        List<EntityWolf> list = world.getEntitiesWithinAABB(EntityWolf.class, AxisAlignedBB.fromBounds(player.posX, player.posY, player.posZ,
+        List<EntityWolf> list = world.getEntitiesWithinAABB(EntityWolf.class, new AxisAlignedBB(player.posX, player.posY, player.posZ,
         		player.posX + 1.0D, player.posY + 1.0D, player.posZ + 1.0D).expand(horizontalRange, 10.0D, horizontalRange));
         Iterator<EntityWolf> iterator = list.iterator();
         int wolfCounter = 0;
@@ -48,10 +52,10 @@ public class ItemDogDeaggravator extends Item
             }
         }
         
-        world.playSoundAtEntity(player, "additionalpipes:bellRing", 1, 1);
+        world.playSound(player, player.posX, player.posY, player.posZ, "additionalpipes:bellRing", 1, 1);
         Log.debug("Cleared attack target on " + wolfCounter + " wolves.");
         
-        return itemStack;
+        return ActionResult.<ItemStack>newResult(EnumActionResult.SUCCESS, );
 
 	}
 	
@@ -59,7 +63,7 @@ public class ItemDogDeaggravator extends Item
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
 	{
-		list.add(StatCollector.translateToLocal("tooltip.dogDeaggravator"));
+		list.add(I18n.format("tooltip.dogDeaggravator"));
 	}
 	
 
@@ -67,7 +71,7 @@ public class ItemDogDeaggravator extends Item
     @SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item parItem, CreativeTabs parTab, List parListSubItems)
+    public void getSubItems(Item parItem, CreativeTabs parTab, NonNullList parListSubItems)
     {
         parListSubItems.add(new ItemStack(this, 1));
     }

@@ -11,22 +11,22 @@ package buildcraft.additionalpipes.pipes;
 import java.util.LinkedList;
 import java.util.List;
 
+import buildcraft.additionalpipes.APConfiguration;
+import buildcraft.additionalpipes.AdditionalPipes;
+import buildcraft.additionalpipes.gui.GuiHandler;
+import buildcraft.additionalpipes.gui.GuiJeweledPipe;
+import buildcraft.api.tiles.IDebuggable;
+import buildcraft.api.transport.pipe.PipeEventItem;
+import buildcraft.core.lib.inventory.InvUtils;
+import buildcraft.transport.PipeTransportItems;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
-import buildcraft.additionalpipes.APConfiguration;
-import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.additionalpipes.gui.GuiHandler;
-import buildcraft.additionalpipes.gui.GuiJeweledPipe;
-import buildcraft.api.tiles.IDebuggable;
-import buildcraft.core.lib.inventory.InvUtils;
-import buildcraft.transport.PipeTransportItems;
-import buildcraft.transport.pipes.events.PipeEventItem;
 
-public class PipeItemsJeweled extends APPipe<PipeTransportItems> implements IDebuggable {
+public class PipeItemsJeweled extends APPipe implements IDebuggable {
 
 	public SideFilterData[] filterData = new SideFilterData[GuiJeweledPipe.NUM_TABS];
 	public PipeItemsJeweled(Item item) 

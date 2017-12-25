@@ -1,206 +1,139 @@
 package buildcraft.additionalpipes.pipes;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IChatComponent;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
-import buildcraft.core.lib.inventory.Transactor;
-import buildcraft.core.lib.inventory.TransactorSimple;
-import buildcraft.core.lib.utils.Utils;
-import buildcraft.transport.PipeTransportItems;
-import buildcraft.transport.pipes.events.PipeEventItem;
+import buildcraft.additionalpipes.utils.InventoryUtils;
+import buildcraft.api.core.EnumPipePart;
+import buildcraft.api.inventory.IItemTransactor;
+import buildcraft.api.transport.pipe.IPipe;
+import buildcraft.api.transport.pipe.PipeEventHandler;
+import buildcraft.api.transport.pipe.PipeEventItem;
+import buildcraft.lib.inventory.ItemTransactorHelper;
+import buildcraft.lib.misc.EntityUtil;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 
-public class PipeItemsClosed extends APPipe<PipeTransportItems> implements IInventory {
+public class PipeItemsClosed extends APPipe implements ICapabilityProvider {
+	
+	// note: if you change this, you will also have to change the GUI code
+	public static final int EFFECTIVE_INVENTORY_SIZE = 9;
+	public static final int ACTUAL_INVENTORY_SIZE = EFFECTIVE_INVENTORY_SIZE + 1; // we have a 10 slot inventory, but any stacks entering the last slot will get deleted
+	
+	ItemStackHandler inventory = new ItemStackHandler(ACTUAL_INVENTORY_SIZE);
 
-	private ItemStack[] inventory = new ItemStack[10];
-
-	public PipeItemsClosed(Item item) {
-		super(new PipeTransportItems(), item);
-		//((PipeTransportItems) transport).travelHook = this;
-	}
-
-	@Override
-	public boolean blockActivated(EntityPlayer player, EnumFacing side)
+	public PipeItemsClosed(IPipe pipe)
 	{
-		ItemStack equippedItem = player.getCurrentEquippedItem();
-		if(equippedItem != null && AdditionalPipes.isPipe(equippedItem.getItem()))
-		{
-			return false;
-		}
-		if(player.worldObj.isRemote) return true;
-		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_CLOSED, getWorld(), container.getPos().getX(), container.getPos().getY(), container.getPos().getZ());
-		return true;
+		super(pipe);
+	}
+
+	public PipeItemsClosed(IPipe pipe, NBTTagCompound nbt)
+	{
+		super(pipe, nbt);
+		readFromNBT(nbt);
 	}
 
 	@Override
-	public void dropContents() {
-		super.dropContents();
-		Utils.preDestroyBlock(getWorld(), container.getPos());
+    public boolean onPipeActivate(EntityPlayer player, RayTraceResult trace, float hitX, float hitY, float hitZ, EnumPipePart part) 
+	{
+        if (EntityUtil.getWrenchHand(player) != null) 
+        {
+            return super.onPipeActivate(player, trace, hitX, hitY, hitZ, part);
+        }
+        
+        if (player.isServerWorld()) 
+        {
+        	BlockPos pipePos = pipe.getHolder().getPipePos();
+        	player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_CLOSED, pipe.getHolder().getPipeWorld(), pipePos.getX(), pipePos.getY(), pipePos.getZ());
+        }
+        return true;
+    }
+
+	@Override
+	public void addDrops(NonNullList<ItemStack> toDrop, int fortune)
+	{
+		super.addDrops(toDrop, fortune);
+		toDrop.addAll(InventoryUtils.getItems(inventory));
 	}
 	
-	public void eventHandler(PipeEventItem.DropItem event)
+	@Override
+	public NBTTagCompound writeToNbt() 
 	{
-		Transactor transactor = new TransactorSimple(this, event.direction);
-		transactor.add(event.item.getItemStack().copy(), true);
-		if(inventory[inventory.length - 1] != null)
+		NBTTagCompound nbttagcompound = super.writeToNbt();
+		
+		nbttagcompound.setTag("closedInventory", inventory.serializeNBT());
+		
+		return nbttagcompound;
+	}
+
+	public void readFromNBT(NBTTagCompound nbttagcompound) 
+	{
+		inventory.deserializeNBT(nbttagcompound.getCompoundTag("closedInventory"));
+	}
+	
+	@PipeEventHandler
+	public void onDrop(PipeEventItem.Drop event)
+	{
+		IItemTransactor transactor = ItemTransactorHelper.getTransactor(this, EnumFacing.UP); // note: face argument doesn't actually matter
+		transactor.insert(event.getStack(), false, false); 
+		// the itemstack is guaranteed to fit because there will always be at least one free slot
+		
+		// ...because we thin the herd here
+		if(inventory.getStackInSlot(ACTUAL_INVENTORY_SIZE - 1) != ItemStack.EMPTY)
 		{
-			for(int i = 1; i < inventory.length; i++)
+			for(int i = 1; i < ACTUAL_INVENTORY_SIZE; i++)
 			{
-				inventory[i - 1] = inventory[i];
+				inventory.setStackInSlot(i-1, inventory.getStackInSlot(i));
 			}
 		}
 		
-		inventory[inventory.length - 1] = null;
-		event.item.getItemStack().stackSize = 0;
-		container.scheduleRenderUpdate();
-		event.entity = null;
+		inventory.setStackInSlot(ACTUAL_INVENTORY_SIZE - 1, ItemStack.EMPTY);
+		
+		event.setStack(ItemStack.EMPTY);
+		pipe.getHolder().scheduleRenderUpdate();
 	}
 
-	@Override
-	public void writeToNBT(NBTTagCompound nbttagcompound) {
-		super.writeToNBT(nbttagcompound);
-		NBTTagList list = new NBTTagList();
 
-		for(ItemStack stack : inventory) {
-			if(stack != null) {
-				NBTTagCompound stackTag = new NBTTagCompound();
-				stack.writeToNBT(stackTag);
-				list.appendTag(stackTag);
-			}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+	{
+		if(capability.equals(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY))
+		{
+			return true;
 		}
-
-		nbttagcompound.setTag("closedInventory", list);
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbttagcompound) {
-		super.readFromNBT(nbttagcompound);
-		NBTTagList list = nbttagcompound.getTagList("closedInventory", 10);
-		for(int i = 0; i < list.tagCount() && i < inventory.length; i++) {
-			NBTTagCompound stackTag = (NBTTagCompound) list.getCompoundTagAt(i);
-			inventory[i] = ItemStack.loadItemStackFromNBT(stackTag);
+		else
+		{
+			return super.hasCapability(capability, facing);
 		}
-
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public int getIconIndex(EnumFacing direction) {
-		return 18 + (getStackInSlot(0) == null ? 0 : 1);
-	}
-
-	@Override
-	public int getSizeInventory() {
-		return inventory.length;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int i) {
-		return inventory[i];
-	}
-
-	@Override
-	public ItemStack decrStackSize(int i, int amt) {
-		ItemStack stack = inventory[i].splitStack(amt);
-		if(inventory[i].stackSize == 0) {
-			inventory[i] = null;
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+	{
+		if(capability.equals(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY))
+		{
+			return (T) inventory;
 		}
-		return stack;
+		else
+		{		
+			return super.getCapability(capability, facing);
+		}
 	}
 
 	@Override
-	public void setInventorySlotContents(int i, ItemStack stack) {
-		inventory[i] = stack;
-	}
-
-	@Override
-	public String getName() {
-		return "pipeItemsClosed";
-	}
-
-	@Override
-	public int getInventoryStackLimit() {
-		return 64;
-	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer var1) {
-		return true;
-	}
-
-	@Override
-	public boolean isItemValidForSlot(int i, ItemStack itemstack) 
+	public int getTextureIndex(EnumFacing direction) 
 	{
-		return true;
-	}
-
-	@Override
-	public boolean hasCustomName()
-	{
-		return false;
-	}
-
-	@Override
-	public void markDirty() {
-		container.markDirty();
-		
-	}
-
-	@Override
-	public IChatComponent getDisplayName()
-	{
-		return null;
-	}
-
-	@Override
-	public void openInventory(EntityPlayer playerIn)
-	{
-
-	}
-
-	@Override
-	public void closeInventory(EntityPlayer playerIn)
-	{
-
-	}
-
-	@Override
-	public int getField(int id)
-	{
-		return 0;
-	}
-
-	@Override
-	public void setField(int id, int value)
-	{
-		
-	}
-
-	@Override
-	public int getFieldCount()
-	{
-		return 0;
-	}
-
-	@Override
-	public void clear()
-	{
-
-	}
-
-	@Override
-	public ItemStack removeStackFromSlot(int index)
-	{
-		ItemStack requestedItem = inventory[index];
-		
-		inventory[index] = null;
-		
-		return requestedItem;
+		return (inventory.getStackInSlot(0) == ItemStack.EMPTY ? 0 : 1);
 	}
 
 }

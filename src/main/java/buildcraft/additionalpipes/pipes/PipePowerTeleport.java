@@ -16,7 +16,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import buildcraft.additionalpipes.APConfiguration;
-import buildcraft.additionalpipes.api.PipeType;
+import buildcraft.additionalpipes.api.TeleportPipeType;
 import buildcraft.additionalpipes.utils.Log;
 import buildcraft.api.transport.IPipeTile;
 import buildcraft.core.lib.utils.Utils;
@@ -42,7 +42,7 @@ public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implemen
 	}
 
 	public PipePowerTeleport(Item item) {
-		super(new PipeTransportPower(), item, PipeType.POWER);
+		super(new PipeTransportPower(), item, TeleportPipeType.POWER);
 		((PipeTransportPower) transport).initFromPipe(PipePowerDiamond.class);
 	}
 

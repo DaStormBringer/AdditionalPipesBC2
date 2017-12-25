@@ -1,15 +1,15 @@
 package buildcraft.additionalpipes.network.message;
 
+import buildcraft.additionalpipes.pipes.PipeTeleport;
+import buildcraft.transport.tile.TilePipeHolder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import buildcraft.additionalpipes.pipes.PipeTeleport;
-import buildcraft.transport.TileGenericPipe;
 
 /**
  * Message that sets the properties of a Teleport Pipe from the GUI
@@ -56,13 +56,14 @@ public class MessageTelePipeUpdate implements IMessage, IMessageHandler<MessageT
     @Override
     public IMessage onMessage(MessageTelePipeUpdate message, MessageContext ctx)
     {
-    	TileEntity te = ctx.getServerHandler().playerEntity.worldObj.getTileEntity(message.position);
-    	if(te instanceof TileGenericPipe) {
-			PipeTeleport<?> pipe = (PipeTeleport<?>) ((TileGenericPipe) te).pipe;
+    	TileEntity te = ctx.getServerHandler().playerEntity.getEntityWorld().getTileEntity(message.position);
+    	if(te instanceof TilePipeHolder) {
+			PipeTeleport pipe = (PipeTeleport) ((TilePipeHolder) te).getPipe().getBehaviour();
 			// only allow the owner to change pipe state
 			EntityPlayerMP entityPlayer = (EntityPlayerMP) ctx.getServerHandler().playerEntity;
-			if(!PipeTeleport.canPlayerModifyPipe(entityPlayer, pipe)) {
-				entityPlayer.addChatComponentMessage(new ChatComponentText("Sorry, You may not change pipe state."));
+			if(!PipeTeleport.canPlayerModifyPipe(entityPlayer, pipe)) 
+			{
+				entityPlayer.sendMessage(new TextComponentString("Sorry, You may not change pipe state."));
 				return null;
 			}
 			int frequency = message._freq;

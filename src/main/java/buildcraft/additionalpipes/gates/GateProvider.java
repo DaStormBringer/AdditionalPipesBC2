@@ -1,43 +1,46 @@
 package buildcraft.additionalpipes.gates;
 
 import java.util.Collection;
-import java.util.LinkedList;
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.pipes.PipeItemsClosed;
-import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.api.statements.IStatementContainer;
 import buildcraft.api.statements.ITriggerExternal;
 import buildcraft.api.statements.ITriggerInternal;
+import buildcraft.api.statements.ITriggerInternalSided;
 import buildcraft.api.statements.ITriggerProvider;
-import buildcraft.transport.Pipe;
-import buildcraft.transport.TileGenericPipe;
+import buildcraft.api.transport.pipe.PipeBehaviour;
+import buildcraft.transport.tile.TilePipeHolder;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 
 public class GateProvider implements ITriggerProvider {
 
+
 	@Override
-	public LinkedList<ITriggerInternal> getInternalTriggers(IStatementContainer container)
+	public void addInternalTriggers(Collection<ITriggerInternal> triggers, IStatementContainer container)
 	{
+		PipeBehaviour behavior = ((TilePipeHolder)container.getTile()).getPipe().getBehaviour();
 		
-		Pipe<?> pipe = ((TileGenericPipe)container.getTile()).pipe;
-		
-		LinkedList<ITriggerInternal> list = new LinkedList<ITriggerInternal>();
-		if(pipe instanceof PipeItemsClosed)
+		if(behavior instanceof PipeItemsClosed)
 		{
-			list.add(AdditionalPipes.instance.triggerPipeClosed);
+			triggers.add(AdditionalPipes.instance.triggerPipeClosed);
 		}
-		if(pipe instanceof PipeTeleport)
-		{
-			
-		}
-		return list;
 	}
 
 	@Override
-	public Collection<ITriggerExternal> getExternalTriggers(EnumFacing side, TileEntity tile) {
-		return null;
+	public void addInternalSidedTriggers(Collection<ITriggerInternalSided> triggers, IStatementContainer container,
+			EnumFacing side)
+	{
+		// do nothing
+		
+	}
+
+	@Override
+	public void addExternalTriggers(Collection<ITriggerExternal> triggers, EnumFacing side, TileEntity tile)
+	{
+		// do nothing
+		
 	}
 
 }

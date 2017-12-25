@@ -14,7 +14,7 @@ import java.util.List;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3;
-import buildcraft.additionalpipes.api.PipeType;
+import buildcraft.additionalpipes.api.TeleportPipeType;
 import buildcraft.additionalpipes.utils.Log;
 import buildcraft.core.lib.utils.Utils;
 import buildcraft.transport.PipeTransportItems;
@@ -25,7 +25,7 @@ public class PipeItemsTeleport extends PipeTeleport<PipeTransportItems> {
 	private static final int ICON = 0;
 
 	public PipeItemsTeleport(Item items) {
-		super(new PipeTransportItems(), items, PipeType.ITEMS);
+		super(new PipeTransportItems(), items, TeleportPipeType.ITEMS);
 	}
 	
 	public void eventHandler(PipeEventItem.Entered event)

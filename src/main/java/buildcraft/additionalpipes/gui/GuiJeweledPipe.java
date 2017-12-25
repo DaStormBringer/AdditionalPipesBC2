@@ -2,15 +2,6 @@ package buildcraft.additionalpipes.gui;
 
 import java.io.IOException;
 
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.StatCollector;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.opengl.GL11;
 
 import buildcraft.additionalpipes.network.PacketHandler;
@@ -19,6 +10,14 @@ import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
 import buildcraft.additionalpipes.pipes.SideFilterData;
 import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.additionalpipes.utils.Log;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiJeweledPipe extends GuiContainer
@@ -35,7 +34,7 @@ public class GuiJeweledPipe extends GuiContainer
 	final int tabY = 14;
 	final int tabHeight = 11;
 	final int totalSpaceBetweenTabs = 7; //total space between tab strings
-    final int halfSpaceBetweenTabs = MathHelper.floor_double(totalSpaceBetweenTabs / 2.0);
+    final int halfSpaceBetweenTabs = MathHelper.floor(totalSpaceBetweenTabs / 2.0);
     final int tabOutlineWidth = 2;
 	
 	int[] tabEndX = new int[NUM_TABS + 1];
@@ -66,11 +65,11 @@ public class GuiJeweledPipe extends GuiContainer
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y)
     {
-        String containerName = StatCollector.translateToLocal("gui.jeweled_pipe");
+        String containerName = I18n.format("gui.jeweled_pipe.title");
         fontRendererObj.drawString(containerName, xSize / 2 - fontRendererObj.getStringWidth(containerName) / 2, 6, 4210752);
-        fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 93, 4210752);
+        fontRendererObj.drawString(I18n.format("container.inventory"), 8, ySize - 93, 4210752);
         
-        String match = StatCollector.translateToLocal("gui.match");
+        String match = I18n.format("gui.jeweled_pipe.match");
         fontRendererObj.drawString(match, 105, 94, 4210752);
 		
         //draw the actual tabs
@@ -88,7 +87,7 @@ public class GuiJeweledPipe extends GuiContainer
 		//add the tab labels
 		for(int tabNumber = 1; tabNumber <= NUM_TABS; ++tabNumber)
 		{
-			String tabName = StatCollector.translateToLocal("gui.tab." + EnumFacing.VALUES[tabNumber - 1].getName2());
+			String tabName = I18n.format("gui.jeweled_pipe.tab." + EnumFacing.VALUES[tabNumber - 1].getName2());
 						
 			fontRendererObj.drawString(tabName, tabEndX[tabNumber- 1] + halfSpaceBetweenTabs, tabY + 3, 4210752);
 		}
@@ -121,7 +120,7 @@ public class GuiJeweledPipe extends GuiContainer
 		//calculate the tab widths
 		for(int tabNumber = 1; tabNumber <= NUM_TABS; ++tabNumber)
 		{
-			String tabName = StatCollector.translateToLocal("gui.tab." + EnumFacing.VALUES[tabNumber - 1].toString().toLowerCase());
+			String tabName = I18n.format("gui.jeweled_pipe.tab." + EnumFacing.VALUES[tabNumber - 1].toString().toLowerCase());
 						
 			//record the width of this tab
 			tabEndX[tabNumber] = tabEndX[tabNumber- 1] + fontRendererObj.getStringWidth(tabName) - 1 + totalSpaceBetweenTabs;
@@ -130,11 +129,11 @@ public class GuiJeweledPipe extends GuiContainer
 		//add the buttons
 		buttonAcceptUnsorted = new GuiButtonOnOff(BUTTON_ID_UNSORTED, xStart + 8, yStart + 88, 95,
 				container.pipeItemsJeweled.filterData[container.currentSide - 1].acceptsUnsortedItems(),
-				StatCollector.translateToLocal("gui.acceptUnsorted"));
+				I18n.format("gui.jeweled_pipe.acceptUnsorted"));
 		buttonMatchNBT = new GuiButtonOnOff(BUTTON_ID_NBT, xStart + 135, yStart + 88, 30, 
-				container.pipeItemsJeweled.filterData[container.currentSide - 1].matchNBT(), StatCollector.translateToLocal("gui.NBT"));
+				container.pipeItemsJeweled.filterData[container.currentSide - 1].matchNBT(), I18n.format("gui.jeweled_pipe.NBT"));
 		buttonMatchMetadata = new GuiButtonOnOff(BUTTON_ID_METADATA, xStart + 165, yStart + 88, 30,
-				container.pipeItemsJeweled.filterData[container.currentSide - 1].matchMetadata(), StatCollector.translateToLocal("gui.metadata"));
+				container.pipeItemsJeweled.filterData[container.currentSide - 1].matchMetadata(), I18n.format("gui.jeweled_pipe.metadata"));
 		
 		buttonList.add(buttonAcceptUnsorted);
 		buttonList.add(buttonMatchNBT);
@@ -208,7 +207,7 @@ public class GuiJeweledPipe extends GuiContainer
 		((GuiButtonOnOff)button).togglePressed();
 
 		//send the current filter data to the server
-		MessageJeweledPipeOptionsServer message = new MessageJeweledPipeOptionsServer(container.pipeItemsJeweled.container.getPos(), (byte) container.currentSide, currentSideFilter);
+		MessageJeweledPipeOptionsServer message = new MessageJeweledPipeOptionsServer(container.pipeItemsJeweled.getPos(), (byte) container.currentSide, currentSideFilter);
 		PacketHandler.INSTANCE.sendToServer(message);	
 	}
 

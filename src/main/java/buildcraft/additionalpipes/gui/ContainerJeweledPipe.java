@@ -2,6 +2,10 @@ package buildcraft.additionalpipes.gui;
 
 import java.util.ArrayList;
 
+import buildcraft.additionalpipes.network.PacketHandler;
+import buildcraft.additionalpipes.network.message.MessageJeweledPipeOptionsClient;
+import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
+import buildcraft.transport.tile.TilePipeHolder;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -10,10 +14,6 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
-import buildcraft.additionalpipes.network.PacketHandler;
-import buildcraft.additionalpipes.network.message.MessageJeweledPipeOptionsClient;
-import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
-import buildcraft.transport.TileGenericPipe;
 
 
 public class ContainerJeweledPipe extends Container
@@ -88,7 +88,7 @@ public class ContainerJeweledPipe extends Container
         //send the options to the client, since they are only loaded from NBT on the server
 		if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 		{	
-			MessageJeweledPipeOptionsClient message = new MessageJeweledPipeOptionsClient(pipe.container.getPos(), pipe.filterData);
+			MessageJeweledPipeOptionsClient message = new MessageJeweledPipeOptionsClient(pipe.getPos(), pipe.filterData);
 			PacketHandler.INSTANCE.sendTo(message, (EntityPlayerMP) inventoryPlayer.player);
 		}
     }
@@ -116,8 +116,8 @@ public class ContainerJeweledPipe extends Container
             for(int filterColumnIndex = 0; filterColumnIndex < 9; ++filterColumnIndex)
             {
             	Slot currentSlot = oldTabSlots.get(9 * filterRowIndex + filterColumnIndex);
-                currentSlot.xDisplayPosition = filterColumnIndex * 18;
-                currentSlot.yDisplayPosition =  1000 + ((3 * (currentSide - 1)) + filterRowIndex) * 18;
+                currentSlot.xPos = filterColumnIndex * 18;
+                currentSlot.yPos =  1000 + ((3 * (currentSide - 1)) + filterRowIndex) * 18;
             }
 	    }
 		
@@ -127,8 +127,8 @@ public class ContainerJeweledPipe extends Container
             for(int filterColumnIndex = 0; filterColumnIndex < 9; ++filterColumnIndex)
             {
             	Slot currentSlot = newTabSlots.get(9 * filterRowIndex + filterColumnIndex);
-                currentSlot.xDisplayPosition = SLOT_START_X + filterColumnIndex * 18;
-                currentSlot.yDisplayPosition = 33 + filterRowIndex * 18;
+                currentSlot.xPos = SLOT_START_X + filterColumnIndex * 18;
+                currentSlot.yPos = 33 + filterRowIndex * 18;
             }
 	    }
 			
@@ -137,7 +137,7 @@ public class ContainerJeweledPipe extends Container
 
 	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer) {
-		TileGenericPipe tile = pipeItemsJeweled.container;
+		TilePipeHolder tile = (TilePipeHolder) pipeItemsJeweled.pipe.getHolder();
 		if(tile.getWorld().getTileEntity(tile.getPos()) != tile) return false;
 		if(entityplayer.getDistanceSq(tile.getPos().getX() + 0.5D, tile.getPos().getY() + 0.5D, tile.getPos().getZ() + 0.5D) > 64) return false;
 		return true;

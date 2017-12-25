@@ -10,21 +10,21 @@ package buildcraft.additionalpipes.pipes;
 
 import java.util.ArrayList;
 
+import buildcraft.additionalpipes.APConfiguration;
+import buildcraft.additionalpipes.AdditionalPipes;
+import buildcraft.additionalpipes.gui.GuiHandler;
+import buildcraft.api.transport.pipe.PipeEventItem;
+import buildcraft.core.lib.inventory.ITransactor;
+import buildcraft.core.lib.inventory.Transactor;
+import buildcraft.transport.PipeTransportItems;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import buildcraft.additionalpipes.APConfiguration;
-import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.additionalpipes.gui.GuiHandler;
-import buildcraft.core.lib.inventory.ITransactor;
-import buildcraft.core.lib.inventory.Transactor;
-import buildcraft.transport.PipeTransportItems;
-import buildcraft.transport.pipes.events.PipeEventItem;
 
-public class PipeItemsPriorityInsertion extends APPipe<PipeTransportItems> {
+public class PipeItemsPriorityInsertion extends APPipe {
 
 	public int sidePriorities[] = { 1, 1, 1, 1, 1, 1 };
 

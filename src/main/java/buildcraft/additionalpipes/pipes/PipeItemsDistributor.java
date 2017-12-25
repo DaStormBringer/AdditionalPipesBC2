@@ -11,24 +11,33 @@ package buildcraft.additionalpipes.pipes;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import buildcraft.additionalpipes.APConfiguration;
+import buildcraft.additionalpipes.AdditionalPipes;
+import buildcraft.additionalpipes.gui.GuiHandler;
+import buildcraft.api.transport.pipe.IPipe;
+import buildcraft.api.transport.pipe.PipeEventItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import buildcraft.additionalpipes.APConfiguration;
-import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.additionalpipes.gui.GuiHandler;
-import buildcraft.transport.PipeTransportItems;
-import buildcraft.transport.pipes.events.PipeEventItem;
 
-public class PipeItemsDistributor extends APPipe<PipeTransportItems> {
+public class PipeItemsDistributor extends APPipe {
 
 	public int distData[] = { 1, 1, 1, 1, 1, 1 };
 	public int distSide = 0;
 	public int curTick = Integer.MAX_VALUE;
 
-	public PipeItemsDistributor(Item item) {
-		super(new PipeTransportItems(), item);
+
+
+	public PipeItemsDistributor(IPipe pipe, NBTTagCompound nbt)
+	{
+		super(pipe, nbt);
+		readFromNBT(nbt);
+	}
+
+	public PipeItemsDistributor(IPipe pipe)
+	{
+		super(pipe);
 	}
 
 	@Override
@@ -118,19 +127,19 @@ public class PipeItemsDistributor extends APPipe<PipeTransportItems> {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
+	public NBTTagCompound writeToNbt() {
+		NBTTagCompound nbt = super.writeToNbt();
 
 		nbt.setInteger("curTick", curTick);
 		nbt.setInteger("distSide", distSide);
 		for(int i = 0; i < distData.length; i++) {
 			nbt.setInteger("distData" + i, distData[i]);
 		}
+		
+		return nbt;
 	}
 
-	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
 
 		curTick = nbt.getInteger("curTick");
 		distSide = nbt.getInteger("distSide");

@@ -1,14 +1,9 @@
 package buildcraft.additionalpipes.utils;
 
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.additionalpipes.item.ItemPipeAP;
-import buildcraft.additionalpipes.pipes.APPipe;
-import buildcraft.transport.BlockGenericPipe;
-import buildcraft.transport.ItemPipe;
-import buildcraft.transport.Pipe;
-import net.minecraft.item.Item;
+import buildcraft.api.transport.pipe.PipeDefinition;
+import buildcraft.transport.item.ItemPipeHolder;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
@@ -24,10 +19,10 @@ public class PipeCreator
 	 * @param shapeless whether or not the recipe is shapeless
 	 * @return
 	 */
-	public static Item createPipeAndRecipe(int output, Class<? extends Pipe<?>> clas, boolean shapeless, Object... recipe) 
+	public static ItemPipeHolder createPipeItemAndRecipe(int output, PipeDefinition pipeDef, boolean shapeless, Object... recipe) 
 	{
 	
-		Item pipe = createPipe(clas);
+		ItemPipeHolder pipe = createPipeItem(pipeDef);
 		for(Object obj : recipe) {
 			if(obj == null)
 				return pipe;
@@ -48,18 +43,15 @@ public class PipeCreator
 	 * @param clas
 	 * @return
 	 */
-	public static ItemPipe createPipe(Class<? extends Pipe<?>> clas)
+	public static ItemPipeHolder createPipeItem(PipeDefinition pipeDef)
 	{
-		ItemPipe res = BlockGenericPipe.registerPipe(clas, AdditionalPipes.instance.creativeTab);
-		res.setUnlocalizedName(clas.getSimpleName());
-		AdditionalPipes.proxy.setPipeTextureProvider(res);
-		return res;
+		return new ItemPipeHolder(pipeDef);
 	}
 
-	public static Item createPipeTooltip(Class<? extends APPipe<?>> clas, String tooltip)
+	/*public static Item createPipeTooltip(Class<? extends APPipe<?>> clas, String tooltip)
 	{
 		//we need to use our own version of ItemPipe with tooltip support
-		ItemPipe item = new ItemPipeAP(tooltip);
+		ItemPipeHolder item = new ItemPipeAP(tooltip);
 		item.setUnlocalizedName(clas.getSimpleName());
 		BlockGenericPipe.pipes.put(item, clas);
 		
@@ -68,6 +60,6 @@ public class PipeCreator
 		AdditionalPipes.proxy.createPipeSpecial(item, clas);
 	
 		return item;
-	}
+	}*/
 
 }

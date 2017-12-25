@@ -2,25 +2,26 @@ package buildcraft.additionalpipes.gui;
 
 import java.util.List;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.ICrafting;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
+import buildcraft.additionalpipes.api.ITeleportPipe;
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessageTelePipeData;
 import buildcraft.additionalpipes.pipes.PipeTeleport;
 import buildcraft.additionalpipes.pipes.TeleportManager;
 import buildcraft.additionalpipes.utils.Log;
-import buildcraft.core.lib.gui.BuildCraftContainer;
-import buildcraft.transport.TileGenericPipe;
+import buildcraft.lib.gui.ContainerBC_Neptune;
+import buildcraft.transport.tile.TilePipeHolder;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.IContainerListener;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
-public class ContainerTeleportPipe extends BuildCraftContainer {
+public class ContainerTeleportPipe extends ContainerBC_Neptune {
 
 	public int connectedPipes = 0;
 
 	private int ticks = 0;
-	public PipeTeleport<?> pipe;
+	public PipeTeleport pipe;
 	private int freq;
 	private byte state;
 	private boolean isPublic;
@@ -32,9 +33,9 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 	// only set on the server side
 	private int originalfreq;
 
-	public ContainerTeleportPipe(EntityPlayer player, PipeTeleport<?> pipe)
+	public ContainerTeleportPipe(EntityPlayer player, PipeTeleport pipe)
 	{
-		super(player, 0);
+		super(player);
 		this.pipe = pipe;
 
 		//set these variables to invalid values so that they will be updated
@@ -46,16 +47,16 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 		
 		if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 		{			
-			List<PipeTeleport<?>> connectedPipes = TeleportManager.instance.<PipeTeleport<?>>getConnectedPipes(pipe, !isSendingPipe, isSendingPipe);
+			List<ITeleportPipe> connectedPipes = TeleportManager.instance.getConnectedPipes(pipe, !isSendingPipe, isSendingPipe);
 			int[] locations = new int[connectedPipes.size() * 3];
 			for(int i = 0; i < connectedPipes.size() && i < 9; i++) {
-				PipeTeleport<?> connectedPipe = connectedPipes.get(i);
-				locations[3 * i] = connectedPipe.container.getPos().getX();
-				locations[3 * i + 1] = connectedPipe.container.getPos().getY();
-				locations[3 * i + 2] = connectedPipe.container.getPos().getZ();
+				ITeleportPipe connectedPipe = connectedPipes.get(i);
+				locations[3 * i] = connectedPipe.getContainer().getPos().getX();
+				locations[3 * i + 1] = connectedPipe.getContainer().getPos().getY();
+				locations[3 * i + 2] = connectedPipe.getContainer().getPos().getZ();
 			}
 			
-			MessageTelePipeData message = new MessageTelePipeData(pipe.container.getPos(), locations, pipe.ownerUUID, pipe.ownerName);
+			MessageTelePipeData message = new MessageTelePipeData(pipe.getPos(), locations, pipe.ownerUUID, pipe.ownerName);
 			PacketHandler.INSTANCE.sendTo(message, (EntityPlayerMP) player);
 			
 			//save the pipe's old frequency so it can be removed later
@@ -65,8 +66,9 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 	}
 
 	@Override
-	public boolean canInteractWith(EntityPlayer entityplayer) {
-		TileGenericPipe tile = pipe.container;
+	public boolean canInteractWith(EntityPlayer entityplayer)
+	{
+		TilePipeHolder tile = pipe.getContainer();
 		if(tile.getWorld().getTileEntity(tile.getPos()) != tile) return false;
 		if(entityplayer.getDistanceSq(tile.getPos().getX() + 0.5D, tile.getPos().getY() + 0.5D, tile.getPos().getZ() + 0.5D) > 64) return false;
 		return true;
@@ -83,18 +85,18 @@ public class ContainerTeleportPipe extends BuildCraftContainer {
 			Log.debug("New connected:" + connectedPipesNew);
 		}
 		ticks++;
-		for(Object crafter : crafters) {
+		for(IContainerListener crafter : listeners) {
 			if(freq != pipe.getFrequency()) {
-				((ICrafting) crafter).sendProgressBarUpdate(this, 0, pipe.getFrequency());
+				crafter.sendProgressBarUpdate(this, 0, pipe.getFrequency());
 			}
 			if(state != pipe.state) {
-				((ICrafting) crafter).sendProgressBarUpdate(this, 1, pipe.state);
+				crafter.sendProgressBarUpdate(this, 1, pipe.state);
 			}
 			if(connectedPipesNew != connectedPipes) {
-				((ICrafting) crafter).sendProgressBarUpdate(this, 2, connectedPipesNew);
+				crafter.sendProgressBarUpdate(this, 2, connectedPipesNew);
 			}
 			if(isPublic != pipe.isPublic) {
-				((ICrafting) crafter).sendProgressBarUpdate(this, 3, pipe.isPublic ? 1 : 0);
+				crafter.sendProgressBarUpdate(this, 3, pipe.isPublic ? 1 : 0);
 			}
 		}
 		state = pipe.state;

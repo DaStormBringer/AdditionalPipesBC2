@@ -6,29 +6,23 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumFacing;
 import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.api.ITeleportPipe;
-import buildcraft.additionalpipes.api.PipeType;
+import buildcraft.additionalpipes.api.TeleportPipeType;
 import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.additionalpipes.utils.PlayerUtils;
-import buildcraft.api.transport.IPipeTile;
-import buildcraft.api.transport.PipeWire;
-import buildcraft.transport.Gate;
-import buildcraft.transport.Pipe;
-import buildcraft.transport.PipeTransport;
-import buildcraft.transport.TileGenericPipe;
+import buildcraft.api.transport.pipe.IPipe;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 
 
-public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPipe<pipeType> implements ITeleportPipe {
+public abstract class PipeTeleport extends APPipe implements ITeleportPipe 
+{
 	protected static final Random rand = new Random();
 
 	private int frequency = 0;
@@ -38,14 +32,14 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 	public UUID ownerUUID;
 	public String ownerName = "";
 	
-	public int[] network = new int[0];
+	public int[] network = new int[0]; // coordinates of connected pipes.  Used as a sort of cache variable by the teleport pipe GUI.
 	public boolean isPublic = false;
 	
-	public final PipeType type;
+	public final TeleportPipeType type;
 
-	public PipeTeleport(pipeType transport, Item item, PipeType type)
+	public PipeTeleport(IPipe pipe, TeleportPipeType type)
 	{
-		super(transport, item);
+		super(pipe);
 		this.type = type;
 		
 		
@@ -119,7 +113,7 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 	}
 	
 	@Override
-	public PipeType getType()
+	public TeleportPipeType getType()
 	{
 		return type;
 	}
@@ -381,9 +375,8 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 		nbttagcompound.setBoolean("isPublic", isPublic);
 	}
 
-	@Override
-	public void readFromNBT(NBTTagCompound nbttagcompound) {
-		super.readFromNBT(nbttagcompound);
+	public void readFromNBT(NBTTagCompound nbttagcompound) 
+	{
 		frequency = nbttagcompound.getInteger("freq");
 		state = nbttagcompound.getByte("state");
 		if(nbttagcompound.hasKey("ownerUUID"))
@@ -394,14 +387,15 @@ public abstract class PipeTeleport<pipeType extends PipeTransport> extends APPip
 		isPublic = nbttagcompound.getBoolean("isPublic");
 	}
 
-	public static boolean canPlayerModifyPipe(EntityPlayer player, PipeTeleport<?> pipe) {
+	public static boolean canPlayerModifyPipe(EntityPlayer player, PipeTeleport pipe)
+	{
 		if(pipe.isPublic || pipe.ownerUUID.equals(PlayerUtils.getUUID(player)) || player.capabilities.isCreativeMode)
 			return true;
 		return false;
 	}
 
 	public BlockPos getPosition() {
-		return container.getPos();
+		return getPos();
 	}
 	
 	@Override

@@ -1,18 +1,16 @@
 package buildcraft.additionalpipes.gui;
 
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.util.StatCollector;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.opengl.GL11;
 
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessageDistPipe;
 import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
 import buildcraft.additionalpipes.textures.Textures;
-import buildcraft.transport.TileGenericPipe;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiDistributionPipe extends GuiContainer {
@@ -24,7 +22,7 @@ public class GuiDistributionPipe extends GuiContainer {
 	public int guiY = 0;
 	private final PipeItemsDistributor pipe;
 
-	public GuiDistributionPipe(TileGenericPipe container) {
+	public GuiDistributionPipe(PipeItemsDistributor container) {
 		super(new ContainerDistributionPipe(container));
 		pipe = (PipeItemsDistributor) container.pipe;
 		xSize = 117;
@@ -73,7 +71,7 @@ public class GuiDistributionPipe extends GuiContainer {
 		buttons[13].displayString = "" + pipe.distData[4];
 		buttons[16].displayString = "" + pipe.distData[5];
 		
-		fontRendererObj.drawString(StatCollector.translateToLocal("gui.pipeItemsDistributor"), guiX + 42, guiY + 22, 4210752);
+		fontRendererObj.drawString(I18n.format("gui.distribution_pipe.title"), guiX + 42, guiY + 22, 4210752);
 	}
 
 	@Override
@@ -85,24 +83,11 @@ public class GuiDistributionPipe extends GuiContainer {
 		} else {
 			newData++;
 		}
-		/*
-		 * //Old code
-		 *  switch (guibutton.id) { case 1: index = 0;
-		 * pipeLogic.distData[0] -= 1; break; case 3: index = 0;
-		 * pipeLogic.distData[0] += 1; break; case 4: pipeLogic.distData[1] -=
-		 * 1; break; case 6: pipeLogic.distData[1] += 1; break; case 7:
-		 * pipeLogic.distData[2] -= 1; break; case 9: pipeLogic.distData[2] +=
-		 * 1; break; case 10: pipeLogic.distData[3] -= 1; break; case 12:
-		 * pipeLogic.distData[3] += 1; break; case 13: pipeLogic.distData[4] -=
-		 * 1; break; case 15: pipeLogic.distData[4] += 1; break; case 16:
-		 * pipeLogic.distData[5] -= 1; break; case 18: pipeLogic.distData[5] +=
-		 * 1; break; }
-		 */
 
 		if(newData < 0)
 			return;
 
-		MessageDistPipe message = new MessageDistPipe(pipe.container.getPos(), (byte) index, newData);
+		MessageDistPipe message = new MessageDistPipe(pipe.getPos(), (byte) index, newData);
 		PacketHandler.INSTANCE.sendToServer(message);	
 	}
 

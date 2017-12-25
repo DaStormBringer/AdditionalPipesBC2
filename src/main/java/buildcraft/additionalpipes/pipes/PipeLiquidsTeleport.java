@@ -18,7 +18,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import buildcraft.additionalpipes.api.PipeType;
+import buildcraft.additionalpipes.api.TeleportPipeType;
 import buildcraft.transport.IPipeTransportFluidsHook;
 import buildcraft.transport.PipeTransportFluids;
 import buildcraft.transport.pipes.PipeFluidsDiamond;
@@ -28,7 +28,7 @@ public class PipeLiquidsTeleport extends PipeTeleport<PipeTransportFluids> imple
 
 	public PipeLiquidsTeleport(Item item)
 	{
-		super(new PipeTransportFluids(), item, PipeType.FLUIDS);
+		super(new PipeTransportFluids(), item, TeleportPipeType.FLUIDS);
 		
 		//load the fluid capacities set in mod init
 		transport.initFromPipe(PipeFluidsDiamond.class);

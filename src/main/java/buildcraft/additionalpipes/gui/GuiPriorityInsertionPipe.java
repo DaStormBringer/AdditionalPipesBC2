@@ -1,18 +1,16 @@
 package buildcraft.additionalpipes.gui;
 
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.util.StatCollector;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.opengl.GL11;
 
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessagePriorityPipe;
 import buildcraft.additionalpipes.pipes.PipeItemsPriorityInsertion;
 import buildcraft.additionalpipes.textures.Textures;
-import buildcraft.transport.TileGenericPipe;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 
 @SideOnly(Side.CLIENT)
@@ -25,9 +23,9 @@ public class GuiPriorityInsertionPipe extends GuiContainer {
 	public int guiY = 0;
 	private final PipeItemsPriorityInsertion pipe;
 
-	public GuiPriorityInsertionPipe(TileGenericPipe container) {
-		super(new ContainerPriorityInsertionPipe(container));
-		pipe = (PipeItemsPriorityInsertion) container.pipe;
+	public GuiPriorityInsertionPipe(PipeItemsPriorityInsertion pipe) {
+		super(new ContainerPriorityInsertionPipe(pipe));
+		this.pipe = pipe;
 		xSize = 132;
 		ySize = 130;
 	}
@@ -66,7 +64,8 @@ public class GuiPriorityInsertionPipe extends GuiContainer {
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int p1, int p2) {
+	protected void drawGuiContainerForegroundLayer(int p1, int p2) 
+	{
 		buttons[1].displayString = "" + pipe.sidePriorities[0];
 		buttons[4].displayString = "" + pipe.sidePriorities[1];
 		buttons[7].displayString = "" + pipe.sidePriorities[2];
@@ -74,7 +73,7 @@ public class GuiPriorityInsertionPipe extends GuiContainer {
 		buttons[13].displayString = "" + pipe.sidePriorities[4];
 		buttons[16].displayString = "" + pipe.sidePriorities[5];
 		
-		fontRendererObj.drawString(StatCollector.translateToLocal("gui.pipeItemsPriorityInsertion"), guiX + 33, guiY + 22, 4210752);
+		fontRendererObj.drawString(I18n.format("gui.priority_insertion.title"), guiX + 33, guiY + 22, 4210752);
 	}
 
 	@Override
@@ -90,7 +89,7 @@ public class GuiPriorityInsertionPipe extends GuiContainer {
 		if(newData < 0 || newData > 6)
 			return;
 
-		MessagePriorityPipe message = new MessagePriorityPipe(pipe.container.getPos(), (byte) index, newData);
+		MessagePriorityPipe message = new MessagePriorityPipe(pipe.getPos(), (byte) index, newData);
 		PacketHandler.INSTANCE.sendToServer(message);	
 	}
 

@@ -1,14 +1,14 @@
 package buildcraft.additionalpipes.network.message;
 
+import buildcraft.additionalpipes.pipes.PipeItemsPriorityInsertion;
+import buildcraft.transport.tile.TilePipeHolder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import buildcraft.additionalpipes.pipes.PipeItemsPriorityInsertion;
-import buildcraft.transport.TileGenericPipe;
 
 
 /**
@@ -52,11 +52,11 @@ public class MessagePriorityPipe implements IMessage, IMessageHandler<MessagePri
     public IMessage onMessage(MessagePriorityPipe message, MessageContext ctx)
     {
     	
-    	World world = ctx.getServerHandler().playerEntity.worldObj;
+    	World world = ctx.getServerHandler().playerEntity.getEntityWorld();
     	TileEntity te = world.getTileEntity(message.position);
-		if(te instanceof TileGenericPipe)
+		if(te instanceof TilePipeHolder)
 		{
-			PipeItemsPriorityInsertion pipe = (PipeItemsPriorityInsertion) ((TileGenericPipe) te).pipe;
+			PipeItemsPriorityInsertion pipe = (PipeItemsPriorityInsertion) ((TilePipeHolder) te).getPipe().getBehaviour();
 
 			if(message._newData >= 0 && message._index >= 0 && message._index < pipe.sidePriorities.length) {
 				pipe.sidePriorities[message._index] = message._newData;
