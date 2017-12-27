@@ -57,7 +57,8 @@ public class MessageDistPipe implements IMessage, IMessageHandler<MessageDistPip
 		{
 			PipeItemsDistributor pipe = (PipeItemsDistributor) ((TilePipeHolder) te).getPipe().getBehaviour();
 
-			if(message._newData >= 0 && message._index >= 0 && message._index < pipe.distData.length) {
+			if(message._newData >= 0 && message._index >= 0 && message._index < pipe.distData.length) 
+			{
 				pipe.distData[message._index] = message._newData;
 				boolean found = message._newData > 0;
 				if(!found) {

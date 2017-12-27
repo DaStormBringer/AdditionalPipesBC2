@@ -8,26 +8,32 @@
 
 package buildcraft.additionalpipes.pipes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 
-import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
+import buildcraft.api.core.EnumPipePart;
 import buildcraft.api.transport.pipe.IPipe;
+import buildcraft.api.transport.pipe.IPipeHolder.PipeMessageReceiver;
+import buildcraft.api.transport.pipe.PipeEventHandler;
 import buildcraft.api.transport.pipe.PipeEventItem;
+import buildcraft.api.transport.pipe.PipeEventItem.ItemEntry;
+import buildcraft.lib.misc.EntityUtil;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class PipeItemsDistributor extends APPipe {
 
 	public int distData[] = { 1, 1, 1, 1, 1, 1 };
-	public int distSide = 0;
-	public int curTick = Integer.MAX_VALUE;
-
-
+	public EnumFacing distSide = EnumFacing.UP; // will get initialized on first toNextOpenSide() call
+	public int itemsThisSide = Integer.MAX_VALUE; // normally ranges from 0 to distData[distSide] - 1
 
 	public PipeItemsDistributor(IPipe pipe, NBTTagCompound nbt)
 	{
@@ -41,78 +47,115 @@ public class PipeItemsDistributor extends APPipe {
 	}
 
 	@Override
-	public int getIconIndex(EnumFacing connection)
+	public int getTextureIndex(EnumFacing connection)
 	{
 		if(connection == null)
 		{
-			return 10;
+			return 0;
 		}
 		switch(connection) 
 		{
 		case DOWN: // -y
-			return 10;
+			return 0;
 		case UP: // +y
-			return 11;
+			return 1;
 		case NORTH: // -z
-			return 12;
+			return 2;
 		case SOUTH: // +z
-			return 13;
+			return 3;
 		case WEST: // -x
-			return 14;
+			return 4;
 		case EAST: // +x
 		default:
-			return 9;
+			return 5;
 		}
 	}
 	
-	public void eventHandler(PipeEventItem.FindDest event)
+	@PipeEventHandler
+	public void splitStacks(PipeEventItem.Split splitEvent) 
 	{
-		LinkedList<EnumFacing> result = new LinkedList<EnumFacing>();
-
-		//curTick used to be initialized to 0
-		//but the issue was that when the first item stack passes through the pipe, it always sent it downward whether or not anything was connected
-		//so I changed curTick to be initialized to Integer.MAX_VALUE so that it will look for the correct output. -JS
-		if(curTick >= distData[distSide]) 
+		ArrayList<ItemEntry>  newDistribution = new ArrayList<>();
+		for(ItemEntry entry : splitEvent.items)
 		{
-			toNextOpenSide();
+
+			if(getItemsLeftThisSide() > 0 && entry.stack.getCount() <= getItemsLeftThisSide())
+			{
+				// easy
+				entry.to.clear(); 
+				entry.to.add(distSide);
+				itemsThisSide += entry.stack.getCount();
+				
+				newDistribution.add(entry);
+			}
+			else // if there are more items in this stack than there are left for this side, we will have to split the stack		
+			{
+				while(entry.stack.getCount() > 0)
+				{
+					if(getItemsLeftThisSide() <= 0)
+					{
+						toNextOpenSide();
+					}
+					
+					ItemEntry stackPartThisSide = new ItemEntry(null, entry.stack.copy(), entry.from);
+					
+					stackPartThisSide.stack.setCount(Math.min(getItemsLeftThisSide(), entry.stack.getCount())); // take as many items as the distribution will allow
+					entry.stack.setCount(entry.stack.getCount() - stackPartThisSide.stack.getCount()); // and leave event.stack with the remainder
+					
+					newDistribution.add(stackPartThisSide);
+				}
+			}
+			
 		}
-
-		result.add(EnumFacing.values()[distSide]);
-		curTick += event.item.getItemStack().stackSize;
-
-		event.destinations.clear();
-		event.destinations.addAll(result);
+		
+		splitEvent.items.clear();
+		splitEvent.items.addAll(newDistribution);
 	}
 
-	private void toNextOpenSide() {
-		curTick = 0;
-		for(int o = 0; o < distData.length; ++o) {
-			distSide = (distSide + 1) % distData.length;
-			if(distData[distSide] > 0 && container.isPipeConnected(EnumFacing.values()[distSide])) {
-				break;
+	
+
+	/**
+	 * Moves the pipe to the next open side.
+	 */
+	private void toNextOpenSide() 
+	{
+		itemsThisSide = 0;
+		for(int o = 0; o < distData.length; ++o) 
+		{
+			distSide = EnumFacing.VALUES[(distSide.ordinal() + 1) % distData.length];
+			if(distData[distSide.ordinal()] > 0 && pipe.isConnected(distSide))
+			{
+				return;
 			}
 		}
-		// no valid inventories found, do nothing
+	}
+	
+	/**
+	 * 
+	 * @return the number of items left that this side can output before switching to the next one
+	 */
+	private int getItemsLeftThisSide()
+	{
+		return distData[distSide.ordinal()] - itemsThisSide;
 	}
 
 	@Override
-	public boolean blockActivated(EntityPlayer player, EnumFacing direction) {
-		if(player.isSneaking()) {
-			return false;
-		}
-
-		Item equipped = player.getCurrentEquippedItem() != null ? player.getCurrentEquippedItem().getItem() : null;
-		if(equipped != null) {
-			if(APConfiguration.filterRightclicks && AdditionalPipes.isPipe(equipped)) {
-				return false;
-			}
-		}
-
-		if(player.worldObj.isRemote) return true;
-		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_DIST, container.getWorld(), container.getPos().getX(), container.getPos().getY(), container.getPos().getZ());
-
-		return true;
-	}
+    public boolean onPipeActivate(EntityPlayer player, RayTraceResult trace, float hitX, float hitY, float hitZ, EnumPipePart part) 
+	{
+        if (EntityUtil.getWrenchHand(player) != null) 
+        {
+            return super.onPipeActivate(player, trace, hitX, hitY, hitZ, part);
+        }
+        
+        if(!player.world.isRemote) 
+        {
+        	// fire off an update packet to the client
+        	pipe.getHolder().scheduleNetworkUpdate(PipeMessageReceiver.BEHAVIOUR);
+        	
+        	BlockPos pipePos = pipe.getHolder().getPipePos();
+        	player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_DIST, pipe.getHolder().getPipeWorld(), pipePos.getX(), pipePos.getY(), pipePos.getZ());
+        }
+        return true;
+    }
 
 	private void sanityCheck()
 	{
@@ -130,9 +173,10 @@ public class PipeItemsDistributor extends APPipe {
 	public NBTTagCompound writeToNbt() {
 		NBTTagCompound nbt = super.writeToNbt();
 
-		nbt.setInteger("curTick", curTick);
-		nbt.setInteger("distSide", distSide);
-		for(int i = 0; i < distData.length; i++) {
+		nbt.setInteger("itemsThisSide", itemsThisSide);
+		nbt.setInteger("distSide", distSide.ordinal());
+		for(int i = 0; i < distData.length; i++) 
+		{
 			nbt.setInteger("distData" + i, distData[i]);
 		}
 		
@@ -141,12 +185,47 @@ public class PipeItemsDistributor extends APPipe {
 
 	public void readFromNBT(NBTTagCompound nbt) {
 
-		curTick = nbt.getInteger("curTick");
-		distSide = nbt.getInteger("distSide");
+		itemsThisSide = nbt.getInteger("itemsThisSide");
+		distSide = EnumFacing.VALUES[nbt.getInteger("distSide")];
 		for(int i = 0; i < distData.length; i++) {
 			distData[i] = nbt.getInteger("distData" + i);
 		}
 		sanityCheck();
 	}
+	
+	
+    @Override
+    public void writePayload(PacketBuffer buffer, Side side) 
+    {
+        super.writePayload(buffer, side);
+        if (side == Side.SERVER) 
+        {
+        	buffer.writeInt(itemsThisSide);
+        	buffer.writeInt(distSide.ordinal());
+        	
+        	for(int i = 0; i < distData.length; i++) 
+    		{
+        		buffer.writeInt(distData[i]);
+    		}
+        }
+    }
+    
+    @Override
+    public void readPayload(PacketBuffer buffer, Side side, MessageContext ctx)
+    {
+        super.readPayload(buffer, side, ctx);
+        if (side == Side.CLIENT) 
+        {
+            itemsThisSide = buffer.readInt();
+            distSide = EnumFacing.values()[buffer.readInt()];
+            
+            for(int i = 0; i < distData.length; i++) 
+    		{
+            	distData[i] = buffer.readInt();
+    		}
+        }
+    }
+
+
 
 }

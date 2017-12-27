@@ -21,8 +21,6 @@ import net.minecraft.util.EnumFacing;
 
 public class PipeItemsAddition extends APPipe
 {
-	//re-use old Redstone Pipe texture
-	private static final int ICON = 4;
 
 	public PipeItemsAddition(IPipe pipe) {
 		super(pipe);

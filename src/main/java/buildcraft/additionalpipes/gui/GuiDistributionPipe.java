@@ -63,7 +63,8 @@ public class GuiDistributionPipe extends GuiContainer {
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int p1, int p2) {
+	protected void drawGuiContainerForegroundLayer(int p1, int p2) 
+	{
 		buttons[1].displayString = "" + pipe.distData[0];
 		buttons[4].displayString = "" + pipe.distData[1];
 		buttons[7].displayString = "" + pipe.distData[2];
@@ -75,20 +76,48 @@ public class GuiDistributionPipe extends GuiContainer {
 	}
 
 	@Override
-	protected void actionPerformed(GuiButton guibutton) {
+	protected void actionPerformed(GuiButton guibutton) 
+	{
 		int index = (guibutton.id - 1) / 3;
+		
 		int newData = pipe.distData[index];
-		if((guibutton.id - 1) % 3 == 0) {
+		if((guibutton.id - 1) % 3 == 0) 
+		{
 			newData--;
-		} else {
+		}
+		else
+		{
 			newData++;
 		}
-
+		
 		if(newData < 0)
+		{
 			return;
-
-		MessageDistPipe message = new MessageDistPipe(pipe.getPos(), (byte) index, newData);
-		PacketHandler.INSTANCE.sendToServer(message);	
+		}
+		
+		// make sure that one of the distData[] elements is at least 1
+		boolean nonZeroFound = newData > 0;
+		
+		if(!nonZeroFound) 
+		{
+			for(int i = 0; i < pipe.distData.length; i++) 
+			{
+				if(i != index && pipe.distData[i] > 0) 
+				{
+					nonZeroFound = true;
+				}
+			}
+		}
+		
+		if(nonZeroFound)
+		{
+			// save data and send packet
+			pipe.distData[index] = newData;
+			MessageDistPipe message = new MessageDistPipe(pipe.getPos(), (byte) index, newData);
+			PacketHandler.INSTANCE.sendToServer(message);	
+		}
+		
+		
 	}
 
 	@Override

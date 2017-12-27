@@ -1,6 +1,5 @@
 package buildcraft.additionalpipes.gates;
 
-import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.api.core.render.ISprite;
 import buildcraft.api.statements.IStatement;
 import buildcraft.api.statements.StatementManager;
@@ -17,8 +16,10 @@ public abstract class APTrigger implements IStatement {
 	protected String descriptionKey; //used for description translations
     protected ResourceLocation texture;
 
+    private final String textureID;
+    
     @SideOnly(Side.CLIENT)
-    private final ISprite sprite;
+    private ISprite sprite = null;
 
     /**
      * 
@@ -30,7 +31,7 @@ public abstract class APTrigger implements IStatement {
 		
 		this.id = "additionalpipes:" + descriptionKey;
 		StatementManager.statements.put(this.id, this);		
-		sprite = SpriteHolderRegistry.getHolder(new ResourceLocation(AdditionalPipes.MODID, "items/triggers/" + idWithoutPrefix));
+		textureID = idWithoutPrefix;
 		
         MinecraftForge.EVENT_BUS.register(this);		
 
@@ -51,7 +52,11 @@ public abstract class APTrigger implements IStatement {
 	@Override
 	public ISprite getSprite()
 	{
-		return sprite;
+	    if (sprite == null) 
+	    {
+	        sprite = SpriteHolderRegistry.getHolder("items/triggers/" + textureID);
+	    }
+	    return sprite;
 	}
 	
 

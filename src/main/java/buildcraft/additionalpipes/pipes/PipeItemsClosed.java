@@ -49,7 +49,7 @@ public class PipeItemsClosed extends APPipe implements ICapabilityProvider {
             return super.onPipeActivate(player, trace, hitX, hitY, hitZ, part);
         }
         
-        if (player.isServerWorld()) 
+        if (!player.world.isRemote) 
         {
         	BlockPos pipePos = pipe.getHolder().getPipePos();
         	player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_CLOSED, pipe.getHolder().getPipeWorld(), pipePos.getX(), pipePos.getY(), pipePos.getZ());
