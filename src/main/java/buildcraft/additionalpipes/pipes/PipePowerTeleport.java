@@ -8,123 +8,141 @@
 
 package buildcraft.additionalpipes.pipes;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
 import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.api.TeleportPipeType;
 import buildcraft.additionalpipes.utils.Log;
-import buildcraft.api.transport.IPipeTile;
-import buildcraft.core.lib.utils.Utils;
-import buildcraft.transport.IPipeTransportPowerHook;
-import buildcraft.transport.PipeTransportPower;
-import buildcraft.transport.TileGenericPipe;
-import buildcraft.transport.pipes.PipePowerDiamond;
-import cofh.api.energy.IEnergyReceiver;
+import buildcraft.api.mj.IMjReceiver;
+import buildcraft.api.mj.MjAPI;
+import buildcraft.api.transport.pipe.IPipe;
+import buildcraft.api.transport.pipe.IPipe.ConnectedType;
+import buildcraft.api.transport.pipe.IPipeHolder;
+import buildcraft.transport.pipe.flow.IPipeTransportPowerHook;
+import buildcraft.transport.pipe.flow.PipeFlowPower;
+import buildcraft.transport.tile.TilePipeHolder;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.MathHelper;
 
-public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implements IPipeTransportPowerHook {
-	private static final int ICON = 3;
+public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPowerHook
+{
 
+	/**
+	 * Data class used in receivePower() to keep track of what TEs need power
+	 * @author jamie
+	 *
+	 */
 	private static class PowerRequest {
 		public final TileEntity tile;
-		public final EnumFacing orientation;
+		public final EnumFacing orientation; // side on tile entity of power request
 		public final boolean isPipe;
 
 		public PowerRequest(TileEntity te, EnumFacing o) {
 			tile = te;
 			orientation = o;
-			isPipe = te instanceof IPipeTile;
+			isPipe = te instanceof IPipeHolder;
 		}
 	}
 
-	public PipePowerTeleport(Item item) {
-		super(new PipeTransportPower(), item, TeleportPipeType.POWER);
-		((PipeTransportPower) transport).initFromPipe(PipePowerDiamond.class);
+	public PipePowerTeleport(IPipe pipe, NBTTagCompound tagCompound, TeleportPipeType type)
+	{
+		super(pipe, tagCompound, TeleportPipeType.POWER);
 	}
 
+	public PipePowerTeleport(IPipe pipe, TeleportPipeType type)
+	{
+		super(pipe, type);
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public int requestEnergy(EnumFacing from, int value ) {
+	public int requestPower(EnumFacing from, long value)
+	{
 		int requested = 0;
 
-		if((state & 0x2) == 0) { // No need to waste CPU
+		if(!canReceive()) 
+		{ // No need to waste CPU
 			return requested;
 		}
 
-		List<PipePowerTeleport> pipeList = TeleportManager.instance.getConnectedPipes(this, true, false);
+		ArrayList<PipePowerTeleport> pipeList = (ArrayList)TeleportManager.instance.getConnectedPipes(this, true, false);
 
 		if(pipeList.size() <= 0) {
 			return requested;
 		}
 
-		for(PipeTeleport<?> pipe : pipeList) {
-			LinkedList<EnumFacing> possibleMovements = getRealPossibleMovements(pipe);
-			for(EnumFacing orientation : possibleMovements) {
-				TileEntity tile = pipe.container.getTile(orientation);
-				if(tile instanceof TileGenericPipe) {
-					TileGenericPipe adjacentTile = (TileGenericPipe) tile;
-					PipeTransportPower nearbyTransport = (PipeTransportPower) adjacentTile.pipe.transport;
-					nearbyTransport.requestEnergy(orientation.getOpposite(), value);
-					//TODO does this work??
-					requested += nearbyTransport.nextPowerQuery[orientation.getOpposite().ordinal()];
-				}
+		
+		// for each teleport pipe connected to us, tell pipes connected to THEM that we are requesting the power
+		for(PipePowerTeleport otherPipe : pipeList) 
+		{
+			LinkedList<EnumFacing> possibleMovements = getRealPossibleMovements(otherPipe);
+			for(EnumFacing orientation : possibleMovements) 
+			{
+				IPipe nearbyPipe = otherPipe.pipe.getConnectedPipe(from);
+				
+				PipeFlowPower nearbyFlow = (PipeFlowPower) nearbyPipe.getFlow();
+				nearbyFlow.requestPower(orientation.getOpposite(), value);
 			}
 		}
 		return requested;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public int receiveEnergy(EnumFacing from, int energy) {
-		List<PipePowerTeleport> connectedPipes = TeleportManager.instance.<PipePowerTeleport>getConnectedPipes(this, false, true);
+	public int receivePower(EnumFacing from, long energy) 
+	{
+		List<PipePowerTeleport> connectedPipes = (List)TeleportManager.instance.getConnectedPipes(this, false, true);
 		List<PipePowerTeleport> sendingToList = new LinkedList<PipePowerTeleport>();
 
 		// no connected pipes, leave!
-		if(connectedPipes.size() <= 0 || (state & 0x1) == 0) {
+		if(connectedPipes.size() <= 0 || (state & 0x1) == 0)
+		{
 			return 0;
 		}
 
-		for(PipePowerTeleport pipe : connectedPipes) {
-			if(getPowerRequestsByNeighbors(pipe).size() > 0) {
+		for(PipePowerTeleport pipe : connectedPipes) 
+		{
+			if(getPowerRequestsByNeighbors(pipe).size() > 0) 
+			{
 				sendingToList.add(pipe);
 			}
 		}
 
 		// no pipes need energy, leave!
-		if(sendingToList.size() <= 0) {
+		if(sendingToList.size() <= 0)
+		{
 			Log.debug("No pipes want power on channel " + getFrequency());
 			
 			return 0;
 		}
 
-		// TODO proportional power relay
 		double powerToSend = APConfiguration.powerTransmittanceCfg * energy / sendingToList.size();
 
-		for(PipePowerTeleport receiver : sendingToList) {
+		for(PipePowerTeleport receiver : sendingToList)
+		{
 			List<PowerRequest> needsPower = getPowerRequestsByNeighbors(receiver);
 
 			if(needsPower.size() <= 0) {
 				continue;
 			}
 
-			int dividedPowerToSend = MathHelper.ceiling_double_int(powerToSend / needsPower.size());
+			int dividedPowerToSend = MathHelper.ceil(powerToSend / needsPower.size());
 
 			for(PowerRequest powerEntry : needsPower) 
 			{
 				if(powerEntry.isPipe)
 				{
-					PipeTransportPower nearbyTransport = (PipeTransportPower)(((TileGenericPipe)powerEntry.tile).pipe.transport);
-					nearbyTransport.receiveEnergy(powerEntry.orientation, dividedPowerToSend);
+					PipeFlowPower nearbyFlow = (PipeFlowPower)(((TilePipeHolder)powerEntry.tile).getPipe().getFlow());
+					nearbyFlow.addPower(powerEntry.orientation, dividedPowerToSend);
 				}
-				else if (powerEntry.tile instanceof IEnergyReceiver) 
+				else if (powerEntry.tile.hasCapability(MjAPI.CAP_RECEIVER, powerEntry.orientation)) 
 				{
-					IEnergyReceiver handler = (IEnergyReceiver) powerEntry.tile;
-					if (handler.canConnectEnergy(powerEntry.orientation.getOpposite())) 
-					{
-						handler.receiveEnergy(powerEntry.orientation.getOpposite(), dividedPowerToSend, false);
-					}
+					IMjReceiver recv = powerEntry.tile.getCapability(MjAPI.CAP_RECEIVER, powerEntry.orientation);
+					recv.receivePower(dividedPowerToSend, false);
 				}
 				else
 				{
@@ -133,10 +151,11 @@ public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implemen
 
 			}
 		}
-		return energy;
+		
+		return (int) energy;
 	}
 
-	private List<PowerRequest> getPowerRequestsByNeighbors(PipeTeleport<?> pipe) 
+	private List<PowerRequest> getPowerRequestsByNeighbors(PipePowerTeleport pipe) 
 	{
 		LinkedList<EnumFacing> possibleMovements = getRealPossibleMovements(pipe);
 		List<PowerRequest> needsPower = new LinkedList<PowerRequest>();
@@ -145,10 +164,10 @@ public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implemen
 		{
 			for(EnumFacing orientation : possibleMovements)
 			{
-				TileEntity tile = pipe.container.getTile(orientation);
-				if(tile instanceof TileGenericPipe) 
+				TileEntity tile = pipe.pipe.getConnectedTile(orientation);
+				if(tile instanceof TilePipeHolder) 
 				{
-					TileGenericPipe adjacentPipe = (TileGenericPipe) tile;
+					TilePipeHolder adjacentPipe = (TilePipeHolder) tile;
 					if(pipeNeedsPower(adjacentPipe)) 
 					{
 						needsPower.add(new PowerRequest(adjacentPipe, orientation.getOpposite()));
@@ -157,7 +176,7 @@ public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implemen
 			
 				else if(tile != null)
 				{
-					if(getPowerRequestedByTileEntity(tile, orientation.getOpposite()) > 0)
+					if(getPowerRequestedByTileEntity(tile, orientation) > 0)
 					{
 						needsPower.add(new PowerRequest(tile, orientation.getOpposite()));
 					}
@@ -170,51 +189,53 @@ public class PipePowerTeleport extends PipeTeleport<PipeTransportPower> implemen
 	}
 
 	// precondition: power pipe that isn't tp
-	private static boolean pipeNeedsPower(TileGenericPipe tile) {
-		if(tile.pipe.transport instanceof PipeTransportPower) {
-			PipeTransportPower ttb = (PipeTransportPower) tile.pipe.transport;
-			for(int i = 0; i < ttb.nextPowerQuery.length; i++)
-				if(ttb.nextPowerQuery[i] > 0) {
+	private static boolean pipeNeedsPower(TilePipeHolder tile)
+	{
+		if(tile.getPipe().getFlow() instanceof PipeFlowPower) 
+		{
+			PipeFlowPower flowPower = (PipeFlowPower) tile.getPipe().getFlow();
+			
+			for(EnumFacing side : EnumFacing.VALUES)
+			{
+				if(flowPower.getNextRequestedPower(side) > 0)
+				{
 					return true;
 				}
+			}
 		}
 		return false;
 	}
 	
-	private int getPowerRequestedByTileEntity(TileEntity tile, EnumFacing sideOnTile)
+	private long getPowerRequestedByTileEntity(TileEntity tile, EnumFacing sideOnPipe)
 	{
-		int power = 0;
+		long power = 0;
 				
-		if (tile instanceof IEnergyReceiver) {
-			IEnergyReceiver handler = (IEnergyReceiver) tile;
-			if (handler.canConnectEnergy(sideOnTile)) {
-				power = handler.receiveEnergy(sideOnTile, transport.maxPower, true);
-			}
-		}
+		IMjReceiver recv = pipe.getHolder().getCapabilityFromPipe(sideOnPipe, MjAPI.CAP_RECEIVER);
+        if (recv != null && recv.canReceive()) 
+        {
+            long requested = recv.getPowerRequested();
+            if (requested > 0) {
+            	power += requested;
+            }
+        }
 		
 		return power;
 	}
 
 	// returns all adjacent pipes
-	private static LinkedList<EnumFacing> getRealPossibleMovements(PipeTeleport<?> pipe) {
+	private static LinkedList<EnumFacing> getRealPossibleMovements(PipePowerTeleport pipe) 
+	{
 		LinkedList<EnumFacing> result = new LinkedList<EnumFacing>();
 
-		for(EnumFacing orientation : EnumFacing.values()) {
-			if(pipe.outputOpen(orientation)) {
-				TileEntity te = pipe.container.getTile(orientation);
-				if((te instanceof IPipeTile) && Utils.checkPipesConnections(pipe.container, te)) {
-					result.add(orientation);
-				}
+		for(EnumFacing orientation : EnumFacing.values()) 
+		{
+			if(pipe.pipe.isConnected(orientation) && pipe.pipe.getConnectedType(orientation) == ConnectedType.PIPE) 
+			{
+				result.add(orientation);
 			}
 		}
 
 		return result;
-	}
-
-	@Override
-	public int getIconIndex(EnumFacing direction)
-	{
-		return ICON;
 	}
 	
 

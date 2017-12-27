@@ -11,28 +11,45 @@ package buildcraft.additionalpipes.pipes;
 import java.util.LinkedList;
 import java.util.List;
 
-import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.additionalpipes.gui.GuiJeweledPipe;
+import buildcraft.additionalpipes.utils.InventoryUtils;
+import buildcraft.api.core.EnumPipePart;
 import buildcraft.api.tiles.IDebuggable;
+import buildcraft.api.transport.pipe.IPipe;
 import buildcraft.api.transport.pipe.PipeEventItem;
-import buildcraft.core.lib.inventory.InvUtils;
-import buildcraft.transport.PipeTransportItems;
+import buildcraft.lib.misc.EntityUtil;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 public class PipeItemsJeweled extends APPipe implements IDebuggable {
 
 	public SideFilterData[] filterData = new SideFilterData[GuiJeweledPipe.NUM_TABS];
-	public PipeItemsJeweled(Item item) 
+	
+	
+	public PipeItemsJeweled(IPipe pipe, NBTTagCompound nbt)
 	{
-		super(new PipeTransportItems(), item);
-		
+		super(pipe, nbt);
+		init();
+		readFromNBT(nbt);
+	}
+
+	public PipeItemsJeweled(IPipe pipe)
+	{
+		super(pipe);
+		init();
+	}
+
+	private void init()
+	{
 		for(int index = 0; index < filterData.length; ++index)
 		{
 			filterData[index] = new SideFilterData();
@@ -40,28 +57,14 @@ public class PipeItemsJeweled extends APPipe implements IDebuggable {
 	}
 
 	@Override
-	public int getIconIndex(EnumFacing connection)
+	public int getTextureIndex(EnumFacing connection)
 	{
 		if(connection == null)
 		{
-			return 34;
+			return 0;
 		}
 		
-		switch(connection) {
-		case DOWN: // -y
-			return 35;
-		case UP: // +y
-			return 36;
-		case NORTH: // -z
-			return 37;
-		case SOUTH: // +z
-			return 38;
-		case WEST: // -x
-			return 39;
-		case EAST: // +x
-		default:
-			return 34;
-		}
+		return connection.ordinal();
 	}
 	
 	//adapted from Diamond Pipe code
@@ -100,30 +103,25 @@ public class PipeItemsJeweled extends APPipe implements IDebuggable {
 	}
 
 	@Override
-	public boolean blockActivated(EntityPlayer player, EnumFacing direction)
+    public boolean onPipeActivate(EntityPlayer player, RayTraceResult trace, float hitX, float hitY, float hitZ, EnumPipePart part) 
 	{
-		if(player.isSneaking())
-		{
-			return false;
-		}
-
-		Item equipped = player.getCurrentEquippedItem() != null ? player.getCurrentEquippedItem().getItem() : null;
-		if(equipped != null) {
-			if(APConfiguration.filterRightclicks && AdditionalPipes.isPipe(equipped)) {
-				return false;
-			}
-		}
-
-		if(player.worldObj.isRemote) return true;
-		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_JEWELED, container.getWorld(), container.getPos().getX(), container.getPos().getY(), container.getPos().getZ());
-
-		return true;
-	}
+        if (EntityUtil.getWrenchHand(player) != null) 
+        {
+            return super.onPipeActivate(player, trace, hitX, hitY, hitZ, part);
+        }
+        
+        if (!player.world.isRemote) 
+        {
+        	BlockPos pipePos = pipe.getHolder().getPipePos();
+        	player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_JEWELED, pipe.getHolder().getPipeWorld(), pipePos.getX(), pipePos.getY(), pipePos.getZ());
+        }
+        return true;
+    }
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt)
+	public NBTTagCompound writeToNbt()
 	{
-		super.writeToNBT(nbt);
+		NBTTagCompound nbt = super.writeToNbt();
 		
 		NBTTagList filterList = new NBTTagList();
 		for(int index = 0; index < filterData.length; ++index)
@@ -134,13 +132,12 @@ public class PipeItemsJeweled extends APPipe implements IDebuggable {
 		}
 		
 		nbt.setTag("filterList", filterList);
+		
+		return nbt;
 	}
 
-	@Override
 	public void readFromNBT(NBTTagCompound nbt) 
 	{
-		super.readFromNBT(nbt);
-
 		NBTTagList filterList = nbt.getTagList("filterList", 10);
 		for(int index = 0; index < filterData.length; ++index)
 		{
@@ -150,12 +147,12 @@ public class PipeItemsJeweled extends APPipe implements IDebuggable {
 	}
 	
 	@Override
-	public void dropContents() 
+	public void addDrops(NonNullList<ItemStack> toDrop, int fortune)
 	{
-		super.dropContents();
+		super.addDrops(toDrop, fortune);
 		for(SideFilterData sideFilter : filterData)
 		{
-			InvUtils.dropItems(getWorld(), sideFilter, container.getPos());
+			toDrop.addAll(InventoryUtils.getItems(sideFilter.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)));
 		}
 	}
 

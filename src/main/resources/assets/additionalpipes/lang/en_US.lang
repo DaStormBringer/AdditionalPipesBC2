@@ -75,5 +75,7 @@ tooltip.dogDeaggravator=Calms down your dogs
 
 itemGroup.buildcraft.apcreativetab=Additional Pipes
 
+# chat stuff
 command.ap.usage=/additionalpipes teleport <items|fluids|power>
 command.ap.pipelist_header=Teleport Pipes: 
+message.ap.accessdenied=Access denied!  This pipe belongs to %s

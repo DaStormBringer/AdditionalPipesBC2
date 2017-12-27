@@ -53,22 +53,8 @@ public class PipeItemsDistributor extends APPipe {
 		{
 			return 0;
 		}
-		switch(connection) 
-		{
-		case DOWN: // -y
-			return 0;
-		case UP: // +y
-			return 1;
-		case NORTH: // -z
-			return 2;
-		case SOUTH: // +z
-			return 3;
-		case WEST: // -x
-			return 4;
-		case EAST: // +x
-		default:
-			return 5;
-		}
+		
+		return connection.ordinal();
 	}
 	
 	@PipeEventHandler

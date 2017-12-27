@@ -1,24 +1,24 @@
 package buildcraft.additionalpipes.pipes;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
-import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.api.ITeleportPipe;
 import buildcraft.additionalpipes.api.TeleportPipeType;
 import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.additionalpipes.utils.PlayerUtils;
+import buildcraft.api.core.EnumPipePart;
 import buildcraft.api.transport.pipe.IPipe;
+import buildcraft.api.transport.pipe.PipeBehaviour;
+import buildcraft.lib.misc.EntityUtil;
+import buildcraft.transport.tile.TilePipeHolder;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.TextComponentTranslation;
 
 
 public abstract class PipeTeleport extends APPipe implements ITeleportPipe 
@@ -41,29 +41,13 @@ public abstract class PipeTeleport extends APPipe implements ITeleportPipe
 	{
 		super(pipe);
 		this.type = type;
-		
-		
-		//initialize the static reflection fields
-		if(updateSignalState == null)
-		{	
-			try
-			{				
-				//go up from PipeTeleportX to Pipe
-				Class<?> pipeClass = getClass().getSuperclass().getSuperclass().getSuperclass();
+	}
 	
-				updateSignalState = pipeClass.getDeclaredMethod("updateSignalState", new Class<?>[]{PipeWire.class});
-				
-				updateSignalState.setAccessible(true);
-			}
-			catch (NoSuchMethodException e)
-			{
-				e.printStackTrace();
-			}
-			catch (SecurityException e)
-			{
-				e.printStackTrace();
-			}
-		}
+	public PipeTeleport(IPipe pipe, NBTTagCompound tagCompound, TeleportPipeType type)
+	{
+		super(pipe);
+		this.type = type;
+		readFromNBT(tagCompound);
 	}
 	
 	@Override
@@ -137,14 +121,16 @@ public abstract class PipeTeleport extends APPipe implements ITeleportPipe
 	}
 	
 	@Override
-	public boolean blockActivated(EntityPlayer player, EnumFacing direction) {
-		if(player.worldObj.isRemote)
+	public boolean onPipeActivate(EntityPlayer player, RayTraceResult trace, float hitX, float hitY, float hitZ, EnumPipePart part)  
+	{
+		if(player.world.isRemote)
 		{
 			return true;
 		}
 		
 		if(ownerUUID == null)
 		{
+			// set owner of pipe
 			ownerUUID = PlayerUtils.getUUID(player);
 			ownerName = player.getName();
 		}
@@ -162,30 +148,24 @@ public abstract class PipeTeleport extends APPipe implements ITeleportPipe
 			else
 			{
 				//access denied
-				player.addChatMessage(new ChatComponentText("Access denied!  This pipe belongs to " + ownerName));
+				player.sendMessage(new TextComponentTranslation("message.ap.accessdenied", ownerName));
 				
 				//if we return false, this method can get called again with a different side, and it will show the message again
 				return true;
 			}
 		}
 		
-		if(APConfiguration.filterRightclicks)
-		{
-			ItemStack equippedItem = player.getCurrentEquippedItem();
-			
-			if (equippedItem != null && AdditionalPipes.isPipe(equippedItem.getItem()))
-			{
-				return false;
-			}
-		}
-		
-		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_TP, getWorld(), container.getPos().getX(), container.getPos().getY(), container.getPos().getZ());
-		return true;
-	}
-
-	@Override
-	public void updateEntity() {
-		super.updateEntity();
+		if (EntityUtil.getWrenchHand(player) != null) 
+        {
+            return super.onPipeActivate(player, trace, hitX, hitY, hitZ, part);
+        }
+        
+        if (!player.world.isRemote) 
+        {
+        	BlockPos pipePos = pipe.getHolder().getPipePos();
+        	player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_CLOSED, pipe.getHolder().getPipeWorld(), pipePos.getX(), pipePos.getY(), pipePos.getZ());
+        }
+        return true;
 	}
 
 	public void setFrequency(int freq) {
@@ -196,175 +176,29 @@ public abstract class PipeTeleport extends APPipe implements ITeleportPipe
 	public int getFrequency() {
 		return frequency;
 	}
+	
+	@Override
+	public TilePipeHolder getContainer()
+	{
+		return (TilePipeHolder) pipe.getHolder();
+	}
 
 	@Override
-	public boolean canPipeConnect(TileEntity tile, EnumFacing side) {
-		Pipe<?> pipe = null;
-		if(tile instanceof TileGenericPipe) {
-			pipe = ((TileGenericPipe) tile).pipe;
-		}
-		if(pipe != null && pipe instanceof PipeTeleport)
+	public boolean canConnect(EnumFacing face, PipeBehaviour other)
+	{
+		if(other instanceof PipeTeleport)
+		{
 			return false;
-
-		return super.canPipeConnect(tile, side);
+		}
+		
+		return super.canConnect(face, other);
 	}
+	
 
 	@Override
-	public boolean outputOpen(EnumFacing to) {
-		return container.isPipeConnected(to);
-	}
-	
-	// Teleport Gates stuff
-	// ---------------------------------------------
-	
-	//we need to access stuff private to Pipe, so we use reflection to do it.	
-	
-	//TODO update for 1.8
-	static Method updateSignalState;
-
-	@Override
-	public void updateSignalState() 
+	public NBTTagCompound writeToNbt() 
 	{
-		ArrayList<PipeTeleport<?>> otherTeleportPipes = TeleportManager.instance.<PipeTeleport<?>>getConnectedPipes(this, true, true);
-		
-		for (PipeWire wire : PipeWire.values()) 
-		{
-			if(wireSet[wire.ordinal()])
-			{
-				myUpdateSignalStateForColor(wire, otherTeleportPipes);
-			}
-		}
-	}
-
-	//we cannot override this because it is private
-	//so we override the function that calls it and invoke our version.
-	private void myUpdateSignalStateForColor(PipeWire wire, ArrayList<PipeTeleport<?>> otherTeleportPipes)
-	{
-		try
-		{
-			int prevStrength = signalStrength[wire.ordinal()];
-			boolean isBroadcast = false;
-
-			for (Gate g : gates) {
-				if (g != null && (g.broadcastSignal & (1 << wire.ordinal())) != 0) {
-					isBroadcast = true;
-					break;
-				}
-			}
-			
-			//find connected pipes
-			ArrayList<Pipe<?>> connectedPipes = new ArrayList<Pipe<?>>();
-			int maxStrength = 0;
-
-			for (EnumFacing dir : EnumFacing.VALUES) {
-				TileEntity tile = container.getTile(dir);
-				if (tile instanceof IPipeTile)
-				{
-					Pipe<?> pipe = (Pipe<?>) ((IPipeTile) tile).getPipe();
-					if (isWireConnectedTo(tile, pipe, wire, dir))
-					{
-						connectedPipes.add(pipe);
-						
-						//may as well do this now instead of looping back through again later
-						int pipeStrength = pipe.signalStrength[wire.ordinal()];
-						if (pipeStrength > maxStrength) 
-						{
-							maxStrength = pipeStrength;
-						}
-					}
-				}
-			}
-			
-			connectedPipes.addAll(otherTeleportPipes);
-
-			if (isBroadcast) {
-				if (prevStrength < 255)
-				{
-					myPropagateSignalState(wire, 255, connectedPipes);
-				}
-			} else
-			{
-				//look for a signal
-				
-				
-				for (Pipe<?> pipe : otherTeleportPipes)
-				{
-					int pipeStrength = pipe.signalStrength[wire.ordinal()];
-					if (pipeStrength > maxStrength) {
-						maxStrength = pipeStrength;
-					}
-				}
-
-				if (maxStrength > prevStrength && maxStrength > 1) {
-					signalStrength[wire.ordinal()] = maxStrength - 1;
-				} else {
-					signalStrength[wire.ordinal()] = 0;
-				}
-
-				if (prevStrength != signalStrength[wire.ordinal()]) {
-					container.scheduleRenderUpdate();
-				}
-
-				if (signalStrength[wire.ordinal()] == 0) {
-					for (Pipe<?> p : connectedPipes) 
-					{
-						if (p.signalStrength[wire.ordinal()] > 0) {
-							updateSignalState.invoke(p, wire);
-						}
-					}
-				} else {
-					for (Pipe<?> p : connectedPipes) {
-						if (p.signalStrength[wire.ordinal()] < (signalStrength[wire.ordinal()] - 1)) {
-							updateSignalState.invoke(p, wire);
-						}
-					}
-				}
-			}
-			
-		}
-		
-		//Man, I really want to be able to use Multi-Catch here
-		catch (IllegalAccessException e)
-		{
-			e.printStackTrace();
-		}
-		catch (IllegalArgumentException e)
-		{
-			e.printStackTrace();
-		}
-		catch (InvocationTargetException e)
-		{	
-			e.printStackTrace();
-		}
-		
-		
-	}
-	
-	private void myPropagateSignalState(PipeWire wire, int strength, ArrayList<Pipe<?>> connectedPipes) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException 
-	{
-		signalStrength[wire.ordinal()] = strength;
-		for (Pipe<?> pipe : connectedPipes)
-		{
-			if (strength == 0)
-			{
-				if (pipe.signalStrength[wire.ordinal()] > 0)
-				{
-					updateSignalState.invoke(pipe, wire);
-				}
-			} 
-			else
-			{
-				if (pipe.signalStrength[wire.ordinal()] < strength) 
-				{
-					updateSignalState.invoke(pipe, wire);
-				}
-			}
-		}
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound nbttagcompound) {
-		super.writeToNBT(nbttagcompound);
+		NBTTagCompound nbttagcompound = super.writeToNbt();
 		nbttagcompound.setInteger("freq", frequency);
 		nbttagcompound.setByte("state", state);
 		if(ownerUUID != null)
@@ -373,6 +207,8 @@ public abstract class PipeTeleport extends APPipe implements ITeleportPipe
 			nbttagcompound.setString("ownerName", ownerName);
 		}
 		nbttagcompound.setBoolean("isPublic", isPublic);
+		
+		return nbttagcompound;
 	}
 
 	public void readFromNBT(NBTTagCompound nbttagcompound) 
