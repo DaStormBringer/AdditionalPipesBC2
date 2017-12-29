@@ -54,18 +54,10 @@ public class AdditionalPipes {
 	public ChunkLoadViewDataProxy chunkLoadViewer;
 	
 	public CreativeTabBC creativeTab;
-
-
-	// teleport scanner TODO
-	// public Item teleportScanner;
-
-
-	
 	
 	// Advanced Wood
 	public Item pipeItemsAdvancedWood;
-	// Gravity Feed
-	public Item pipeItemsGravityFeed;
+	
 	// Distributor
 	public Item pipeItemsDistributor;
 	// Jeweled

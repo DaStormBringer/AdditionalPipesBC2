@@ -4,6 +4,7 @@ import buildcraft.additionalpipes.pipes.PipeItemsAddition;
 import buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
 import buildcraft.additionalpipes.pipes.PipeItemsClosed;
 import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
+import buildcraft.additionalpipes.pipes.PipeItemsGravityFeed;
 import buildcraft.additionalpipes.utils.PipeCreator;
 import buildcraft.api.transport.pipe.PipeDefinition;
 import buildcraft.api.transport.pipe.PipeDefinition.PipeDefinitionBuilder;
@@ -13,7 +14,7 @@ import net.minecraft.util.EnumFacing;
 
 public class APPipeDefintions
 {
-	// Addition
+	// Addition Pipe
 	public static Item additionPipeItem;
 	public static PipeDefinition additionPipeDef;
 	
@@ -28,6 +29,10 @@ public class APPipeDefintions
 	// Distribution Pipe
 	public static Item distributionPipeItem;
 	public static PipeDefinition distributionPipeDef;
+	
+	// Gravity Feed Pipe
+	public static Item gravityFeedPipeItem;
+	public static PipeDefinition gravityFeedPipeDef;
 	
 	public static void createPipes()
 	{
@@ -44,6 +49,8 @@ public class APPipeDefintions
 		attachSidedSuffixes(distPipeDefBuilder);
 		distributionPipeDef = distPipeDefBuilder.define();
 		distributionPipeItem = PipeCreator.createPipeItemAndRecipe(1, distributionPipeDef, false, " r ", "IgI", 'r', "dustRedstone", 'I', "ingotIron", 'g', "blockGlass");
+		
+		gravityFeedPipeDef = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipeItemsGravityFeed").texSuffixes("_up", "_sides").logic(PipeItemsGravityFeed::new, PipeItemsGravityFeed::new).define();
 	}
 	
 	/**

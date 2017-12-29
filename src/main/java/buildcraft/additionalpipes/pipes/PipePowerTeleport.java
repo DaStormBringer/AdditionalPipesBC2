@@ -85,7 +85,9 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 				IPipe nearbyPipe = otherPipe.pipe.getConnectedPipe(from);
 				
 				PipeFlowPower nearbyFlow = (PipeFlowPower) nearbyPipe.getFlow();
-				nearbyFlow.requestPower(orientation.getOpposite(), value);
+				
+				// will uncomment when Buildcraft API is added
+				//nearbyFlow.requestPower(orientation.getOpposite(), value);
 			}
 		}
 		return requested;
@@ -137,7 +139,9 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 				if(powerEntry.isPipe)
 				{
 					PipeFlowPower nearbyFlow = (PipeFlowPower)(((TilePipeHolder)powerEntry.tile).getPipe().getFlow());
-					nearbyFlow.addPower(powerEntry.orientation, dividedPowerToSend);
+					
+					// will uncomment when Buildcraft API is added
+					//nearbyFlow.addPower(powerEntry.orientation, dividedPowerToSend);
 				}
 				else if (powerEntry.tile.hasCapability(MjAPI.CAP_RECEIVER, powerEntry.orientation)) 
 				{
@@ -197,10 +201,11 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 			
 			for(EnumFacing side : EnumFacing.VALUES)
 			{
-				if(flowPower.getNextRequestedPower(side) > 0)
-				{
-					return true;
-				}
+				// will uncomment when Buildcraft API is added
+				//if(flowPower.getNextRequestedPower(side) > 0)
+				//{
+				//	return true;
+				//}
 			}
 		}
 		return false;
