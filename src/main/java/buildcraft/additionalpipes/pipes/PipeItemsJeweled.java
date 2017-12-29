@@ -8,7 +8,7 @@
 
 package buildcraft.additionalpipes.pipes;
 
-import java.util.LinkedList;
+import java.util.EnumSet;
 import java.util.List;
 
 import buildcraft.additionalpipes.AdditionalPipes;
@@ -18,6 +18,7 @@ import buildcraft.additionalpipes.utils.InventoryUtils;
 import buildcraft.api.core.EnumPipePart;
 import buildcraft.api.tiles.IDebuggable;
 import buildcraft.api.transport.pipe.IPipe;
+import buildcraft.api.transport.pipe.PipeEventHandler;
 import buildcraft.api.transport.pipe.PipeEventItem;
 import buildcraft.lib.misc.EntityUtil;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,7 +34,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 public class PipeItemsJeweled extends APPipe implements IDebuggable {
 
 	public SideFilterData[] filterData = new SideFilterData[GuiJeweledPipe.NUM_TABS];
-	
 	
 	public PipeItemsJeweled(IPipe pipe, NBTTagCompound nbt)
 	{
@@ -67,40 +67,39 @@ public class PipeItemsJeweled extends APPipe implements IDebuggable {
 		return connection.ordinal();
 	}
 	
-	//adapted from Diamond Pipe code
-	public void eventHandler(PipeEventItem.FindDest event)
+	@PipeEventHandler
+	public void onSideCheck(PipeEventItem.SideCheck event)
 	{
-		LinkedList<EnumFacing> filteredOrientations = new LinkedList<EnumFacing>();
-		LinkedList<EnumFacing> defaultOrientations = new LinkedList<EnumFacing>();
-
-		ItemStack stack = event.item.getItemStack();
+		EnumSet<EnumFacing> disallowedSides = EnumSet.<EnumFacing>noneOf(EnumFacing.class);
 		
-		// Filtered outputs
-		for (EnumFacing dir : event.destinations)
+		for(EnumFacing dir : EnumFacing.VALUES)
 		{
 			SideFilterData data = filterData[dir.ordinal()];
 
-			if(data.matchesStack(stack))
+			if(!data.matchesStack(event.stack))
 			{
-				filteredOrientations.add(dir);
-			}
-			else if(data.acceptsUnsortedItems())
-			{
-				defaultOrientations.add(dir);
+				disallowedSides.add(dir);
 			}
 		}
-
-		event.destinations.clear();
-
-		if (!filteredOrientations.isEmpty()) 
+		
+		// if no sides were allowed, find sides that accept unsorted items
+		if(disallowedSides.size() == 6)
 		{
-			event.destinations.addAll(filteredOrientations);
+			for(EnumFacing dir : EnumFacing.VALUES)
+			{
+				SideFilterData data = filterData[dir.ordinal()];
+
+				if(data.acceptsUnsortedItems())
+				{
+					disallowedSides.remove(dir);
+				}
+			}
 		}
-		else
-		{
-			event.destinations.addAll(defaultOrientations);
-		}
+		
+		// pass results to event
+		event.disallowAll(disallowedSides);
 	}
+	
 
 	@Override
     public boolean onPipeActivate(EntityPlayer player, RayTraceResult trace, float hitX, float hitY, float hitZ, EnumPipePart part) 

@@ -15,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerAdvancedWoodPipe extends ContainerBC_Neptune {
@@ -29,7 +30,7 @@ public class ContainerAdvancedWoodPipe extends ContainerBC_Neptune {
 		int k = 0;
 
 		for(int j1 = 0; j1 < 9; j1++) {
-			addSlotToContainer(new SlotItemHandler(pipe, j1 + k * 9, 8 + j1 * 18, 18 + k * 18));
+			addSlotToContainer(new SlotItemHandler(pipe.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null), j1 + k * 9, 8 + j1 * 18, 18 + k * 18));
 		}
 
 		for(int l = 0; l < 3; l++) {

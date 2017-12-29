@@ -14,6 +14,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 
 public class ContainerJeweledPipe extends Container
@@ -43,7 +45,6 @@ public class ContainerJeweledPipe extends Container
 
 	public ContainerJeweledPipe(InventoryPlayer inventoryPlayer, PipeItemsJeweled pipe)
     {
-		
 		sideSlots = new ArrayList<ArrayList<Slot>>();
 		
         // Add the jeweled pipe slots
@@ -56,7 +57,8 @@ public class ContainerJeweledPipe extends Container
 		    {
 	            for(int filterColumnIndex = 0; filterColumnIndex < 9; ++filterColumnIndex)
 	            {
-	            	Slot newSlot = new Slot(pipe.filterData[side], filterColumnIndex + filterRowIndex * 9, filterColumnIndex * 18, 1000 + ((3 * side) + filterRowIndex) * 18);
+	            	Slot newSlot = new SlotItemHandler(pipe.filterData[side].getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null),
+	            			filterColumnIndex + filterRowIndex * 9, filterColumnIndex * 18, 1000 + ((3 * side) + filterRowIndex) * 18);
 	                this.addSlotToContainer(newSlot);
 	            	currentSide.add(newSlot);
 	            }

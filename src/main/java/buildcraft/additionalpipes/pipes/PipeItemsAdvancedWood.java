@@ -10,26 +10,29 @@ package buildcraft.additionalpipes.pipes;
 
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
+import buildcraft.additionalpipes.utils.InventoryUtils;
 import buildcraft.api.core.EnumPipePart;
 import buildcraft.api.core.IStackFilter;
 import buildcraft.api.transport.pipe.IFlowItems;
 import buildcraft.api.transport.pipe.IPipe;
 import buildcraft.api.transport.pipe.IPipeHolder.PipeMessageReceiver;
-import buildcraft.lib.inventory.filter.ArrayStackOrListFilter;
-import buildcraft.lib.inventory.filter.InvertedStackFilter;
+import buildcraft.lib.inventory.filter.DelegatingItemHandlerFilter;
 import buildcraft.lib.misc.EntityUtil;
+import buildcraft.lib.misc.StackUtil;
 import buildcraft.transport.pipe.behaviour.PipeBehaviourWood;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import scala.actors.threadpool.Arrays;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 
-public class PipeItemsAdvancedWood extends PipeBehaviourWood
+public class PipeItemsAdvancedWood extends PipeBehaviourWood implements ICapabilityProvider
 {	
     public PipeItemsAdvancedWood(IPipe pipe) {
         super(pipe);
@@ -41,21 +44,24 @@ public class PipeItemsAdvancedWood extends PipeBehaviourWood
     }	
     
     public static final int INVENTORY_SIZE = 9;
-	public ItemStack[] items = new ItemStack[INVENTORY_SIZE];
+	public ItemStackHandler items = new ItemStackHandler(INVENTORY_SIZE);
 	private IStackFilter filter;
 	
 	public boolean exclude = false;
+	
+	void init()
+	{
+	   if(exclude)
+	   {
+		   // lambda capture?  We iz fancy, yes!
+		   filter = new DelegatingItemHandlerFilter((ItemStack target, ItemStack toTest) -> exclude ? !StackUtil.isMatchingItem(target, toTest) : StackUtil.isMatchingItem(target, toTest), items);
+	   }
+	}
 
-	public void readFromNBT(NBTTagCompound nbttagcompound) {
+	public void readFromNBT(NBTTagCompound nbttagcompound) 
+	{
 		exclude = nbttagcompound.getBoolean("exclude");
-
-		NBTTagList nbttaglist = nbttagcompound.getTagList("items", 10);
-
-		for(int j = 0; j < nbttaglist.tagCount(); ++j) {
-			NBTTagCompound nbttagcompound2 = (NBTTagCompound) nbttaglist.getCompoundTagAt(j);
-			int index = nbttagcompound2.getInteger("index");
-			items[index] = new ItemStack(nbttagcompound2);
-		}
+		items.deserializeNBT(nbttagcompound.getCompoundTag("filterItems"));
 	}
 
 	@Override
@@ -64,19 +70,8 @@ public class PipeItemsAdvancedWood extends PipeBehaviourWood
 		NBTTagCompound nbttagcompound = super.writeToNbt();
 		
 		nbttagcompound.setBoolean("exclude", exclude);
-
-		NBTTagList nbttaglist = new NBTTagList();
-
-		for(int j = 0; j < INVENTORY_SIZE; ++j) {
-			if(items[j] != null && items[j].getCount() > 0) {
-				NBTTagCompound nbttagcompound2 = new NBTTagCompound();
-				nbttaglist.appendTag(nbttagcompound2);
-				nbttagcompound2.setInteger("index", j);
-				items[j].writeToNBT(nbttagcompound2);
-			}
-		}
-
-		nbttagcompound.setTag("items", nbttaglist);
+		
+		nbttagcompound.setTag("filterItems", items.serializeNBT());
 		
 		return nbttagcompound;
 	}
@@ -94,27 +89,11 @@ public class PipeItemsAdvancedWood extends PipeBehaviourWood
         return extracted;
     }
 
-    /**
-     * Call this whenever items or exclude changes to re-create the item filter
-     */
-    public void regenerateFilter()
-    {
-	   if(exclude)
-	   {
-		   filter = new InvertedStackFilter(new ArrayStackOrListFilter(items));
-	   }
-	   else
-	   {
-		   filter = new ArrayStackOrListFilter(items);
-	   }
-    }
-
-	@SuppressWarnings("unchecked")
 	@Override
 	public void addDrops(NonNullList<ItemStack> toDrop, int fortune)
 	{
 		super.addDrops(toDrop, fortune);
-		toDrop.addAll(Arrays.asList(items));
+		toDrop.addAll(InventoryUtils.getItems(items));
 	}
 
 	@Override
@@ -132,5 +111,30 @@ public class PipeItemsAdvancedWood extends PipeBehaviourWood
         }
         return true;
     }
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+	{
+		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		{
+			return (T) items;
+		}
+		
+		return super.getCapability(capability, facing);
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+	{
+		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		{
+			return true;
+		}
+		
+		return super.hasCapability(capability, facing);
+	}
+	
+	
 
 }

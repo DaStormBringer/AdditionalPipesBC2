@@ -5,6 +5,7 @@ import buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
 import buildcraft.additionalpipes.pipes.PipeItemsClosed;
 import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
 import buildcraft.additionalpipes.pipes.PipeItemsGravityFeed;
+import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
 import buildcraft.additionalpipes.pipes.PipeItemsPriorityInsertion;
 import buildcraft.additionalpipes.utils.PipeCreator;
 import buildcraft.api.transport.pipe.PipeDefinition;
@@ -39,6 +40,10 @@ public class APPipeDefintions
 	public static Item priorityPipeItem;
 	public static PipeDefinition priorityPipeDef;
 	
+	// Jeweled Pipe
+	public static Item jeweledPipeItem;
+	public static PipeDefinition jeweledPipeDef;
+	
 	public static void createPipes()
 	{
 		additionPipeDef = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipeItemsAddition").logic(PipeItemsAddition::new, PipeItemsAddition::new).define();
@@ -62,6 +67,11 @@ public class APPipeDefintions
 		attachSidedSuffixes(priorityPipeDefBuilder);
 		priorityPipeDef = priorityPipeDefBuilder.define();
 		priorityPipeItem = PipeCreator.createPipeItemAndRecipe(2, distributionPipeDef, true, distributionPipeItem, BCTransportItems.pipeItemClay);
+		
+		PipeDefinitionBuilder jeweledPipeDefBuilder = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipeItemsJeweled").logic(PipeItemsJeweled::new, PipeItemsJeweled::new);
+		attachSidedSuffixes(jeweledPipeDefBuilder);
+		jeweledPipeDef = jeweledPipeDefBuilder.define();
+		jeweledPipeItem = PipeCreator.createPipeItemAndRecipe(2, jeweledPipeDef, false, " D ", "DGD", " D ", 'D', BCTransportItems.pipeItemDiamond, 'G', "gearGold");
 	}
 	
 	/**

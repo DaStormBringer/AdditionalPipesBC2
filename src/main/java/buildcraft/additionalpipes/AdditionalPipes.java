@@ -36,11 +36,11 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
-@Mod(modid = AdditionalPipes.MODID, name = AdditionalPipes.NAME, dependencies = "after:BuildCraft|Transport[7.1.5,);after:BuildCraft|Silicon;after:BuildCraft|Transport;after:BuildCraft|Factory", version = AdditionalPipes.VERSION)
+@Mod(modid = AdditionalPipes.MODID, name = AdditionalPipes.NAME, dependencies = "after:BuildCraft|Transport[7.99,);after:BuildCraft|Silicon;after:BuildCraft|Transport;after:BuildCraft|Factory", version = AdditionalPipes.VERSION)
 public class AdditionalPipes {
 	public static final String MODID = "additionalpipes";
 	public static final String NAME = "Additional Pipes";
-	public static final String VERSION = "5.0.1";
+	public static final String VERSION = "6.0.0";
 
 	@Instance(MODID)
 	public static AdditionalPipes instance;
@@ -55,14 +55,6 @@ public class AdditionalPipes {
 	
 	public CreativeTabBC creativeTab;
 	
-	// Advanced Wood
-	public Item pipeItemsAdvancedWood;
-	
-	// Jeweled
-	public Item pipeItemsJeweled;
-
-	
-
 	// Item Teleport
 	public Item pipeItemsTeleport;
 	// Liquid Teleport
@@ -156,8 +148,6 @@ public class AdditionalPipes {
 	
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		// For Logistics Pipes compatibility
-		
 		
 	}
 
