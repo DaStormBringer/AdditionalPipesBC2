@@ -58,14 +58,11 @@ public class AdditionalPipes {
 	// Advanced Wood
 	public Item pipeItemsAdvancedWood;
 	
-	// Distributor
-	public Item pipeItemsDistributor;
 	// Jeweled
 	public Item pipeItemsJeweled;
 
 	
-	//priority insertion pipe
-	public Item pipeItemsPriority;
+
 	// Item Teleport
 	public Item pipeItemsTeleport;
 	// Liquid Teleport
@@ -197,26 +194,11 @@ public class AdditionalPipes {
 		if(pipeItemsTeleport != null) {
 			GameRegistry.addShapelessRecipe(new ItemStack(pipePowerTeleport), new Object[] {Items.redstone, pipeItemsTeleport});
 		}
-		
-//		if(logisticsPipesInstalled)
-//		{
-//			// Logistics Teleport Pipe
-//			pipeLogisticsTeleport = PipeCreator.createPipeTooltip((Class<? extends APPipe<?>>) PipeLogisticsTeleport.class, "tip.teleportLogisticsPipe");
-//			if(pipeItemsTeleport != null) {
-//				GameRegistry.addShapelessRecipe(new ItemStack(pipeLogisticsTeleport), new Object[] {pipeItemsTeleport, BuildCraftSilicon.redstoneChipset});
-//			}
-//		}
 
 		//Jeweled Pipe
 		pipeItemsJeweled = PipeCreator.createPipeAndRecipe(2, PipeItemsJeweled.class, false, " D ", "DGD", " D ", 'D', BCTransportItems.pipeItemDiamond, 'G', "gearGold");
 		
-		// Distributor Pipe
-		pipeItemsDistributor = PipeCreator.createPipeAndRecipe(1, PipeItemsDistributor.class, false, " r ", "IgI", 'r', "dustRedstone", 'I', "ingotIron", 'g', "blockGlass");
-		
 		pipeItemsPriority = PipeCreator.createPipeAndRecipe(2, PipeItemsPriorityInsertion.class, true, pipeItemsDistributor, pipeItemsAdvancedInsertion);
-		
-		// Gravity Feed Pipe
-		pipeItemsGravityFeed = PipeCreator.createPipeAndRecipe(1, PipeItemsGravityFeed.class, false, "   ", "IgI", " I ", 'S', "stone", 'I', "ingotIron", 'g', "blockGlass");
 		
 	
 		// switch pipes

@@ -8,127 +8,89 @@
 
 package buildcraft.additionalpipes.pipes;
 
-import java.util.ArrayList;
-
-import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
+import buildcraft.api.core.EnumPipePart;
+import buildcraft.api.transport.pipe.IPipe;
+import buildcraft.api.transport.pipe.PipeEventHandler;
 import buildcraft.api.transport.pipe.PipeEventItem;
-import buildcraft.core.lib.inventory.ITransactor;
-import buildcraft.core.lib.inventory.Transactor;
-import buildcraft.transport.PipeTransportItems;
+import buildcraft.lib.misc.EntityUtil;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 
 public class PipeItemsPriorityInsertion extends APPipe {
 
-	public int sidePriorities[] = { 1, 1, 1, 1, 1, 1 };
+	public byte sidePriorities[] = { 1, 1, 1, 1, 1, 1 };
 
-	public PipeItemsPriorityInsertion(Item item) {
-		super(new PipeTransportItems(), item);
+
+	public PipeItemsPriorityInsertion(IPipe pipe, NBTTagCompound nbt)
+	{
+		super(pipe, nbt);
+		readFromNBT(nbt);
+	}
+
+	public PipeItemsPriorityInsertion(IPipe pipe)
+	{
+		super(pipe);
 	}
 
 	@Override
-	public int getIconIndex(EnumFacing connection)
+	public int getTextureIndex(EnumFacing connection)
 	{
 		if(connection == null)
 		{
-			return 25;
+			return 0;
 		}
 		
-		switch(connection) {
-		case DOWN: // -y
-			return 26;
-		case UP: // +y
-			return 27;
-		case NORTH: // -z
-			return 28;
-		case SOUTH: // +z
-			return 29;
-		case WEST: // -x
-			return 30;
-		case EAST: // +x
-		default:
-			return 25;
-		}
+		return connection.ordinal();
 	}
 	
-	public void eventHandler(PipeEventItem.FindDest event)
+	@PipeEventHandler
+    public void orderSides(PipeEventItem.SideCheck ordering) {
+        for (EnumFacing face : EnumFacing.VALUES) 
+        {
+        	if(face != ordering.from)
+        	{
+                ordering.increasePriority(face, 100 + 10 * sidePriorities[face.ordinal()]); // note: PipeBehaviourClay adds 100 to priorities to override filters and things, so I'm following that precedent
+        	}
+
+        }
+    }
+
+	@Override
+    public boolean onPipeActivate(EntityPlayer player, RayTraceResult trace, float hitX, float hitY, float hitZ, EnumPipePart part) 
 	{
-		ArrayList<EnumFacing> result = new ArrayList<EnumFacing>();
+        if (EntityUtil.getWrenchHand(player) != null) 
+        {
+            return super.onPipeActivate(player, trace, hitX, hitY, hitZ, part);
+        }
+        
+        if (!player.world.isRemote) 
+        {
+        	BlockPos pipePos = pipe.getHolder().getPipePos();
+        	player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_PRIORITY, pipe.getHolder().getPipeWorld(), pipePos.getX(), pipePos.getY(), pipePos.getZ());
+        }
+        return true;
+    }
 
-		for(int checkingPriority = 6; checkingPriority >= 1; --checkingPriority)
-		{
-			boolean foundAny = false;
+	@Override
+	public NBTTagCompound writeToNbt() 
+	{
+		NBTTagCompound nbt = super.writeToNbt();
 			
-			for(EnumFacing side : EnumFacing.VALUES)
-			{
-				if(sidePriorities[side.ordinal()] == checkingPriority)
-				{
-					TileEntity entity = container.getTile(side);
-					if (entity instanceof IInventory)
-					{
-						ITransactor transactor = Transactor.getTransactorFor(entity, side.getOpposite());
-						if (transactor.add(event.item.getItemStack(), true).stackSize > 0)
-						{
-							result.add(side);
-						}
-						
-						foundAny = true;
-					}
-				}
-			}
-			
-			if(foundAny)
-			{
-				break;
-			}
-		}
+		nbt.setByteArray("prioritiesArray", sidePriorities);
 		
-		if(!result.isEmpty())
+		return nbt;
+	}
+
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		if(nbt.hasKey("prioritiesArray"))
 		{
-			event.destinations.clear();
-			event.destinations.addAll(result);
-		}
-	}
-
-	@Override
-	public boolean blockActivated(EntityPlayer player, EnumFacing direction) {
-		if(player.isSneaking()) {
-			return false;
-		}
-
-		Item equipped = player.getCurrentEquippedItem() != null ? player.getCurrentEquippedItem().getItem() : null;
-		if(equipped != null) {
-			if(APConfiguration.filterRightclicks && AdditionalPipes.isPipe(equipped)) {
-				return false;
-			}
-		}
-
-		if(player.worldObj.isRemote) return true;
-		player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_PRIORITY, container.getWorld(), container.getPos().getX(), container.getPos().getY(), container.getPos().getZ());
-
-		return true;
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-			
-		nbt.setIntArray("priorities", sidePriorities);
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-
-		if(nbt.hasKey("priorities"))
-		{
-			sidePriorities = nbt.getIntArray("priorities");
+			sidePriorities = nbt.getByteArray("prioritiesArray");
 		}
 	}
 

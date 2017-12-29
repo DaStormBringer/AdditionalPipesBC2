@@ -14,7 +14,7 @@ public class PipeCreator
 	 * Creates and registers a buildcraft pipe from the provided class.
 	 * Also sets a recipe for it from the provided Object[].
 	 * @param output how many of the pipe should be output from the recipe
-	 * @param clas
+	 * @param pipeDef
 	 * @param recipe
 	 * @param shapeless whether or not the recipe is shapeless
 	 * @return

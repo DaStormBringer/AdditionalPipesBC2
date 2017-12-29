@@ -5,6 +5,7 @@ import buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
 import buildcraft.additionalpipes.pipes.PipeItemsClosed;
 import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
 import buildcraft.additionalpipes.pipes.PipeItemsGravityFeed;
+import buildcraft.additionalpipes.pipes.PipeItemsPriorityInsertion;
 import buildcraft.additionalpipes.utils.PipeCreator;
 import buildcraft.api.transport.pipe.PipeDefinition;
 import buildcraft.api.transport.pipe.PipeDefinition.PipeDefinitionBuilder;
@@ -34,6 +35,10 @@ public class APPipeDefintions
 	public static Item gravityFeedPipeItem;
 	public static PipeDefinition gravityFeedPipeDef;
 	
+	// Priority Insertion Pipe
+	public static Item priorityPipeItem;
+	public static PipeDefinition priorityPipeDef;
+	
 	public static void createPipes()
 	{
 		additionPipeDef = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipeItemsAddition").logic(PipeItemsAddition::new, PipeItemsAddition::new).define();
@@ -45,12 +50,18 @@ public class APPipeDefintions
 		closedPipeDef = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipeItemsClosed").texSuffixes("_open", "_closed").logic(PipeItemsClosed::new, PipeItemsClosed::new).define();
 		closedPipeItem = PipeCreator.createPipeItemAndRecipe(1, closedPipeDef, true, BCTransportItems.pipeItemVoid, "gearIron");
 		
-		PipeDefinitionBuilder distPipeDefBuilder = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipeItemsDistribution").logic(PipeItemsDistributor::new, PipeItemsClosed::new);
+		PipeDefinitionBuilder distPipeDefBuilder = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipeItemsDistribution").logic(PipeItemsDistributor::new, PipeItemsDistributor::new);
 		attachSidedSuffixes(distPipeDefBuilder);
 		distributionPipeDef = distPipeDefBuilder.define();
 		distributionPipeItem = PipeCreator.createPipeItemAndRecipe(1, distributionPipeDef, false, " r ", "IgI", 'r', "dustRedstone", 'I', "ingotIron", 'g', "blockGlass");
 		
 		gravityFeedPipeDef = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipeItemsGravityFeed").texSuffixes("_up", "_sides").logic(PipeItemsGravityFeed::new, PipeItemsGravityFeed::new).define();
+		gravityFeedPipeItem = PipeCreator.createPipeItemAndRecipe(1, gravityFeedPipeDef, false, "   ", "IgI", " I ", 'S', "stone", 'I', "ingotIron", 'g', "blockGlass");
+		
+		PipeDefinitionBuilder priorityPipeDefBuilder = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipeItemsPriority").logic(PipeItemsPriorityInsertion::new, PipeItemsPriorityInsertion::new);
+		attachSidedSuffixes(priorityPipeDefBuilder);
+		priorityPipeDef = priorityPipeDefBuilder.define();
+		priorityPipeItem = PipeCreator.createPipeItemAndRecipe(2, distributionPipeDef, true, distributionPipeItem, BCTransportItems.pipeItemClay);
 	}
 	
 	/**

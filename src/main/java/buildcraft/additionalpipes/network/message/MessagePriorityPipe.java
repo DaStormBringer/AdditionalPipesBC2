@@ -19,13 +19,13 @@ public class MessagePriorityPipe implements IMessage, IMessageHandler<MessagePri
 {
 	public BlockPos position;
 	byte _index;
-	int _newData;
+	byte _newData;
 	
     public MessagePriorityPipe()
     {
     }
 
-    public MessagePriorityPipe(BlockPos position, byte index, int newData)
+    public MessagePriorityPipe(BlockPos position, byte index, byte newData)
     {
     	this.position = position;
     	_index = index;
@@ -37,7 +37,7 @@ public class MessagePriorityPipe implements IMessage, IMessageHandler<MessagePri
     {
         position = BlockPos.fromLong(buf.readLong());
         _index = buf.readByte();
-        _newData = buf.readInt();
+        _newData = buf.readByte();
     }
 
     @Override
@@ -45,7 +45,7 @@ public class MessagePriorityPipe implements IMessage, IMessageHandler<MessagePri
     {
         buf.writeLong(position.toLong());
         buf.writeByte(_index);
-        buf.writeInt(_newData);
+        buf.writeByte(_newData);
     }
 
     @Override

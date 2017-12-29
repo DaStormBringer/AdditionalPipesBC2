@@ -46,7 +46,7 @@ public class ContainerPriorityInsertionPipe extends Container {
 	@Override
 	public void updateProgressBar(int i, int j) {
 		if(i >= 0 && i < pipe.sidePriorities.length) {
-			pipe.sidePriorities[i] = j;
+			pipe.sidePriorities[i] = (byte) j;
 		}
 	}
 }
