@@ -1,55 +1,69 @@
 package buildcraft.additionalpipes.pipes;
 
-import net.minecraft.item.Item;
+import buildcraft.api.transport.pipe.IPipe;
+import buildcraft.api.transport.pipe.PipeBehaviour;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
-import buildcraft.transport.PipeTransport;
-import buildcraft.transport.TileGenericPipe;
 
-public class PipeSwitch<pipeType extends PipeTransport> extends APPipe<pipeType> {
+/**
+ * Class for all 3 types of switch pipe
+ * @author jamie
+ *
+ */
+public class PipeSwitch extends APPipe
+{
 
-	private final int textureIndex;
+	public PipeSwitch(IPipe pipe, NBTTagCompound nbt)
+	{
+		super(pipe, nbt);
+	}
 
-	public PipeSwitch(pipeType transport, Item item, int textureIndex) {
-		super(transport, item);
-		this.textureIndex = textureIndex;
+	public PipeSwitch(IPipe pipe)
+	{
+		super(pipe);
 	}
 
 	@Override
-	public int getIconIndex(EnumFacing direction)
+	public int getTextureIndex(EnumFacing direction)
 	{
 		if(direction == null)
 		{
-			return textureIndex;
+			return 0;
 		}
 		
-		return textureIndex + (canPipeConnect(container.getNeighborTile(direction), direction) ? 0 : 1);
+		return (canConnect() ? 0 : 1);
 	}
-
+	
+	/*
 	@Override
 	public boolean canConnectRedstone() {
 		return true;
 	}
+	*/
+	
+	
 
-	@Override
-	public void onNeighborBlockChange(int blockId) {
-		super.onNeighborBlockChange(blockId);
-		container.scheduleNeighborChange();
-		for(EnumFacing direction : EnumFacing.values()) {
-			TileEntity tile = container.getTile(direction);
-			if(tile instanceof TileGenericPipe) {
-				((TileGenericPipe) tile).scheduleNeighborChange();
-			}
-		}
+	/**
+	 * Overload of canConnect() that takes no arguments, to call from getTextureIndex()
+	 * @param facing
+	 * @return
+	 */
+	private boolean canConnect()
+	{
+		return pipe.getHolder().getPipeWorld().isBlockPowered(getPos());
 	}
 
 	@Override
-	public boolean canPipeConnect(TileEntity tile, EnumFacing side) {
-		if(container == null && side == null) return false;
-		World world = getWorld();
-		return world != null && super.canPipeConnect(tile, side) && !world.isBlockPowered(container.getPos());
+	public boolean canConnect(EnumFacing face, PipeBehaviour other)
+	{
+		return canConnect();
+	}
 
+	@Override
+	public boolean canConnect(EnumFacing face, TileEntity oTile)
+	{
+		return canConnect();
 	}
 
 }

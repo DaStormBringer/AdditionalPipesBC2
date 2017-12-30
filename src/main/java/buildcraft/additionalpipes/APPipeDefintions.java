@@ -1,5 +1,8 @@
 package buildcraft.additionalpipes;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import buildcraft.additionalpipes.pipes.PipeItemsAddition;
 import buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
 import buildcraft.additionalpipes.pipes.PipeItemsClosed;
@@ -7,11 +10,22 @@ import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
 import buildcraft.additionalpipes.pipes.PipeItemsGravityFeed;
 import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
 import buildcraft.additionalpipes.pipes.PipeItemsPriorityInsertion;
+import buildcraft.additionalpipes.pipes.PipeItemsTeleport;
+import buildcraft.additionalpipes.pipes.PipeLiquidsTeleport;
+import buildcraft.additionalpipes.pipes.PipeLiquidsWaterPump;
+import buildcraft.additionalpipes.pipes.PipePowerTeleport;
+import buildcraft.additionalpipes.pipes.PipeSwitch;
 import buildcraft.additionalpipes.utils.PipeCreator;
+import buildcraft.api.recipes.AssemblyRecipe;
+import buildcraft.api.recipes.StackDefinition;
 import buildcraft.api.transport.pipe.PipeDefinition;
 import buildcraft.api.transport.pipe.PipeDefinition.PipeDefinitionBuilder;
+import buildcraft.lib.inventory.filter.ArrayStackFilter;
+import buildcraft.lib.recipe.AssemblyRecipeRegistry;
+import buildcraft.silicon.BCSiliconItems;
 import buildcraft.transport.BCTransportItems;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 
 public class APPipeDefintions
@@ -44,6 +58,36 @@ public class APPipeDefintions
 	public static Item jeweledPipeItem;
 	public static PipeDefinition jeweledPipeDef;
 	
+	// Item Teleport
+	public static Item itemsTeleportPipeItem;
+	public static PipeDefinition itemsTeleportPipeDef;
+	
+	// Liquid Teleport
+	public static Item liquidsTeleportPipeItem;
+	public static PipeDefinition liquidsTeleportPipeDef;
+	
+	// Power Teleport
+	public static Item powerTeleportPipeItem;
+	public static PipeDefinition powerTeleportPipeDef;
+	
+	// Switch pipes
+	// Switch Transport Pipe
+	public static Item itemsSwitchPipeItem;
+	public static PipeDefinition itemsSwitchPipeDef;
+
+	// Switch Fluid Pipe
+	public static Item fluidsSwitchPipeItem;
+	public static PipeDefinition fluidsSwitchPipeDef;
+	
+	// Switch Transport Pipe
+	public static Item powerSwitchPipeItem;
+	public static PipeDefinition powerSwitchPipeDef;
+	
+	// water pump pipe
+	public static Item waterPumpPipeItem;
+	public static PipeDefinition waterPumpPipeDef;
+	
+	
 	public static void createPipes()
 	{
 		additionPipeDef = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipeItemsAddition").logic(PipeItemsAddition::new, PipeItemsAddition::new).define();
@@ -72,6 +116,35 @@ public class APPipeDefintions
 		attachSidedSuffixes(jeweledPipeDefBuilder);
 		jeweledPipeDef = jeweledPipeDefBuilder.define();
 		jeweledPipeItem = PipeCreator.createPipeItemAndRecipe(2, jeweledPipeDef, false, " D ", "DGD", " D ", 'D', BCTransportItems.pipeItemDiamond, 'G', "gearGold");
+		
+		itemsTeleportPipeDef = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipeItemsTeleport").logic(PipeItemsTeleport::new, PipeItemsTeleport::new).define();
+		itemsTeleportPipeItem = PipeCreator.createPipeItem(itemsTeleportPipeDef);	
+		
+		// add assembly recipe for Item Teleport Pipe
+		Set<StackDefinition> tpRecipeIngredients = new HashSet<StackDefinition>();
+		tpRecipeIngredients.add(ArrayStackFilter.definition(new ItemStack(BCSiliconItems.redstoneChipset, 1, 4)));
+		tpRecipeIngredients.add(ArrayStackFilter.definition(8, new ItemStack(BCTransportItems.pipeItemDiamond)));
+		tpRecipeIngredients.add(ArrayStackFilter.definition(new ItemStack(BCSiliconItems.redstoneChipset, 1, 3)));
+		AssemblyRecipeRegistry.INSTANCE.addRecipe(new AssemblyRecipe("teleportPipe", 10000, tpRecipeIngredients, new ItemStack(itemsTeleportPipeItem, 8)));
+		
+		liquidsTeleportPipeDef = new PipeDefinitionBuilder().flowFluid().idTexPrefix("pipeLiquidsTeleport").logic(PipeLiquidsTeleport::new, PipeLiquidsTeleport::new).define();
+		liquidsTeleportPipeItem = PipeCreator.createPipeItemAndRecipe(1, liquidsTeleportPipeDef, true, new Object[] {BCTransportItems.waterproof, itemsTeleportPipeItem});
+		
+		powerTeleportPipeDef = new PipeDefinitionBuilder().flowPower().idTexPrefix("pipePowerTeleport").logic(PipePowerTeleport::new, PipePowerTeleport::new).define();
+		powerTeleportPipeItem = PipeCreator.createPipeItemAndRecipe(1, powerTeleportPipeDef, true, new Object[] {"dustRedstone", itemsTeleportPipeItem});
+		
+		itemsSwitchPipeDef = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipeItemsSwitch").texSuffixes("_closed", "_open").logic(PipeSwitch::new, PipeSwitch::new).define();
+		itemsSwitchPipeItem = PipeCreator.createPipeItemAndRecipe(8, itemsSwitchPipeDef, false, "GgI", 'g', "blockGlass", 'G', "gearGold", 'I', "gearIron");
+		
+		fluidsSwitchPipeDef = new PipeDefinitionBuilder().flowFluid().idTexPrefix("pipeFluidsSwitch").texSuffixes("_closed", "_open").logic(PipeSwitch::new, PipeSwitch::new).define();
+		fluidsSwitchPipeItem = PipeCreator.createPipeItemAndRecipe(1, fluidsSwitchPipeDef, true, new Object[] {BCTransportItems.waterproof, itemsSwitchPipeItem});
+		
+		powerSwitchPipeDef = new PipeDefinitionBuilder().flowPower().idTexPrefix("pipePowerSwitch").texSuffixes("_closed", "_open").logic(PipeSwitch::new, PipeSwitch::new).define();
+		powerSwitchPipeItem = PipeCreator.createPipeItemAndRecipe(1, powerSwitchPipeDef, true, new Object[] {"dustRedstone", itemsSwitchPipeItem});
+		
+		waterPumpPipeDef = new PipeDefinitionBuilder().flowFluid().idTexPrefix("pipeFluidsWaterPump").logic(PipeLiquidsWaterPump::new, PipeLiquidsWaterPump::new).define();
+		waterPumpPipeItem = PipeCreator.createPipeItemAndRecipe(1, waterPumpPipeDef, false, " L ", "rPr", " W ", 'r', "dustRedstone", 'P', "gearIron", 'L',
+				BCTransportItems.pipeFluidGold, 'w', BCTransportItems.waterproof, 'W', BCTransportItems.pipeFluidWood);
 	}
 	
 	/**

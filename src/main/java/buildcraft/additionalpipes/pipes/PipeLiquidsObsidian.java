@@ -3,29 +3,28 @@ package buildcraft.additionalpipes.pipes;
 import java.util.HashSet;
 import java.util.List;
 
+import buildcraft.additionalpipes.utils.Log;
+import buildcraft.api.transport.pipe.PipeEventItem;
+import buildcraft.core.lib.RFBattery;
+import buildcraft.core.proxy.CoreProxy;
+import buildcraft.transport.PipeTransportFluids;
+import buildcraft.transport.TransportProxy;
+import buildcraft.transport.TravelingItem;
+import cofh.api.energy.IEnergyHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
-import buildcraft.additionalpipes.utils.Log;
-import buildcraft.core.lib.RFBattery;
-import buildcraft.core.lib.utils.Utils;
-import buildcraft.core.proxy.CoreProxy;
-import buildcraft.transport.PipeTransportFluids;
-import buildcraft.transport.TransportProxy;
-import buildcraft.transport.TravelingItem;
-import buildcraft.transport.pipes.events.PipeEventItem;
-import cofh.api.energy.IEnergyHandler;
 
-public class PipeLiquidsObsidian extends APPipe<PipeTransportFluids> implements IEnergyHandler 
+public class PipeLiquidsObsidian extends APPipe implements IEnergyHandler 
 {
 	// 		return battery.receiveEnergy(maxReceive, simulate);
 

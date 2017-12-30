@@ -41,6 +41,8 @@ public abstract class PipeTeleport extends APPipe implements ITeleportPipe
 	{
 		super(pipe);
 		this.type = type;
+		// TEMP
+		TeleportManager.instance.add(this, frequency);
 	}
 	
 	public PipeTeleport(IPipe pipe, NBTTagCompound tagCompound, TeleportPipeType type)
@@ -48,6 +50,9 @@ public abstract class PipeTeleport extends APPipe implements ITeleportPipe
 		super(pipe);
 		this.type = type;
 		readFromNBT(tagCompound);
+		
+		// TEMP
+		TeleportManager.instance.add(this, frequency);
 	}
 	
 	@Override
@@ -102,7 +107,7 @@ public abstract class PipeTeleport extends APPipe implements ITeleportPipe
 		return type;
 	}
 
-	@Override
+	/*@Override
 	public void initialize() {
 		super.initialize();
 		TeleportManager.instance.add(this, frequency);
@@ -118,7 +123,7 @@ public abstract class PipeTeleport extends APPipe implements ITeleportPipe
 	public void onChunkUnload() {
 		super.onChunkUnload();
 		TeleportManager.instance.remove(this, frequency);
-	}
+	}*/
 	
 	@Override
 	public boolean onPipeActivate(EntityPlayer player, RayTraceResult trace, float hitX, float hitY, float hitZ, EnumPipePart part)  

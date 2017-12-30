@@ -8,77 +8,146 @@
 
 package buildcraft.additionalpipes.pipes;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import net.minecraft.item.Item;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidHandler;
-
-import org.apache.commons.lang3.tuple.Pair;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import buildcraft.additionalpipes.api.TeleportPipeType;
-import buildcraft.transport.IPipeTransportFluidsHook;
-import buildcraft.transport.PipeTransportFluids;
-import buildcraft.transport.pipes.PipeFluidsDiamond;
+import buildcraft.additionalpipes.utils.Log;
+import buildcraft.api.transport.pipe.IPipe;
+import buildcraft.api.transport.pipe.PipeEventFluid;
+import buildcraft.api.transport.pipe.PipeEventHandler;
+import buildcraft.transport.pipe.flow.PipeFlowFluids;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 
-public class PipeLiquidsTeleport extends PipeTeleport<PipeTransportFluids> implements IPipeTransportFluidsHook {
-	private static final int ICON = 2;
+public class PipeLiquidsTeleport extends PipeTeleport 
+{
 
-	public PipeLiquidsTeleport(Item item)
+	// casted reference to the flow so we don't have to keep casting it
+	PipeFlowFluids flow;
+
+	public PipeLiquidsTeleport(IPipe pipe, NBTTagCompound tagCompound)
 	{
-		super(new PipeTransportFluids(), item, TeleportPipeType.FLUIDS);
-		
-		//load the fluid capacities set in mod init
-		transport.initFromPipe(PipeFluidsDiamond.class);
+		super(pipe, tagCompound, TeleportPipeType.FLUIDS);
+		init();
 	}
 
-	@Override
-	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
-		List<PipeLiquidsTeleport> pipeList = TeleportManager.instance.getConnectedPipes(this, false, true);
+	public PipeLiquidsTeleport(IPipe pipe)
+	{
+		super(pipe, TeleportPipeType.FLUIDS);
+		init();
+	}
+	
+	private void init()
+	{
+		flow = (PipeFlowFluids) pipe.getFlow();
+	}
+	
 
-		if(pipeList.size() == 0 || (state & 0x1) == 0) {
-			return 0;
-		}
-
-		int i = getWorld().rand.nextInt(pipeList.size());
-		List<Pair<EnumFacing, IFluidHandler>> possibleMovements = getPossibleLiquidMovements(pipeList.get(i));
-
-		if(possibleMovements.size() <= 0) {
-			return 0;
-		}
-
-		int used = 0;
-		while(possibleMovements.size() > 0 && used <= 0) {
-			int a = rand.nextInt(possibleMovements.size());
-			Pair<EnumFacing, IFluidHandler> outputData = possibleMovements.get(a);
+	/**
+	 * Thsi event handler only allows as much fluid to move to the center as can move to other teleport pipes
+	 * @param event
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@PipeEventHandler
+	public void preMoveCenter(PipeEventFluid.PreMoveToCentre event)
+	{
+		if(canSend())
+		{
+			ArrayList<PipeLiquidsTeleport> connectedPipes = (ArrayList)TeleportManager.instance.getConnectedPipes(this, false, true);
 			
-			used = outputData.getRight().fill(outputData.getLeft().getOpposite(), resource, doFill);
-			possibleMovements.remove(a);
-		}
-
-		return used;
-	}
-
-	private static List<Pair<EnumFacing, IFluidHandler>> getPossibleLiquidMovements(PipeTeleport<?> pipe) {
-		List<Pair<EnumFacing, IFluidHandler>> result = new LinkedList<Pair<EnumFacing, IFluidHandler>>();
-
-		for(EnumFacing o : EnumFacing.values()) {
-			if(pipe.outputOpen(o) && pipe.container.getTile(o) instanceof IFluidHandler) {
-				IFluidHandler te = (IFluidHandler) pipe.container.getTile(o);
-				if (te != null) {
-					result.add(Pair.<EnumFacing, IFluidHandler>of(o, te));
-				}
+			// make our request based off the total number of MB that other pipes have space for
+			int totalMBNeeded = 0;
+			for(PipeLiquidsTeleport pipe : connectedPipes)
+			{
+				totalMBNeeded += pipe.getMaxAcceptableMB(event.fluid.getFluid());
+			}
+			
+			for(EnumFacing side : EnumFacing.VALUES)
+			{
+				int fluidFromThisSide = Math.min(event.totalOffered[side.ordinal()], totalMBNeeded);
+				
+				event.actuallyOffered[side.ordinal()] = fluidFromThisSide;
+				totalMBNeeded -= fluidFromThisSide;
 			}
 		}
-
-		return result;
 	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@PipeEventHandler
+	public void onMoveCenter(PipeEventFluid.OnMoveToCentre event)
+	{
+		if(canSend())
+		{
+			ArrayList<PipeLiquidsTeleport> connectedPipes = (ArrayList)TeleportManager.instance.getConnectedPipes(this, false, true);
+			
+			FluidStack remaining = event.fluid.copy();
+						
+			// loop until we're out of fluid, or until no pipes need it
+			while(remaining.amount > 0 && connectedPipes.size() > 0)
+			{
+				
+				// divide the fluid into apportionments for each pipe
+				FluidStack maxPerIteration = remaining.copy();
+				maxPerIteration.amount /= connectedPipes.size(); // it's OK if we have rounding errors, it will get resolved eventually
+				
+				// insert one allocation into each pipe that needs it
+				Iterator<PipeLiquidsTeleport> pipeIter = connectedPipes.iterator();
+				while(pipeIter.hasNext())
+				{
+					PipeLiquidsTeleport pipe = pipeIter.next();
+					
+					int inserted = pipe.flow.insertFluidsForce(maxPerIteration, null, false);
+					
+					if(inserted == 0)
+					{
+						// this pipe is done, remove it
+						pipeIter.remove();
+					}
+					else
+					{
+						remaining.amount -= inserted;
+					}
+					
+				}
+			}
+			
+			if(remaining.amount > 0)
+			{
+				Log.unexpected("PipeLiquidsTeleport's PreMoveToCentre event handler requested more fluid than can be handled!");
+			}
+			
+			// update event data
+			for(EnumFacing side : EnumFacing.VALUES)
+			{
+				// allow no fluid to enter the center, regardless
+				event.fluidEnteringCentre[side.ordinal()] = 0;
+				
+				if(remaining.amount > 0)
+				{
+					// decrease the amount of fluid entering the side to match what was actually consumed
+					int fluidBlockedFromEntering = Math.min(event.fluidLeavingSide[side.ordinal()], remaining.amount);
+					
+					event.fluidLeavingSide[side.ordinal()] -= fluidBlockedFromEntering;
+					remaining.amount -= fluidBlockedFromEntering;
+				}
+			}
 
-	@Override
-	public int getIconIndex(EnumFacing direction) {
-		return ICON;
+			
+		}
+	}
+	
+	/**
+	 * Returns the number of millibuckets of the given fluid that this pipe's center tank can accept
+	 * @param fluid
+	 * @return
+	 */
+	public int getMaxAcceptableMB(Fluid fluid)
+	{
+		// try inserting an infinite amount, and see how much is returned
+		return flow.insertFluidsForce(new FluidStack(fluid, Integer.MAX_VALUE), null, true);
 	}
 
 }

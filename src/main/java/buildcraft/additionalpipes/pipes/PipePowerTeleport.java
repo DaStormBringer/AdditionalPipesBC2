@@ -48,14 +48,14 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 		}
 	}
 
-	public PipePowerTeleport(IPipe pipe, NBTTagCompound tagCompound, TeleportPipeType type)
+	public PipePowerTeleport(IPipe pipe, NBTTagCompound tagCompound)
 	{
 		super(pipe, tagCompound, TeleportPipeType.POWER);
 	}
 
-	public PipePowerTeleport(IPipe pipe, TeleportPipeType type)
+	public PipePowerTeleport(IPipe pipe)
 	{
-		super(pipe, type);
+		super(pipe, TeleportPipeType.POWER);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -243,5 +243,4 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 		return result;
 	}
 	
-
 }

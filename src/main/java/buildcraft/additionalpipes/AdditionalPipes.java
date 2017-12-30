@@ -55,13 +55,7 @@ public class AdditionalPipes {
 	
 	public CreativeTabBC creativeTab;
 	
-	// Item Teleport
-	public Item pipeItemsTeleport;
-	// Liquid Teleport
-	public Item pipeLiquidsTeleport;
-	// Power Teleport
-	public Item pipePowerTeleport;
-	
+
 	// Switch pipes
 	public Item pipePowerSwitch;
 	public Item pipeItemsSwitch;
@@ -126,7 +120,7 @@ public class AdditionalPipes {
 
 		
 		//set creative tab icon
-		creativeTab.setItem(new ItemStack(pipeItemsTeleport));
+		creativeTab.setItem(new ItemStack(APPipeDefintions.itemsTeleportPipeItem));
 
 		triggerPipeClosed = new TriggerPipeClosed();
 		StatementManager.registerTriggerProvider(new GateProvider());
@@ -170,13 +164,6 @@ public class AdditionalPipes {
 		tpRecipeIngredients.add(ArrayStackFilter.definition(new ItemStack(BCSiliconItems.redstoneChipset, 1, 3)));
 		
 		AssemblyRecipeRegistry.INSTANCE.addRecipe(new AssemblyRecipe("teleportPipe", 10000, tpRecipeIngredients, new ItemStack(pipeItemsTeleport, 8)));
-
-
-		// Liquid Teleport Pipe
-		pipeLiquidsTeleport = PipeCreator.createPipeTooltip((Class<? extends APPipe>>) PipeLiquidsTeleport.class, "tip.teleportPipe");
-		if(pipeItemsTeleport != null) {
-			GameRegistry.addShapelessRecipe(new ItemStack(pipeLiquidsTeleport), new Object[] {BuildCraftTransport.pipeWaterproof, pipeItemsTeleport});
-		}
 
 		// Power Teleport Pipe
 		

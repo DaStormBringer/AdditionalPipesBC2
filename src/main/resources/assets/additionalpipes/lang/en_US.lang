@@ -5,7 +5,7 @@ item.PipeItemsDistributor.name=Distribution Transport Pipe
 item.PipeItemsClosed.name=Closed Transport Pipe
 item.PipeItemsTeleport.name=Item Teleport Pipe
 item.PipeLiquidsTeleport.name=Fluid Teleport Pipe
-item.PipePowerTeleport.name=Power Teleport Pipe
+item.PipePowerTeleport.name=Power Teleport Pipe [WIP]
 item.PipeSwitchPower.name=Switch Kinesis Pipe
 item.PipeSwitchFluids.name=Switch Fluid Pipe
 item.PipeSwitchItems.name=Switch Transport Pipe
@@ -17,8 +17,6 @@ item.PipeItemsJeweled.name=Jeweled Transport Pipe
 #regular items & blocks
 item.dogDeaggravator.name=Dog Deaggravator
 tile.teleportTether.name=Teleport Tether
-
-
 
 # Priority Insertion Pipe
 gui.priority_insertion.title=Priority Insertion Pipe

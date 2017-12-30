@@ -89,6 +89,7 @@ public class TeleportManagerTest
 		return true;
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static boolean testGetConnectedPipesBasic()
 	{
 		TeleportManager.instance.reset();
@@ -112,7 +113,7 @@ public class TeleportManagerTest
 		TeleportManager.instance.add(pipe2, 3);
 		TeleportManager.instance.add(pipe3, 3);
 		
-		ArrayList<PipeItemsTeleport> pipesList = TeleportManager.instance.getConnectedPipes(pipe1, true, true);
+		ArrayList<PipeItemsTeleport> pipesList = (ArrayList)TeleportManager.instance.getConnectedPipes(pipe1, true, true);
 		
 		if(!(pipesList.size() == 2 && (pipesList.contains(pipe2) && pipesList.contains(pipe3))))
 		{
@@ -125,6 +126,7 @@ public class TeleportManagerTest
 		return true;
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static boolean testGetConnectedPipesSendReceive()
 	{
 		TeleportManager.instance.reset();
@@ -149,7 +151,7 @@ public class TeleportManagerTest
 		TeleportManager.instance.add(pipe3, 3);
 		
 		//get a list of pipes which can send to pipe1
-		ArrayList<PipeItemsTeleport> sendablePipes = TeleportManager.instance.getConnectedPipes(pipe1, true, false);
+		ArrayList<PipeItemsTeleport> sendablePipes = (ArrayList)TeleportManager.instance.getConnectedPipes(pipe1, true, false);
 		
 		if(!(sendablePipes.size() == 1 && (sendablePipes.contains(pipe2) && !(sendablePipes.contains(pipe1) && sendablePipes.contains(pipe3)))))
 		{
@@ -157,7 +159,7 @@ public class TeleportManagerTest
 		}
 		
 		//get a list of pipes which pipe1 can send to
-		ArrayList<PipeItemsTeleport> receivingPipes = TeleportManager.instance.getConnectedPipes(pipe1, false, true);
+		ArrayList<PipeItemsTeleport> receivingPipes = (ArrayList)TeleportManager.instance.getConnectedPipes(pipe1, false, true);
 		
 		if(!(receivingPipes.size() == 1 && (receivingPipes.contains(pipe3) && !(receivingPipes.contains(pipe1) && receivingPipes.contains(pipe2)))))
 		{
@@ -170,6 +172,7 @@ public class TeleportManagerTest
 		return true;
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static boolean testGetConnectedPipesRealUseCase()
 	{
 		TeleportManager.instance.reset();
@@ -203,7 +206,7 @@ public class TeleportManagerTest
 		TeleportManager.instance.add(pipe4, 3);
 		TeleportManager.instance.add(pipe5, 7);
 
-		ArrayList<PipeItemsTeleport> pipesList = TeleportManager.instance.getConnectedPipes(pipe1, false, true);
+		ArrayList<PipeItemsTeleport> pipesList = (ArrayList)TeleportManager.instance.getConnectedPipes(pipe1, false, true);
 		
 		Log.info(">> getConnectedPipes() returned " + pipesList.size() + " pipes");
 

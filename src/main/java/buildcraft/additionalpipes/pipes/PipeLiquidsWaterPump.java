@@ -1,48 +1,48 @@
 package buildcraft.additionalpipes.pipes;
 
-import net.minecraft.block.Block;
+import buildcraft.additionalpipes.APConfiguration;
+import buildcraft.api.transport.pipe.IPipe;
+import buildcraft.api.transport.pipe.PipeBehaviour;
+import buildcraft.transport.pipe.flow.PipeFlowFluids;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import buildcraft.additionalpipes.APConfiguration;
-import buildcraft.transport.PipeTransportFluids;
 
-public class PipeLiquidsWaterPump extends APPipe<PipeTransportFluids> {
-	private static final int ICON = 24;
-	private static final Block water = Blocks.water;
+public class PipeLiquidsWaterPump extends APPipe
+{
 
-	public PipeLiquidsWaterPump(Item item)
+	public PipeLiquidsWaterPump(IPipe pipe, NBTTagCompound nbt)
 	{
-		super(new PipeTransportFluids(), item);
-		
-		//load the fluid capacities set in mod init
-		transport.initFromPipe(getClass());
+		super(pipe, nbt);
+	}
+
+	public PipeLiquidsWaterPump(IPipe pipe)
+	{
+		super(pipe);
 	}
 
 	@Override
-	public void updateEntity() 
+	public void onTick()
 	{
-		super.updateEntity();
-        if(getWorld().getBlockState(container.getPos().down()).getBlock() == water)
+        if(pipe.getHolder().getPipeWorld().getBlockState(getPos().down()).getBlock() == Blocks.WATER)
 		{
-			transport.fill(EnumFacing.DOWN, new FluidStack(FluidRegistry.WATER, APConfiguration.waterPumpWaterPerTick), true);
-
+			((PipeFlowFluids)pipe.getFlow()).insertFluidsForce(new FluidStack(FluidRegistry.WATER, APConfiguration.waterPumpWaterPerTick), EnumFacing.DOWN, false);
 		}
-	}
-
-	@Override
-	public int getIconIndex(EnumFacing direction) {
-
-		return ICON;
 	}
 	
 	@Override
-	public boolean canPipeConnect(TileEntity tile, EnumFacing side)
+	public boolean canConnect(EnumFacing side, TileEntity tile)
 	{
-		return side != EnumFacing.DOWN && super.canPipeConnect(tile, side);
+		return side != EnumFacing.DOWN;
+	}
+	
+	@Override
+	public boolean canConnect(EnumFacing side, PipeBehaviour tile)
+	{
+		return side != EnumFacing.DOWN;
 	}
 
 }
