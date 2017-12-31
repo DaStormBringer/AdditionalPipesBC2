@@ -11,15 +11,15 @@ import net.minecraft.util.EnumFacing;
  * @author jamie
  *
  */
-public class PipeSwitch extends APPipe
+public class PipeBehaviorSwitch extends APPipe
 {
 
-	public PipeSwitch(IPipe pipe, NBTTagCompound nbt)
+	public PipeBehaviorSwitch(IPipe pipe, NBTTagCompound nbt)
 	{
 		super(pipe, nbt);
 	}
 
-	public PipeSwitch(IPipe pipe)
+	public PipeBehaviorSwitch(IPipe pipe)
 	{
 		super(pipe);
 	}

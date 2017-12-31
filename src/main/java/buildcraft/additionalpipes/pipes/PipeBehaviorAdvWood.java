@@ -32,13 +32,13 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class PipeItemsAdvancedWood extends PipeBehaviourWood implements ICapabilityProvider
+public class PipeBehaviorAdvWood extends PipeBehaviourWood implements ICapabilityProvider
 {	
-    public PipeItemsAdvancedWood(IPipe pipe) {
+    public PipeBehaviorAdvWood(IPipe pipe) {
         super(pipe);
     }
 
-    public PipeItemsAdvancedWood(IPipe pipe, NBTTagCompound nbt) {
+    public PipeBehaviorAdvWood(IPipe pipe, NBTTagCompound nbt) {
         super(pipe, nbt);
         readFromNBT(nbt);
     }	

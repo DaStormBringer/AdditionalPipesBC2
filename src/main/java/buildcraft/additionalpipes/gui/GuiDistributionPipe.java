@@ -4,7 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessageDistPipe;
-import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
+import buildcraft.additionalpipes.pipes.PipeBehaviorDistribution;
 import buildcraft.additionalpipes.textures.Textures;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -20,11 +20,11 @@ public class GuiDistributionPipe extends GuiContainer {
 	private GuiButton[] buttons = new GuiButton[18];
 	public int guiX = 0;
 	public int guiY = 0;
-	private final PipeItemsDistributor pipe;
+	private final PipeBehaviorDistribution pipe;
 
-	public GuiDistributionPipe(PipeItemsDistributor container) {
+	public GuiDistributionPipe(PipeBehaviorDistribution container) {
 		super(new ContainerDistributionPipe(container));
-		pipe = (PipeItemsDistributor) container.pipe;
+		pipe = (PipeBehaviorDistribution) container.pipe;
 		xSize = 117;
 		ySize = 130;
 	}

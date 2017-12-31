@@ -1,6 +1,6 @@
 package buildcraft.additionalpipes.network.message;
 
-import buildcraft.additionalpipes.pipes.PipeTeleport;
+import buildcraft.additionalpipes.pipes.PipeBehaviorTeleport;
 import buildcraft.transport.tile.TilePipeHolder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -58,10 +58,10 @@ public class MessageTelePipeUpdate implements IMessage, IMessageHandler<MessageT
     {
     	TileEntity te = ctx.getServerHandler().playerEntity.getEntityWorld().getTileEntity(message.position);
     	if(te instanceof TilePipeHolder) {
-			PipeTeleport pipe = (PipeTeleport) ((TilePipeHolder) te).getPipe().getBehaviour();
+			PipeBehaviorTeleport pipe = (PipeBehaviorTeleport) ((TilePipeHolder) te).getPipe().getBehaviour();
 			// only allow the owner to change pipe state
 			EntityPlayerMP entityPlayer = (EntityPlayerMP) ctx.getServerHandler().playerEntity;
-			if(!PipeTeleport.canPlayerModifyPipe(entityPlayer, pipe)) 
+			if(!PipeBehaviorTeleport.canPlayerModifyPipe(entityPlayer, pipe)) 
 			{
 				entityPlayer.sendMessage(new TextComponentString("Sorry, You may not change pipe state."));
 				return null;

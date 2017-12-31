@@ -19,14 +19,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 
-public class PipeItemsAddition extends APPipe
+public class PipeBehaviorAddition extends APPipe
 {
 
-	public PipeItemsAddition(IPipe pipe) {
+	public PipeBehaviorAddition(IPipe pipe) {
 		super(pipe);
 	}
 	
-    public PipeItemsAddition(IPipe pipe, NBTTagCompound nbt) {
+    public PipeBehaviorAddition(IPipe pipe, NBTTagCompound nbt) {
         super(pipe, nbt);
     }
 	

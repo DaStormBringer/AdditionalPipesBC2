@@ -1,7 +1,7 @@
 package buildcraft.additionalpipes.network.message;
 
 import buildcraft.additionalpipes.gui.GuiJeweledPipe;
-import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
+import buildcraft.additionalpipes.pipes.PipeBehaviorJeweled;
 import buildcraft.additionalpipes.pipes.SideFilterData;
 import buildcraft.additionalpipes.utils.NetworkUtils;
 import buildcraft.transport.tile.TilePipeHolder;
@@ -71,7 +71,7 @@ public class MessageJeweledPipeOptionsClient implements IMessage, IMessageHandle
         TileEntity te = FMLClientHandler.instance().getClient().world.getTileEntity(message.position);
 		if(te instanceof TilePipeHolder)
 		{
-			PipeItemsJeweled pipe = (PipeItemsJeweled) ((TilePipeHolder) te).getPipe().getBehaviour();
+			PipeBehaviorJeweled pipe = (PipeBehaviorJeweled) ((TilePipeHolder) te).getPipe().getBehaviour();
 
 	    	for(int sideNumber = 0; sideNumber < GuiJeweledPipe.NUM_TABS; ++sideNumber)
 	    	{

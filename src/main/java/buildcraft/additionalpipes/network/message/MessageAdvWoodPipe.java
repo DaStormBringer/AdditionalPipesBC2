@@ -1,6 +1,6 @@
 package buildcraft.additionalpipes.network.message;
 
-import buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
+import buildcraft.additionalpipes.pipes.PipeBehaviorAdvWood;
 import buildcraft.transport.tile.TilePipeHolder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
@@ -50,7 +50,7 @@ public class MessageAdvWoodPipe implements IMessage, IMessageHandler<MessageAdvW
     	TileEntity te = world.getTileEntity(message.position);
     	
     	if(te instanceof TilePipeHolder) {
-			PipeItemsAdvancedWood pipe = (PipeItemsAdvancedWood) ((TilePipeHolder) te).getPipe().getBehaviour();
+			PipeBehaviorAdvWood pipe = (PipeBehaviorAdvWood) ((TilePipeHolder) te).getPipe().getBehaviour();
 			pipe.exclude = exclude;
 		}
     	

@@ -22,7 +22,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class PipeItemsClosed extends APPipe implements ICapabilityProvider {
+public class PipeBehaviorClosed extends APPipe implements ICapabilityProvider {
 	
 	// note: if you change this, you will also have to change the GUI code
 	public static final int EFFECTIVE_INVENTORY_SIZE = 9;
@@ -30,12 +30,12 @@ public class PipeItemsClosed extends APPipe implements ICapabilityProvider {
 	
 	ItemStackHandler inventory = new ItemStackHandler(ACTUAL_INVENTORY_SIZE);
 
-	public PipeItemsClosed(IPipe pipe)
+	public PipeBehaviorClosed(IPipe pipe)
 	{
 		super(pipe);
 	}
 
-	public PipeItemsClosed(IPipe pipe, NBTTagCompound nbt)
+	public PipeBehaviorClosed(IPipe pipe, NBTTagCompound nbt)
 	{
 		super(pipe, nbt);
 		readFromNBT(nbt);

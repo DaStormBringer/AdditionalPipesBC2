@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessageJeweledPipeOptionsClient;
-import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
+import buildcraft.additionalpipes.pipes.PipeBehaviorJeweled;
 import buildcraft.transport.tile.TilePipeHolder;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -38,12 +38,12 @@ public class ContainerJeweledPipe extends Container
 	 * 5 -> red        -> east
 	 */
 	
-	PipeItemsJeweled pipeItemsJeweled;
+	PipeBehaviorJeweled pipeItemsJeweled;
 	
 	//holds references to the slots for each side
 	ArrayList<ArrayList<Slot>> sideSlots;
 
-	public ContainerJeweledPipe(InventoryPlayer inventoryPlayer, PipeItemsJeweled pipe)
+	public ContainerJeweledPipe(InventoryPlayer inventoryPlayer, PipeBehaviorJeweled pipe)
     {
 		sideSlots = new ArrayList<ArrayList<Slot>>();
 		

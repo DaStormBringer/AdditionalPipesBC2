@@ -1,11 +1,11 @@
 package buildcraft.additionalpipes.gui;
 
-import buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
-import buildcraft.additionalpipes.pipes.PipeItemsClosed;
-import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
-import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
-import buildcraft.additionalpipes.pipes.PipeItemsPriorityInsertion;
-import buildcraft.additionalpipes.pipes.PipeTeleport;
+import buildcraft.additionalpipes.pipes.PipeBehaviorAdvWood;
+import buildcraft.additionalpipes.pipes.PipeBehaviorClosed;
+import buildcraft.additionalpipes.pipes.PipeBehaviorDistribution;
+import buildcraft.additionalpipes.pipes.PipeBehaviorJeweled;
+import buildcraft.additionalpipes.pipes.PipeBehaviorPriorityInsertion;
+import buildcraft.additionalpipes.pipes.PipeBehaviorTeleport;
 import buildcraft.additionalpipes.utils.Log;
 import buildcraft.transport.tile.TilePipeHolder;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,17 +35,17 @@ public class GuiHandler implements IGuiHandler {
 		
 		switch(ID) {
 		case PIPE_TP:
-			return new ContainerTeleportPipe(player, (PipeTeleport) ((TilePipeHolder) tile).getPipe().getBehaviour());
+			return new ContainerTeleportPipe(player, (PipeBehaviorTeleport) ((TilePipeHolder) tile).getPipe().getBehaviour());
 		case PIPE_DIST:
-			return new ContainerDistributionPipe((PipeItemsDistributor) ((TilePipeHolder) tile).getPipe().getBehaviour());
+			return new ContainerDistributionPipe((PipeBehaviorDistribution) ((TilePipeHolder) tile).getPipe().getBehaviour());
 		case PIPE_WOODEN_ADV:
-			return new ContainerAdvancedWoodPipe(player, player.inventory, (PipeItemsAdvancedWood) ((TilePipeHolder) tile).getPipe().getBehaviour());
+			return new ContainerAdvancedWoodPipe(player, player.inventory, (PipeBehaviorAdvWood) ((TilePipeHolder) tile).getPipe().getBehaviour());
 		case PIPE_CLOSED:
-			return new ContainerPipeClosed(player.inventory,(PipeItemsClosed) ((TilePipeHolder) tile).getPipe().getBehaviour());
+			return new ContainerPipeClosed(player.inventory,(PipeBehaviorClosed) ((TilePipeHolder) tile).getPipe().getBehaviour());
 		case PIPE_PRIORITY:
-			return new ContainerPriorityInsertionPipe((PipeItemsPriorityInsertion) ((TilePipeHolder) tile).getPipe().getBehaviour());
+			return new ContainerPriorityInsertionPipe((PipeBehaviorPriorityInsertion) ((TilePipeHolder) tile).getPipe().getBehaviour());
 		case PIPE_JEWELED:
-			return new ContainerJeweledPipe(player.inventory, ((PipeItemsJeweled)((TilePipeHolder) tile).getPipe().getBehaviour()));
+			return new ContainerJeweledPipe(player.inventory, ((PipeBehaviorJeweled)((TilePipeHolder) tile).getPipe().getBehaviour()));
 		default:
 			return null;
 		}
@@ -63,17 +63,17 @@ public class GuiHandler implements IGuiHandler {
 		switch(ID)
 		{
 		case PIPE_TP:
-			return new GuiTeleportPipe(player, ((PipeTeleport)((TilePipeHolder) tile).getPipe().getBehaviour()));
+			return new GuiTeleportPipe(player, ((PipeBehaviorTeleport)((TilePipeHolder) tile).getPipe().getBehaviour()));
 		case PIPE_DIST:
-			return new GuiDistributionPipe((PipeItemsDistributor) ((TilePipeHolder) tile).getPipe().getBehaviour());
+			return new GuiDistributionPipe((PipeBehaviorDistribution) ((TilePipeHolder) tile).getPipe().getBehaviour());
 		case PIPE_WOODEN_ADV:
-			return new GuiAdvancedWoodPipe(player, player.inventory, (PipeItemsAdvancedWood) ((TilePipeHolder) tile).getPipe().getBehaviour());
+			return new GuiAdvancedWoodPipe(player, player.inventory, (PipeBehaviorAdvWood) ((TilePipeHolder) tile).getPipe().getBehaviour());
 		case PIPE_CLOSED:
-			return new GuiPipeClosed(player.inventory, (PipeItemsClosed) ((TilePipeHolder) tile).getPipe().getBehaviour());
+			return new GuiPipeClosed(player.inventory, (PipeBehaviorClosed) ((TilePipeHolder) tile).getPipe().getBehaviour());
 		case PIPE_PRIORITY:
-			return new GuiPriorityInsertionPipe((PipeItemsPriorityInsertion) ((TilePipeHolder) tile).getPipe().getBehaviour());
+			return new GuiPriorityInsertionPipe((PipeBehaviorPriorityInsertion) ((TilePipeHolder) tile).getPipe().getBehaviour());
 		case PIPE_JEWELED:
-			return new GuiJeweledPipe(player.inventory, ((PipeItemsJeweled)((TilePipeHolder) tile).getPipe().getBehaviour()));
+			return new GuiJeweledPipe(player.inventory, ((PipeBehaviorJeweled)((TilePipeHolder) tile).getPipe().getBehaviour()));
 		default:
 			return null;
 		}

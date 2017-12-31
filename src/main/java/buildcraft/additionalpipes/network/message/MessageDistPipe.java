@@ -1,6 +1,6 @@
 package buildcraft.additionalpipes.network.message;
 
-import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
+import buildcraft.additionalpipes.pipes.PipeBehaviorDistribution;
 import buildcraft.transport.tile.TilePipeHolder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
@@ -55,7 +55,7 @@ public class MessageDistPipe implements IMessage, IMessageHandler<MessageDistPip
     	TileEntity te = world.getTileEntity(message.position);
 		if(te instanceof TilePipeHolder)
 		{
-			PipeItemsDistributor pipe = (PipeItemsDistributor) ((TilePipeHolder) te).getPipe().getBehaviour();
+			PipeBehaviorDistribution pipe = (PipeBehaviorDistribution) ((TilePipeHolder) te).getPipe().getBehaviour();
 
 			if(message._newData >= 0 && message._index >= 0 && message._index < pipe.distData.length) 
 			{

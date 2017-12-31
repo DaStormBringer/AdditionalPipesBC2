@@ -8,7 +8,7 @@
 
 package buildcraft.additionalpipes.gui;
 
-import buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
+import buildcraft.additionalpipes.pipes.PipeBehaviorAdvWood;
 import buildcraft.lib.gui.ContainerBC_Neptune;
 import buildcraft.transport.tile.TilePipeHolder;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,9 +21,9 @@ import net.minecraftforge.items.SlotItemHandler;
 public class ContainerAdvancedWoodPipe extends ContainerBC_Neptune {
 
 	private boolean exclude;
-	private PipeItemsAdvancedWood pipe;
+	private PipeBehaviorAdvWood pipe;
 
-	public ContainerAdvancedWoodPipe(EntityPlayer player, IInventory playerInventory, PipeItemsAdvancedWood pipe) {
+	public ContainerAdvancedWoodPipe(EntityPlayer player, IInventory playerInventory, PipeBehaviorAdvWood pipe) {
 		super(player);
 		this.pipe = pipe;
 		exclude = !pipe.exclude; // force a network update

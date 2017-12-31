@@ -6,7 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessageJeweledPipeOptionsServer;
-import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
+import buildcraft.additionalpipes.pipes.PipeBehaviorJeweled;
 import buildcraft.additionalpipes.pipes.SideFilterData;
 import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.additionalpipes.utils.Log;
@@ -53,7 +53,7 @@ public class GuiJeweledPipe extends GuiContainer
     //this is here so that we don't have to cast it
     ContainerJeweledPipe container;
     
-    public GuiJeweledPipe(InventoryPlayer inventoryPlayer, PipeItemsJeweled pipe)
+    public GuiJeweledPipe(InventoryPlayer inventoryPlayer, PipeBehaviorJeweled pipe)
     {
         super(new ContainerJeweledPipe(inventoryPlayer, pipe));
         xSize = 202;

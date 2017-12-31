@@ -21,7 +21,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentTranslation;
 
 
-public abstract class PipeTeleport extends APPipe implements ITeleportPipe 
+public abstract class PipeBehaviorTeleport extends APPipe implements ITeleportPipe 
 {
 	protected static final Random rand = new Random();
 
@@ -37,7 +37,7 @@ public abstract class PipeTeleport extends APPipe implements ITeleportPipe
 	
 	public final TeleportPipeType type;
 
-	public PipeTeleport(IPipe pipe, TeleportPipeType type)
+	public PipeBehaviorTeleport(IPipe pipe, TeleportPipeType type)
 	{
 		super(pipe);
 		this.type = type;
@@ -45,7 +45,7 @@ public abstract class PipeTeleport extends APPipe implements ITeleportPipe
 		TeleportManager.instance.add(this, frequency);
 	}
 	
-	public PipeTeleport(IPipe pipe, NBTTagCompound tagCompound, TeleportPipeType type)
+	public PipeBehaviorTeleport(IPipe pipe, NBTTagCompound tagCompound, TeleportPipeType type)
 	{
 		super(pipe);
 		this.type = type;
@@ -191,7 +191,7 @@ public abstract class PipeTeleport extends APPipe implements ITeleportPipe
 	@Override
 	public boolean canConnect(EnumFacing face, PipeBehaviour other)
 	{
-		if(other instanceof PipeTeleport)
+		if(other instanceof PipeBehaviorTeleport)
 		{
 			return false;
 		}
@@ -228,7 +228,7 @@ public abstract class PipeTeleport extends APPipe implements ITeleportPipe
 		isPublic = nbttagcompound.getBoolean("isPublic");
 	}
 
-	public static boolean canPlayerModifyPipe(EntityPlayer player, PipeTeleport pipe)
+	public static boolean canPlayerModifyPipe(EntityPlayer player, PipeBehaviorTeleport pipe)
 	{
 		if(pipe.isPublic || pipe.ownerUUID.equals(PlayerUtils.getUUID(player)) || player.capabilities.isCreativeMode)
 			return true;

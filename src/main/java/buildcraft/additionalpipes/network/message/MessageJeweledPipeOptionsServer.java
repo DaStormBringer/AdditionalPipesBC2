@@ -1,6 +1,6 @@
 package buildcraft.additionalpipes.network.message;
 
-import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
+import buildcraft.additionalpipes.pipes.PipeBehaviorJeweled;
 import buildcraft.additionalpipes.pipes.SideFilterData;
 import buildcraft.transport.tile.TilePipeHolder;
 import io.netty.buffer.ByteBuf;
@@ -65,7 +65,7 @@ public class MessageJeweledPipeOptionsServer implements IMessage, IMessageHandle
     	TileEntity te = world.getTileEntity(message.position);
 		if(te instanceof TilePipeHolder)
 		{
-			PipeItemsJeweled pipe = (PipeItemsJeweled) ((TilePipeHolder) te).getPipe().getBehaviour();
+			PipeBehaviorJeweled pipe = (PipeBehaviorJeweled) ((TilePipeHolder) te).getPipe().getBehaviour();
 
 			SideFilterData dataToUpdate = pipe.filterData[message.index - 1];
 			dataToUpdate.setAcceptUnsortedItems(message.acceptUnsorted);

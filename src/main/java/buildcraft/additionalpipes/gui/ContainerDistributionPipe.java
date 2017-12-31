@@ -1,15 +1,15 @@
 package buildcraft.additionalpipes.gui;
 
-import buildcraft.additionalpipes.pipes.PipeItemsDistributor;
+import buildcraft.additionalpipes.pipes.PipeBehaviorDistribution;
 import buildcraft.transport.tile.TilePipeHolder;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 
 public class ContainerDistributionPipe extends Container {
-	private PipeItemsDistributor pipe;
+	private PipeBehaviorDistribution pipe;
 	
-	public ContainerDistributionPipe(PipeItemsDistributor container) {
-		pipe = (PipeItemsDistributor) container.pipe;
+	public ContainerDistributionPipe(PipeBehaviorDistribution container) {
+		pipe = (PipeBehaviorDistribution) container.pipe;
 	}
 
 	@Override

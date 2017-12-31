@@ -2,7 +2,7 @@ package buildcraft.additionalpipes.gui;
 
 import org.lwjgl.opengl.GL11;
 
-import buildcraft.additionalpipes.pipes.PipeItemsClosed;
+import buildcraft.additionalpipes.pipes.PipeBehaviorClosed;
 import buildcraft.additionalpipes.textures.Textures;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiPipeClosed extends GuiContainer {
 
-	public GuiPipeClosed(InventoryPlayer inventory, PipeItemsClosed pipe) {
+	public GuiPipeClosed(InventoryPlayer inventory, PipeBehaviorClosed pipe) {
 		super(new ContainerPipeClosed(inventory, pipe));
 	}
 

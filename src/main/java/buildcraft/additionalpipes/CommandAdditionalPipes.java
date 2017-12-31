@@ -3,7 +3,7 @@ package buildcraft.additionalpipes;
 import java.util.Collection;
 
 import buildcraft.additionalpipes.api.TeleportPipeType;
-import buildcraft.additionalpipes.pipes.PipeTeleport;
+import buildcraft.additionalpipes.pipes.PipeBehaviorTeleport;
 import buildcraft.additionalpipes.pipes.TeleportManager;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -54,7 +54,7 @@ public class CommandAdditionalPipes extends CommandBase {
 			for(Object pipeObject : pipes)
 			{
 				StringBuffer sb = new StringBuffer();
-				PipeTeleport pipe = (PipeTeleport)pipeObject;
+				PipeBehaviorTeleport pipe = (PipeBehaviorTeleport)pipeObject;
 				sb.append('[');
 				sb.append(pipe.getPosition().getX()).append(", ");
 				sb.append(pipe.getPosition().getY()).append(", ");

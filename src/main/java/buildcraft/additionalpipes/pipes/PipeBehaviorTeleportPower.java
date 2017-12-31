@@ -28,7 +28,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 
-public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPowerHook
+public class PipeBehaviorTeleportPower extends PipeBehaviorTeleport implements IPipeTransportPowerHook
 {
 
 	/**
@@ -48,12 +48,12 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 		}
 	}
 
-	public PipePowerTeleport(IPipe pipe, NBTTagCompound tagCompound)
+	public PipeBehaviorTeleportPower(IPipe pipe, NBTTagCompound tagCompound)
 	{
 		super(pipe, tagCompound, TeleportPipeType.POWER);
 	}
 
-	public PipePowerTeleport(IPipe pipe)
+	public PipeBehaviorTeleportPower(IPipe pipe)
 	{
 		super(pipe, TeleportPipeType.POWER);
 	}
@@ -69,7 +69,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 			return requested;
 		}
 
-		ArrayList<PipePowerTeleport> pipeList = (ArrayList)TeleportManager.instance.getConnectedPipes(this, true, false);
+		ArrayList<PipeBehaviorTeleportPower> pipeList = (ArrayList)TeleportManager.instance.getConnectedPipes(this, true, false);
 
 		if(pipeList.size() <= 0) {
 			return requested;
@@ -77,7 +77,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 
 		
 		// for each teleport pipe connected to us, tell pipes connected to THEM that we are requesting the power
-		for(PipePowerTeleport otherPipe : pipeList) 
+		for(PipeBehaviorTeleportPower otherPipe : pipeList) 
 		{
 			LinkedList<EnumFacing> possibleMovements = getRealPossibleMovements(otherPipe);
 			for(EnumFacing orientation : possibleMovements) 
@@ -97,8 +97,8 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 	@Override
 	public int receivePower(EnumFacing from, long energy) 
 	{
-		List<PipePowerTeleport> connectedPipes = (List)TeleportManager.instance.getConnectedPipes(this, false, true);
-		List<PipePowerTeleport> sendingToList = new LinkedList<PipePowerTeleport>();
+		List<PipeBehaviorTeleportPower> connectedPipes = (List)TeleportManager.instance.getConnectedPipes(this, false, true);
+		List<PipeBehaviorTeleportPower> sendingToList = new LinkedList<PipeBehaviorTeleportPower>();
 
 		// no connected pipes, leave!
 		if(connectedPipes.size() <= 0 || (state & 0x1) == 0)
@@ -106,7 +106,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 			return 0;
 		}
 
-		for(PipePowerTeleport pipe : connectedPipes) 
+		for(PipeBehaviorTeleportPower pipe : connectedPipes) 
 		{
 			if(getPowerRequestsByNeighbors(pipe).size() > 0) 
 			{
@@ -124,7 +124,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 
 		double powerToSend = APConfiguration.powerTransmittanceCfg * energy / sendingToList.size();
 
-		for(PipePowerTeleport receiver : sendingToList)
+		for(PipeBehaviorTeleportPower receiver : sendingToList)
 		{
 			List<PowerRequest> needsPower = getPowerRequestsByNeighbors(receiver);
 
@@ -159,7 +159,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 		return (int) energy;
 	}
 
-	private List<PowerRequest> getPowerRequestsByNeighbors(PipePowerTeleport pipe) 
+	private List<PowerRequest> getPowerRequestsByNeighbors(PipeBehaviorTeleportPower pipe) 
 	{
 		LinkedList<EnumFacing> possibleMovements = getRealPossibleMovements(pipe);
 		List<PowerRequest> needsPower = new LinkedList<PowerRequest>();
@@ -228,7 +228,7 @@ public class PipePowerTeleport extends PipeTeleport implements IPipeTransportPow
 	}
 
 	// returns all adjacent pipes
-	private static LinkedList<EnumFacing> getRealPossibleMovements(PipePowerTeleport pipe) 
+	private static LinkedList<EnumFacing> getRealPossibleMovements(PipeBehaviorTeleportPower pipe) 
 	{
 		LinkedList<EnumFacing> result = new LinkedList<EnumFacing>();
 

@@ -1,6 +1,6 @@
 package buildcraft.additionalpipes.gui;
 
-import buildcraft.additionalpipes.pipes.PipeItemsClosed;
+import buildcraft.additionalpipes.pipes.PipeBehaviorClosed;
 import buildcraft.transport.tile.TilePipeHolder;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -13,10 +13,10 @@ import net.minecraftforge.items.SlotItemHandler;
 //from dispenser code
 public class ContainerPipeClosed extends Container {
 
-	private PipeItemsClosed pipe;
+	private PipeBehaviorClosed pipe;
 
-	public ContainerPipeClosed(InventoryPlayer inventory, PipeItemsClosed pipe) {
-		this.pipe = (PipeItemsClosed) pipe;
+	public ContainerPipeClosed(InventoryPlayer inventory, PipeBehaviorClosed pipe) {
+		this.pipe = (PipeBehaviorClosed) pipe;
 		int row;
 		int col;
 

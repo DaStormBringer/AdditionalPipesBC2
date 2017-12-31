@@ -3,7 +3,7 @@ package buildcraft.additionalpipes.gates;
 import java.util.Collection;
 
 import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.additionalpipes.pipes.PipeItemsClosed;
+import buildcraft.additionalpipes.pipes.PipeBehaviorClosed;
 import buildcraft.api.statements.IStatementContainer;
 import buildcraft.api.statements.ITriggerExternal;
 import buildcraft.api.statements.ITriggerInternal;
@@ -22,7 +22,7 @@ public class GateProvider implements ITriggerProvider {
 	{
 		PipeBehaviour behavior = ((TilePipeHolder)container.getTile()).getPipe().getBehaviour();
 		
-		if(behavior instanceof PipeItemsClosed)
+		if(behavior instanceof PipeBehaviorClosed)
 		{
 			triggers.add(AdditionalPipes.instance.triggerPipeClosed);
 		}

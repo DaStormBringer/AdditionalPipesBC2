@@ -1,16 +1,16 @@
 package buildcraft.additionalpipes.gui;
 
-import buildcraft.additionalpipes.pipes.PipeItemsPriorityInsertion;
+import buildcraft.additionalpipes.pipes.PipeBehaviorPriorityInsertion;
 import buildcraft.transport.tile.TilePipeHolder;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 
 public class ContainerPriorityInsertionPipe extends Container {
-	private PipeItemsPriorityInsertion pipe;
+	private PipeBehaviorPriorityInsertion pipe;
 	public int[] lastPriorityData;
 
-	public ContainerPriorityInsertionPipe(PipeItemsPriorityInsertion pipe) {
+	public ContainerPriorityInsertionPipe(PipeBehaviorPriorityInsertion pipe) {
 		this.pipe = pipe;
 		lastPriorityData = new int[pipe.sidePriorities.length];
 		for(int i = 0; i < lastPriorityData.length; i++) {

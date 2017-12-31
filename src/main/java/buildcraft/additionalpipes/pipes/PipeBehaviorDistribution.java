@@ -29,19 +29,19 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class PipeItemsDistributor extends APPipe {
+public class PipeBehaviorDistribution extends APPipe {
 
 	public int distData[] = { 1, 1, 1, 1, 1, 1 };
 	public EnumFacing distSide = EnumFacing.UP; // will get initialized on first toNextOpenSide() call
 	public int itemsThisSide = Integer.MAX_VALUE; // normally ranges from 0 to distData[distSide] - 1
 
-	public PipeItemsDistributor(IPipe pipe, NBTTagCompound nbt)
+	public PipeBehaviorDistribution(IPipe pipe, NBTTagCompound nbt)
 	{
 		super(pipe, nbt);
 		readFromNBT(nbt);
 	}
 
-	public PipeItemsDistributor(IPipe pipe)
+	public PipeBehaviorDistribution(IPipe pipe)
 	{
 		super(pipe);
 	}

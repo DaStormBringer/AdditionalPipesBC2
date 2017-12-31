@@ -21,18 +21,18 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 
-public class PipeItemsPriorityInsertion extends APPipe {
+public class PipeBehaviorPriorityInsertion extends APPipe {
 
 	public byte sidePriorities[] = { 1, 1, 1, 1, 1, 1 };
 
 
-	public PipeItemsPriorityInsertion(IPipe pipe, NBTTagCompound nbt)
+	public PipeBehaviorPriorityInsertion(IPipe pipe, NBTTagCompound nbt)
 	{
 		super(pipe, nbt);
 		readFromNBT(nbt);
 	}
 
-	public PipeItemsPriorityInsertion(IPipe pipe)
+	public PipeBehaviorPriorityInsertion(IPipe pipe)
 	{
 		super(pipe);
 	}

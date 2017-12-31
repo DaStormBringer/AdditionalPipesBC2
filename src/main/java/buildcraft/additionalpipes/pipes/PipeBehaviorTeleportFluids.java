@@ -22,19 +22,19 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
-public class PipeLiquidsTeleport extends PipeTeleport 
+public class PipeBehaviorTeleportFluids extends PipeBehaviorTeleport 
 {
 
 	// casted reference to the flow so we don't have to keep casting it
 	PipeFlowFluids flow;
 
-	public PipeLiquidsTeleport(IPipe pipe, NBTTagCompound tagCompound)
+	public PipeBehaviorTeleportFluids(IPipe pipe, NBTTagCompound tagCompound)
 	{
 		super(pipe, tagCompound, TeleportPipeType.FLUIDS);
 		init();
 	}
 
-	public PipeLiquidsTeleport(IPipe pipe)
+	public PipeBehaviorTeleportFluids(IPipe pipe)
 	{
 		super(pipe, TeleportPipeType.FLUIDS);
 		init();
@@ -56,11 +56,11 @@ public class PipeLiquidsTeleport extends PipeTeleport
 	{
 		if(canSend())
 		{
-			ArrayList<PipeLiquidsTeleport> connectedPipes = (ArrayList)TeleportManager.instance.getConnectedPipes(this, false, true);
+			ArrayList<PipeBehaviorTeleportFluids> connectedPipes = (ArrayList)TeleportManager.instance.getConnectedPipes(this, false, true);
 			
 			// make our request based off the total number of MB that other pipes have space for
 			int totalMBNeeded = 0;
-			for(PipeLiquidsTeleport pipe : connectedPipes)
+			for(PipeBehaviorTeleportFluids pipe : connectedPipes)
 			{
 				totalMBNeeded += pipe.getMaxAcceptableMB(event.fluid.getFluid());
 			}
@@ -81,7 +81,7 @@ public class PipeLiquidsTeleport extends PipeTeleport
 	{
 		if(canSend())
 		{
-			ArrayList<PipeLiquidsTeleport> connectedPipes = (ArrayList)TeleportManager.instance.getConnectedPipes(this, false, true);
+			ArrayList<PipeBehaviorTeleportFluids> connectedPipes = (ArrayList)TeleportManager.instance.getConnectedPipes(this, false, true);
 			
 			FluidStack remaining = event.fluid.copy();
 						
@@ -94,10 +94,10 @@ public class PipeLiquidsTeleport extends PipeTeleport
 				maxPerIteration.amount /= connectedPipes.size(); // it's OK if we have rounding errors, it will get resolved eventually
 				
 				// insert one allocation into each pipe that needs it
-				Iterator<PipeLiquidsTeleport> pipeIter = connectedPipes.iterator();
+				Iterator<PipeBehaviorTeleportFluids> pipeIter = connectedPipes.iterator();
 				while(pipeIter.hasNext())
 				{
-					PipeLiquidsTeleport pipe = pipeIter.next();
+					PipeBehaviorTeleportFluids pipe = pipeIter.next();
 					
 					int inserted = pipe.flow.insertFluidsForce(maxPerIteration, null, false);
 					

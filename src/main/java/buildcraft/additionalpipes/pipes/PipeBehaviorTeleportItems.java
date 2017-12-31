@@ -20,20 +20,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 
-public class PipeItemsTeleport extends PipeTeleport
+public class PipeBehaviorTeleportItems extends PipeBehaviorTeleport
 {
 	final private static double TELEPORTED_ITEM_SPEED = .1;
 	
 	// side of the pipe that teleported items enter and exit from
 	private EnumFacing teleportSide = null;
 	
-	public PipeItemsTeleport(IPipe pipe, NBTTagCompound tagCompound)
+	public PipeBehaviorTeleportItems(IPipe pipe, NBTTagCompound tagCompound)
 	{
 		super(pipe, tagCompound, TeleportPipeType.ITEMS);
 		readFromNBT(tagCompound);
 	}
 
-	public PipeItemsTeleport(IPipe pipe)
+	public PipeBehaviorTeleportItems(IPipe pipe)
 	{
 		super(pipe, TeleportPipeType.ITEMS);
 	}
@@ -95,7 +95,7 @@ public class PipeItemsTeleport extends PipeTeleport
 		// if the item is going to the teleportSide, teleport it.
 		if(getTeleportSide() == event.to)
 		{
-			ArrayList<PipeItemsTeleport> connectedTeleportPipes = (ArrayList)TeleportManager.instance.getConnectedPipes(this, false, true);
+			ArrayList<PipeBehaviorTeleportItems> connectedTeleportPipes = (ArrayList)TeleportManager.instance.getConnectedPipes(this, false, true);
 			
 			// no teleport pipes connected, use default
 			if(connectedTeleportPipes.size() <= 0 || (state & 0x1) == 0) {
@@ -104,7 +104,7 @@ public class PipeItemsTeleport extends PipeTeleport
 	
 			// output to random pipe
 			LinkedList<EnumFacing> outputOrientations = new LinkedList<EnumFacing>();
-			PipeItemsTeleport otherPipe;
+			PipeBehaviorTeleportItems otherPipe;
 			
 			int originalPipeNumber = pipe.getHolder().getPipeWorld().rand.nextInt(connectedTeleportPipes.size());
 			int currentPipeNumber = originalPipeNumber;

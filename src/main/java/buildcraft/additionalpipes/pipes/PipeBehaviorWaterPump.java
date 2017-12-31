@@ -11,15 +11,15 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-public class PipeLiquidsWaterPump extends APPipe
+public class PipeBehaviorWaterPump extends APPipe
 {
 
-	public PipeLiquidsWaterPump(IPipe pipe, NBTTagCompound nbt)
+	public PipeBehaviorWaterPump(IPipe pipe, NBTTagCompound nbt)
 	{
 		super(pipe, nbt);
 	}
 
-	public PipeLiquidsWaterPump(IPipe pipe)
+	public PipeBehaviorWaterPump(IPipe pipe)
 	{
 		super(pipe);
 	}

@@ -2,7 +2,7 @@ package buildcraft.additionalpipes.test;
 
 import java.util.ArrayList;
 
-import buildcraft.additionalpipes.pipes.PipeItemsTeleport;
+import buildcraft.additionalpipes.pipes.PipeBehaviorTeleportItems;
 import buildcraft.additionalpipes.pipes.TeleportManager;
 import buildcraft.additionalpipes.utils.Log;
 
@@ -73,7 +73,7 @@ public class TeleportManagerTest
 		try
 		{
 			TeleportManager.instance.reset();
-			PipeItemsTeleport pipe = new PipeItemsTeleport(null);
+			PipeBehaviorTeleportItems pipe = new PipeBehaviorTeleportItems(null);
 			
 			pipe.setFrequency(3);
 			TeleportManager.instance.add(pipe, pipe.getFrequency());
@@ -93,9 +93,9 @@ public class TeleportManagerTest
 	public static boolean testGetConnectedPipesBasic()
 	{
 		TeleportManager.instance.reset();
-		PipeItemsTeleport pipe1 = new PipeItemsTeleport(null);
-		PipeItemsTeleport pipe2 = new PipeItemsTeleport(null);
-		PipeItemsTeleport pipe3 = new PipeItemsTeleport(null);
+		PipeBehaviorTeleportItems pipe1 = new PipeBehaviorTeleportItems(null);
+		PipeBehaviorTeleportItems pipe2 = new PipeBehaviorTeleportItems(null);
+		PipeBehaviorTeleportItems pipe3 = new PipeBehaviorTeleportItems(null);
 
 		pipe1.setFrequency(3);
 		pipe2.setFrequency(3);
@@ -113,7 +113,7 @@ public class TeleportManagerTest
 		TeleportManager.instance.add(pipe2, 3);
 		TeleportManager.instance.add(pipe3, 3);
 		
-		ArrayList<PipeItemsTeleport> pipesList = (ArrayList)TeleportManager.instance.getConnectedPipes(pipe1, true, true);
+		ArrayList<PipeBehaviorTeleportItems> pipesList = (ArrayList)TeleportManager.instance.getConnectedPipes(pipe1, true, true);
 		
 		if(!(pipesList.size() == 2 && (pipesList.contains(pipe2) && pipesList.contains(pipe3))))
 		{
@@ -130,9 +130,9 @@ public class TeleportManagerTest
 	public static boolean testGetConnectedPipesSendReceive()
 	{
 		TeleportManager.instance.reset();
-		PipeItemsTeleport pipe1 = new PipeItemsTeleport(null);
-		PipeItemsTeleport pipe2 = new PipeItemsTeleport(null);
-		PipeItemsTeleport pipe3 = new PipeItemsTeleport(null);
+		PipeBehaviorTeleportItems pipe1 = new PipeBehaviorTeleportItems(null);
+		PipeBehaviorTeleportItems pipe2 = new PipeBehaviorTeleportItems(null);
+		PipeBehaviorTeleportItems pipe3 = new PipeBehaviorTeleportItems(null);
 
 		pipe1.setFrequency(3);
 		pipe2.setFrequency(3);
@@ -151,7 +151,7 @@ public class TeleportManagerTest
 		TeleportManager.instance.add(pipe3, 3);
 		
 		//get a list of pipes which can send to pipe1
-		ArrayList<PipeItemsTeleport> sendablePipes = (ArrayList)TeleportManager.instance.getConnectedPipes(pipe1, true, false);
+		ArrayList<PipeBehaviorTeleportItems> sendablePipes = (ArrayList)TeleportManager.instance.getConnectedPipes(pipe1, true, false);
 		
 		if(!(sendablePipes.size() == 1 && (sendablePipes.contains(pipe2) && !(sendablePipes.contains(pipe1) && sendablePipes.contains(pipe3)))))
 		{
@@ -159,7 +159,7 @@ public class TeleportManagerTest
 		}
 		
 		//get a list of pipes which pipe1 can send to
-		ArrayList<PipeItemsTeleport> receivingPipes = (ArrayList)TeleportManager.instance.getConnectedPipes(pipe1, false, true);
+		ArrayList<PipeBehaviorTeleportItems> receivingPipes = (ArrayList)TeleportManager.instance.getConnectedPipes(pipe1, false, true);
 		
 		if(!(receivingPipes.size() == 1 && (receivingPipes.contains(pipe3) && !(receivingPipes.contains(pipe1) && receivingPipes.contains(pipe2)))))
 		{
@@ -176,11 +176,11 @@ public class TeleportManagerTest
 	public static boolean testGetConnectedPipesRealUseCase()
 	{
 		TeleportManager.instance.reset();
-		PipeItemsTeleport pipe1 = new PipeItemsTeleport(null);
-		PipeItemsTeleport pipe2 = new PipeItemsTeleport(null);
-		PipeItemsTeleport pipe3 = new PipeItemsTeleport(null);
-		PipeItemsTeleport pipe4 = new PipeItemsTeleport(null);
-		PipeItemsTeleport pipe5 = new PipeItemsTeleport(null);
+		PipeBehaviorTeleportItems pipe1 = new PipeBehaviorTeleportItems(null);
+		PipeBehaviorTeleportItems pipe2 = new PipeBehaviorTeleportItems(null);
+		PipeBehaviorTeleportItems pipe3 = new PipeBehaviorTeleportItems(null);
+		PipeBehaviorTeleportItems pipe4 = new PipeBehaviorTeleportItems(null);
+		PipeBehaviorTeleportItems pipe5 = new PipeBehaviorTeleportItems(null);
 
 		pipe1.setFrequency(3);
 		pipe2.setFrequency(3);
@@ -206,7 +206,7 @@ public class TeleportManagerTest
 		TeleportManager.instance.add(pipe4, 3);
 		TeleportManager.instance.add(pipe5, 7);
 
-		ArrayList<PipeItemsTeleport> pipesList = (ArrayList)TeleportManager.instance.getConnectedPipes(pipe1, false, true);
+		ArrayList<PipeBehaviorTeleportItems> pipesList = (ArrayList)TeleportManager.instance.getConnectedPipes(pipe1, false, true);
 		
 		Log.info(">> getConnectedPipes() returned " + pipesList.size() + " pipes");
 

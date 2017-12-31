@@ -4,7 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessagePriorityPipe;
-import buildcraft.additionalpipes.pipes.PipeItemsPriorityInsertion;
+import buildcraft.additionalpipes.pipes.PipeBehaviorPriorityInsertion;
 import buildcraft.additionalpipes.textures.Textures;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -21,9 +21,9 @@ public class GuiPriorityInsertionPipe extends GuiContainer {
 	private GuiButton[] buttons = new GuiButton[18];
 	public int guiX = 0;
 	public int guiY = 0;
-	private final PipeItemsPriorityInsertion pipe;
+	private final PipeBehaviorPriorityInsertion pipe;
 
-	public GuiPriorityInsertionPipe(PipeItemsPriorityInsertion pipe) {
+	public GuiPriorityInsertionPipe(PipeBehaviorPriorityInsertion pipe) {
 		super(new ContainerPriorityInsertionPipe(pipe));
 		this.pipe = pipe;
 		xSize = 132;

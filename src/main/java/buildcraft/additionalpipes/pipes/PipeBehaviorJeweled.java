@@ -31,18 +31,18 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class PipeItemsJeweled extends APPipe implements IDebuggable {
+public class PipeBehaviorJeweled extends APPipe implements IDebuggable {
 
 	public SideFilterData[] filterData = new SideFilterData[GuiJeweledPipe.NUM_TABS];
 	
-	public PipeItemsJeweled(IPipe pipe, NBTTagCompound nbt)
+	public PipeBehaviorJeweled(IPipe pipe, NBTTagCompound nbt)
 	{
 		super(pipe, nbt);
 		init();
 		readFromNBT(nbt);
 	}
 
-	public PipeItemsJeweled(IPipe pipe)
+	public PipeBehaviorJeweled(IPipe pipe)
 	{
 		super(pipe);
 		init();

@@ -8,19 +8,19 @@ import buildcraft.transport.pipe.flow.PipeFlowItems;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 
-public class PipeItemsGravityFeed extends APPipe
+public class PipeBehaviorGravityFeed extends APPipe
 {
 			
 	private int ticksSincePull = 0;
 
 
 	
-	public PipeItemsGravityFeed(IPipe pipe, NBTTagCompound nbt)
+	public PipeBehaviorGravityFeed(IPipe pipe, NBTTagCompound nbt)
 	{
 		super(pipe, nbt);
 	}
 
-	public PipeItemsGravityFeed(IPipe pipe)
+	public PipeBehaviorGravityFeed(IPipe pipe)
 	{
 		super(pipe);
 	}

@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessageAdvWoodPipe;
-import buildcraft.additionalpipes.pipes.PipeItemsAdvancedWood;
+import buildcraft.additionalpipes.pipes.PipeBehaviorAdvWood;
 import buildcraft.additionalpipes.textures.Textures;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -27,12 +27,12 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 
 	int inventoryRows = 1;
 	IInventory playerInventory;
-	PipeItemsAdvancedWood pipe;
+	PipeBehaviorAdvWood pipe;
 	private GuiButton[] buttons = new GuiButton[1];
 
 	int guiX, guiY; 
 	
-	public GuiAdvancedWoodPipe(EntityPlayer player, IInventory playerInventory, PipeItemsAdvancedWood pipe)
+	public GuiAdvancedWoodPipe(EntityPlayer player, IInventory playerInventory, PipeBehaviorAdvWood pipe)
 	{
 		super(new ContainerAdvancedWoodPipe(player, playerInventory, pipe));
 		this.playerInventory = playerInventory;

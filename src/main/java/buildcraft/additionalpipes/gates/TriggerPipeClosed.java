@@ -1,6 +1,6 @@
 package buildcraft.additionalpipes.gates;
 
-import buildcraft.additionalpipes.pipes.PipeItemsClosed;
+import buildcraft.additionalpipes.pipes.PipeBehaviorClosed;
 import buildcraft.additionalpipes.utils.Log;
 import buildcraft.api.statements.IStatement;
 import buildcraft.api.statements.IStatementContainer;
@@ -21,11 +21,11 @@ public class TriggerPipeClosed extends APTrigger implements ITriggerInternal {
 	@Override
 	public boolean isTriggerActive(IStatementContainer statement, IStatementParameter[] parameters)
 	{
-		PipeItemsClosed closedPipe = null;
+		PipeBehaviorClosed closedPipe = null;
 		//this much casting feels unsafe
 		try
 		{
-			closedPipe = (PipeItemsClosed) ((TilePipeHolder)statement.getTile()).getPipe().getBehaviour();
+			closedPipe = (PipeBehaviorClosed) ((TilePipeHolder)statement.getTile()).getPipe().getBehaviour();
 		}
 		catch(RuntimeException ex)
 		{

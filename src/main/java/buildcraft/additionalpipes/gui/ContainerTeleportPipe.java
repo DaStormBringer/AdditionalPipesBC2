@@ -5,7 +5,7 @@ import java.util.List;
 import buildcraft.additionalpipes.api.ITeleportPipe;
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessageTelePipeData;
-import buildcraft.additionalpipes.pipes.PipeTeleport;
+import buildcraft.additionalpipes.pipes.PipeBehaviorTeleport;
 import buildcraft.additionalpipes.pipes.TeleportManager;
 import buildcraft.additionalpipes.utils.Log;
 import buildcraft.lib.gui.ContainerBC_Neptune;
@@ -21,7 +21,7 @@ public class ContainerTeleportPipe extends ContainerBC_Neptune {
 	public int connectedPipes = 0;
 
 	private int ticks = 0;
-	public PipeTeleport pipe;
+	public PipeBehaviorTeleport pipe;
 	private int freq;
 	private byte state;
 	private boolean isPublic;
@@ -33,7 +33,7 @@ public class ContainerTeleportPipe extends ContainerBC_Neptune {
 	// only set on the server side
 	private int originalfreq;
 
-	public ContainerTeleportPipe(EntityPlayer player, PipeTeleport pipe)
+	public ContainerTeleportPipe(EntityPlayer player, PipeBehaviorTeleport pipe)
 	{
 		super(player);
 		this.pipe = pipe;

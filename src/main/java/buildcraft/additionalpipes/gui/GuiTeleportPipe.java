@@ -4,7 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessageTelePipeUpdate;
-import buildcraft.additionalpipes.pipes.PipeTeleport;
+import buildcraft.additionalpipes.pipes.PipeBehaviorTeleport;
 import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.lib.BCLibSprites;
 import buildcraft.lib.gui.GuiBC8;
@@ -74,11 +74,11 @@ public class GuiTeleportPipe extends GuiBC8<ContainerTeleportPipe> {
 	
 	}
 
-	private final PipeTeleport pipe;
+	private final PipeBehaviorTeleport pipe;
 	private final ContainerTeleportPipe container;
 	private final GuiButton[] buttons = new GuiButton[8];
 
-	public GuiTeleportPipe(EntityPlayer player, PipeTeleport pipe) {
+	public GuiTeleportPipe(EntityPlayer player, PipeBehaviorTeleport pipe) {
 		super(new ContainerTeleportPipe(player, pipe));
 		this.pipe = pipe;
 		container = (ContainerTeleportPipe) inventorySlots;
