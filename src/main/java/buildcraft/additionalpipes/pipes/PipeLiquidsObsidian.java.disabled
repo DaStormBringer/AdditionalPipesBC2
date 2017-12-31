@@ -4,13 +4,12 @@ import java.util.HashSet;
 import java.util.List;
 
 import buildcraft.additionalpipes.utils.Log;
+import buildcraft.api.mj.IMjRedstoneReceiver;
+import buildcraft.api.mj.MjCapabilityHelper;
 import buildcraft.api.transport.pipe.PipeEventItem;
-import buildcraft.core.lib.RFBattery;
 import buildcraft.core.proxy.CoreProxy;
-import buildcraft.transport.PipeTransportFluids;
 import buildcraft.transport.TransportProxy;
 import buildcraft.transport.TravelingItem;
-import cofh.api.energy.IEnergyHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
@@ -24,14 +23,12 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
-public class PipeLiquidsObsidian extends APPipe implements IEnergyHandler 
+public class PipeLiquidsObsidian extends APPipe implements IMjRedstoneReceiver 
 {
-	// 		return battery.receiveEnergy(maxReceive, simulate);
-
-	private static final int ICON = 31;
 	
 	AxisAlignedBB searchBox;
-	private RFBattery battery = new RFBattery(2560, 640, 0);
+	
+	private final MjCapabilityHelper mjCaps = new MjCapabilityHelper(this);
 
 	//set of entity IDs to avoid picking up
 	private HashSet<Integer> entitiesDropped;
@@ -42,40 +39,18 @@ public class PipeLiquidsObsidian extends APPipe implements IEnergyHandler
 
 	//item that the pipe is currently holding
 	private ItemStack currentItem = null;
-	
-	public PipeLiquidsObsidian(Item item)
-	{
-		super(new PipeTransportFluids(), item);
-		
-		//load the fluid capacities set in mod init
-		transport.initFromPipe(getClass());
-		
-		entitiesDropped = new HashSet<Integer>();
-	}
+
 
 	@Override
-	public int getIconIndex(EnumFacing direction)
-	{
-		return ICON;
-	}
-
-	@Override
-	public void onEntityCollidedWithBlock(Entity entity) {
-		super.onEntityCollidedWithBlock(entity);
-
-		if (entity.isDead || entity.worldObj.isRemote) {
-			return;
-		}
-		
-		if(entity instanceof EntityItem)
-		{
-			EntityItem entityItem = (EntityItem) entity;
-			if(canSuck(entityItem, 0)) 
-			{
-				pullItemIntoPipe(entityItem, 0);
-			}
-		}
-	}
+    public void onEntityCollide(Entity entity) {
+        if (pipe.getHolder().getPipeWorld().isRemote) {
+            return;
+        }
+        EnumFacing openFace = getOpenFace();
+        if (openFace != null) {
+            trySuckEntity(entity, openFace, 0, false);
+        }
+    }
 
 	private AxisAlignedBB getSuckingBox(EnumFacing orientation, int distance) {
 		Vec3 p1 = new Vec3(container.getPos());

@@ -4,7 +4,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import buildcraft.additionalpipes.AdditionalPipes;
+import buildcraft.additionalpipes.sound.APSounds;
 import buildcraft.additionalpipes.utils.Log;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,8 +16,8 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -52,10 +54,10 @@ public class ItemDogDeaggravator extends Item
             }
         }
         
-        world.playSound(player, player.posX, player.posY, player.posZ, "additionalpipes:bellRing", 1, 1);
+        world.playSound(player, player.getPosition(), APSounds.dogDeaggravatorBell, SoundCategory.PLAYERS, 1, 1);
         Log.debug("Cleared attack target on " + wolfCounter + " wolves.");
         
-        return ActionResult.<ItemStack>newResult(EnumActionResult.SUCCESS, );
+        return ActionResult.<ItemStack>newResult(EnumActionResult.SUCCESS, hand == EnumHand.MAIN_HAND ? player.getHeldItemMainhand() : player.getHeldItemOffhand());
 
 	}
 	

@@ -18,11 +18,13 @@ import buildcraft.additionalpipes.pipes.PipeSwitch;
 import buildcraft.additionalpipes.utils.PipeCreator;
 import buildcraft.api.recipes.AssemblyRecipe;
 import buildcraft.api.recipes.StackDefinition;
+import buildcraft.api.transport.pipe.PipeApi;
 import buildcraft.api.transport.pipe.PipeDefinition;
 import buildcraft.api.transport.pipe.PipeDefinition.PipeDefinitionBuilder;
 import buildcraft.lib.inventory.filter.ArrayStackFilter;
 import buildcraft.lib.recipe.AssemblyRecipeRegistry;
 import buildcraft.silicon.BCSiliconItems;
+import buildcraft.transport.BCTransportConfig;
 import buildcraft.transport.BCTransportItems;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -145,6 +147,18 @@ public class APPipeDefintions
 		waterPumpPipeDef = new PipeDefinitionBuilder().flowFluid().idTexPrefix("pipeFluidsWaterPump").logic(PipeLiquidsWaterPump::new, PipeLiquidsWaterPump::new).define();
 		waterPumpPipeItem = PipeCreator.createPipeItemAndRecipe(1, waterPumpPipeDef, false, " L ", "rPr", " W ", 'r', "dustRedstone", 'P', "gearIron", 'L',
 				BCTransportItems.pipeFluidGold, 'w', BCTransportItems.waterproof, 'W', BCTransportItems.pipeFluidWood);
+	}
+	
+	public static void setFluidCapacities()
+	{
+		// set Liquids Teleport Pipe to be the same as the Diamond Fluid Pipe
+		PipeApi.fluidTransferData.put(liquidsTeleportPipeDef, new PipeApi.FluidTransferInfo(BCTransportConfig.baseFlowRate * 8, 10));
+		
+		// set Switch Fluid Pipe to be halfway between the Iron and Gold FLuid Pipes
+		PipeApi.fluidTransferData.put(fluidsSwitchPipeDef, new PipeApi.FluidTransferInfo(BCTransportConfig.baseFlowRate * 6, 10));
+		
+		// set Water Pump Pipe to match its output capacity
+		PipeApi.fluidTransferData.put(waterPumpPipeDef, new PipeApi.FluidTransferInfo(APConfiguration.waterPumpWaterPerTick, 10));
 	}
 	
 	/**

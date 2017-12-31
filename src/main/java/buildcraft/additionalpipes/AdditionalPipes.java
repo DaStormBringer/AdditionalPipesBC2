@@ -12,6 +12,7 @@ import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.additionalpipes.item.ItemDogDeaggravator;
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.pipes.TeleportManager;
+import buildcraft.additionalpipes.sound.APSounds;
 import buildcraft.additionalpipes.test.TeleportManagerTest;
 import buildcraft.additionalpipes.utils.Log;
 import buildcraft.api.statements.ITriggerInternal;
@@ -51,17 +52,12 @@ public class AdditionalPipes {
 	public File configFile;
 	
 	// chunk load boundaries
-	public ChunkLoadViewDataProxy chunkLoadViewer;
+	//public ChunkLoadViewDataProxy chunkLoadViewer;
 	
 	public CreativeTabBC creativeTab;
 	
 
-	// Switch pipes
-	public Item pipePowerSwitch;
-	public Item pipeItemsSwitch;
-	public Item pipeLiquidsSwitch;
-	// water pump pipe
-	public Item pipeLiquidsWaterPump;
+
 	// obsidian fluid pipe
 	public Item pipeLiquidsObsidian;
 	
@@ -88,6 +84,10 @@ public class AdditionalPipes {
 				
 		Log.info("Registering pipes");
 		APPipeDefintions.createPipes();
+		APPipeDefintions.setFluidCapacities();
+		
+		Log.info("Registering sounds");
+		APSounds.init();
 	}
 
 	@EventHandler
@@ -101,8 +101,8 @@ public class AdditionalPipes {
 		{
 			Log.info("Registering chunk load handler");
 			ForgeChunkManager.setForcedChunkLoadingCallback(this, new ChunkLoadingHandler());
-			chunkLoadViewer = new ChunkLoadViewDataProxy(APConfiguration.chunkSightRange);
-			MinecraftForge.EVENT_BUS.register(chunkLoadViewer);
+			//chunkLoadViewer = new ChunkLoadViewDataProxy(APConfiguration.chunkSightRange);
+			//MinecraftForge.EVENT_BUS.register(chunkLoadViewer);
 			
 			// register Teleport Tether block
 			blockTeleportTether = new BlockTeleportTether();
@@ -154,51 +154,6 @@ public class AdditionalPipes {
 	
 	private void loadPipes() {
 		/*
-		
-		// Item Teleport Pipe
-		pipeItemsTeleport = PipeCreator.createPipeTooltip((Class<? extends APPipe>) PipeItemsTeleport.class, "tip.teleportPipe");
-		
-		Set<StackDefinition> tpRecipeIngredients = new HashSet<StackDefinition>();
-		tpRecipeIngredients.add(ArrayStackFilter.definition(new ItemStack(BCSiliconItems.redstoneChipset, 1, 4)));
-		tpRecipeIngredients.add(ArrayStackFilter.definition(8, new ItemStack(BCTransportItems.pipeItemDiamond)));
-		tpRecipeIngredients.add(ArrayStackFilter.definition(new ItemStack(BCSiliconItems.redstoneChipset, 1, 3)));
-		
-		AssemblyRecipeRegistry.INSTANCE.addRecipe(new AssemblyRecipe("teleportPipe", 10000, tpRecipeIngredients, new ItemStack(pipeItemsTeleport, 8)));
-
-		// Power Teleport Pipe
-		
-		pipePowerTeleport = PipeCreator.createPipeTooltip((Class<? extends APPipe<?>>) PipePowerTeleport.class, "tip.teleportPipe");
-		if(pipeItemsTeleport != null) {
-			GameRegistry.addShapelessRecipe(new ItemStack(pipePowerTeleport), new Object[] {Items.redstone, pipeItemsTeleport});
-		}
-
-		//Jeweled Pipe
-		pipeItemsJeweled = PipeCreator.createPipeAndRecipe(2, PipeItemsJeweled.class, false, " D ", "DGD", " D ", 'D', BCTransportItems.pipeItemDiamond, 'G', "gearGold");
-		
-		pipeItemsPriority = PipeCreator.createPipeAndRecipe(2, PipeItemsPriorityInsertion.class, true, pipeItemsDistributor, pipeItemsAdvancedInsertion);
-		
-	
-		// switch pipes
-		pipeItemsSwitch = PipeCreator.createPipeAndRecipe(8, PipeSwitchItems.class, false, "GgI", 'g', "blockGlass", 'G', "gearGold", 'I', "gearIron");
-		
-		//set power capacity to the average between iron and gold
-		int switchPowerCapacity = (PipeTransportPower.powerCapacities.get(PipePowerGold.class) + PipeTransportPower.powerCapacities.get(PipePowerIron.class))/ 2;
-		
-		PipeTransportPower.powerCapacities.put(PipeSwitchPower.class, switchPowerCapacity);
-		pipePowerSwitch = PipeCreator.createPipeAndRecipe(1, PipeSwitchPower.class, true, pipeItemsSwitch, "dustRedstone");
-		
-		//set fluid capacity to the average between iron and gold
-		int switchFluidCapacity = (PipeTransportFluids.fluidCapacities.get(PipeFluidsGold.class) + PipeTransportFluids.fluidCapacities.get(PipeFluidsIron.class))/ 2;
-		
-		PipeTransportFluids.fluidCapacities.put(PipeSwitchFluids.class, switchFluidCapacity);
-		pipeLiquidsSwitch = PipeCreator.createPipeAndRecipe(1, PipeSwitchFluids.class, true, pipeItemsSwitch, BuildCraftTransport.pipeWaterproof);
-
-		// water pump pipe
-		//set fluid capacity
-		PipeTransportFluids.fluidCapacities.put(PipeLiquidsWaterPump.class, APConfiguration.waterPumpWaterPerTick);
-		pipeLiquidsWaterPump = PipeCreator.createPipeAndRecipe(1, PipeLiquidsWaterPump.class, false, " L ", "rPr", " W ", 'r', "dustRedstone", 'P', "gearIron", 'L',
-				BuildCraftTransport.pipeFluidsGold, 'w', BuildCraftTransport.pipeWaterproof, 'W', BuildCraftTransport.pipeFluidsWood);
-		
 		// obsidian fluid pipe
 		//set fluid capacity
 		PipeTransportFluids.fluidCapacities.put(PipeLiquidsObsidian.class, 100);

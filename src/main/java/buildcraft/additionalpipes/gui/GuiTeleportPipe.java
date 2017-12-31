@@ -34,6 +34,8 @@ public class GuiTeleportPipe extends GuiBC8<ContainerTeleportPipe> {
 			super(GuiTeleportPipe.this, OVERLAY_COLOR, true);
 			maxHeight = 99;
 			shownElements.add(new TeleportPipeLedger());
+			
+			this.title = "gui.teleport.ledger.title";
 		}
 
 		@Override
@@ -42,23 +44,23 @@ public class GuiTeleportPipe extends GuiBC8<ContainerTeleportPipe> {
 			//we have to initialize this here since pipe is not yet set when the constructor is run
 			if(networkTitle == null)
 			{
-				networkTitle = ((pipe.state & 0x1) >= 1) ? I18n.format("gui.teleport.ledger.outputs") : I18n.format("gui.teleport.ledger.inputs");
+				 appendText(((pipe.state & 0x1) >= 1) ? I18n.format("gui.teleport.ledger.outputs") : I18n.format("gui.teleport.ledger.inputs"), headerColour);
 			}
 
-			fontRendererObj.drawString(I18n.format("gui.teleport.ledger.title"), x + 22, y + 8, headerColour);
-			fontRendererObj.drawString(I18n.format("gui.teleport.ledger.owner"), x + 22, y + 20, subheaderColour);
-			fontRendererObj.drawString(pipe.ownerName, x + 22, y + 32, textColour);
-			fontRendererObj.drawStringWithShadow(networkTitle, x + 22, y + 44, subheaderColour);
-			fontRendererObj.drawString(String.valueOf(container.connectedPipes), x + 66, y + 45, textColour);
+			appendText(I18n.format("gui.teleport.ledger.owner"), subheaderColour);
+			appendText(pipe.ownerName, textColour);
+			appendText(networkTitle, subheaderColour);
+			appendText(String.valueOf(container.connectedPipes), textColour);
 			int[] net = pipe.network;
-			if(net.length > 0) {
-				fontRendererObj.drawString(new StringBuilder("(").append(net[0]).append(", ").append(net[1]).append(", ").append(net[2]).append(")").toString(), x + 22, y + 56, textColour);
+			if(net.length > 0) 
+			{
+				appendText(new StringBuilder("(").append(net[0]).append(", ").append(net[1]).append(", ").append(net[2]).append(")").toString(), textColour);
 			}
 			if(net.length > 3) {
-				fontRendererObj.drawString(new StringBuilder("(").append(net[3]).append(", ").append(net[4]).append(", ").append(net[5]).append(")").toString(), x + 22, y + 68, textColour);
+				appendText(new StringBuilder("(").append(net[3]).append(", ").append(net[4]).append(", ").append(net[5]).append(")").toString(), textColour);
 			}
 			if(net.length > 6) {
-				fontRendererObj.drawString(new StringBuilder("(").append(net[6]).append(", ").append(net[7]).append(", ").append(net[8]).append(")").toString(), x + 22, y + 80, textColour);
+				appendText(new StringBuilder("(").append(net[6]).append(", ").append(net[7]).append(", ").append(net[8]).append(")").toString(), textColour);
 			}
 			
 			super.drawForeground(partialTicks);
