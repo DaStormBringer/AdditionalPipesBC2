@@ -1,14 +1,15 @@
 package buildcraft.additionalpipes.utils;
 
 import buildcraft.api.transport.pipe.PipeDefinition;
+import buildcraft.lib.registry.RegistrationHelper;
+import buildcraft.lib.registry.TagManager;
 import buildcraft.transport.item.ItemPipeHolder;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 public class PipeCreator
 {
+
+	// saves items during preInit, then registers them during the RegisterEvent
+    private static final RegistrationHelper regHelper = new RegistrationHelper();
 
 	/**
 	 * Creates and registers a buildcraft pipe from the provided class.
@@ -29,27 +30,41 @@ public class PipeCreator
 		}
 		if(shapeless)
 		{
-			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(pipe, output), recipe));
+			//ForgeRegistries.RECIPES.register(new ShapelessOreRecipe(new ResourceLocation(AdditionalPipes.MODID, "recipes/" + pipeDef.identifier.getResourcePath()), new ItemStack(pipe, output), recipe));
 		}
 		else
 		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(pipe, output), recipe));
+			//ForgeRegistries.RECIPES.register(new ShapedOreRecipe(new ResourceLocation(AdditionalPipes.MODID, "recipes/" + pipeDef.identifier.getResourcePath()), new ItemStack(pipe, output), recipe));
 		}
 		return pipe;
 	}
 
 	/**
-	 * Creates and registers a buildcraft pipe from the provided class.
+	 * Creates and registers a buildcraft pipe from the provided definition.
 	 * @param clas
 	 * @return
 	 */
 	public static ItemPipeHolder createPipeItem(PipeDefinition pipeDef)
 	{
-		return new ItemPipeHolder(pipeDef);
+		TagManager.registerTag("item.pipe.additionalpipes." + pipeDef.identifier.getResourcePath())
+			.reg(pipeDef.identifier.getResourcePath())
+			.locale("pipe.ap." + pipeDef.identifier.getResourcePath())
+			.tab("apcreativetab");		
+		
+		ItemPipeHolder item = new ItemPipeHolder(pipeDef);
+		item.registerWithPipeApi();
+		
+		regHelper.addItem(item);
+		
+		return item;
 	}
 
 	/*public static Item createPipeTooltip(Class<? extends APPipe<?>> clas, String tooltip)
-	{
+	{	
+	
+	item.pipe.additionalpipes.pipeitemsaddition
+	item.pipe.additionalpipes.pipeitemsaddition
+	
 		//we need to use our own version of ItemPipe with tooltip support
 		ItemPipeHolder item = new ItemPipeAP(tooltip);
 		item.setUnlocalizedName(clas.getSimpleName());

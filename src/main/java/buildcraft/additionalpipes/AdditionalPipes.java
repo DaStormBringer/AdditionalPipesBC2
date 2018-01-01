@@ -15,6 +15,7 @@ import buildcraft.additionalpipes.pipes.TeleportManager;
 import buildcraft.additionalpipes.sound.APSounds;
 import buildcraft.additionalpipes.test.TeleportManagerTest;
 import buildcraft.additionalpipes.utils.Log;
+import buildcraft.api.BCModules;
 import buildcraft.api.statements.ITriggerInternal;
 import buildcraft.api.statements.StatementManager;
 import buildcraft.lib.registry.CreativeTabManager;
@@ -23,8 +24,12 @@ import buildcraft.silicon.BCSiliconItems;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -33,11 +38,12 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
-@Mod(modid = AdditionalPipes.MODID, name = AdditionalPipes.NAME, dependencies = "after:BuildCraft|Transport[7.99,);after:BuildCraft|Silicon;after:BuildCraft|Transport;after:BuildCraft|Factory", version = AdditionalPipes.VERSION)
+@Mod(modid = AdditionalPipes.MODID, name = AdditionalPipes.NAME, dependencies = "required-after:buildcrafttransport@[7.99.13,);required-after:buildcraftsilicon;required-after:buildcraftfactory", version = AdditionalPipes.VERSION)
 public class AdditionalPipes {
 	public static final String MODID = "additionalpipes";
 	public static final String NAME = "Additional Pipes";
@@ -73,6 +79,8 @@ public class AdditionalPipes {
 	public void preInit(FMLPreInitializationEvent event) 
 	{
 		
+		System.err.println("buildcraft transport is loaded: " + BCModules.TRANSPORT.isLoaded());
+		
 		PacketHandler.init();
 
 		configFile = event.getSuggestedConfigurationFile();
@@ -81,13 +89,53 @@ public class AdditionalPipes {
 		
 		//create BuildCraft creative tab
 		creativeTab = CreativeTabManager.createTab("apcreativetab");
-				
+		
 		Log.info("Registering pipes");
 		APPipeDefintions.createPipes();
 		APPipeDefintions.setFluidCapacities();
+	}
+	
+	@SubscribeEvent
+	public void registerBlocks(RegistryEvent.Register<Block> event)
+	{
+		if(APConfiguration.enableChunkloader)
+		{
+			// register Teleport Tether block
+			blockTeleportTether = new BlockTeleportTether();
+			blockTeleportTether.setRegistryName("teleportTether");
+			event.getRegistry().register(blockTeleportTether);
+		}
+	    
+	}
+	
+	@SubscribeEvent
+	public void registerItems(RegistryEvent.Register<Item> event)
+	{
+
+		dogDeaggravator = new ItemDogDeaggravator();
+		event.getRegistry().register(dogDeaggravator);
+	    
+	}
+	
+	@SubscribeEvent
+	public void registerRecipes(RegistryEvent.Register<IRecipe> event)
+	{
+		ShapedOreRecipe deaggravatorRecipe = new ShapedOreRecipe(new ResourceLocation(MODID, "recipes/dogDeaggravator"), dogDeaggravator, "gsg", "gig", "g g", 'i', "ingotIron", 'g', "ingotGold", 's', "stickWood");
+		deaggravatorRecipe.setRegistryName("dogDeaggravator");
+		event.getRegistry().register(deaggravatorRecipe);
 		
-		Log.info("Registering sounds");
-		APSounds.init();
+		if(APConfiguration.enableChunkloader)
+		{
+			ShapedOreRecipe chunkloaderRecipe = new ShapedOreRecipe(new ResourceLocation(MODID, "recipes/teleportTether"), blockTeleportTether, "iii", "iLi", "ici", 'i', "ingotIron", 'L', "gemLapis", 'c', BCSiliconItems.redstoneChipset);
+			chunkloaderRecipe.setRegistryName("teleportTether");
+			event.getRegistry().register(chunkloaderRecipe);
+		}
+	}
+	
+	@SubscribeEvent
+	public void registerSounds(RegistryEvent.Register<SoundEvent> event)
+	{
+		APSounds.register(event.getRegistry());
 	}
 
 	@EventHandler
@@ -104,13 +152,7 @@ public class AdditionalPipes {
 			//chunkLoadViewer = new ChunkLoadViewDataProxy(APConfiguration.chunkSightRange);
 			//MinecraftForge.EVENT_BUS.register(chunkLoadViewer);
 			
-			// register Teleport Tether block
-			blockTeleportTether = new BlockTeleportTether();
-			blockTeleportTether.setRegistryName("teleportTether");
-			
-			GameRegistry.register(blockTeleportTether);
 			GameRegistry.registerTileEntity(TileTeleportTether.class, "TeleportTether");
-			GameRegistry.addRecipe(new ShapedOreRecipe(blockTeleportTether, "iii", "iLi", "ici", 'i', "ingotIron", 'L', "gemLapis", 'c', BCSiliconItems.redstoneChipset));
 			
 			// the lasers key function depends on the chunk loading code, so it can only be enabled if the chunk loader is
 			proxy.registerKeyHandler();
@@ -125,9 +167,7 @@ public class AdditionalPipes {
 		triggerPipeClosed = new TriggerPipeClosed();
 		StatementManager.registerTriggerProvider(new GateProvider());
 
-		dogDeaggravator = new ItemDogDeaggravator();
-		GameRegistry.register(dogDeaggravator);
-		GameRegistry.addRecipe(new ShapedOreRecipe(dogDeaggravator, "gsg", "gig", "g g", 'i', "ingotIron", 'g', "ingotGold", 's', "stickWood"));	
+			
 		
 		Log.info("Running Teleport Manager Tests");
 		TeleportManagerTest.runAllTests();
@@ -149,16 +189,6 @@ public class AdditionalPipes {
 	public void onServerStart(FMLServerStartingEvent event) {
 		event.registerServerCommand(new CommandAdditionalPipes());
 		TeleportManager.instance.reset();
-	}
-
-	
-	private void loadPipes() {
-		/*
-		// obsidian fluid pipe
-		//set fluid capacity
-		PipeTransportFluids.fluidCapacities.put(PipeLiquidsObsidian.class, 100);
-		pipeLiquidsObsidian = PipeCreator.createPipeAndRecipe(1, PipeLiquidsObsidian.class, true, BuildCraftTransport.pipeItemsObsidian, BuildCraftTransport.pipeWaterproof);
-		*/
 	}
 
 

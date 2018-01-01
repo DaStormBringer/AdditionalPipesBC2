@@ -1,7 +1,6 @@
 package buildcraft.additionalpipes;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.google.common.collect.ImmutableSet;
 
 import buildcraft.additionalpipes.pipes.PipeBehaviorAddition;
 import buildcraft.additionalpipes.pipes.PipeBehaviorAdvWood;
@@ -10,18 +9,17 @@ import buildcraft.additionalpipes.pipes.PipeBehaviorDistribution;
 import buildcraft.additionalpipes.pipes.PipeBehaviorGravityFeed;
 import buildcraft.additionalpipes.pipes.PipeBehaviorJeweled;
 import buildcraft.additionalpipes.pipes.PipeBehaviorPriorityInsertion;
-import buildcraft.additionalpipes.pipes.PipeBehaviorTeleportItems;
-import buildcraft.additionalpipes.pipes.PipeBehaviorTeleportFluids;
-import buildcraft.additionalpipes.pipes.PipeBehaviorWaterPump;
-import buildcraft.additionalpipes.pipes.PipeBehaviorTeleportPower;
 import buildcraft.additionalpipes.pipes.PipeBehaviorSwitch;
+import buildcraft.additionalpipes.pipes.PipeBehaviorTeleportFluids;
+import buildcraft.additionalpipes.pipes.PipeBehaviorTeleportItems;
+import buildcraft.additionalpipes.pipes.PipeBehaviorTeleportPower;
+import buildcraft.additionalpipes.pipes.PipeBehaviorWaterPump;
 import buildcraft.additionalpipes.utils.PipeCreator;
-import buildcraft.api.recipes.AssemblyRecipe;
-import buildcraft.api.recipes.StackDefinition;
+import buildcraft.api.recipes.AssemblyRecipeBasic;
+import buildcraft.api.recipes.IngredientStack;
 import buildcraft.api.transport.pipe.PipeApi;
 import buildcraft.api.transport.pipe.PipeDefinition;
 import buildcraft.api.transport.pipe.PipeDefinition.PipeDefinitionBuilder;
-import buildcraft.lib.inventory.filter.ArrayStackFilter;
 import buildcraft.lib.recipe.AssemblyRecipeRegistry;
 import buildcraft.silicon.BCSiliconItems;
 import buildcraft.transport.BCTransportConfig;
@@ -92,7 +90,7 @@ public class APPipeDefintions
 	
 	public static void createPipes()
 	{
-		additionPipeDef = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipeItemsAddition").logic(PipeBehaviorAddition::new, PipeBehaviorAddition::new).define();
+		additionPipeDef = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipe_items_addition").logic(PipeBehaviorAddition::new, PipeBehaviorAddition::new).define();
 		additionPipeItem = PipeCreator.createPipeItemAndRecipe(1, additionPipeDef, false, " R ", "RCR", " R ", 'C', BCTransportItems.pipeItemClay, 'R', "dustRedstone");
 		
 		advWoodPipeDef = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipeItemsAdvancedWood").texSuffixes("_output", "_input").logic(PipeBehaviorAdvWood::new, PipeBehaviorAdvWood::new).define();
@@ -112,7 +110,7 @@ public class APPipeDefintions
 		PipeDefinitionBuilder priorityPipeDefBuilder = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipeItemsPriority").logic(PipeBehaviorPriorityInsertion::new, PipeBehaviorPriorityInsertion::new);
 		attachSidedSuffixes(priorityPipeDefBuilder);
 		priorityPipeDef = priorityPipeDefBuilder.define();
-		priorityPipeItem = PipeCreator.createPipeItemAndRecipe(2, distributionPipeDef, true, distributionPipeItem, BCTransportItems.pipeItemClay);
+		priorityPipeItem = PipeCreator.createPipeItemAndRecipe(2, priorityPipeDef, true, distributionPipeItem, BCTransportItems.pipeItemClay);
 		
 		PipeDefinitionBuilder jeweledPipeDefBuilder = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipeItemsJeweled").logic(PipeBehaviorJeweled::new, PipeBehaviorJeweled::new);
 		attachSidedSuffixes(jeweledPipeDefBuilder);
@@ -123,11 +121,11 @@ public class APPipeDefintions
 		itemsTeleportPipeItem = PipeCreator.createPipeItem(itemsTeleportPipeDef);	
 		
 		// add assembly recipe for Item Teleport Pipe
-		Set<StackDefinition> tpRecipeIngredients = new HashSet<StackDefinition>();
-		tpRecipeIngredients.add(ArrayStackFilter.definition(new ItemStack(BCSiliconItems.redstoneChipset, 1, 4)));
-		tpRecipeIngredients.add(ArrayStackFilter.definition(8, new ItemStack(BCTransportItems.pipeItemDiamond)));
-		tpRecipeIngredients.add(ArrayStackFilter.definition(new ItemStack(BCSiliconItems.redstoneChipset, 1, 3)));
-		AssemblyRecipeRegistry.INSTANCE.addRecipe(new AssemblyRecipe("teleportPipe", 10000, tpRecipeIngredients, new ItemStack(itemsTeleportPipeItem, 8)));
+		ImmutableSet<IngredientStack> tpRecipeIngredients = ImmutableSet.<IngredientStack>of(
+				IngredientStack.of(new ItemStack(BCSiliconItems.redstoneChipset, 1, 4)),
+				IngredientStack.of(new ItemStack(BCTransportItems.pipeItemDiamond)),
+				IngredientStack.of(new ItemStack(BCSiliconItems.redstoneChipset, 1, 3)));
+		AssemblyRecipeRegistry.register(new AssemblyRecipeBasic("teleportPipe", 10000, tpRecipeIngredients, new ItemStack(itemsTeleportPipeItem, 8)));
 		
 		liquidsTeleportPipeDef = new PipeDefinitionBuilder().flowFluid().idTexPrefix("pipeLiquidsTeleport").logic(PipeBehaviorTeleportFluids::new, PipeBehaviorTeleportFluids::new).define();
 		liquidsTeleportPipeItem = PipeCreator.createPipeItemAndRecipe(1, liquidsTeleportPipeDef, true, new Object[] {BCTransportItems.waterproof, itemsTeleportPipeItem});

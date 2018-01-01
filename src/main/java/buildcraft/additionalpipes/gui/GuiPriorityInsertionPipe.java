@@ -73,7 +73,7 @@ public class GuiPriorityInsertionPipe extends GuiContainer {
 		buttons[13].displayString = "" + pipe.sidePriorities[4];
 		buttons[16].displayString = "" + pipe.sidePriorities[5];
 		
-		fontRendererObj.drawString(I18n.format("gui.priority_insertion.title"), guiX + 33, guiY + 22, 4210752);
+		fontRenderer.drawString(I18n.format("gui.priority_insertion.title"), guiX + 33, guiY + 22, 4210752);
 	}
 
 	@Override

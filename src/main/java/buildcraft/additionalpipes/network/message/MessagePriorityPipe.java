@@ -52,7 +52,7 @@ public class MessagePriorityPipe implements IMessage, IMessageHandler<MessagePri
     public IMessage onMessage(MessagePriorityPipe message, MessageContext ctx)
     {
     	
-    	World world = ctx.getServerHandler().playerEntity.getEntityWorld();
+    	World world = ctx.getServerHandler().player.getEntityWorld();
     	TileEntity te = world.getTileEntity(message.position);
 		if(te instanceof TilePipeHolder)
 		{

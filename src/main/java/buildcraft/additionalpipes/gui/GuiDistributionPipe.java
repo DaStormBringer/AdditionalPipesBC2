@@ -72,7 +72,7 @@ public class GuiDistributionPipe extends GuiContainer {
 		buttons[13].displayString = "" + pipe.distData[4];
 		buttons[16].displayString = "" + pipe.distData[5];
 		
-		fontRendererObj.drawString(I18n.format("gui.distribution_pipe.title"), guiX + 42, guiY + 22, 4210752);
+		fontRenderer.drawString(I18n.format("gui.distribution_pipe.title"), guiX + 42, guiY + 22, 4210752);
 	}
 
 	@Override

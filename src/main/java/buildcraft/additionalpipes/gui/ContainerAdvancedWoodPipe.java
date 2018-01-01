@@ -62,7 +62,7 @@ public class ContainerAdvancedWoodPipe extends ContainerBC_Neptune {
 		super.detectAndSendChanges();
 		for(IContainerListener crafter : listeners) {
 			if(exclude != pipe.exclude) {
-				((IContainerListener) crafter).sendProgressBarUpdate(this, 0, pipe.exclude ? 1 : 0);
+				crafter.sendWindowProperty(this, 0, pipe.exclude ? 1 : 0);
 			}
 		}
 		exclude = pipe.exclude;

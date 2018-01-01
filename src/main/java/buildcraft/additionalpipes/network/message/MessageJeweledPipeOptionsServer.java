@@ -61,7 +61,7 @@ public class MessageJeweledPipeOptionsServer implements IMessage, IMessageHandle
     public IMessage onMessage(MessageJeweledPipeOptionsServer message, MessageContext ctx)
     {
     	
-    	World world = ctx.getServerHandler().playerEntity.getEntityWorld();
+    	World world = ctx.getServerHandler().player.getEntityWorld();
     	TileEntity te = world.getTileEntity(message.position);
 		if(te instanceof TilePipeHolder)
 		{

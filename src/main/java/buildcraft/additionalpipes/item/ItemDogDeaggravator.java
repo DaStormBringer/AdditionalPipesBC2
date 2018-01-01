@@ -3,11 +3,13 @@ package buildcraft.additionalpipes.item;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.sound.APSounds;
 import buildcraft.additionalpipes.utils.Log;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -15,7 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
@@ -61,22 +62,11 @@ public class ItemDogDeaggravator extends Item
 
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
+	@SideOnly(Side.CLIENT)
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn)
 	{
 		list.add(I18n.format("tooltip.dogDeaggravator"));
 	}
-	
-
-
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-	@Override
-    @SideOnly(Side.CLIENT)
-    public void getSubItems(Item parItem, CreativeTabs parTab, NonNullList parListSubItems)
-    {
-        parListSubItems.add(new ItemStack(this, 1));
-    }
-
 
 }

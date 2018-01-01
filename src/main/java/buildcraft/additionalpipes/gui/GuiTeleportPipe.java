@@ -105,8 +105,8 @@ public class GuiTeleportPipe extends GuiBC8<ContainerTeleportPipe> {
 	@Override
 	protected void drawForegroundLayer() 
 	{
-		fontRendererObj.drawString(I18n.format("gui.teleport.frequency", pipe.getFrequency()), 16, 12, 0x404040);
-		fontRendererObj.drawString(new StringBuilder("(")
+		fontRenderer.drawString(I18n.format("gui.teleport.frequency", pipe.getFrequency()), 16, 12, 0x404040);
+		fontRenderer.drawString(new StringBuilder("(")
 			.append(pipe.getPos().getX()).append(", ")
 			.append(pipe.getPos().getY()).append(", ")
 			.append(pipe.getPos().getZ()).append(")").toString(), 128, 12, 0x404040);

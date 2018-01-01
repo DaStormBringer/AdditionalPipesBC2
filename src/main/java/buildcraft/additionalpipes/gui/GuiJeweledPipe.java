@@ -66,11 +66,11 @@ public class GuiJeweledPipe extends GuiContainer
     protected void drawGuiContainerForegroundLayer(int x, int y)
     {
         String containerName = I18n.format("gui.jeweled_pipe.title");
-        fontRendererObj.drawString(containerName, xSize / 2 - fontRendererObj.getStringWidth(containerName) / 2, 6, 4210752);
-        fontRendererObj.drawString(I18n.format("container.inventory"), 8, ySize - 93, 4210752);
+        fontRenderer.drawString(containerName, xSize / 2 - fontRenderer.getStringWidth(containerName) / 2, 6, 4210752);
+        fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 93, 4210752);
         
         String match = I18n.format("gui.jeweled_pipe.match");
-        fontRendererObj.drawString(match, 105, 94, 4210752);
+        fontRenderer.drawString(match, 105, 94, 4210752);
 		
         //draw the actual tabs
         for(int tabNumber = 1; tabNumber <= NUM_TABS; ++tabNumber)
@@ -89,7 +89,7 @@ public class GuiJeweledPipe extends GuiContainer
 		{
 			String tabName = I18n.format("gui.jeweled_pipe.tab." + EnumFacing.VALUES[tabNumber - 1].getName2());
 						
-			fontRendererObj.drawString(tabName, tabEndX[tabNumber- 1] + halfSpaceBetweenTabs, tabY + 3, 4210752);
+			fontRenderer.drawString(tabName, tabEndX[tabNumber- 1] + halfSpaceBetweenTabs, tabY + 3, 4210752);
 		}
 	
     }
@@ -123,7 +123,7 @@ public class GuiJeweledPipe extends GuiContainer
 			String tabName = I18n.format("gui.jeweled_pipe.tab." + EnumFacing.VALUES[tabNumber - 1].toString().toLowerCase());
 						
 			//record the width of this tab
-			tabEndX[tabNumber] = tabEndX[tabNumber- 1] + fontRendererObj.getStringWidth(tabName) - 1 + totalSpaceBetweenTabs;
+			tabEndX[tabNumber] = tabEndX[tabNumber- 1] + fontRenderer.getStringWidth(tabName) - 1 + totalSpaceBetweenTabs;
 		}
 		
 		//add the buttons

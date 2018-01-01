@@ -7,7 +7,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -17,9 +17,9 @@ group= "com.buildcraft.additionalpipes"
 archivesBaseName = "additionalpipes"
 
 minecraft {
-    version = "1.11.2-13.20.1.2386"
+    version = "1.12.2-14.23.0.2544"
     runDir = "minecraft"
-	mappings = "snapshot_20161220"
+	mappings = "snapshot_20171120"
 
 }
 // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -31,7 +31,7 @@ repositories {
 }
 
 dependencies {
-	compile name: 'buildcraft', version: "7.99.8.1", classifier: "dev", ext: 'jar'
+	compile name: 'buildcraft', version: "7.99.13", classifier: "dev", ext: 'jar'
 }
 
 sourceSets {

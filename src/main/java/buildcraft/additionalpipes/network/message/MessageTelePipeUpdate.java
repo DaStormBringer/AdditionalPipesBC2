@@ -56,11 +56,11 @@ public class MessageTelePipeUpdate implements IMessage, IMessageHandler<MessageT
     @Override
     public IMessage onMessage(MessageTelePipeUpdate message, MessageContext ctx)
     {
-    	TileEntity te = ctx.getServerHandler().playerEntity.getEntityWorld().getTileEntity(message.position);
+    	TileEntity te = ctx.getServerHandler().player.getEntityWorld().getTileEntity(message.position);
     	if(te instanceof TilePipeHolder) {
 			PipeBehaviorTeleport pipe = (PipeBehaviorTeleport) ((TilePipeHolder) te).getPipe().getBehaviour();
 			// only allow the owner to change pipe state
-			EntityPlayerMP entityPlayer = (EntityPlayerMP) ctx.getServerHandler().playerEntity;
+			EntityPlayerMP entityPlayer = (EntityPlayerMP) ctx.getServerHandler().player;
 			if(!PipeBehaviorTeleport.canPlayerModifyPipe(entityPlayer, pipe)) 
 			{
 				entityPlayer.sendMessage(new TextComponentString("Sorry, You may not change pipe state."));

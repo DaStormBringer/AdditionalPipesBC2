@@ -34,7 +34,7 @@ public class ContainerPriorityInsertionPipe extends Container {
 		{
 			for(int i = 0; i < lastPriorityData.length; i++) {
 				if(lastPriorityData[i] != pipe.sidePriorities[i]) {
-					crafter.sendProgressBarUpdate(this, i, pipe.sidePriorities[i]);
+					crafter.sendWindowProperty(this, i, pipe.sidePriorities[i]);
 				}
 			}
 		}

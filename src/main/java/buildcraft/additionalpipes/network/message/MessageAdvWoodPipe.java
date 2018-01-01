@@ -46,7 +46,7 @@ public class MessageAdvWoodPipe implements IMessage, IMessageHandler<MessageAdvW
     @Override
     public IMessage onMessage(MessageAdvWoodPipe message, MessageContext ctx)
     {
-    	World world = ctx.getServerHandler().playerEntity.getEntityWorld();
+    	World world = ctx.getServerHandler().player.getEntityWorld();
     	TileEntity te = world.getTileEntity(message.position);
     	
     	if(te instanceof TilePipeHolder) {

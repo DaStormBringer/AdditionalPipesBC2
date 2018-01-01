@@ -87,16 +87,16 @@ public class ContainerTeleportPipe extends ContainerBC_Neptune {
 		ticks++;
 		for(IContainerListener crafter : listeners) {
 			if(freq != pipe.getFrequency()) {
-				crafter.sendProgressBarUpdate(this, 0, pipe.getFrequency());
+				crafter.sendWindowProperty(this, 0, pipe.getFrequency());
 			}
 			if(state != pipe.state) {
-				crafter.sendProgressBarUpdate(this, 1, pipe.state);
+				crafter.sendWindowProperty(this, 1, pipe.state);
 			}
 			if(connectedPipesNew != connectedPipes) {
-				crafter.sendProgressBarUpdate(this, 2, connectedPipesNew);
+				crafter.sendWindowProperty(this, 2, connectedPipesNew);
 			}
 			if(isPublic != pipe.isPublic) {
-				crafter.sendProgressBarUpdate(this, 3, pipe.isPublic ? 1 : 0);
+				crafter.sendWindowProperty(this, 3, pipe.isPublic ? 1 : 0);
 			}
 		}
 		state = pipe.state;

@@ -3,6 +3,7 @@ package buildcraft.additionalpipes;
 import java.io.File;
 
 import buildcraft.additionalpipes.utils.Log;
+import buildcraft.lib.registry.RegistryConfig;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
@@ -90,6 +91,9 @@ public class APConfiguration
 		finally
 		{
 			config.save();
+			
+			// tell Buildcraft that this is our configuration file
+			RegistryConfig.setRegistryConfig(AdditionalPipes.MODID, config);
 		}
 	}
 

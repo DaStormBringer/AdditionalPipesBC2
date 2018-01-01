@@ -65,7 +65,7 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 			buttons[0].displayString = I18n.format("gui.advwood_pipe.whitelist");
 		}
 		
-		fontRendererObj.drawString(I18n.format("gui.advwood_pipe.title"), guiX + 42, guiY + 22, 4210752);
+		fontRenderer.drawString(I18n.format("gui.advwood_pipe.title"), guiX + 42, guiY + 22, 4210752);
 	}
 
 	@Override

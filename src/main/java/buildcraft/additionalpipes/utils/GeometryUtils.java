@@ -14,6 +14,6 @@ public class GeometryUtils
 	 */
 	public static EnumFacing getNearestSide(BlockPos block, Vec3d point)
 	{
-		return EnumFacing.getFacingFromVector((float)(point.xCoord - (block.getX() + 0.5)), (float)(point.yCoord - (block.getY() + 0.5)), (float)(point.zCoord - (block.getZ() + 0.5)));
+		return EnumFacing.getFacingFromVector((float)(point.x - (block.getX() + 0.5)), (float)(point.y - (block.getY() + 0.5)), (float)(point.z - (block.getZ() + 0.5)));
 	}
 }
