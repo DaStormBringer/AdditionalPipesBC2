@@ -96,7 +96,7 @@ public class InventoryUtils
 	}
 	
 	/**
-	 * Returns an ordered list of all stacks in the ItemHandler
+	 * Returns an ordered list of all stacks in the ItemHandler.  Includes empty itemstacks, but not null ones.
 	 * @param handler
 	 * @return
 	 */
@@ -104,7 +104,7 @@ public class InventoryUtils
 	{
 		int invSize = handler.getSlots();
 		
-		NonNullList<ItemStack> stacks = NonNullList.withSize(invSize, ItemStack.EMPTY);
+		NonNullList<ItemStack> stacks = NonNullList.create();
 		
 		for(int index = 0; index < invSize; ++index)
 		{

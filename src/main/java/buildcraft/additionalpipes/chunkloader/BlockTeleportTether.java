@@ -12,7 +12,7 @@ public class BlockTeleportTether extends BlockContainer {
 	{
 		super(Material.CLOTH);
 		setCreativeTab(AdditionalPipes.instance.creativeTab);
-		setUnlocalizedName("teleportTether");
+		setUnlocalizedName("teleport_tether");
 	}
 
 	@Override

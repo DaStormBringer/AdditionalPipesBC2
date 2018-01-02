@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemDogDeaggravator extends Item
 {	
-	public static final String NAME = "dogDeaggravator";
+	public static final String NAME = "dog_deaggravator";
 	
 	public ItemDogDeaggravator()
 	{
@@ -66,7 +66,7 @@ public class ItemDogDeaggravator extends Item
 	@SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn)
 	{
-		list.add(I18n.format("tooltip.dogDeaggravator"));
+		list.add(I18n.format("tooltip.dog_deaggravator"));
 	}
 
 }

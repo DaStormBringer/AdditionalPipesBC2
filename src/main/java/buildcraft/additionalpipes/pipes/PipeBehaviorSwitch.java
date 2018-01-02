@@ -51,7 +51,7 @@ public class PipeBehaviorSwitch extends APPipe
 	 */
 	private boolean canConnect()
 	{
-		return pipe.getHolder().getPipeWorld().isBlockPowered(getPos());
+		return !pipe.getHolder().getPipeWorld().isBlockPowered(getPos());
 	}
 
 	@Override

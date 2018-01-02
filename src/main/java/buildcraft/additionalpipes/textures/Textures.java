@@ -11,11 +11,11 @@ public class Textures {
 	
 	public static final String TEXTURE_PATH = "textures";
 
-	public static final ResourceLocation GUI_TELEPORT = new ResourceLocation("additionalpipes", TEXTURE_PATH + "/gui/blankSmallGui.png");
-	public static final ResourceLocation GUI_ADVANCEDWOOD = new ResourceLocation("additionalpipes", TEXTURE_PATH + "/gui/advancedWoodGui.png");
-	public static final ResourceLocation GUI_DISTRIBUTION = new ResourceLocation("additionalpipes", TEXTURE_PATH + "/gui/distributionGui.png");
-	public static final ResourceLocation GUI_PRIORITY = new ResourceLocation("additionalpipes", TEXTURE_PATH + "/gui/priorityGui.png");
-	public static final ResourceLocation GUI_JEWELED = new ResourceLocation("additionalpipes", TEXTURE_PATH + "/gui/jeweledGui.png");
+	public static final ResourceLocation GUI_TELEPORT = new ResourceLocation("additionalpipes", TEXTURE_PATH + "/gui/background_generic.png");
+	public static final ResourceLocation GUI_ADVANCEDWOOD = new ResourceLocation("additionalpipes", TEXTURE_PATH + "/gui/background_adv_wood.png");
+	public static final ResourceLocation GUI_DISTRIBUTION = new ResourceLocation("additionalpipes", TEXTURE_PATH + "/gui/background_distribution.png");
+	public static final ResourceLocation GUI_PRIORITY = new ResourceLocation("additionalpipes", TEXTURE_PATH + "/gui/background_priority.png");
+	public static final ResourceLocation GUI_JEWELED = new ResourceLocation("additionalpipes", TEXTURE_PATH + "/gui/background_jeweled.png");
 	
 	public static final ResourceLocation GUI_OUTLINE_JEWELED[] = new ResourceLocation[GuiJeweledPipe.NUM_TABS];
 	
@@ -23,7 +23,7 @@ public class Textures {
 	{
 		for(int tabNumber = 1; tabNumber <= GuiJeweledPipe.NUM_TABS; ++tabNumber)
 		{
-			 GUI_OUTLINE_JEWELED[tabNumber - 1] = new ResourceLocation("additionalpipes", TEXTURE_PATH + "/gui/jeweledPipeGuiOutline" + tabNumber + ".png");
+			 GUI_OUTLINE_JEWELED[tabNumber - 1] = new ResourceLocation("additionalpipes", TEXTURE_PATH + "/gui/jeweled_gui_outline_" + tabNumber + ".png");
 		}
 	}
 

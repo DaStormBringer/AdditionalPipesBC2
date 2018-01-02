@@ -51,7 +51,7 @@ public class PipeBehaviorDistribution extends APPipe {
 	{
 		if(connection == null)
 		{
-			return 0;
+			return EnumFacing.EAST.ordinal();
 		}
 		
 		return connection.ordinal();

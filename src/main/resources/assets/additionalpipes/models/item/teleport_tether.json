@@ -1,5 +1,5 @@
 {
-	"parent": "additionalpipes:block/teleportTether",
+	"parent": "additionalpipes:block/teleport_tether",
 	"display": {
 		"thirdperson": {
 			"rotation": [ 10, -45, 170 ],

@@ -22,9 +22,9 @@ public class GuiDistributionPipe extends GuiContainer {
 	public int guiY = 0;
 	private final PipeBehaviorDistribution pipe;
 
-	public GuiDistributionPipe(PipeBehaviorDistribution container) {
-		super(new ContainerDistributionPipe(container));
-		pipe = (PipeBehaviorDistribution) container.pipe;
+	public GuiDistributionPipe(PipeBehaviorDistribution pipe) {
+		super(new ContainerDistributionPipe(pipe));
+		this.pipe = pipe;
 		xSize = 117;
 		ySize = 130;
 	}

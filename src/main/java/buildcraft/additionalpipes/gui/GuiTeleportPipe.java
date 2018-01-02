@@ -27,43 +27,55 @@ public class GuiTeleportPipe extends GuiBC8<ContainerTeleportPipe> {
 		int textColour = 0x000000;
 		
 		final static int OVERLAY_COLOR = 0xd46c1f;
-
-		String networkTitle;
 		
 		public TeleportPipeLedger() {
 			super(GuiTeleportPipe.this, OVERLAY_COLOR, true);
-			maxHeight = 99;
-			shownElements.add(new TeleportPipeLedger());
-			
+			maxHeight = 99;			
 			this.title = "gui.teleport.ledger.title";
-		}
-
-		@Override
-		public void drawForeground(float partialTicks)
-		{
-			//we have to initialize this here since pipe is not yet set when the constructor is run
-			if(networkTitle == null)
-			{
-				 appendText(((pipe.state & 0x1) >= 1) ? I18n.format("gui.teleport.ledger.outputs") : I18n.format("gui.teleport.ledger.inputs"), headerColour);
-			}
+			
+			appendText(() -> ((pipe.state & 0x1) >= 1) ? I18n.format("gui.teleport.ledger.outputs") : I18n.format("gui.teleport.ledger.inputs"), headerColour);
 
 			appendText(I18n.format("gui.teleport.ledger.owner"), subheaderColour);
 			appendText(pipe.ownerName, textColour);
-			appendText(networkTitle, subheaderColour);
-			appendText(String.valueOf(container.connectedPipes), textColour);
-			int[] net = pipe.network;
-			if(net.length > 0) 
-			{
-				appendText(new StringBuilder("(").append(net[0]).append(", ").append(net[1]).append(", ").append(net[2]).append(")").toString(), textColour);
-			}
-			if(net.length > 3) {
-				appendText(new StringBuilder("(").append(net[3]).append(", ").append(net[4]).append(", ").append(net[5]).append(")").toString(), textColour);
-			}
-			if(net.length > 6) {
-				appendText(new StringBuilder("(").append(net[6]).append(", ").append(net[7]).append(", ").append(net[8]).append(")").toString(), textColour);
-			}
+			appendText(() -> String.valueOf(container.connectedPipes), textColour);
 			
-			super.drawForeground(partialTicks);
+			// print up to the first 3 connected pipes
+			appendText( () -> 
+			{
+				StringBuilder text = new StringBuilder();
+				if(pipe.network.length >= 2) 
+				{
+					text.append("(").append(pipe.network[0]).append(", ").append(pipe.network[1]).append(", ").append(pipe.network[2]).append(")");
+				}
+				
+				return text.toString();
+			},  textColour);
+			
+			appendText( () -> 
+			{
+				StringBuilder text = new StringBuilder();
+				if(pipe.network.length >= 5) 
+				{
+					text.append("(").append(pipe.network[3]).append(", ").append(pipe.network[4]).append(", ").append(pipe.network[5]).append(")");
+				}
+				
+				return text.toString();
+			},  textColour);
+			
+			appendText( () -> 
+			{
+				StringBuilder text = new StringBuilder();
+				if(pipe.network.length >= 8) 
+				{
+					text.append("(").append(pipe.network[6]).append(", ").append(pipe.network[7]).append(", ").append(pipe.network[8]).append(")");
+				}
+				
+				return text.toString();
+			},  textColour);
+			
+			
+			calculateMaxSize();
+
 		}
 
 		@Override
@@ -77,13 +89,15 @@ public class GuiTeleportPipe extends GuiBC8<ContainerTeleportPipe> {
 	private final PipeBehaviorTeleport pipe;
 	private final ContainerTeleportPipe container;
 	private final GuiButton[] buttons = new GuiButton[8];
-
+	
 	public GuiTeleportPipe(EntityPlayer player, PipeBehaviorTeleport pipe) {
 		super(new ContainerTeleportPipe(player, pipe));
 		this.pipe = pipe;
 		container = (ContainerTeleportPipe) inventorySlots;
 		xSize = 228;
 		ySize = 117;
+		
+		shownElements.add(new TeleportPipeLedger());
 	}
 
 	@Override

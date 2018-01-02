@@ -1,22 +1,22 @@
-item.PipeItemsPriorityInsertion.name=Priority Insertion Pipe
-item.PipeItemsAdvancedWood.name=Adv. Wooden Transport Pipe
-item.PipeItemsGravityFeed.name=Gravity Feed Transport Pipe
-item.PipeItemsDistributor.name=Distribution Transport Pipe
-item.PipeItemsClosed.name=Closed Transport Pipe
-item.PipeItemsTeleport.name=Item Teleport Pipe
-item.PipeLiquidsTeleport.name=Fluid Teleport Pipe
-item.PipePowerTeleport.name=Power Teleport Pipe [WIP]
-item.PipeSwitchPower.name=Switch Kinesis Pipe
-item.PipeSwitchFluids.name=Switch Fluid Pipe
-item.PipeSwitchItems.name=Switch Transport Pipe
-item.PipeLiquidsWaterPump.name=Water Pump Pipe
-item.PipeItemsAddition.name=Addition Transport Pipe
+item.pipe.ap.pipe_items_priority.name=Priority Insertion Pipe
+item.pipe.ap.pipe_items_adv_wood.name=Adv. Wooden Transport Pipe
+item.pipe.ap.pipe_items_gravity_feed.name=Gravity Feed Transport Pipe
+item.pipe.ap.pipe_items_distribution.name=Distribution Transport Pipe
+item.pipe.ap.pipe_items_closed.name=Closed Transport Pipe
+item.pipe.ap.pipe_items_teleport.name=Item Teleport Pipe
+item.pipe.ap.pipe_fluids_teleport.name=Fluid Teleport Pipe
+item.pipe.ap.pipe_power_teleport.name=Power Teleport Pipe [WIP]
+item.pipe.ap.pipe_power_switch.name=Switch Kinesis Pipe
+item.pipe.ap.pipe_fluids_switch.name=Switch Fluid Pipe
+item.pipe.ap.pipe_items_switch.name=Switch Transport Pipe
+item.pipe.ap.pipe_fluids_water_pump.name=Water Pump Pipe
+item.pipe.ap.pipe_items_addition.name=Addition Transport Pipe
 item.PipeLiquidsObsidian.name=Obsidian Fluid Pipe
-item.PipeItemsJeweled.name=Jeweled Transport Pipe
+item.pipe.ap.pipe_items_jeweled.name=Jeweled Transport Pipe
 
 #regular items & blocks
-item.dogDeaggravator.name=Dog Deaggravator
-tile.teleportTether.name=Teleport Tether
+item.dog_deaggravator.name=Dog Deaggravator
+tile.teleport_tether.name=Teleport Tether
 
 # Priority Insertion Pipe
 gui.priority_insertion.title=Priority Insertion Pipe
@@ -62,16 +62,16 @@ gui.teleport.public=Public
 gui.teleport.private=Private
 
 # name of "closed pipe is closed" trigger
-trigger.pipeClosed=Pipe Closed (Storing Items) 
+trigger.pipe_closed=Pipe Closed (Storing Items) 
 
 key.lasers=Show chunk load boundaries
 
 #tooltips for teleport pipes
 tip.teleportPipe=No more long pipelines!
 
-tooltip.dogDeaggravator=Calms down your dogs
+tooltip.dog_deaggravator=Calms down your dogs
 
-itemGroup.buildcraft.apcreativetab=Additional Pipes
+itemGroup.apcreativetab=Additional Pipes
 
 # chat stuff
 command.ap.usage=/additionalpipes teleport <items|fluids|power>
@@ -79,4 +79,4 @@ command.ap.pipelist_header=Teleport Pipes:
 message.ap.accessdenied=Access denied!  This pipe belongs to %s
 
 # Subtitle for when the Dog Deaggravator is used
-subtitle.ap.dogDeaggravator=Dingdingding!
+subtitle.ap.dog_deaggravator=Dingdingding!

@@ -13,7 +13,7 @@ public class TriggerPipeClosed extends APTrigger implements ITriggerInternal {
 
 	public TriggerPipeClosed()
 	{
-		super("pipeClosed");
+		super("pipe_closed");
 	}
 
 

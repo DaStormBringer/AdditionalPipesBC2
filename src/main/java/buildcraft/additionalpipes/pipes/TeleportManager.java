@@ -53,11 +53,6 @@ public class TeleportManager extends TeleportManagerBase
 	@Override
 	public void add(ITeleportPipe pipe, int frequency)
 	{
-		if(FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
-		{
-			return;
-		}
-		
 		pipes.get(pipe.getType()).put(frequency, pipe);
 
 		//if unit tests are being run, pipe.container will be null.

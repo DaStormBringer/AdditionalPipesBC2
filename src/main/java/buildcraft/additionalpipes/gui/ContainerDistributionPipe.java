@@ -8,8 +8,8 @@ import net.minecraft.inventory.Container;
 public class ContainerDistributionPipe extends Container {
 	private PipeBehaviorDistribution pipe;
 	
-	public ContainerDistributionPipe(PipeBehaviorDistribution container) {
-		pipe = (PipeBehaviorDistribution) container.pipe;
+	public ContainerDistributionPipe(PipeBehaviorDistribution pipe) {
+		this.pipe = pipe;
 	}
 
 	@Override

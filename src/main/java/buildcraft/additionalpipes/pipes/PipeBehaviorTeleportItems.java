@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import buildcraft.additionalpipes.api.TeleportPipeType;
+import buildcraft.additionalpipes.utils.Log;
 import buildcraft.api.transport.pipe.IPipe;
 import buildcraft.api.transport.pipe.PipeEventHandler;
 import buildcraft.api.transport.pipe.PipeEventItem;
@@ -43,7 +44,7 @@ public class PipeBehaviorTeleportItems extends PipeBehaviorTeleport
 	{
 		NBTTagCompound nbt = super.writeToNbt();
 		
-		nbt.setByte("teleportSide", (byte) teleportSide.ordinal());
+		nbt.setByte("teleportSide", (byte) getTeleportSide().ordinal());
 		
 		return nbt;
 	}
@@ -63,21 +64,25 @@ public class PipeBehaviorTeleportItems extends PipeBehaviorTeleport
 	 * @return
 	 */
 	public EnumFacing getTeleportSide()
-	{
+	{		
 		// check if we need to recalculate the teleport side
 		if(teleportSide == null || pipe.isConnected(teleportSide) || !pipe.isConnected(teleportSide.getOpposite()))
 		{
+			Log.debug("[ItemTeleportPipe] Recalculating teleport side...");
 			teleportSide = null;
 			
 			// for recalculation: 
 			// find the first unconnected side that is opposite to a connected side
 			for(EnumFacing side : EnumFacing.VALUES)
 			{
-				if(pipe.isConnected(side) && !pipe.isConnected(side.getOpposite()))
+				if(!pipe.isConnected(side) && pipe.isConnected(side.getOpposite()))
 				{
 					teleportSide = side;
 				}
 			}
+			
+			Log.debug("[ItemTeleportPipe] Teleport side set to " + String.valueOf(teleportSide));
+
 		}
 		
 		return teleportSide;
@@ -85,7 +90,7 @@ public class PipeBehaviorTeleportItems extends PipeBehaviorTeleport
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@PipeEventHandler
-	public void onReachEnd(PipeEventItem.ReachEnd event)
+	public void onTryDrop(PipeEventItem.Drop event)
 	{
 		if(pipe.getHolder().getPipeWorld().isRemote || !canSend()) 
 		{
@@ -93,67 +98,66 @@ public class PipeBehaviorTeleportItems extends PipeBehaviorTeleport
 		}
 		
 		// if the item is going to the teleportSide, teleport it.
-		if(getTeleportSide() == event.to)
-		{
-			ArrayList<PipeBehaviorTeleportItems> connectedTeleportPipes = (ArrayList)TeleportManager.instance.getConnectedPipes(this, false, true);
-			
-			// no teleport pipes connected, use default
-			if(connectedTeleportPipes.size() <= 0 || (state & 0x1) == 0) {
-				return;
-			}
-	
-			// output to random pipe
-			LinkedList<EnumFacing> outputOrientations = new LinkedList<EnumFacing>();
-			PipeBehaviorTeleportItems otherPipe;
-			
-			int originalPipeNumber = pipe.getHolder().getPipeWorld().rand.nextInt(connectedTeleportPipes.size());
-			int currentPipeNumber = originalPipeNumber;
-			
-			boolean found = false;
-			int numberOfTries = 0;
-			
-			// find a pipe with something connected to it
-			// The logic for this is... pretty complicated, actually.
-			do
-			{
-				++numberOfTries;
-				otherPipe = connectedTeleportPipes.get(currentPipeNumber);
-				
-				for(EnumFacing o : EnumFacing.values())
-				{
-					if(otherPipe.pipe.isConnected(o))
-					{
-						outputOrientations.add(o);
-					}
-				}
-				
-				// no outputs found, try again
-				if(outputOrientations.size() <= 0) 
-				{
-					++currentPipeNumber;
-					
-					//loop back to the start
-					if(currentPipeNumber >= connectedTeleportPipes.size())
-					{
-						currentPipeNumber = 0;
-					}
-				}
-				else
-				{
-					found = true;
-				}
-			}
-			while(numberOfTries < connectedTeleportPipes.size() && !found);
-	
-			//couldn't find any, so give up
-			if(!found)
-			{
-				return;
-			}
-			
-			((PipeFlowItems)otherPipe.pipe.getFlow()).injectItem(event.getStack(), true, otherPipe.getTeleportSide(), null, TELEPORTED_ITEM_SPEED); 
-			event.setStack(ItemStack.EMPTY);
+
+		ArrayList<PipeBehaviorTeleportItems> connectedTeleportPipes = (ArrayList)TeleportManager.instance.getConnectedPipes(this, false, true);
+		
+		// no teleport pipes connected, use default
+		if(connectedTeleportPipes.size() <= 0 || (state & 0x1) == 0) {
+			return;
 		}
+
+		// output to random pipe
+		LinkedList<EnumFacing> outputOrientations = new LinkedList<EnumFacing>();
+		PipeBehaviorTeleportItems otherPipe;
+		
+		int originalPipeNumber = pipe.getHolder().getPipeWorld().rand.nextInt(connectedTeleportPipes.size());
+		int currentPipeNumber = originalPipeNumber;
+		
+		boolean found = false;
+		int numberOfTries = 0;
+		
+		// find a pipe with something connected to it
+		// The logic for this is... pretty complicated, actually.
+		do
+		{
+			++numberOfTries;
+			otherPipe = connectedTeleportPipes.get(currentPipeNumber);
+			
+			for(EnumFacing o : EnumFacing.values())
+			{
+				if(otherPipe.pipe.isConnected(o))
+				{
+					outputOrientations.add(o);
+				}
+			}
+			
+			// no outputs found, try again
+			if(outputOrientations.size() <= 0) 
+			{
+				++currentPipeNumber;
+				
+				//loop back to the start
+				if(currentPipeNumber >= connectedTeleportPipes.size())
+				{
+					currentPipeNumber = 0;
+				}
+			}
+			else
+			{
+				found = true;
+			}
+		}
+		while(numberOfTries < connectedTeleportPipes.size() && !found);
+
+		//couldn't find any, so give up
+		if(!found)
+		{
+			return;
+		}
+		
+		((PipeFlowItems)otherPipe.pipe.getFlow()).insertItemsForce(event.getStack(), otherPipe.getTeleportSide(), null, TELEPORTED_ITEM_SPEED); 
+		Log.debug(event.getStack() + " from " + getPosition() + " to " + otherPipe.getPosition());
+		event.setStack(ItemStack.EMPTY);
 	}
 	
 	@PipeEventHandler

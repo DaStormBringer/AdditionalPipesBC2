@@ -25,24 +25,14 @@ import net.minecraftforge.fluids.FluidStack;
 public class PipeBehaviorTeleportFluids extends PipeBehaviorTeleport 
 {
 
-	// casted reference to the flow so we don't have to keep casting it
-	PipeFlowFluids flow;
-
 	public PipeBehaviorTeleportFluids(IPipe pipe, NBTTagCompound tagCompound)
 	{
 		super(pipe, tagCompound, TeleportPipeType.FLUIDS);
-		init();
 	}
 
 	public PipeBehaviorTeleportFluids(IPipe pipe)
 	{
 		super(pipe, TeleportPipeType.FLUIDS);
-		init();
-	}
-	
-	private void init()
-	{
-		flow = (PipeFlowFluids) pipe.getFlow();
 	}
 	
 
@@ -99,7 +89,7 @@ public class PipeBehaviorTeleportFluids extends PipeBehaviorTeleport
 				{
 					PipeBehaviorTeleportFluids pipe = pipeIter.next();
 					
-					int inserted = pipe.flow.insertFluidsForce(maxPerIteration, null, false);
+					int inserted = ((PipeFlowFluids) pipe.pipe.getFlow()).insertFluidsForce(maxPerIteration, null, false);
 					
 					if(inserted == 0)
 					{
@@ -147,7 +137,7 @@ public class PipeBehaviorTeleportFluids extends PipeBehaviorTeleport
 	public int getMaxAcceptableMB(Fluid fluid)
 	{
 		// try inserting an infinite amount, and see how much is returned
-		return flow.insertFluidsForce(new FluidStack(fluid, Integer.MAX_VALUE), null, true);
+		return ((PipeFlowFluids) pipe.getFlow()).insertFluidsForce(new FluidStack(fluid, Integer.MAX_VALUE), null, true);
 	}
 
 }

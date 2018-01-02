@@ -168,7 +168,7 @@ public abstract class PipeBehaviorTeleport extends APPipe implements ITeleportPi
         if (!player.world.isRemote) 
         {
         	BlockPos pipePos = pipe.getHolder().getPipePos();
-        	player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_CLOSED, pipe.getHolder().getPipeWorld(), pipePos.getX(), pipePos.getY(), pipePos.getZ());
+        	player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_TP, pipe.getHolder().getPipeWorld(), pipePos.getX(), pipePos.getY(), pipePos.getZ());
         }
         return true;
 	}
@@ -185,7 +185,15 @@ public abstract class PipeBehaviorTeleport extends APPipe implements ITeleportPi
 	@Override
 	public TilePipeHolder getContainer()
 	{
-		return (TilePipeHolder) pipe.getHolder();
+		// if unit tests are being run, pipe will br null
+		if(pipe != null)
+		{
+			return (TilePipeHolder) pipe.getHolder();
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	@Override

@@ -102,7 +102,7 @@ public class AdditionalPipes {
 		{
 			// register Teleport Tether block
 			blockTeleportTether = new BlockTeleportTether();
-			blockTeleportTether.setRegistryName("teleportTether");
+			blockTeleportTether.setRegistryName("teleport_tether");
 			event.getRegistry().register(blockTeleportTether);
 		}
 	    
@@ -120,14 +120,14 @@ public class AdditionalPipes {
 	@SubscribeEvent
 	public void registerRecipes(RegistryEvent.Register<IRecipe> event)
 	{
-		ShapedOreRecipe deaggravatorRecipe = new ShapedOreRecipe(new ResourceLocation(MODID, "recipes/dogDeaggravator"), dogDeaggravator, "gsg", "gig", "g g", 'i', "ingotIron", 'g', "ingotGold", 's', "stickWood");
-		deaggravatorRecipe.setRegistryName("dogDeaggravator");
+		ShapedOreRecipe deaggravatorRecipe = new ShapedOreRecipe(new ResourceLocation(MODID, "recipes/dog_deaggravator"), dogDeaggravator, "gsg", "gig", "g g", 'i', "ingotIron", 'g', "ingotGold", 's', "stickWood");
+		deaggravatorRecipe.setRegistryName("dog_deaggravator");
 		event.getRegistry().register(deaggravatorRecipe);
 		
 		if(APConfiguration.enableChunkloader)
 		{
-			ShapedOreRecipe chunkloaderRecipe = new ShapedOreRecipe(new ResourceLocation(MODID, "recipes/teleportTether"), blockTeleportTether, "iii", "iLi", "ici", 'i', "ingotIron", 'L', "gemLapis", 'c', BCSiliconItems.redstoneChipset);
-			chunkloaderRecipe.setRegistryName("teleportTether");
+			ShapedOreRecipe chunkloaderRecipe = new ShapedOreRecipe(new ResourceLocation(MODID, "recipes/teleport_tether"), blockTeleportTether, "iii", "iLi", "ici", 'i', "ingotIron", 'L', "gemLapis", 'c', BCSiliconItems.redstoneChipset);
+			chunkloaderRecipe.setRegistryName("teleport_tether");
 			event.getRegistry().register(chunkloaderRecipe);
 		}
 	}
@@ -152,7 +152,7 @@ public class AdditionalPipes {
 			//chunkLoadViewer = new ChunkLoadViewDataProxy(APConfiguration.chunkSightRange);
 			//MinecraftForge.EVENT_BUS.register(chunkLoadViewer);
 			
-			GameRegistry.registerTileEntity(TileTeleportTether.class, "TeleportTether");
+			GameRegistry.registerTileEntity(TileTeleportTether.class, "teleport_tether");
 			
 			// the lasers key function depends on the chunk loading code, so it can only be enabled if the chunk loader is
 			proxy.registerKeyHandler();

@@ -2,9 +2,9 @@
 	"bellRing": {
 		"category": "master",
 		"sounds": [{
-			"name": "copper-bell",
+			"name": "additionalpipes:copper-bell",
 			"stream": false
 		}],
-		"subtitle": "subtitle.ap.dogDeaggravator"
+		"subtitle": "subtitle.ap.dog_deaggravator"
 	}
 }
