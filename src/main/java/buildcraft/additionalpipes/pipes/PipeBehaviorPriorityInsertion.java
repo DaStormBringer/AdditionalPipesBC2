@@ -29,7 +29,8 @@ public class PipeBehaviorPriorityInsertion extends APPipe {
 	public PipeBehaviorPriorityInsertion(IPipe pipe, NBTTagCompound nbt)
 	{
 		super(pipe, nbt);
-		readFromNBT(nbt);
+		
+		sidePriorities = nbt.getByteArray("prioritiesArray");
 	}
 
 	public PipeBehaviorPriorityInsertion(IPipe pipe)
@@ -84,14 +85,6 @@ public class PipeBehaviorPriorityInsertion extends APPipe {
 		nbt.setByteArray("prioritiesArray", sidePriorities);
 		
 		return nbt;
-	}
-
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		if(nbt.hasKey("prioritiesArray"))
-		{
-			sidePriorities = nbt.getByteArray("prioritiesArray");
-		}
 	}
 
 }

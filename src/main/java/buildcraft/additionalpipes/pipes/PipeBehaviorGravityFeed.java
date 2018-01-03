@@ -17,7 +17,9 @@ public class PipeBehaviorGravityFeed extends APPipe
 	
 	public PipeBehaviorGravityFeed(IPipe pipe, NBTTagCompound nbt)
 	{
-		super(pipe, nbt);
+		super(pipe, nbt);		
+		
+		ticksSincePull = nbt.getInteger("ticksSincePull");
 	}
 
 	public PipeBehaviorGravityFeed(IPipe pipe)
@@ -61,5 +63,15 @@ public class PipeBehaviorGravityFeed extends APPipe
 		{
 			return 1;
 		}
+	}
+	
+	@Override
+	public NBTTagCompound writeToNbt() 
+	{
+		NBTTagCompound nbt = super.writeToNbt();
+
+		nbt.setInteger("ticksSincePull", ticksSincePull);
+		
+		return nbt;
 	}
 }

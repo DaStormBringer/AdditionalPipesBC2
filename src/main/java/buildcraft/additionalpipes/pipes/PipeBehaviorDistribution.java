@@ -38,7 +38,13 @@ public class PipeBehaviorDistribution extends APPipe {
 	public PipeBehaviorDistribution(IPipe pipe, NBTTagCompound nbt)
 	{
 		super(pipe, nbt);
-		readFromNBT(nbt);
+		
+		itemsThisSide = nbt.getInteger("itemsThisSide");
+		distSide = EnumFacing.VALUES[nbt.getInteger("distSide")];
+		for(int i = 0; i < distData.length; i++) {
+			distData[i] = nbt.getInteger("distData" + i);
+		}
+		sanityCheck();
 	}
 
 	public PipeBehaviorDistribution(IPipe pipe)
@@ -61,8 +67,15 @@ public class PipeBehaviorDistribution extends APPipe {
 	public void splitStacks(PipeEventItem.Split splitEvent) 
 	{
 		ArrayList<ItemEntry>  newDistribution = new ArrayList<>();
+		
+		
 		for(ItemEntry entry : splitEvent.items)
 		{
+			if(entry.to == null)
+			{
+				entry.to = new ArrayList<EnumFacing>();
+			}
+
 
 			if(getItemsLeftThisSide() > 0 && entry.stack.getCount() <= getItemsLeftThisSide())
 			{
@@ -167,16 +180,6 @@ public class PipeBehaviorDistribution extends APPipe {
 		}
 		
 		return nbt;
-	}
-
-	public void readFromNBT(NBTTagCompound nbt) {
-
-		itemsThisSide = nbt.getInteger("itemsThisSide");
-		distSide = EnumFacing.VALUES[nbt.getInteger("distSide")];
-		for(int i = 0; i < distData.length; i++) {
-			distData[i] = nbt.getInteger("distData" + i);
-		}
-		sanityCheck();
 	}
 	
 	

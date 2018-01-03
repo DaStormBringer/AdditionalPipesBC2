@@ -26,52 +26,29 @@ public class GuiTeleportPipe extends GuiBC8<ContainerTeleportPipe> {
 		int subheaderColour = 0xaaafb8;
 		int textColour = 0x000000;
 		
-		final static int OVERLAY_COLOR = 0xd46c1f;
+		final static int OVERLAY_COLOR = 0xffd46c1f;
 		
 		public TeleportPipeLedger() {
 			super(GuiTeleportPipe.this, OVERLAY_COLOR, true);
-			maxHeight = 99;			
 			this.title = "gui.teleport.ledger.title";
 			
-			appendText(() -> ((pipe.state & 0x1) >= 1) ? I18n.format("gui.teleport.ledger.outputs") : I18n.format("gui.teleport.ledger.inputs"), headerColour);
-
-			appendText(I18n.format("gui.teleport.ledger.owner"), subheaderColour);
-			appendText(pipe.ownerName, textColour);
-			appendText(() -> String.valueOf(container.connectedPipes), textColour);
+			appendText(() -> ((pipe.state & 0x1) >= 1) ? I18n.format("gui.teleport.ledger.outputs", container.connectedPipes) : I18n.format("gui.teleport.ledger.inputs", container.connectedPipes), headerColour);
 			
-			// print up to the first 3 connected pipes
-			appendText( () -> 
+			// print up to the first 3 connected pipes, with 3 coords each
+			for(int coordIndex = 0; coordIndex < 3; coordIndex += 3)
 			{
-				StringBuilder text = new StringBuilder();
-				if(pipe.network.length >= 2) 
+				final int capturedIdx = coordIndex;
+				appendText( () -> 
 				{
-					text.append("(").append(pipe.network[0]).append(", ").append(pipe.network[1]).append(", ").append(pipe.network[2]).append(")");
-				}
-				
-				return text.toString();
-			},  textColour);
-			
-			appendText( () -> 
-			{
-				StringBuilder text = new StringBuilder();
-				if(pipe.network.length >= 5) 
-				{
-					text.append("(").append(pipe.network[3]).append(", ").append(pipe.network[4]).append(", ").append(pipe.network[5]).append(")");
-				}
-				
-				return text.toString();
-			},  textColour);
-			
-			appendText( () -> 
-			{
-				StringBuilder text = new StringBuilder();
-				if(pipe.network.length >= 8) 
-				{
-					text.append("(").append(pipe.network[6]).append(", ").append(pipe.network[7]).append(", ").append(pipe.network[8]).append(")");
-				}
-				
-				return text.toString();
-			},  textColour);
+					StringBuilder text = new StringBuilder();
+					if(pipe.network.length >= capturedIdx + 2) 
+					{
+						text.append("(").append(pipe.network[capturedIdx]).append(", ").append(pipe.network[capturedIdx + 1]).append(", ").append(pipe.network[capturedIdx + 2]).append(")");
+					}
+					
+					return text.toString();
+				},  textColour);
+			}
 			
 			
 			calculateMaxSize();
@@ -103,27 +80,31 @@ public class GuiTeleportPipe extends GuiBC8<ContainerTeleportPipe> {
 	@Override
 	public void initGui() {
 		super.initGui();
-		int x = (width - xSize) / 2, y = (height - ySize) / 2 + 16;
+		int x = (width - xSize) / 2;
 		int bw = xSize - 24;
-		buttonList.add(buttons[0] = new GuiButton(1, x + 12, y + 32, bw / 6, 20, "-100"));
-		buttonList.add(buttons[1] = new GuiButton(2, x + 12 + bw / 6, y + 32, bw / 6, 20, "-10"));
-		buttonList.add(buttons[2] = new GuiButton(3, x + 12 + bw * 2 / 6, y + 32, bw / 6, 20, "-1"));
-		buttonList.add(buttons[3] = new GuiButton(4, x + 12 + bw * 3 / 6, y + 32, bw / 6, 20, "+1"));
-		buttonList.add(buttons[4] = new GuiButton(5, x + 12 + bw * 4 / 6, y + 32, bw / 6, 20, "+10"));
-		buttonList.add(buttons[5] = new GuiButton(6, x + 12 + bw * 5 / 6, y + 32, bw / 6, 20, "+100"));
+		
+		final int freqButtonTop = 78;
+		
+		buttonList.add(buttons[0] = new GuiButton(1, x + 12, guiTop + freqButtonTop, bw / 6, 20, "-100"));
+		buttonList.add(buttons[1] = new GuiButton(2, x + 12 + bw / 6, guiTop + freqButtonTop, bw / 6, 20, "-10"));
+		buttonList.add(buttons[2] = new GuiButton(3, x + 12 + bw * 2 / 6, guiTop + freqButtonTop, bw / 6, 20, "-1"));
+		buttonList.add(buttons[3] = new GuiButton(4, x + 12 + bw * 3 / 6, guiTop + freqButtonTop, bw / 6, 20, "+1"));
+		buttonList.add(buttons[4] = new GuiButton(5, x + 12 + bw * 4 / 6, guiTop + freqButtonTop, bw / 6, 20, "+10"));
+		buttonList.add(buttons[5] = new GuiButton(6, x + 12 + bw * 5 / 6, guiTop + freqButtonTop, bw / 6, 20, "+100"));
 
-		buttonList.add(buttons[6] = new GuiButton(7, x + 12, y + 10, bw / 2, 20, ""));
-		buttonList.add(buttons[7] = new GuiButton(8, x + 12 + bw * 3 / 6, y + 10, bw / 2, 20, ""));
+		buttonList.add(buttons[6] = new GuiButton(7, x + 12, guiTop + 35, bw / 2, 20, ""));
+		buttonList.add(buttons[7] = new GuiButton(8, x + 12 + bw * 3 / 6, guiTop + 35, bw / 2, 20, ""));
 	}
 
 	@Override
 	protected void drawForegroundLayer() 
 	{
-		fontRenderer.drawString(I18n.format("gui.teleport.frequency", pipe.getFrequency()), 16, 12, 0x404040);
-		fontRenderer.drawString(new StringBuilder("(")
-			.append(pipe.getPos().getX()).append(", ")
-			.append(pipe.getPos().getY()).append(", ")
-			.append(pipe.getPos().getZ()).append(")").toString(), 128, 12, 0x404040);
+		fontRenderer.drawString(I18n.format(pipe.getUnlocalizedName()), guiLeft + 70, guiTop + 6, 0x0a0c84, false);
+		fontRenderer.drawString(I18n.format("gui.teleport.frequency", pipe.getFrequency()), guiLeft + 16, guiTop + 66, 0x404040);
+		fontRenderer.drawString(I18n.format("gui.teleport.coordPair", pipe.getPos().getX(), pipe.getPos().getY(), pipe.getPos().getZ()), guiLeft + 110, guiTop + 20, 0x404040);
+		
+		fontRenderer.drawString(I18n.format("gui.teleport.ledger.owner", pipe.ownerName), guiLeft + 12, guiTop + 20, 0x404040);
+		
 		switch(pipe.state) {
 		case 3:
 			buttons[6].displayString = I18n.format("gui.teleport.send_and_receive");

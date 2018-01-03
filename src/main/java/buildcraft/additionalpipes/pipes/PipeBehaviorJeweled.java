@@ -39,7 +39,13 @@ public class PipeBehaviorJeweled extends APPipe implements IDebuggable {
 	{
 		super(pipe, nbt);
 		init();
-		readFromNBT(nbt);
+		
+		NBTTagList filterList = nbt.getTagList("filterList", 10);
+		for(int index = 0; index < filterData.length; ++index)
+		{
+			NBTTagCompound filterTag = filterList.getCompoundTagAt(index);
+			filterData[index].readFromNBT(filterTag);
+		}
 	}
 
 	public PipeBehaviorJeweled(IPipe pipe)
@@ -133,16 +139,6 @@ public class PipeBehaviorJeweled extends APPipe implements IDebuggable {
 		nbt.setTag("filterList", filterList);
 		
 		return nbt;
-	}
-
-	public void readFromNBT(NBTTagCompound nbt) 
-	{
-		NBTTagList filterList = nbt.getTagList("filterList", 10);
-		for(int index = 0; index < filterData.length; ++index)
-		{
-			NBTTagCompound filterTag = filterList.getCompoundTagAt(index);
-			filterData[index].readFromNBT(filterTag);
-		}
 	}
 	
 	@Override

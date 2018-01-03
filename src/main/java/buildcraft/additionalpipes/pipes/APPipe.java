@@ -37,4 +37,13 @@ public abstract class APPipe extends PipeBehaviour
 	{
 		return pipe.getHolder().getPipePos();
 	}
+	
+	/**
+	 * 
+	 * @return The translation key for the localized name of the pipe
+	 */
+	public String getUnlocalizedName()
+	{
+		return "item.pipe.ap." + pipe.getDefinition().identifier.getResourcePath() + ".name";
+	}
 }

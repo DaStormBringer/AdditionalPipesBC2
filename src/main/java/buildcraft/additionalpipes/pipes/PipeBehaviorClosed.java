@@ -38,7 +38,8 @@ public class PipeBehaviorClosed extends APPipe implements ICapabilityProvider {
 	public PipeBehaviorClosed(IPipe pipe, NBTTagCompound nbt)
 	{
 		super(pipe, nbt);
-		readFromNBT(nbt);
+		
+		inventory.deserializeNBT(nbt.getCompoundTag("closedInventory"));
 	}
 
 	@Override
@@ -72,11 +73,6 @@ public class PipeBehaviorClosed extends APPipe implements ICapabilityProvider {
 		nbttagcompound.setTag("closedInventory", inventory.serializeNBT());
 		
 		return nbttagcompound;
-	}
-
-	public void readFromNBT(NBTTagCompound nbttagcompound) 
-	{
-		inventory.deserializeNBT(nbttagcompound.getCompoundTag("closedInventory"));
 	}
 	
 	@PipeEventHandler

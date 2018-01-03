@@ -55,6 +55,8 @@ public class PipeBehaviorTeleportFluids extends PipeBehaviorTeleport
 				totalMBNeeded += pipe.getMaxAcceptableMB(event.fluid.getFluid());
 			}
 			
+			Log.debug("[FluidTeleportPipe] Requested " + totalMBNeeded + " MB of fluid");
+			
 			for(EnumFacing side : EnumFacing.VALUES)
 			{
 				int fluidFromThisSide = Math.min(event.totalOffered[side.ordinal()], totalMBNeeded);
@@ -72,6 +74,8 @@ public class PipeBehaviorTeleportFluids extends PipeBehaviorTeleport
 		if(canSend())
 		{
 			ArrayList<PipeBehaviorTeleportFluids> connectedPipes = (ArrayList)TeleportManager.instance.getConnectedPipes(this, false, true);
+			
+			Log.debug("[FluidTeleportPipe] Got " + event.fluid.amount + " MB of fluid");
 			
 			FluidStack remaining = event.fluid.copy();
 						
@@ -106,7 +110,7 @@ public class PipeBehaviorTeleportFluids extends PipeBehaviorTeleport
 			
 			if(remaining.amount > 0)
 			{
-				Log.unexpected("PipeLiquidsTeleport's PreMoveToCentre event handler requested more fluid than can be handled!");
+				Log.debug("PipeLiquidsTeleport's PreMoveToCentre event handler requested more fluid than can be handled!  " + remaining.amount + " MB is left and will be rejected.");
 			}
 			
 			// update event data

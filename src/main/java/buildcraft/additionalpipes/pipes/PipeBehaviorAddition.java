@@ -47,6 +47,10 @@ public class PipeBehaviorAddition extends APPipe
                     	// cause the pipe to prefer this face above all others
                         ordering.increasePriority(face, 100);
                     }
+                    else
+                    {
+                    	ordering.decreasePriority(face, 100);
+                    }
                     
 
                 }

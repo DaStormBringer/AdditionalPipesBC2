@@ -31,7 +31,8 @@ public class PipeBehaviorTeleportItems extends PipeBehaviorTeleport
 	public PipeBehaviorTeleportItems(IPipe pipe, NBTTagCompound tagCompound)
 	{
 		super(pipe, tagCompound, TeleportPipeType.ITEMS);
-		readFromNBT(tagCompound);
+		
+		teleportSide = EnumFacing.VALUES[tagCompound.getByte("teleportSide")];
 	}
 
 	public PipeBehaviorTeleportItems(IPipe pipe)
@@ -47,11 +48,6 @@ public class PipeBehaviorTeleportItems extends PipeBehaviorTeleport
 		nbt.setByte("teleportSide", (byte) getTeleportSide().ordinal());
 		
 		return nbt;
-	}
-	
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		teleportSide = EnumFacing.VALUES[nbt.getByte("teleportSide")];
 	}
 	
 	/**

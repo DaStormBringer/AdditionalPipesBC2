@@ -41,18 +41,21 @@ public abstract class PipeBehaviorTeleport extends APPipe implements ITeleportPi
 	{
 		super(pipe);
 		this.type = type;
-		// TEMP
-		TeleportManager.instance.add(this, frequency);
 	}
 	
 	public PipeBehaviorTeleport(IPipe pipe, NBTTagCompound tagCompound, TeleportPipeType type)
 	{
-		super(pipe);
+		super(pipe, tagCompound);
 		this.type = type;
-		readFromNBT(tagCompound);
 		
-		// TEMP
-		TeleportManager.instance.add(this, frequency);
+		frequency = tagCompound.getInteger("freq");
+		state = tagCompound.getByte("state");
+		if(tagCompound.hasKey("ownerUUID"))
+		{
+			ownerUUID = UUID.fromString(tagCompound.getString("ownerUUID"));
+			ownerName = tagCompound.getString("ownerName");
+		}
+		isPublic = tagCompound.getBoolean("isPublic");
 	}
 	
 	@Override
@@ -105,6 +108,28 @@ public abstract class PipeBehaviorTeleport extends APPipe implements ITeleportPi
 	public TeleportPipeType getType()
 	{
 		return type;
+	}
+	
+	// temporary, until Buildcraft events needed for state keeping are added
+	boolean isAddedToManager = false;
+	public void onTick()
+	{
+		if(((TilePipeHolder)pipe.getHolder()).isInvalid())
+		{
+			if(isAddedToManager)
+			{
+				TeleportManager.instance.remove(this, frequency);
+				isAddedToManager = false;
+			}
+		}
+		else
+		{
+			if(!isAddedToManager)
+			{
+				TeleportManager.instance.add(this, frequency);
+				isAddedToManager = true;
+			}
+		}
 	}
 
 	/*@Override
@@ -222,18 +247,6 @@ public abstract class PipeBehaviorTeleport extends APPipe implements ITeleportPi
 		nbttagcompound.setBoolean("isPublic", isPublic);
 		
 		return nbttagcompound;
-	}
-
-	public void readFromNBT(NBTTagCompound nbttagcompound) 
-	{
-		frequency = nbttagcompound.getInteger("freq");
-		state = nbttagcompound.getByte("state");
-		if(nbttagcompound.hasKey("ownerUUID"))
-		{
-			ownerUUID = UUID.fromString(nbttagcompound.getString("ownerUUID"));
-			ownerName = nbttagcompound.getString("ownerName");
-		}
-		isPublic = nbttagcompound.getBoolean("isPublic");
 	}
 
 	public static boolean canPlayerModifyPipe(EntityPlayer player, PipeBehaviorTeleport pipe)
