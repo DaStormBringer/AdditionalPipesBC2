@@ -56,7 +56,7 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int p1, int p2) 
 	{
-		if(pipe.exclude) 
+		if(pipe.getExclude()) 
 		{
 			buttons[0].displayString = I18n.format("gui.advwood_pipe.blacklist");
 		}
@@ -72,8 +72,8 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 	protected void actionPerformed(GuiButton guibutton) {
 		if(guibutton.id == 1) 
 		{
-			pipe.exclude = !pipe.exclude;
-			MessageAdvWoodPipe packet = new MessageAdvWoodPipe(pipe.pipe.getHolder().getPipePos(), pipe.exclude);
+			pipe.setExclude(!pipe.getExclude());
+			MessageAdvWoodPipe packet = new MessageAdvWoodPipe(pipe.pipe.getHolder().getPipePos(), pipe.getExclude());
 			PacketHandler.INSTANCE.sendToServer(packet);
 		}
 	}

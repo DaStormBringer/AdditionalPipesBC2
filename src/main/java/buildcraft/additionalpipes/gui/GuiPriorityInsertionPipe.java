@@ -9,6 +9,7 @@ import buildcraft.additionalpipes.textures.Textures;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -66,12 +67,14 @@ public class GuiPriorityInsertionPipe extends GuiContainer {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int p1, int p2) 
 	{
-		buttons[1].displayString = "" + pipe.sidePriorities[0];
-		buttons[4].displayString = "" + pipe.sidePriorities[1];
-		buttons[7].displayString = "" + pipe.sidePriorities[2];
-		buttons[10].displayString = "" + pipe.sidePriorities[3];
-		buttons[13].displayString = "" + pipe.sidePriorities[4];
-		buttons[16].displayString = "" + pipe.sidePriorities[5];
+		for(int side = 0; side < EnumFacing.VALUES.length; ++side)
+		{
+			int buttonIndex = 3 * side + 1;
+			buttons[buttonIndex].displayString = "" + pipe.sidePriorities[side];
+			
+			// display the button text in red if it is zero, indicating that the side is completely disabled
+			buttons[buttonIndex].packedFGColour = pipe.sidePriorities[side] == 0 ? 0xa04e4e : 0xe0e0e0;
+		}
 		
 		fontRenderer.drawString(I18n.format("gui.priority_insertion.title"), guiX + 33, guiY + 22, 4210752);
 	}

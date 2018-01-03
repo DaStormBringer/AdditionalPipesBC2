@@ -51,7 +51,8 @@ public class MessageAdvWoodPipe implements IMessage, IMessageHandler<MessageAdvW
     	
     	if(te instanceof TilePipeHolder) {
 			PipeBehaviorAdvWood pipe = (PipeBehaviorAdvWood) ((TilePipeHolder) te).getPipe().getBehaviour();
-			pipe.exclude = exclude;
+			
+			pipe.setExclude(message.exclude);
 		}
     	
     	return null;

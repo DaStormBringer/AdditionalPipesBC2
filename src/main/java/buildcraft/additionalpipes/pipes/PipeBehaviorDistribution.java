@@ -13,6 +13,7 @@ import java.util.Arrays;
 
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
+import buildcraft.additionalpipes.utils.Log;
 import buildcraft.api.core.EnumPipePart;
 import buildcraft.api.transport.pipe.IPipe;
 import buildcraft.api.transport.pipe.IPipeHolder.PipeMessageReceiver;
@@ -71,6 +72,8 @@ public class PipeBehaviorDistribution extends APPipe {
 		
 		for(ItemEntry entry : splitEvent.items)
 		{
+			Log.debug("[PipeDistribution] current side: " + distSide.getName() + " items left this side: " + getItemsLeftThisSide());
+			
 			if(entry.to == null)
 			{
 				entry.to = new ArrayList<EnumFacing>();
@@ -96,11 +99,14 @@ public class PipeBehaviorDistribution extends APPipe {
 					}
 					
 					ItemEntry stackPartThisSide = new ItemEntry(null, entry.stack.copy(), entry.from);
+					stackPartThisSide.to = new ArrayList<>();
 					
 					stackPartThisSide.stack.setCount(Math.min(getItemsLeftThisSide(), entry.stack.getCount())); // take as many items as the distribution will allow
 					entry.stack.setCount(entry.stack.getCount() - stackPartThisSide.stack.getCount()); // and leave event.stack with the remainder
 					
 					newDistribution.add(stackPartThisSide);
+					itemsThisSide += stackPartThisSide.stack.getCount();
+					stackPartThisSide.to.add(distSide);
 				}
 			}
 			
@@ -117,12 +123,15 @@ public class PipeBehaviorDistribution extends APPipe {
 	 */
 	private void toNextOpenSide() 
 	{
+		EnumFacing lastDistSide = distSide;
+		
 		itemsThisSide = 0;
 		for(int o = 0; o < distData.length; ++o) 
 		{
 			distSide = EnumFacing.VALUES[(distSide.ordinal() + 1) % distData.length];
 			if(distData[distSide.ordinal()] > 0 && pipe.isConnected(distSide))
 			{
+				Log.debug("toNextOpenSide(): distSide changed: " + lastDistSide + "-> " + distSide);
 				return;
 			}
 		}
@@ -134,6 +143,11 @@ public class PipeBehaviorDistribution extends APPipe {
 	 */
 	private int getItemsLeftThisSide()
 	{
+		if(!pipe.isConnected(distSide))
+		{
+			return 0;
+		}
+		
 		return distData[distSide.ordinal()] - itemsThisSide;
 	}
 

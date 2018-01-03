@@ -23,12 +23,12 @@ public class BlockTeleportTether extends BlockContainer {
 	
 	public boolean isFullCube()
     {
-        return false;
+        return true;
     }
 
     public boolean isOpaqueCube()
     {
-        return false;
+        return true;
     }
     
     /**

@@ -30,6 +30,7 @@ public class ItemDogDeaggravator extends Item
 	public ItemDogDeaggravator()
 	{
 		setRegistryName(NAME);
+		setUnlocalizedName(NAME);
 		setCreativeTab(AdditionalPipes.instance.creativeTab);
 		setMaxStackSize(1);
 	}
@@ -40,7 +41,7 @@ public class ItemDogDeaggravator extends Item
 		//this code adapted from EntityAIHurtByTarget.startExecuting()
 		double horizontalRange = 16;
         List<EntityWolf> list = world.getEntitiesWithinAABB(EntityWolf.class, new AxisAlignedBB(player.posX, player.posY, player.posZ,
-        		player.posX + 1.0D, player.posY + 1.0D, player.posZ + 1.0D).expand(horizontalRange, 10.0D, horizontalRange));
+        		player.posX + 1.0D, player.posY + 1.0D, player.posZ + 1.0D).grow(horizontalRange, 10.0D, horizontalRange));
         Iterator<EntityWolf> iterator = list.iterator();
         int wolfCounter = 0;
 

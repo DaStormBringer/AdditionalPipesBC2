@@ -26,7 +26,7 @@ public class ContainerAdvancedWoodPipe extends ContainerBC_Neptune {
 	public ContainerAdvancedWoodPipe(EntityPlayer player, IInventory playerInventory, PipeBehaviorAdvWood pipe) {
 		super(player);
 		this.pipe = pipe;
-		exclude = !pipe.exclude; // force a network update
+		exclude = !pipe.getExclude(); // force a network update
 		int k = 0;
 
 		for(int j1 = 0; j1 < 9; j1++) {
@@ -61,11 +61,11 @@ public class ContainerAdvancedWoodPipe extends ContainerBC_Neptune {
 	{
 		super.detectAndSendChanges();
 		for(IContainerListener crafter : listeners) {
-			if(exclude != pipe.exclude) {
-				crafter.sendWindowProperty(this, 0, pipe.exclude ? 1 : 0);
+			if(exclude != pipe.getExclude()) {
+				crafter.sendWindowProperty(this, 0, pipe.getExclude() ? 1 : 0);
 			}
 		}
-		exclude = pipe.exclude;
+		exclude = pipe.getExclude();
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class ContainerAdvancedWoodPipe extends ContainerBC_Neptune {
 	{
 		switch(i) {
 		case 0:
-			pipe.exclude = (j == 1);
+			pipe.setExclude(j == 1);
 			break;
 		}
 	}

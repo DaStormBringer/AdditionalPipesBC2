@@ -11,14 +11,13 @@ package buildcraft.additionalpipes.pipes;
 import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.gui.GuiHandler;
 import buildcraft.additionalpipes.utils.InventoryUtils;
+import buildcraft.additionalpipes.utils.ItemHandlerPresenceFilter;
 import buildcraft.api.core.EnumPipePart;
 import buildcraft.api.core.IStackFilter;
 import buildcraft.api.transport.pipe.IFlowItems;
 import buildcraft.api.transport.pipe.IPipe;
 import buildcraft.api.transport.pipe.IPipeHolder.PipeMessageReceiver;
-import buildcraft.lib.inventory.filter.DelegatingItemHandlerFilter;
 import buildcraft.lib.misc.EntityUtil;
-import buildcraft.lib.misc.StackUtil;
 import buildcraft.transport.pipe.behaviour.PipeBehaviourWood;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -36,33 +35,45 @@ public class PipeBehaviorAdvWood extends PipeBehaviourWood implements ICapabilit
 {	
     public PipeBehaviorAdvWood(IPipe pipe) {
         super(pipe);
+        initFilter();
     }
 
     public PipeBehaviorAdvWood(IPipe pipe, NBTTagCompound nbt) {
         super(pipe, nbt);
-        readFromNBT(nbt);
+        
+		setExclude(nbt.getBoolean("exclude"));
+		items.deserializeNBT(nbt.getCompoundTag("filterItems"));
     }	
     
     public static final int INVENTORY_SIZE = 9;
 	public ItemStackHandler items = new ItemStackHandler(INVENTORY_SIZE);
 	private IStackFilter filter;
 	
-	public boolean exclude = false;
+	private boolean exclude = false;
 	
-	void init()
+	/**
+	 * Creates the filter using the current value of exclude
+	 */
+	private void initFilter()
 	{
-	   if(exclude)
-	   {
-		   // lambda capture?  We iz fancy, yes!
-		   filter = new DelegatingItemHandlerFilter((ItemStack target, ItemStack toTest) -> exclude ? !StackUtil.isMatchingItem(target, toTest) : StackUtil.isMatchingItem(target, toTest), items);
-	   }
+	   filter = new ItemHandlerPresenceFilter(items, exclude);
+	}
+	
+	/**
+	 * Sets whether the pipe should be in exclude/blacklist mode, or include/whitelist mode
+	 * @param exclude
+	 */
+	public void setExclude(boolean exclude)
+	{
+		this.exclude = exclude;
+		initFilter();
+	}
+	
+	public boolean getExclude()
+	{
+		return exclude;
 	}
 
-	public void readFromNBT(NBTTagCompound nbttagcompound) 
-	{
-		exclude = nbttagcompound.getBoolean("exclude");
-		items.deserializeNBT(nbttagcompound.getCompoundTag("filterItems"));
-	}
 
 	@Override
 	public NBTTagCompound writeToNbt() 

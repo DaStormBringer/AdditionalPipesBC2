@@ -1,5 +1,6 @@
 package buildcraft.additionalpipes.pipes;
 
+import buildcraft.additionalpipes.utils.Log;
 import buildcraft.api.transport.pipe.IPipe;
 import buildcraft.api.transport.pipe.PipeBehaviour;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,6 +32,8 @@ public class PipeBehaviorSwitch extends APPipe
 		{
 			return 0;
 		}
+		
+		Log.debug("[PipeBehaviorSwitch] Returning Texture Index " + (canConnect() ? 0 : 1));
 		
 		return (canConnect() ? 0 : 1);
 	}

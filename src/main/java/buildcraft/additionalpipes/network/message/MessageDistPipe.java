@@ -59,6 +59,7 @@ public class MessageDistPipe implements IMessage, IMessageHandler<MessageDistPip
 
 			if(message._newData >= 0 && message._index >= 0 && message._index < pipe.distData.length) 
 			{
+				// make sure that there would still be a 1 in at least one distData element
 				pipe.distData[message._index] = message._newData;
 				boolean found = message._newData > 0;
 				if(!found) {

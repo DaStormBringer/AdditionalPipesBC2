@@ -104,6 +104,8 @@ public class AdditionalPipes {
 			blockTeleportTether = new BlockTeleportTether();
 			blockTeleportTether.setRegistryName("teleport_tether");
 			event.getRegistry().register(blockTeleportTether);
+			
+			Log.debug("Chunkloader enabled!");
 		}
 	    
 	}
