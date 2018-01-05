@@ -1,12 +1,16 @@
 package buildcraft.additionalpipes.gates;
 
 import buildcraft.additionalpipes.pipes.PipeBehaviorClosed;
+import buildcraft.additionalpipes.textures.Textures;
 import buildcraft.additionalpipes.utils.Log;
+import buildcraft.api.core.render.ISprite;
 import buildcraft.api.statements.IStatement;
 import buildcraft.api.statements.IStatementContainer;
 import buildcraft.api.statements.IStatementParameter;
 import buildcraft.api.statements.ITriggerInternal;
 import buildcraft.transport.tile.TilePipeHolder;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TriggerPipeClosed extends APTrigger implements ITriggerInternal {
 
@@ -59,7 +63,12 @@ public class TriggerPipeClosed extends APTrigger implements ITriggerInternal {
 		return this;
 	}
 
-
+	@Override
+	@SideOnly(Side.CLIENT)
+	public ISprite getSprite()
+	{
+	    return Textures.TRIGGER_PIPE_CLOSED;
+	}
 
 	@Override
 	public IStatement[] getPossible()

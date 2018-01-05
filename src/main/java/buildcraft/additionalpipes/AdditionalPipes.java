@@ -15,7 +15,6 @@ import buildcraft.additionalpipes.pipes.TeleportManager;
 import buildcraft.additionalpipes.sound.APSounds;
 import buildcraft.additionalpipes.test.TeleportManagerTest;
 import buildcraft.additionalpipes.utils.Log;
-import buildcraft.api.BCModules;
 import buildcraft.api.statements.ITriggerInternal;
 import buildcraft.api.statements.StatementManager;
 import buildcraft.lib.registry.CreativeTabManager;
@@ -80,10 +79,7 @@ public class AdditionalPipes {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) 
-	{
-		
-		System.err.println("buildcraft transport is loaded: " + BCModules.TRANSPORT.isLoaded());
-		
+	{		
 		PacketHandler.init();
 
 		configFile = event.getSuggestedConfigurationFile();
@@ -98,6 +94,7 @@ public class AdditionalPipes {
 		APPipeDefintions.setFluidCapacities();
 		
 		Log.info("Registering gates");
+		proxy.registerSprites();
 		triggerPipeClosed = new TriggerPipeClosed();
 		StatementManager.registerTriggerProvider(new GateProvider());
 		

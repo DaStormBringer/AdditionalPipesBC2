@@ -1,6 +1,8 @@
 package buildcraft.additionalpipes.textures;
 
 import buildcraft.additionalpipes.gui.GuiJeweledPipe;
+import buildcraft.api.core.render.ISprite;
+import buildcraft.lib.client.sprite.SpriteHolderRegistry;
 import net.minecraft.util.ResourceLocation;
 
 public class Textures {
@@ -26,7 +28,8 @@ public class Textures {
 			 GUI_OUTLINE_JEWELED[tabNumber - 1] = new ResourceLocation("additionalpipes", TEXTURE_PATH + "/gui/jeweled_gui_outline_" + tabNumber + ".png");
 		}
 	}
-
-
+	
+    // gets set by MultiPlayerProxyClient.registerSprites()
+    public static ISprite TRIGGER_PIPE_CLOSED = SpriteHolderRegistry.getHolder("additionalpipes:items/triggers/pipe_closed");
 
 }

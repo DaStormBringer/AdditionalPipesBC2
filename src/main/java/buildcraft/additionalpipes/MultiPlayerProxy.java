@@ -12,5 +12,10 @@ public class MultiPlayerProxy {
 		// do nothing
 	}
 
+	public void registerSprites()
+	{
+		// do nothing
+	}
+
 
 }

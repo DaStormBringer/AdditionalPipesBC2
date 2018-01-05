@@ -1,6 +1,8 @@
 package buildcraft.additionalpipes;
 
 import buildcraft.additionalpipes.item.ItemDogDeaggravator;
+import buildcraft.additionalpipes.textures.Textures;
+import buildcraft.lib.client.sprite.SpriteHolderRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -39,5 +41,11 @@ public class MultiPlayerProxyClient extends MultiPlayerProxy
 	    		 new ModelResourceLocation(AdditionalPipes.MODID + ":" + ItemDogDeaggravator.NAME, "inventory"));
 
 	     
+	}
+	
+	@Override
+	public void registerSprites()
+	{
+		Textures.TRIGGER_PIPE_CLOSED = SpriteHolderRegistry.getHolder("additionalpipes:items/triggers/pipe_closed");
 	}
 }
