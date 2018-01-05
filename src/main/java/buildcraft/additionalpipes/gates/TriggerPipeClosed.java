@@ -1,30 +1,28 @@
 package buildcraft.additionalpipes.gates;
 
-import buildcraft.additionalpipes.pipes.PipeItemsClosed;
+import buildcraft.additionalpipes.pipes.PipeBehaviorClosed;
 import buildcraft.additionalpipes.utils.Log;
 import buildcraft.api.statements.IStatement;
 import buildcraft.api.statements.IStatementContainer;
 import buildcraft.api.statements.IStatementParameter;
 import buildcraft.api.statements.ITriggerInternal;
-import buildcraft.transport.TileGenericPipe;
+import buildcraft.transport.tile.TilePipeHolder;
 
 public class TriggerPipeClosed extends APTrigger implements ITriggerInternal {
 
 	public TriggerPipeClosed()
 	{
-		super("pipeClosed");
+		super("pipe_closed");
 	}
-
-
 
 	@Override
 	public boolean isTriggerActive(IStatementContainer statement, IStatementParameter[] parameters)
 	{
-		PipeItemsClosed closedPipe = null;
+		PipeBehaviorClosed closedPipe = null;
 		//this much casting feels unsafe
 		try
 		{
-			closedPipe = (PipeItemsClosed) ((TileGenericPipe)statement.getTile()).pipe;
+			closedPipe = (PipeBehaviorClosed) ((TilePipeHolder)statement.getTile()).getPipe().getBehaviour();
 		}
 		catch(RuntimeException ex)
 		{
@@ -33,14 +31,8 @@ public class TriggerPipeClosed extends APTrigger implements ITriggerInternal {
 			return false;
 		}
 		
-		for(int i = 0; i < closedPipe.getSizeInventory(); i++) 
-		{
-			if(closedPipe.getStackInSlot(i) != null)
-			{
-				return true;
-			}
-		}
-		return false;
+		// if the first ItemStack is null, then there are no items in the pipe and the trigger should be inactive
+		return closedPipe.isClosed();
 	}
 
 	@Override
@@ -66,6 +58,14 @@ public class TriggerPipeClosed extends APTrigger implements ITriggerInternal {
 	{
 		return this;
 	}
-	
+
+
+
+	@Override
+	public IStatement[] getPossible()
+	{
+		return new IStatement[0];
+	}
+
 
 }

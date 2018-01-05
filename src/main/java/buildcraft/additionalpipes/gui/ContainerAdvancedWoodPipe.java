@@ -8,27 +8,29 @@
 
 package buildcraft.additionalpipes.gui;
 
+import buildcraft.additionalpipes.pipes.PipeBehaviorAdvWood;
+import buildcraft.lib.gui.ContainerBC_Neptune;
+import buildcraft.transport.tile.TilePipeHolder;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
-import buildcraft.additionalpipes.pipes.PipeTransportAdvancedWood;
-import buildcraft.core.lib.gui.BuildCraftContainer;
-import buildcraft.transport.TileGenericPipe;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerAdvancedWoodPipe extends BuildCraftContainer {
+public class ContainerAdvancedWoodPipe extends ContainerBC_Neptune {
 
-	private PipeTransportAdvancedWood logic;
 	private boolean exclude;
+	private PipeBehaviorAdvWood pipe;
 
-	public ContainerAdvancedWoodPipe(EntityPlayer player, IInventory playerInventory, PipeTransportAdvancedWood filterInventory) {
-		super(player, filterInventory.getSizeInventory());
-		logic = filterInventory;
-		exclude = !logic.exclude;
+	public ContainerAdvancedWoodPipe(EntityPlayer player, IInventory playerInventory, PipeBehaviorAdvWood pipe) {
+		super(player);
+		this.pipe = pipe;
+		exclude = !pipe.getExclude(); // force a network update
 		int k = 0;
 
 		for(int j1 = 0; j1 < 9; j1++) {
-			addSlotToContainer(new Slot(filterInventory, j1 + k * 9, 8 + j1 * 18, 18 + k * 18));
+			addSlotToContainer(new SlotItemHandler(pipe.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null), j1 + k * 9, 8 + j1 * 18, 18 + k * 18));
 		}
 
 		for(int l = 0; l < 3; l++) {
@@ -45,28 +47,36 @@ public class ContainerAdvancedWoodPipe extends BuildCraftContainer {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer) {
-		TileGenericPipe tile = logic.container;
+		TilePipeHolder tile = (TilePipeHolder) pipe.pipe.getHolder();
 		if(tile.getWorld().getTileEntity(tile.getPos()) != tile) return false;
 		if(entityplayer.getDistanceSq(tile.getPos().getX() + 0.5D, tile.getPos().getY() + 0.5D, tile.getPos().getZ() + 0.5D) > 64) return false;
 		return true;
 	}
 
 	@Override
-	public void detectAndSendChanges() {
+	/**
+	 * Called on the server, checks if the exclusion state has changed vs our cache
+	 */
+	public void detectAndSendChanges() 
+	{
 		super.detectAndSendChanges();
-		for(Object crafter : crafters) {
-			if(exclude != logic.exclude) {
-				((ICrafting) crafter).sendProgressBarUpdate(this, 0, logic.exclude ? 1 : 0);
+		for(IContainerListener crafter : listeners) {
+			if(exclude != pipe.getExclude()) {
+				crafter.sendWindowProperty(this, 0, pipe.getExclude() ? 1 : 0);
 			}
 		}
-		exclude = logic.exclude;
+		exclude = pipe.getExclude();
 	}
 
+	/**
+	 * Called on the client to update the exclusion state.  Information is transmitted in the other direction via MessageAdvWoodenPipe
+	 */
 	@Override
-	public void updateProgressBar(int i, int j) {
+	public void updateProgressBar(int i, int j) 
+	{
 		switch(i) {
 		case 0:
-			logic.exclude = (j == 1);
+			pipe.setExclude(j == 1);
 			break;
 		}
 	}

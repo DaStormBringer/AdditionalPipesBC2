@@ -1,15 +1,15 @@
 package buildcraft.additionalpipes.network.message;
 
+import buildcraft.additionalpipes.pipes.PipeBehaviorJeweled;
+import buildcraft.additionalpipes.pipes.SideFilterData;
+import buildcraft.transport.tile.TilePipeHolder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
-import buildcraft.additionalpipes.pipes.SideFilterData;
-import buildcraft.transport.TileGenericPipe;
 
 /**
  * Message that sets the three option booleans of a Jeweled Pipe on the client for a single side
@@ -61,11 +61,11 @@ public class MessageJeweledPipeOptionsServer implements IMessage, IMessageHandle
     public IMessage onMessage(MessageJeweledPipeOptionsServer message, MessageContext ctx)
     {
     	
-    	World world = ctx.getServerHandler().playerEntity.worldObj;
+    	World world = ctx.getServerHandler().player.getEntityWorld();
     	TileEntity te = world.getTileEntity(message.position);
-		if(te instanceof TileGenericPipe)
+		if(te instanceof TilePipeHolder)
 		{
-			PipeItemsJeweled pipe = (PipeItemsJeweled) ((TileGenericPipe) te).pipe;
+			PipeBehaviorJeweled pipe = (PipeBehaviorJeweled) ((TilePipeHolder) te).getPipe().getBehaviour();
 
 			SideFilterData dataToUpdate = pipe.filterData[message.index - 1];
 			dataToUpdate.setAcceptUnsortedItems(message.acceptUnsorted);

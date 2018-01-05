@@ -1,16 +1,10 @@
 package buildcraft.additionalpipes;
 
 import buildcraft.additionalpipes.item.ItemDogDeaggravator;
-import buildcraft.additionalpipes.textures.Textures;
-import buildcraft.additionalpipes.utils.Log;
-import buildcraft.core.proxy.CoreProxy;
-import buildcraft.transport.ItemPipe;
-import buildcraft.transport.Pipe;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -30,35 +24,6 @@ public class MultiPlayerProxyClient extends MultiPlayerProxy
 		//MinecraftForge.EVENT_BUS.register(new KeyInputEventHandler());
 	}
 
-	@Override
-	public void createPipeSpecial(ItemPipe item, Class<? extends Pipe<?>> clas)
-	{
-		try
-		{
-			Pipe<?> dummyPipe = clas.getConstructor(Item.class).newInstance(item);
-			if(dummyPipe != null)
-			{
-				item.setPipesIcons(dummyPipe.getIconProvider());
-				// TODO look around
-				item.setPipeIconIndex(dummyPipe.getIconIndex(EnumFacing.DOWN));
-			}
-			
-			CoreProxy.proxy.postRegisterItem(item);
-		} 
-		catch(Exception e)
-		{
-			Log.error("MultiPlayerProxyClient.createPipeSpecial() failed with exception!");
-			
-			e.printStackTrace();
-		}
-	}
-	
-	@Override
-	public void setPipeTextureProvider(ItemPipe pipeItem)
-	{
-		pipeItem.setPipesIcons(Textures.pipeIconProvider);
-	}
-	
 	@Override
 	public void registerRendering()
 	{

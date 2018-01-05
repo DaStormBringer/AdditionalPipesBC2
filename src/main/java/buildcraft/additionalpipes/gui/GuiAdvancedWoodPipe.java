@@ -8,35 +8,35 @@
 
 package buildcraft.additionalpipes.gui;
 
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.opengl.GL11;
 
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessageAdvWoodPipe;
-import buildcraft.additionalpipes.pipes.PipeTransportAdvancedWood;
+import buildcraft.additionalpipes.pipes.PipeBehaviorAdvWood;
 import buildcraft.additionalpipes.textures.Textures;
-import buildcraft.transport.TileGenericPipe;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiAdvancedWoodPipe extends GuiContainer {
 
 	int inventoryRows = 1;
 	IInventory playerInventory;
-	IInventory filterInventory;
-	TileGenericPipe container;
+	PipeBehaviorAdvWood pipe;
 	private GuiButton[] buttons = new GuiButton[1];
 
-	public GuiAdvancedWoodPipe(EntityPlayer player, IInventory playerInventory, TileGenericPipe container) {
-		super(new ContainerAdvancedWoodPipe(player, playerInventory, (PipeTransportAdvancedWood) container.pipe.transport));
+	int guiX, guiY; 
+	
+	public GuiAdvancedWoodPipe(EntityPlayer player, IInventory playerInventory, PipeBehaviorAdvWood pipe)
+	{
+		super(new ContainerAdvancedWoodPipe(player, playerInventory, pipe));
 		this.playerInventory = playerInventory;
-		filterInventory = (PipeTransportAdvancedWood) container.pipe.transport;
-		this.container = container;
+		this.pipe = pipe;
 		// container = theContainer;
 		xSize = 175;
 		ySize = 156;
@@ -44,30 +44,36 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 	}
 
 	@Override
-	public void initGui() {
+	public void initGui() 
+	{
 		super.initGui();
-		int guiX = (width - xSize) / 2;
-		int guiY = (height - ySize) / 2;
-		buttons[0] = new GuiButton(1, guiX + 8, guiY + 40, 140, 20, "These items are required");
+		guiX = (width - xSize) / 2;
+		guiY = (height - ySize) / 2;
+		buttons[0] = new GuiButton(1, guiX + 8, guiY + 40, 140, 20, "");
 		buttonList.add(buttons[0]);
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int p1, int p2) {
-		if(((PipeTransportAdvancedWood) container.pipe.transport).exclude) {
-			buttons[0].displayString = "These items are excluded";
-		} else {
-			buttons[0].displayString = "These items are required";
+	protected void drawGuiContainerForegroundLayer(int p1, int p2) 
+	{
+		if(pipe.getExclude()) 
+		{
+			buttons[0].displayString = I18n.format("gui.advwood_pipe.blacklist");
 		}
-
-		//fontRendererObj.drawString(StatCollector.translateToLocal(filterInventory.getInventoryName()), 8, 6, 0x404040);
-		//fontRendererObj.drawString(StatCollector.translateToLocal(playerInventory.getInventoryName()), 8, 66, 0x404040);
+		else
+		{
+			buttons[0].displayString = I18n.format("gui.advwood_pipe.whitelist");
+		}
+		
+		fontRenderer.drawString(I18n.format("gui.advwood_pipe.title"), guiX + 42, guiY + 22, 4210752);
 	}
 
 	@Override
 	protected void actionPerformed(GuiButton guibutton) {
-		if(guibutton.id == 1) {
-			MessageAdvWoodPipe packet = new MessageAdvWoodPipe(container.getPos());
+		if(guibutton.id == 1) 
+		{
+			pipe.setExclude(!pipe.getExclude());
+			MessageAdvWoodPipe packet = new MessageAdvWoodPipe(pipe.pipe.getHolder().getPipePos(), pipe.getExclude());
 			PacketHandler.INSTANCE.sendToServer(packet);
 		}
 	}

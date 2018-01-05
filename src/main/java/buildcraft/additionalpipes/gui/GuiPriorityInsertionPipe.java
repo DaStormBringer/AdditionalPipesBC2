@@ -1,18 +1,17 @@
 package buildcraft.additionalpipes.gui;
 
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.util.StatCollector;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.opengl.GL11;
 
 import buildcraft.additionalpipes.network.PacketHandler;
 import buildcraft.additionalpipes.network.message.MessagePriorityPipe;
-import buildcraft.additionalpipes.pipes.PipeItemsPriorityInsertion;
+import buildcraft.additionalpipes.pipes.PipeBehaviorPriorityInsertion;
 import buildcraft.additionalpipes.textures.Textures;
-import buildcraft.transport.TileGenericPipe;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 
 @SideOnly(Side.CLIENT)
@@ -23,11 +22,11 @@ public class GuiPriorityInsertionPipe extends GuiContainer {
 	private GuiButton[] buttons = new GuiButton[18];
 	public int guiX = 0;
 	public int guiY = 0;
-	private final PipeItemsPriorityInsertion pipe;
+	private final PipeBehaviorPriorityInsertion pipe;
 
-	public GuiPriorityInsertionPipe(TileGenericPipe container) {
-		super(new ContainerPriorityInsertionPipe(container));
-		pipe = (PipeItemsPriorityInsertion) container.pipe;
+	public GuiPriorityInsertionPipe(PipeBehaviorPriorityInsertion pipe) {
+		super(new ContainerPriorityInsertionPipe(pipe));
+		this.pipe = pipe;
 		xSize = 132;
 		ySize = 130;
 	}
@@ -66,21 +65,24 @@ public class GuiPriorityInsertionPipe extends GuiContainer {
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int p1, int p2) {
-		buttons[1].displayString = "" + pipe.sidePriorities[0];
-		buttons[4].displayString = "" + pipe.sidePriorities[1];
-		buttons[7].displayString = "" + pipe.sidePriorities[2];
-		buttons[10].displayString = "" + pipe.sidePriorities[3];
-		buttons[13].displayString = "" + pipe.sidePriorities[4];
-		buttons[16].displayString = "" + pipe.sidePriorities[5];
+	protected void drawGuiContainerForegroundLayer(int p1, int p2) 
+	{
+		for(int side = 0; side < EnumFacing.VALUES.length; ++side)
+		{
+			int buttonIndex = 3 * side + 1;
+			buttons[buttonIndex].displayString = "" + pipe.sidePriorities[side];
+			
+			// display the button text in red if it is zero, indicating that the side is completely disabled
+			buttons[buttonIndex].packedFGColour = pipe.sidePriorities[side] == 0 ? 0xa04e4e : 0xe0e0e0;
+		}
 		
-		fontRendererObj.drawString(StatCollector.translateToLocal("gui.pipeItemsPriorityInsertion"), guiX + 33, guiY + 22, 4210752);
+		fontRenderer.drawString(I18n.format("gui.priority_insertion.title"), guiX + 33, guiY + 22, 4210752);
 	}
 
 	@Override
 	protected void actionPerformed(GuiButton guibutton) {
 		int index = (guibutton.id - 1) / 3;
-		int newData = pipe.sidePriorities[index];
+		byte newData = pipe.sidePriorities[index];
 		if((guibutton.id - 1) % 3 == 0) {
 			newData--;
 		} else {
@@ -90,7 +92,7 @@ public class GuiPriorityInsertionPipe extends GuiContainer {
 		if(newData < 0 || newData > 6)
 			return;
 
-		MessagePriorityPipe message = new MessagePriorityPipe(pipe.container.getPos(), (byte) index, newData);
+		MessagePriorityPipe message = new MessagePriorityPipe(pipe.getPos(), (byte) index, newData);
 		PacketHandler.INSTANCE.sendToServer(message);	
 	}
 

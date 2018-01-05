@@ -1,0 +1,18 @@
+tile.teleport_tether.name=Teletransporte Tether
+item.PipeLiquidsRedstone.name=Tube de Redstone Fluida
+item.PipeItemsRedstone.name=Tubo de Transporte de Redstone
+item.PipeItemsAdvancedInsertion.name=Tubo de Inserção de Transporte
+item.pipe.ap.pipe_items_adv_wood.name=Tubo de Transporte Avançado de Madeira
+item.pipe.ap.pipe_items_distribution.name=Tubo de Distribuição de Transporte
+item.pipe.ap.pipe_items_closed.name=Tubo de Transporte Fechado [WIP]
+item.pipe.ap.pipe_items_teleport.name=Tubo de Transporte em Fase
+item.pipe.ap.pipe_fluids_teleport.name=Tubo de Fluido em Fase
+item.pipe.ap.pipe_power_teleport.name=Tubo Kinético em Fase
+item.pipe.ap.pipe_power_switch.name=Tube de Troca Kinético 
+item.pipe.ap.pipe_fluids_switch.name=Tube de Troca de Fluido
+item.pipe.ap.pipe_items_switch.name=Tubo de Troca de Transporte
+item.pipe.ap.pipe_fluids_water_pump.name=Tubo da Bomba d'água
+
+key.lasers=Alterna a exibição dos 'chunks' carregados
+
+tip.teleportPipe=Transporta seu material sem a necessidade para uma longa tubulação

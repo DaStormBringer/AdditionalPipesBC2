@@ -1,0 +1,84 @@
+item.pipe.ap.pipe_items_priority.name=Tuyau de Insertion Priotaire
+item.pipe.ap.pipe_items_adv_wood.name=Tuyau de Transport en Bois Avancée
+item.pipe.ap.pipe_items_gravity_feed.name=Tuyau de Transport par Gravité
+item.pipe.ap.pipe_items_distribution.name=Tuyau de Transport Distributeur
+item.pipe.ap.pipe_items_closed.name=Tuyau de Transport Ferme
+item.pipe.ap.pipe_items_teleport.name=Tuyau de Téléportation d'Items
+item.pipe.ap.pipe_fluids_teleport.name=Tuyau de Téléportation de Fluide
+item.pipe.ap.pipe_power_teleport.name=Tuyau the Teleport d'Énergie [Travail en Progrès]
+item.pipe.ap.pipe_power_switch.name=Tuyau de Changement Cinétique
+item.pipe.ap.pipe_fluids_switch.name=Tuyau de Changement Fluide
+item.pipe.ap.pipe_items_switch.name=Tuyau Changement Transport
+item.pipe.ap.pipe_fluids_water_pump.name=Tuyau de Pompe d'Eau
+item.pipe.ap.pipe_items_addition.name=Tuyau d'Addition Transport
+item.PipeLiquidsObsidian.name=Tuyau Obsidienne de Fluide
+item.pipe.ap.pipe_items_jeweled.name=Tuyau de Transport Orné de Joyau
+
+#regular items & blocks
+item.dog_deaggravator.name=Anti-Aggravateur pour Chien
+tile.teleport_tether.name=Attache de Téléport
+
+# Priority Insertion Pipe
+gui.priority_insertion.title=Tuyau d'Insertion Prioritaire
+
+#Distribution Pipe
+gui.distribution_pipe.title=Tuyau de Distribution
+
+# Jeweled Pipe GUI
+gui.jeweled_pipe.title=Tuyau de Transport Orné de Joyau
+#tab names
+gui.jeweled_pipe.tab.up=En Haut
+gui.jeweled_pipe.tab.down=En Bas
+gui.jeweled_pipe.tab.north=Nord
+gui.jeweled_pipe.tab.south=Sud
+gui.jeweled_pipe.tab.east=Est
+gui.jeweled_pipe.tab.west=Ouest
+#buttons
+gui.jeweled_pipe.match=Égaler:
+gui.jeweled_pipe.NBT=NBT
+gui.jeweled_pipe.metadata=Meta
+gui.jeweled_pipe.acceptUnsorted=Acceptez Non Trié
+
+# Closed Pipe GUI
+gui.closed_pipe.title=Tuyau Ferme
+
+# Adv. Wood Pipe GUI
+gui.advwood_pipe.title=Advanced Wooden Pipe
+gui.advwood_pipe.blacklist=Ces Items Sont Exclu
+gui.advwood_pipe.whitelist=Ces Items Sont Exclu
+
+# Teleport Pipe GUI
+# NOTE: "ledger" refers to the menu that expands on the side of the Teleport Pipe GUI when you click the icon
+gui.teleport.ledger.title=Tuyau de Téléport
+gui.teleport.ledger.owner=Propriétaire:
+gui.teleport.ledger.outputs=Sorties:
+gui.teleport.ledger.inputs=Apport:
+gui.teleport.frequency=Fréquence: %d
+gui.teleport.send_only=Envoy Uniquement
+gui.teleport.send_and_receive=Envoy & Recoit
+gui.teleport.receive_only=Recoit Uniquement
+gui.teleport.disabled=Désactivée
+gui.teleport.public=Publique
+gui.teleport.private=Privé
+
+# name of "closed pipe is closed" trigger
+trigger.pipe_closed=Tuyau Ferme (Ranger Items) 
+
+key.lasers=Révéler limite de tronçon chargement
+
+#tooltips for teleport pipes
+tip.teleportPipe=Pas plus de pipeline longues!
+
+tooltip.dog_deaggravator=Pacifier vos Chiens
+
+itemGroup.apcreativetab=Tuyau Additionel
+
+# chat stuff
+command.ap.usage=/tuyauadditonel teleport <items|fluides|énergie>
+command.ap.pipelist_header=Tuyau Téléport: 
+message.ap.accessdenied=Accès refusé! Ce tuyau appartien à %s
+
+# Subtitle for when the Dog Deaggravator is used
+subtitle.ap.dog_deaggravator=Dingdingding!
+
+#Translation by WingofTech

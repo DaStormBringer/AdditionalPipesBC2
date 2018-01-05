@@ -16,3 +16,4 @@ MinecraftForge-*.txt
 /.gradle
 
 /minecraft-server
+/buildcraft_resources

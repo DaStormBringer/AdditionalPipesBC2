@@ -1,18 +1,17 @@
 package buildcraft.additionalpipes.network.message;
 
-import io.netty.buffer.ByteBuf;
-
 import java.util.UUID;
 
+import buildcraft.additionalpipes.pipes.PipeBehaviorTeleport;
+import buildcraft.transport.tile.TilePipeHolder;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import buildcraft.additionalpipes.pipes.PipeTeleport;
-import buildcraft.transport.TileGenericPipe;
 
 public class MessageTelePipeData implements IMessage, IMessageHandler<MessageTelePipeData, IMessage>
 {
@@ -66,9 +65,9 @@ public class MessageTelePipeData implements IMessage, IMessageHandler<MessageTel
     @Override
     public IMessage onMessage(MessageTelePipeData message, MessageContext ctx)
     {
-        TileEntity te = FMLClientHandler.instance().getClient().theWorld.getTileEntity(message.position);
+        TileEntity te = FMLClientHandler.instance().getClient().world.getTileEntity(message.position);
 
-        PipeTeleport<?> pipe = (PipeTeleport<?>) ((TileGenericPipe) te).pipe;
+        PipeBehaviorTeleport pipe = (PipeBehaviorTeleport) ((TilePipeHolder) te).getPipe().getBehaviour();
 		pipe.ownerUUID = UUID.fromString(message.ownerUUID);
 		pipe.ownerName = message.ownerName;
 		pipe.network = message.locations;

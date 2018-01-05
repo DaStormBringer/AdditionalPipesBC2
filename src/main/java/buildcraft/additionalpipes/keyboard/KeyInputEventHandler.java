@@ -1,7 +1,5 @@
 package buildcraft.additionalpipes.keyboard;
 
-import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.additionalpipes.ChunkLoadViewDataProxy;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -22,12 +20,14 @@ public class KeyInputEventHandler
             {
             	if(Keybindings.lasers.isPressed())
             	{
+            		/*
 	            	ChunkLoadViewDataProxy viewer = AdditionalPipes.instance.chunkLoadViewer;
 	    			if(!viewer.lasersActive()) 
 	    			{
 	    				viewer.requestPersistentChunks();
 	    			}
 	    			viewer.toggleLasers();
+	    			*/
             	}
             }
         }

@@ -6,46 +6,36 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.Multimap;
+
+import buildcraft.additionalpipes.api.ITeleportPipe;
+import buildcraft.additionalpipes.api.TeleportManagerBase;
+import buildcraft.additionalpipes.api.TeleportPipeType;
+import buildcraft.additionalpipes.utils.Log;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
-import buildcraft.additionalpipes.api.ITeleportPipe;
-import buildcraft.additionalpipes.api.PipeType;
-import buildcraft.additionalpipes.api.TeleportManagerBase;
-import buildcraft.additionalpipes.utils.Log;
-import buildcraft.transport.PipeTransportFluids;
-import buildcraft.transport.PipeTransportItems;
-import buildcraft.transport.PipeTransportPower;
-
-import com.google.common.collect.LinkedListMultimap;
-import com.google.common.collect.Multimap;
 
 
 public class TeleportManager extends TeleportManagerBase
 {
 	public static final TeleportManager instance = new TeleportManager();
-
-	public final Multimap<Integer, PipeTeleport<PipeTransportItems>> itemPipes;
 	
-	public final Multimap<Integer, PipeTeleport<PipeTransportFluids>> fluidPipes;
-
-	public final Multimap<Integer, PipeTeleport<PipeTransportPower>> powerPipes;
-
-	//public final Multimap<Integer, PipeTeleport<PipeTransportItemsLogistics>> logisticsPipes;
+	private static HashMap<TeleportPipeType, Multimap<Integer, ITeleportPipe>> pipes;
 
 	public final Map<Integer, String> frequencyNames;
 
 	private TeleportManager() 
 	{
-		//create the three multimaps
-		itemPipes = LinkedListMultimap.<Integer, PipeTeleport<PipeTransportItems>>create();
+		//create the multi-multimap
+		pipes = new HashMap<>();
+		for(TeleportPipeType type : TeleportPipeType.values())
+		{
+			pipes.put(type, LinkedListMultimap.<Integer, ITeleportPipe>create());
+		}
 		
-		fluidPipes = LinkedListMultimap.<Integer, PipeTeleport<PipeTransportFluids>>create();
-		
-		powerPipes = LinkedListMultimap.<Integer, PipeTeleport<PipeTransportPower>>create();
-		
-		//logisticsPipes = LinkedListMultimap.<Integer, PipeTeleport<PipeTransportItemsLogistics>>create();
-		
+		// then the regular hashmap for frequency names
 		frequencyNames = new HashMap<Integer, String>();
 	}
 	
@@ -55,51 +45,15 @@ public class TeleportManager extends TeleportManagerBase
 	 * @param type
 	 * @return
 	 */
-	@SuppressWarnings("rawtypes")
-	private Collection getPipesInChannel(int frequency, PipeType type)
+	private Collection<ITeleportPipe> getPipesInChannel(int frequency, TeleportPipeType type)
 	{
-		//it seems that you can't cast from a Collection<PipeTeleport<PipeTransportFluids>>
-		//to a Collection<PipeTeleport<?>>.  Why is that? -JS
-		switch(type)
-		{
-		case ITEMS:
-			return itemPipes.get(frequency);
-		case FLUIDS:
-			return fluidPipes.get(frequency);
-		case POWER:
-			return powerPipes.get(frequency);
-		case LOGISTICS:
-			
-			//return logisticsPipes.get(frequency);
-		}
-		
-		return null;
+		return pipes.get(type).get(frequency);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void add(ITeleportPipe pipe, int frequency)
 	{
-		if(FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
-		{
-			return;
-		}
-		
-		switch(pipe.getType())
-		{
-		case ITEMS:
-			itemPipes.put(frequency, (PipeTeleport<PipeTransportItems>) pipe);
-			break;
-		case FLUIDS:
-			fluidPipes.put(frequency, (PipeTeleport<PipeTransportFluids>) pipe);
-			break;
-		case POWER:
-			powerPipes.put(frequency, (PipeTeleport<PipeTransportPower>) pipe);
-			break;
-		case LOGISTICS:
-			//logisticsPipes.put(frequency, (PipeTeleport<PipeTransportItemsLogistics>) pipe);
-			break;
-		}
+		pipes.get(pipe.getType()).put(frequency, pipe);
 
 		//if unit tests are being run, pipe.container will be null.
 		if(pipe.getContainer() != null)
@@ -109,7 +63,6 @@ public class TeleportManager extends TeleportManagerBase
 		}
 	}
 
-	@SuppressWarnings("unchecked")	
 	@Override
 	public void remove(ITeleportPipe pipe, int frequency)
 	{
@@ -118,21 +71,7 @@ public class TeleportManager extends TeleportManagerBase
 			return;
 
 		}
-		switch(pipe.getType())
-		{
-		case ITEMS:
-			itemPipes.remove(frequency, (PipeTeleport<PipeTransportItems>) pipe);
-			break;
-		case FLUIDS:
-			fluidPipes.remove(frequency, (PipeTeleport<PipeTransportFluids>) pipe);
-			break;
-		case POWER:
-			powerPipes.remove(frequency, (PipeTeleport<PipeTransportPower>) pipe);
-			break;
-		case LOGISTICS:
-			//logisticsPipes.remove(frequency, (PipeTeleport<PipeTransportItemsLogistics>) pipe);
-			break;
-		}
+		pipes.get(pipe.getType()).remove(frequency, pipe);
 
 		//if unit tests are being run, pipe.container will be null.
 		if(pipe.getContainer() != null)
@@ -144,10 +83,10 @@ public class TeleportManager extends TeleportManagerBase
 
 	@Override
 	public void reset() {
-		itemPipes.clear();
-		fluidPipes.clear();
-		powerPipes.clear();
-		//logisticsPipes.clear();
+		for(TeleportPipeType type : TeleportPipeType.values())
+		{
+			pipes.get(type).clear();
+		}
 
 		frequencyNames.clear();
 		Log.info("Reset teleport manager.");
@@ -160,14 +99,13 @@ public class TeleportManager extends TeleportManagerBase
 	 * @param includeReceive whether or not to return connected pipes that receive stuff.
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public <T extends ITeleportPipe> ArrayList<T> getConnectedPipes(T pipe, boolean includeSend, boolean includeReceive) 
+	public ArrayList<ITeleportPipe> getConnectedPipes(ITeleportPipe pipe, boolean includeSend, boolean includeReceive) 
 	{
-		Collection<T> channel = getPipesInChannel(pipe.getFrequency(), pipe.getType());
+		Collection<ITeleportPipe> channel = getPipesInChannel(pipe.getFrequency(), pipe.getType());
 		
-		ArrayList<T> connected = new ArrayList<T>();
+		ArrayList<ITeleportPipe> connected = new ArrayList<ITeleportPipe>();
 		
-		for(T other : channel)
+		for(ITeleportPipe other : channel)
 		{
 			if(other.getContainer() != null && other.getContainer().isInvalid())
 			{
@@ -191,25 +129,10 @@ public class TeleportManager extends TeleportManagerBase
 		return connected;
 	}
 	
-	public Collection<PipeTeleport<PipeTransportItems>> getAllItemPipesInNetwork() 
+	public Collection<ITeleportPipe> getAllPipesInNetwork(TeleportPipeType type) 
 	{
-		return itemPipes.values();
+		return pipes.get(type).values();
 	}
-	
-	public Collection<PipeTeleport<PipeTransportFluids>> getAllFluidPipesInNetwork() 
-	{
-		return fluidPipes.values();
-	}
-	
-	public Collection<PipeTeleport<PipeTransportPower>> getAllPowerPipesInNetwork() 
-	{
-		return powerPipes.values();
-	}
-	
-//	public Collection<PipeTeleport<PipeTransportItemsLogistics>> getAllLogisticsPipesInNetwork() 
-//	{
-//		return logisticsPipes.values();
-//	}
 
 	/**
 	 * Get the name of the provided frequency.
@@ -223,6 +146,8 @@ public class TeleportManager extends TeleportManagerBase
 		return name == null ? "" : name;
 	}
 
+	// TODO
+	
 	@Override
 	public void setFrequencyName(int frequency, String name) 
 	{

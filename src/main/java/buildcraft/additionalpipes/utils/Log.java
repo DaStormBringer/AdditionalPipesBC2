@@ -1,12 +1,11 @@
 package buildcraft.additionalpipes.utils;
 
 
-import net.minecraftforge.fml.common.FMLLog;
-
 import org.apache.logging.log4j.Level;
 
 import buildcraft.additionalpipes.APConfiguration;
 import buildcraft.additionalpipes.AdditionalPipes;
+import net.minecraftforge.fml.common.FMLLog;
 
 public class Log
 {
@@ -46,11 +45,6 @@ public class Log
     public static void info(Object object)
     {
         log(Level.INFO, object);
-    }
-
-    public static void off(Object object)
-    {
-        log(Level.OFF, object);
     }
 
     public static void trace(Object object)

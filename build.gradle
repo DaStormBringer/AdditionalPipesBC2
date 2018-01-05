@@ -7,19 +7,19 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "5.1.0"
+version = "6.0.0.1"
 group= "com.buildcraft.additionalpipes" 
 archivesBaseName = "additionalpipes"
 
 minecraft {
-    version = "1.8.9-11.15.1.1764"
+    version = "${mc_version}-14.23.0.2544"
     runDir = "minecraft"
-	mappings = "stable_20"
+	mappings = "snapshot_20171120"
 
 }
 // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -28,10 +28,27 @@ repositories {
 		name "BuildCraft"
 		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
 	}
+	maven 
+	{
+		// location of the maven that hosts JEI files
+    	name = "Progwml6 maven"
+    	url = "http://dvs1.progwml6.com/files/maven"
+  	}
+	maven
+	{
+    	// location of a maven mirror for JEI files, as a fallback
+    	name = "ModMaven"
+    	url = "modmaven.k-4u.nl"
+	}
 }
 
 dependencies {
-	compile name: 'buildcraft', version: "7.2.8", classifier: "dev", ext: 'jar'
+	compile name: 'buildcraft', version: "7.99.13", classifier: "dev", ext: 'jar'
+	
+	// compile against the JEI API but do not include it at runtime
+	deobfProvided "mezz.jei:jei_${mc_version}:${jei_version}:api"
+	// at runtime, use the full JEI jar
+	runtime "mezz.jei:jei_${mc_version}:${jei_version}"
 }
 
 sourceSets {
@@ -42,14 +59,19 @@ sourceSets {
     }
 }
 
+sourceCompatibility = targetCompatibility = "1.8" // Need this here so eclipse task generates correctly.
+compileJava {
+    sourceCompatibility = targetCompatibility = "1.8"
+}
+
 processResources
 {
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
 		
-		//exclude Paint.NET pdn files
-		exclude '**/*.pdn'
+	//exclude Paint.NET pdn files
+	exclude '**/*.pdn'
 
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {

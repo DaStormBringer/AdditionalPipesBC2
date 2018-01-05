@@ -2,8 +2,9 @@ package buildcraft.additionalpipes.api;
 
 import java.util.UUID;
 
-import net.minecraft.util.BlockPos;
-import buildcraft.transport.TileGenericPipe;
+import buildcraft.transport.tile.TilePipeHolder;
+import net.minecraft.util.math.BlockPos;
+
 
 /**
  * Interface that describes the functions of a Teleport Pipe.
@@ -33,7 +34,7 @@ public interface ITeleportPipe
 
 	public void setPublic(boolean isPublic);
 
-	public PipeType getType();
+	public TeleportPipeType getType();
 	
 	public BlockPos getPosition();
 	
@@ -45,5 +46,5 @@ public interface ITeleportPipe
 
 	public String getOwnerName();
 
-	public TileGenericPipe getContainer();
+	public TilePipeHolder getContainer();
 }

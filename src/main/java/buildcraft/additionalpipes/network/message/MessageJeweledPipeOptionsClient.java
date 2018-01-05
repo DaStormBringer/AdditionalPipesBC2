@@ -1,18 +1,18 @@
 package buildcraft.additionalpipes.network.message;
 
+import buildcraft.additionalpipes.gui.GuiJeweledPipe;
+import buildcraft.additionalpipes.pipes.PipeBehaviorJeweled;
+import buildcraft.additionalpipes.pipes.SideFilterData;
+import buildcraft.additionalpipes.utils.NetworkUtils;
+import buildcraft.transport.tile.TilePipeHolder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import buildcraft.additionalpipes.gui.GuiJeweledPipe;
-import buildcraft.additionalpipes.pipes.PipeItemsJeweled;
-import buildcraft.additionalpipes.pipes.SideFilterData;
-import buildcraft.additionalpipes.utils.NetworkUtils;
-import buildcraft.transport.TileGenericPipe;
 
 
 /**
@@ -68,10 +68,10 @@ public class MessageJeweledPipeOptionsClient implements IMessage, IMessageHandle
     public IMessage onMessage(MessageJeweledPipeOptionsClient message, MessageContext ctx)
     {
     	
-        TileEntity te = FMLClientHandler.instance().getClient().theWorld.getTileEntity(message.position);
-		if(te instanceof TileGenericPipe)
+        TileEntity te = FMLClientHandler.instance().getClient().world.getTileEntity(message.position);
+		if(te instanceof TilePipeHolder)
 		{
-			PipeItemsJeweled pipe = (PipeItemsJeweled) ((TileGenericPipe) te).pipe;
+			PipeBehaviorJeweled pipe = (PipeBehaviorJeweled) ((TilePipeHolder) te).getPipe().getBehaviour();
 
 	    	for(int sideNumber = 0; sideNumber < GuiJeweledPipe.NUM_TABS; ++sideNumber)
 	    	{

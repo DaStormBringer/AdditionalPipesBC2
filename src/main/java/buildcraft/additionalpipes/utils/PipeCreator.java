@@ -1,65 +1,72 @@
 package buildcraft.additionalpipes.utils;
 
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import buildcraft.additionalpipes.AdditionalPipes;
-import buildcraft.additionalpipes.item.ItemPipeAP;
-import buildcraft.additionalpipes.pipes.APPipe;
-import buildcraft.transport.BlockGenericPipe;
-import buildcraft.transport.ItemPipe;
-import buildcraft.transport.Pipe;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
+import buildcraft.api.transport.pipe.PipeDefinition;
+import buildcraft.lib.registry.RegistrationHelper;
+import buildcraft.lib.registry.TagManager;
+import buildcraft.transport.item.ItemPipeHolder;
 
 public class PipeCreator
 {
+
+	// saves items during preInit, then registers them during the RegisterEvent
+    private static final RegistrationHelper regHelper = new RegistrationHelper();
 
 	/**
 	 * Creates and registers a buildcraft pipe from the provided class.
 	 * Also sets a recipe for it from the provided Object[].
 	 * @param output how many of the pipe should be output from the recipe
-	 * @param clas
+	 * @param pipeDef
 	 * @param recipe
 	 * @param shapeless whether or not the recipe is shapeless
 	 * @return
 	 */
-	public static Item createPipeAndRecipe(int output, Class<? extends Pipe<?>> clas, boolean shapeless, Object... recipe) 
+	public static ItemPipeHolder createPipeItemAndRecipe(int output, PipeDefinition pipeDef, boolean shapeless, Object... recipe) 
 	{
 	
-		Item pipe = createPipe(clas);
+		ItemPipeHolder pipe = createPipeItem(pipeDef);
 		for(Object obj : recipe) {
 			if(obj == null)
 				return pipe;
 		}
 		if(shapeless)
 		{
-			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(pipe, output), recipe));
+			//ForgeRegistries.RECIPES.register(new ShapelessOreRecipe(new ResourceLocation(AdditionalPipes.MODID, "recipes/" + pipeDef.identifier.getResourcePath()), new ItemStack(pipe, output), recipe));
 		}
 		else
 		{
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(pipe, output), recipe));
+			//ForgeRegistries.RECIPES.register(new ShapedOreRecipe(new ResourceLocation(AdditionalPipes.MODID, "recipes/" + pipeDef.identifier.getResourcePath()), new ItemStack(pipe, output), recipe));
 		}
 		return pipe;
 	}
 
 	/**
-	 * Creates and registers a buildcraft pipe from the provided class.
+	 * Creates and registers a buildcraft pipe from the provided definition.
 	 * @param clas
 	 * @return
 	 */
-	public static ItemPipe createPipe(Class<? extends Pipe<?>> clas)
+	public static ItemPipeHolder createPipeItem(PipeDefinition pipeDef)
 	{
-		ItemPipe res = BlockGenericPipe.registerPipe(clas, AdditionalPipes.instance.creativeTab);
-		res.setUnlocalizedName(clas.getSimpleName());
-		AdditionalPipes.proxy.setPipeTextureProvider(res);
-		return res;
+		TagManager.registerTag("item.pipe.additionalpipes." + pipeDef.identifier.getResourcePath())
+			.reg(pipeDef.identifier.getResourcePath())
+			.locale("pipe.ap." + pipeDef.identifier.getResourcePath())
+			.tab("apcreativetab");		
+		
+		ItemPipeHolder item = new ItemPipeHolder(pipeDef);
+		item.registerWithPipeApi();
+		
+		regHelper.addItem(item);
+		
+		return item;
 	}
 
-	public static Item createPipeTooltip(Class<? extends APPipe<?>> clas, String tooltip)
-	{
+	/*public static Item createPipeTooltip(Class<? extends APPipe<?>> clas, String tooltip)
+	{	
+	
+	item.pipe.additionalpipes.pipeitemsaddition
+	item.pipe.additionalpipes.pipeitemsaddition
+	
 		//we need to use our own version of ItemPipe with tooltip support
-		ItemPipe item = new ItemPipeAP(tooltip);
+		ItemPipeHolder item = new ItemPipeAP(tooltip);
 		item.setUnlocalizedName(clas.getSimpleName());
 		BlockGenericPipe.pipes.put(item, clas);
 		
@@ -68,6 +75,6 @@ public class PipeCreator
 		AdditionalPipes.proxy.createPipeSpecial(item, clas);
 	
 		return item;
-	}
+	}*/
 
 }

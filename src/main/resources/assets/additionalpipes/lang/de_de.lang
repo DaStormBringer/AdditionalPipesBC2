@@ -1,0 +1,14 @@
+tile.teleport_tether.name=Teleport-Synchronisierer
+item.PipeLiquidsRedstone.name=Redstone-Wasserrohr
+item.PipeItemsRedstone.name=Redstone-Transportrohr
+item.PipeItemsAdvancedInsertion.name=Fortgeschr. Einfügungs-Transportrohr
+item.pipe.ap.pipe_items_adv_wood.name=Fortgeschr. Hölzernes Transportrohr
+item.pipe.ap.pipe_items_distribution.name=Verteilungs-Transportrohr
+item.pipe.ap.pipe_items_closed.name=Geschlossenes Transportrohr
+item.pipe.ap.pipe_items_teleport.name=Synchronisierbares Transportrohr
+item.pipe.ap.pipe_fluids_teleport.name=Synchronisierbares Wasserrohr
+item.pipe.ap.pipe_power_teleport.name=Synchronisierbare Energieleitung
+item.pipe.ap.pipe_power_switch.name=Schaltbare Energieleitung
+item.pipe.ap.pipe_fluids_switch.name=Schaltbares Wasserrohr
+item.pipe.ap.pipe_items_switch.name=Schaltbares Transportrohr
+item.pipe.ap.pipe_fluids_water_pump.name=Wasserpumprohr

@@ -1,74 +1,67 @@
 package buildcraft.additionalpipes.pipes;
 
-import net.minecraft.item.Item;
+import buildcraft.api.transport.pipe.IPipe;
+import buildcraft.api.transport.pipe.PipeBehaviour;
+import buildcraft.transport.pipe.flow.PipeFlowItems;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.Vec3;
-import buildcraft.additionalpipes.textures.Textures;
-import buildcraft.api.core.IIconProvider;
-import buildcraft.core.lib.utils.Utils;
-import buildcraft.transport.Pipe;
-import buildcraft.transport.PipeTransport;
-import buildcraft.transport.PipeTransportItems;
-import buildcraft.transport.TravelingItem;
+import net.minecraft.util.math.BlockPos;
 
-public abstract class APPipe<pipeType extends PipeTransport> extends Pipe<pipeType> 
+public abstract class APPipe extends PipeBehaviour 
 {
-	public APPipe(pipeType transport, Item item) {
-		super(transport, item);
+	public APPipe(IPipe pipe) {
+		super(pipe);
 	}
 	
-	@Override
-	public IIconProvider getIconProvider()
+	public APPipe(IPipe pipe, NBTTagCompound nbt) {
+		super(pipe, nbt);
+	}
+	
+	/**
+	 * Inject an item into the pipe.  Don't call this if the pipe isn't an item pipe!
+	 * 
+	 * @param toInject the ItemStack to inject
+	 * @param fromSide the side that the item should come from.
+	 * @return the items that could not be injected for whatever reason
+	 */
+	protected ItemStack injectItem(ItemStack toInject, EnumFacing fromSide)
+	{				
+		return ((PipeFlowItems)pipe.getFlow()).injectItem(toInject, true, fromSide.getOpposite(), null, .1f);
+	}
+	
+	/**
+	 * Shorthand to get position of pipe
+	 */
+	public BlockPos getPos()
 	{
-		return Textures.pipeIconProvider;
+		return pipe.getHolder().getPipePos();
 	}
 	
 	/**
-	 * Inject an item into the pipe.  Don't call this if the pipe isn't an item pipe!
 	 * 
-	 * @param toInject the ItemStack to inject
-	 * @param fromSide the side that the item should come from.
+	 * @return The translation key for the localized name of the pipe
 	 */
-	protected TravelingItem injectItem(ItemStack toInject, EnumFacing fromSide)
-	{		
-		Vec3 entPos = Utils.convertMiddle(container.getPos()).add(Utils.convert(fromSide.getOpposite(), -0.5));
-		
-		
-		TravelingItem entity = TravelingItem.make(entPos, toInject);
-		((PipeTransportItems) transport).injectItem(entity, fromSide.getOpposite());
-		
-		return entity;
+	public String getUnlocalizedName()
+	{
+		return "item.pipe.ap." + pipe.getDefinition().identifier.getResourcePath() + ".name";
 	}
 	
 	/**
-	 * Make a traveling item suitable for injecting into this pipe from the given side.
-]	 * 
-	 * @param toInject the ItemStack to inject
-	 * @param fromSide the side of the pipe that the item appears on
+	 * Returns true if this behavior is instantiated on the client
+	 * @return
 	 */
-	protected TravelingItem makeTravelingItem(ItemStack toInject, EnumFacing fromSide)
-	{		
-		Vec3 entPos = Utils.convertMiddle(container.getPos()).add(Utils.convert(fromSide.getOpposite(), -0.5));
-		
-		
-		return TravelingItem.make(entPos, toInject);		
+	protected boolean isClient()
+	{
+		return pipe.getHolder().getPipeWorld().isRemote;
 	}
 	
-	
 	/**
-	 * Inject an item into the pipe.  Don't call this if the pipe isn't an item pipe!
-	 * 
-	 * @param toInject the ItemStack to inject
-	 * @param fromSide the side that the item should come from.
+	 * Returns true if this behavior is instantiated on the server
+	 * @return
 	 */
-	protected TravelingItem injectItemAtCenter(ItemStack toInject, EnumFacing fromSide)
-	{		
-		Vec3 entPos = Utils.convertMiddle(container.getPos());
-		
-		TravelingItem entity = TravelingItem.make(entPos, toInject);
-		((PipeTransportItems) transport).injectItem(entity, fromSide.getOpposite());
-		
-		return entity;
+	protected boolean isServer()
+	{
+		return pipe.getHolder().getPipeWorld().isRemote;
 	}
 }
