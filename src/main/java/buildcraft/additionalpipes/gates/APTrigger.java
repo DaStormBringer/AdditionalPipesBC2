@@ -1,15 +1,17 @@
 package buildcraft.additionalpipes.gates;
 
+import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.api.core.render.ISprite;
 import buildcraft.api.statements.IStatement;
 import buildcraft.api.statements.StatementManager;
 import buildcraft.lib.client.sprite.SpriteHolderRegistry;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SuppressWarnings("deprecation")
 public abstract class APTrigger implements IStatement {
 
 	protected String id; //used as unique key in BC registry
@@ -29,11 +31,14 @@ public abstract class APTrigger implements IStatement {
 	{
 		descriptionKey = "trigger." + idWithoutPrefix;
 		
-		this.id = "additionalpipes:" + descriptionKey;
+		this.id = AdditionalPipes.MODID + ":" + descriptionKey;
 		StatementManager.statements.put(this.id, this);		
 		textureID = idWithoutPrefix;
-		
-        MinecraftForge.EVENT_BUS.register(this);		
+        
+        if(FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+        {
+            sprite = SpriteHolderRegistry.getHolder("additionalpipes:items/triggers/" + textureID);
+        }
 
 	}
     
@@ -50,12 +55,9 @@ public abstract class APTrigger implements IStatement {
 	}
 	
 	@Override
+	@SideOnly(Side.CLIENT)
 	public ISprite getSprite()
 	{
-	    if (sprite == null) 
-	    {
-	        sprite = SpriteHolderRegistry.getHolder("items/triggers/" + textureID);
-	    }
 	    return sprite;
 	}
 	

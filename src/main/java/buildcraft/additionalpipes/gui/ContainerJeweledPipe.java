@@ -148,6 +148,6 @@ public class ContainerJeweledPipe extends Container
     @Override
     public ItemStack transferStackInSlot(EntityPlayer entityPlayer, int slotIndex)
     {
-    	return null;
+    	return ItemStack.EMPTY;
     }
 }

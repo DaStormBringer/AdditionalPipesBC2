@@ -1,11 +1,14 @@
 package buildcraft.additionalpipes.pipes;
 
-import buildcraft.additionalpipes.utils.Log;
 import buildcraft.api.transport.pipe.IPipe;
+import buildcraft.api.transport.pipe.IPipeHolder.PipeMessageReceiver;
 import buildcraft.api.transport.pipe.PipeBehaviour;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Class for all 3 types of switch pipe
@@ -14,6 +17,8 @@ import net.minecraft.util.EnumFacing;
  */
 public class PipeBehaviorSwitch extends APPipe
 {
+	
+	private boolean canConnect;
 
 	public PipeBehaviorSwitch(IPipe pipe, NBTTagCompound nbt)
 	{
@@ -27,16 +32,28 @@ public class PipeBehaviorSwitch extends APPipe
 
 	@Override
 	public int getTextureIndex(EnumFacing direction)
+	{		
+		return (canConnect ? 0 : 1);
+	}
+	
+	public void onTick()
 	{
-		if(direction == null)
+		// run only on the server
+		if(pipe.getHolder().getPipeWorld().isRemote)
 		{
-			return 0;
+			return;
 		}
 		
-		Log.debug("[PipeBehaviorSwitch] Returning Texture Index " + (canConnect() ? 0 : 1));
+		boolean newCanConnect = !pipe.getHolder().getPipeWorld().isBlockPowered(getPos());
 		
-		return (canConnect() ? 0 : 1);
+		if(canConnect != newCanConnect)
+		{
+			canConnect = newCanConnect;
+			pipe.getHolder().scheduleNetworkUpdate(PipeMessageReceiver.BEHAVIOUR);
+		}
 	}
+	
+	
 	
 	/*
 	@Override
@@ -45,28 +62,29 @@ public class PipeBehaviorSwitch extends APPipe
 	}
 	*/
 	
-	
 
-	/**
-	 * Overload of canConnect() that takes no arguments, to call from getTextureIndex()
-	 * @param facing
-	 * @return
-	 */
-	private boolean canConnect()
+	@Override
+	public void writePayload(PacketBuffer buffer, Side side)
 	{
-		return !pipe.getHolder().getPipeWorld().isBlockPowered(getPos());
+		buffer.writeBoolean(canConnect);
+	}
+
+	@Override
+	public void readPayload(PacketBuffer buffer, Side side, MessageContext ctx)
+	{
+		canConnect = buffer.readBoolean();
 	}
 
 	@Override
 	public boolean canConnect(EnumFacing face, PipeBehaviour other)
 	{
-		return canConnect();
+		return canConnect;
 	}
 
 	@Override
 	public boolean canConnect(EnumFacing face, TileEntity oTile)
 	{
-		return canConnect();
+		return canConnect;
 	}
 
 }

@@ -23,6 +23,7 @@ import buildcraft.lib.registry.CreativeTabManager.CreativeTabBC;
 import buildcraft.silicon.BCSiliconItems;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
@@ -47,7 +48,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 public class AdditionalPipes {
 	public static final String MODID = "additionalpipes";
 	public static final String NAME = "Additional Pipes";
-	public static final String VERSION = "6.0.0";
+	public static final String VERSION = "6.0.0.1";
 
 	@Instance(MODID)
 	public static AdditionalPipes instance;
@@ -68,13 +69,15 @@ public class AdditionalPipes {
 	public Item pipeLiquidsObsidian;
 	
 	// chunk loader
-	public Block blockTeleportTether;
+	public BlockTeleportTether blockTeleportTether;
 	
 	//dog deaggravator
 	public Item dogDeaggravator;
 	
 	public ITriggerInternal triggerPipeClosed;
 
+	Block blockFoo;
+	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) 
 	{
@@ -93,16 +96,27 @@ public class AdditionalPipes {
 		Log.info("Registering pipes");
 		APPipeDefintions.createPipes();
 		APPipeDefintions.setFluidCapacities();
+		
+		Log.info("Registering gates");
+		triggerPipeClosed = new TriggerPipeClosed();
+		StatementManager.registerTriggerProvider(new GateProvider());
+		
+		// create blocks
+		if(APConfiguration.enableChunkloader)
+		{
+			blockTeleportTether = new BlockTeleportTether();
+			blockTeleportTether.setRegistryName("teleport_tether");
+		}
+
 	}
 	
 	@SubscribeEvent
 	public void registerBlocks(RegistryEvent.Register<Block> event)
 	{
+		Log.info("Registering blocks");
+		
 		if(APConfiguration.enableChunkloader)
 		{
-			// register Teleport Tether block
-			blockTeleportTether = new BlockTeleportTether();
-			blockTeleportTether.setRegistryName("teleport_tether");
 			event.getRegistry().register(blockTeleportTether);
 			
 			Log.debug("Chunkloader enabled!");
@@ -113,15 +127,19 @@ public class AdditionalPipes {
 	@SubscribeEvent
 	public void registerItems(RegistryEvent.Register<Item> event)
 	{
-
+		
+		Log.info("Registering items");
 		dogDeaggravator = new ItemDogDeaggravator();
 		event.getRegistry().register(dogDeaggravator);
 	    
+		event.getRegistry().register(new ItemBlock(blockTeleportTether).setRegistryName(blockTeleportTether.getRegistryName()));
 	}
 	
 	@SubscribeEvent
 	public void registerRecipes(RegistryEvent.Register<IRecipe> event)
 	{
+		Log.info("Registering recipes");
+		
 		ShapedOreRecipe deaggravatorRecipe = new ShapedOreRecipe(new ResourceLocation(MODID, "recipes/dog_deaggravator"), dogDeaggravator, "gsg", "gig", "g g", 'i', "ingotIron", 'g', "ingotGold", 's', "stickWood");
 		deaggravatorRecipe.setRegistryName("dog_deaggravator");
 		event.getRegistry().register(deaggravatorRecipe);
@@ -137,6 +155,8 @@ public class AdditionalPipes {
 	@SubscribeEvent
 	public void registerSounds(RegistryEvent.Register<SoundEvent> event)
 	{
+		Log.info("Registering sounds");
+		
 		APSounds.register(event.getRegistry());
 	}
 
@@ -165,11 +185,6 @@ public class AdditionalPipes {
 		
 		//set creative tab icon
 		creativeTab.setItem(new ItemStack(APPipeDefintions.itemsTeleportPipeItem));
-
-		triggerPipeClosed = new TriggerPipeClosed();
-		StatementManager.registerTriggerProvider(new GateProvider());
-
-			
 		
 		Log.info("Running Teleport Manager Tests");
 		TeleportManagerTest.runAllTests();

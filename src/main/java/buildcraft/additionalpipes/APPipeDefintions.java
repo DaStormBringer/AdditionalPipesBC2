@@ -101,6 +101,7 @@ public class APPipeDefintions
 		
 		PipeDefinitionBuilder distPipeDefBuilder = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipe_items_distribution").logic(PipeBehaviorDistribution::new, PipeBehaviorDistribution::new);
 		attachSidedSuffixes(distPipeDefBuilder);
+		distPipeDefBuilder.itemTex(EnumFacing.EAST.ordinal());
 		distributionPipeDef = distPipeDefBuilder.define();
 		distributionPipeItem = PipeCreator.createPipeItemAndRecipe(1, distributionPipeDef, false, " r ", "IgI", 'r', "dustRedstone", 'I', "ingotIron", 'g', "blockGlass");
 		

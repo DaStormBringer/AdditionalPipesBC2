@@ -1,21 +1,21 @@
 package buildcraft.additionalpipes.gui;
 
 import buildcraft.additionalpipes.pipes.PipeBehaviorClosed;
+import buildcraft.lib.gui.ContainerBC_Neptune;
 import buildcraft.transport.tile.TilePipeHolder;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-//from dispenser code
-public class ContainerPipeClosed extends Container {
+//NOTE: uses the same texture and slot positions as the vanilla Dispenser
+public class ContainerPipeClosed extends ContainerBC_Neptune {
 
 	private PipeBehaviorClosed pipe;
 
-	public ContainerPipeClosed(InventoryPlayer inventory, PipeBehaviorClosed pipe) {
+	public ContainerPipeClosed(EntityPlayer player, PipeBehaviorClosed pipe)
+	{
+		super(player);
 		this.pipe = (PipeBehaviorClosed) pipe;
 		int row;
 		int col;
@@ -28,12 +28,12 @@ public class ContainerPipeClosed extends Container {
 
 		for(row = 0; row < 3; ++row) {
 			for(col = 0; col < 9; ++col) {
-				addSlotToContainer(new Slot(inventory, col + row * 9 + 9, 8 + col * 18, 84 + row * 18));
+				addSlotToContainer(new Slot(player.inventory, col + row * 9 + 9, 8 + col * 18, 84 + row * 18));
 			}
 		}
 
 		for(row = 0; row < 9; ++row) {
-			addSlotToContainer(new Slot(inventory, row, 8 + row * 18, 142));
+			addSlotToContainer(new Slot(player.inventory, row, 8 + row * 18, 142));
 		}
 	}
 
@@ -45,44 +45,19 @@ public class ContainerPipeClosed extends Container {
 		return true;
 	}
 
-	/**
-	 * Called when a player shift-clicks on a slot. You must override this or
-	 * you will crash when someone does that.
-	 */
+	
+	
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int slotNum)
+	public void onContainerClosed(EntityPlayer playerIn)
 	{
-		ItemStack stack = ItemStack.EMPTY;
-		Slot slot = (Slot) inventorySlots.get(slotNum);
-
-		if(slot != null && slot.getHasStack()) {
-			ItemStack stackInSlot = slot.getStack();
-			stack = stackInSlot.copy();
-
-			if(slotNum < 9) {
-				if(!mergeItemStack(stackInSlot, 9, 45, true)) {
-					return null;
-				}
-			} else if(!mergeItemStack(stackInSlot, 0, 9, false)) {
-				return null;
-			}
-
-			if(stackInSlot.getCount() == 0) 
-			{
-				slot.putStack((ItemStack) null);
-			}
-			else 
-			{
-				slot.onSlotChanged();
-			}
-
-			if(stackInSlot.getCount() == stack.getCount()) {
-				return null;
-			}
-
-			slot.onTake(player, stackInSlot);
+		super.onContainerClosed(playerIn);
+		
+		// update the pipe's texture if the user has added or removed items
+		if(!playerIn.world.isRemote)
+		{
+			pipe.updateClosedStatus();
 		}
-
-		return stack;
 	}
+	
+	
 }

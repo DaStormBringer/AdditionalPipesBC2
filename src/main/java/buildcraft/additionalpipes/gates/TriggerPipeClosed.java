@@ -7,7 +7,6 @@ import buildcraft.api.statements.IStatementContainer;
 import buildcraft.api.statements.IStatementParameter;
 import buildcraft.api.statements.ITriggerInternal;
 import buildcraft.transport.tile.TilePipeHolder;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 public class TriggerPipeClosed extends APTrigger implements ITriggerInternal {
 
@@ -15,8 +14,6 @@ public class TriggerPipeClosed extends APTrigger implements ITriggerInternal {
 	{
 		super("pipe_closed");
 	}
-
-
 
 	@Override
 	public boolean isTriggerActive(IStatementContainer statement, IStatementParameter[] parameters)
@@ -35,7 +32,7 @@ public class TriggerPipeClosed extends APTrigger implements ITriggerInternal {
 		}
 		
 		// if the first ItemStack is null, then there are no items in the pipe and the trigger should be inactive
-		return closedPipe.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).getStackInSlot(0) != null;
+		return closedPipe.isClosed();
 	}
 
 	@Override
@@ -67,7 +64,7 @@ public class TriggerPipeClosed extends APTrigger implements ITriggerInternal {
 	@Override
 	public IStatement[] getPossible()
 	{
-		return null;
+		return new IStatement[0];
 	}
 
 

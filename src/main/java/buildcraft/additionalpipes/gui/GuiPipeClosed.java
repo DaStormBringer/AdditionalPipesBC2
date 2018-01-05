@@ -4,23 +4,25 @@ import org.lwjgl.opengl.GL11;
 
 import buildcraft.additionalpipes.pipes.PipeBehaviorClosed;
 import buildcraft.additionalpipes.textures.Textures;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import buildcraft.lib.gui.GuiBC8;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiPipeClosed extends GuiContainer {
+public class GuiPipeClosed extends GuiBC8<ContainerPipeClosed> {
 
-	public GuiPipeClosed(InventoryPlayer inventory, PipeBehaviorClosed pipe) {
-		super(new ContainerPipeClosed(inventory, pipe));
+	public GuiPipeClosed(EntityPlayer player, PipeBehaviorClosed pipe)
+	{
+		super(new ContainerPipeClosed(player, pipe));
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-		fontRenderer.drawString(I18n.format("gui.closed_pipe.title"), 60, 6, 4210752);
-		fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
+	protected void drawForegroundLayer() 
+	{
+		fontRenderer.drawString(I18n.format("gui.closed_pipe.title"), guiLeft + 60, guiTop + 6, 4210752);
+		fontRenderer.drawString(I18n.format("container.inventory"), guiLeft + 8, guiTop + ySize - 96 + 2, 4210752);
 	}
 
 	/**
@@ -28,7 +30,8 @@ public class GuiPipeClosed extends GuiContainer {
 	 * items)
 	 */
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
+	protected void drawBackgroundLayer(float partialTicks)
+	{
 
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		mc.renderEngine.bindTexture(Textures.DISPENSER);

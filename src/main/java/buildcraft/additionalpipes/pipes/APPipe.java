@@ -46,4 +46,22 @@ public abstract class APPipe extends PipeBehaviour
 	{
 		return "item.pipe.ap." + pipe.getDefinition().identifier.getResourcePath() + ".name";
 	}
+	
+	/**
+	 * Returns true if this behavior is instantiated on the client
+	 * @return
+	 */
+	protected boolean isClient()
+	{
+		return pipe.getHolder().getPipeWorld().isRemote;
+	}
+	
+	/**
+	 * Returns true if this behavior is instantiated on the server
+	 * @return
+	 */
+	protected boolean isServer()
+	{
+		return pipe.getHolder().getPipeWorld().isRemote;
+	}
 }
