@@ -15,6 +15,7 @@ import buildcraft.additionalpipes.pipes.PipeBehaviorTeleportItems;
 import buildcraft.additionalpipes.pipes.PipeBehaviorTeleportPower;
 import buildcraft.additionalpipes.pipes.PipeBehaviorWaterPump;
 import buildcraft.additionalpipes.utils.PipeCreator;
+import buildcraft.api.mj.MjAPI;
 import buildcraft.api.recipes.AssemblyRecipeBasic;
 import buildcraft.api.recipes.IngredientStack;
 import buildcraft.api.transport.pipe.PipeApi;
@@ -126,7 +127,7 @@ public class APPipeDefintions
 				IngredientStack.of(new ItemStack(BCSiliconItems.redstoneChipset, 1, 4)),
 				IngredientStack.of(new ItemStack(BCTransportItems.pipeItemDiamond)),
 				IngredientStack.of(new ItemStack(BCSiliconItems.redstoneChipset, 1, 3)));
-		AssemblyRecipeRegistry.register(new AssemblyRecipeBasic("teleportPipe", 10000, tpRecipeIngredients, new ItemStack(itemsTeleportPipeItem, 8)));
+		AssemblyRecipeRegistry.register(new AssemblyRecipeBasic("teleportPipe", 10000 * MjAPI.MJ, tpRecipeIngredients, new ItemStack(itemsTeleportPipeItem, 8)));
 		
 		liquidsTeleportPipeDef = new PipeDefinitionBuilder().flowFluid().idTexPrefix("pipe_fluids_teleport").logic(PipeBehaviorTeleportFluids::new, PipeBehaviorTeleportFluids::new).define();
 		liquidsTeleportPipeItem = PipeCreator.createPipeItemAndRecipe(1, liquidsTeleportPipeDef, true, new Object[] {BCTransportItems.waterproof, itemsTeleportPipeItem});

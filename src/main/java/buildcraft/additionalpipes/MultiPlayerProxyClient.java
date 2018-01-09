@@ -31,7 +31,7 @@ public class MultiPlayerProxyClient extends MultiPlayerProxy
 	{
 		RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
 		
-		if(APConfiguration.enableChunkloader)
+		if(APConfiguration.enableChunkloaderRecipe)
 		{
 			renderItem.getItemModelMesher().register(Item.getItemFromBlock(AdditionalPipes.instance.blockTeleportTether), 0, 
 					new ModelResourceLocation(AdditionalPipes.instance.blockTeleportTether.getRegistryName(), "inventory"));

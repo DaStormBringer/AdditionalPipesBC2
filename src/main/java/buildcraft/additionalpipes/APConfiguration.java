@@ -16,7 +16,7 @@ public class APConfiguration
 	
 	public static boolean enableDebugLog;
 	
-	public static boolean enableChunkloader;
+	public static boolean enableChunkloaderRecipe;
 	
 	// keybinding
 	public static int laserKeyCode; // config option (& in options menu)
@@ -33,12 +33,8 @@ public class APConfiguration
 	public static boolean filterRightclicks = false;
 
 	
-	public static void loadConfigs(boolean init, File configFile)
+	public static void loadConfigs(File configFile)
 	{
-		if((!configFile.exists() && !init) || (configFile.exists() && init))
-		{
-			return;
-		}
 		Configuration config = new Configuration(configFile);
 		try 
 		{
@@ -80,9 +76,9 @@ public class APConfiguration
 			gpPullRateProperty.setComment("How many ticks the Gravity Feed Pipe needs to extract an item");
 			gravityFeedPipeTicksPerPull = gpPullRateProperty.getInt();
 			
-			Property enableChunkloaderProperty = config.get(Configuration.CATEGORY_GENERAL, "enableChunkloader", true);
-			enableChunkloaderProperty.setComment("Whether or not the chunkloader is added as a block");
-			enableChunkloader = enableChunkloaderProperty.getBoolean();
+			Property enableChunkloaderProperty = config.get(Configuration.CATEGORY_GENERAL, "enableChunkloaderRecipe", true);
+			enableChunkloaderProperty.setComment("Whether or not the chunkloader will have a crafting recipe.  Set to false to make it a creative-only item.");
+			enableChunkloaderRecipe = enableChunkloaderProperty.getBoolean();
 		} 
 		catch(Exception e)
 		{

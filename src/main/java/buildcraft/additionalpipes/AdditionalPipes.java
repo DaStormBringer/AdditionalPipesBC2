@@ -47,7 +47,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 public class AdditionalPipes {
 	public static final String MODID = "additionalpipes";
 	public static final String NAME = "Additional Pipes";
-	public static final String VERSION = "6.0.0.1";
+	public static final String VERSION = "6.0.0.2";
 
 	@Instance(MODID)
 	public static AdditionalPipes instance;
@@ -83,7 +83,7 @@ public class AdditionalPipes {
 		PacketHandler.init();
 
 		configFile = event.getSuggestedConfigurationFile();
-		APConfiguration.loadConfigs(false, configFile);
+		APConfiguration.loadConfigs(configFile);
 		MinecraftForge.EVENT_BUS.register(this);
 		
 		//create BuildCraft creative tab
@@ -99,7 +99,7 @@ public class AdditionalPipes {
 		StatementManager.registerTriggerProvider(new GateProvider());
 		
 		// create blocks
-		if(APConfiguration.enableChunkloader)
+		if(APConfiguration.enableChunkloaderRecipe)
 		{
 			blockTeleportTether = new BlockTeleportTether();
 			blockTeleportTether.setRegistryName("teleport_tether");
@@ -112,13 +112,7 @@ public class AdditionalPipes {
 	{
 		Log.info("Registering blocks");
 		
-		if(APConfiguration.enableChunkloader)
-		{
-			event.getRegistry().register(blockTeleportTether);
-			
-			Log.debug("Chunkloader enabled!");
-		}
-	    
+		event.getRegistry().register(blockTeleportTether);
 	}
 	
 	@SubscribeEvent
@@ -141,9 +135,11 @@ public class AdditionalPipes {
 		deaggravatorRecipe.setRegistryName("dog_deaggravator");
 		event.getRegistry().register(deaggravatorRecipe);
 		
-		if(APConfiguration.enableChunkloader)
+		if(APConfiguration.enableChunkloaderRecipe)
 		{
-			ShapedOreRecipe chunkloaderRecipe = new ShapedOreRecipe(new ResourceLocation(MODID, "recipes/teleport_tether"), blockTeleportTether, "iii", "iLi", "ici", 'i', "ingotIron", 'L', "gemLapis", 'c', BCSiliconItems.redstoneChipset);
+			Log.debug("Chunkloader recipe enabled!");
+			
+			ShapedOreRecipe chunkloaderRecipe = new ShapedOreRecipe(new ResourceLocation(MODID, "recipes/teleport_tether"), blockTeleportTether, "iii", "iLi", "ici", 'i', "ingotIron", 'L', "gemLapis", 'c', new ItemStack(BCSiliconItems.redstoneChipset, 1, 3));
 			chunkloaderRecipe.setRegistryName("teleport_tether");
 			event.getRegistry().register(chunkloaderRecipe);
 		}
@@ -164,20 +160,15 @@ public class AdditionalPipes {
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 	
 		
-		if(APConfiguration.enableChunkloader)
-		{
-			Log.info("Registering chunk load handler");
-			ForgeChunkManager.setForcedChunkLoadingCallback(this, new ChunkLoadingHandler());
-			//chunkLoadViewer = new ChunkLoadViewDataProxy(APConfiguration.chunkSightRange);
-			//MinecraftForge.EVENT_BUS.register(chunkLoadViewer);
-			
-			GameRegistry.registerTileEntity(TileTeleportTether.class, "teleport_tether");
-			
-			// the lasers key function depends on the chunk loading code, so it can only be enabled if the chunk loader is
-			proxy.registerKeyHandler();
-
-		}
-		APConfiguration.loadConfigs(true, configFile);
+		Log.info("Registering chunk load handler");
+		ForgeChunkManager.setForcedChunkLoadingCallback(this, new ChunkLoadingHandler());
+		//chunkLoadViewer = new ChunkLoadViewDataProxy(APConfiguration.chunkSightRange);
+		//MinecraftForge.EVENT_BUS.register(chunkLoadViewer);
+		
+		GameRegistry.registerTileEntity(TileTeleportTether.class, "teleport_tether");
+		
+		// the lasers key function depends on the chunk loading code, so it can only be enabled if the chunk loader is
+		proxy.registerKeyHandler();
 
 		
 		//set creative tab icon
