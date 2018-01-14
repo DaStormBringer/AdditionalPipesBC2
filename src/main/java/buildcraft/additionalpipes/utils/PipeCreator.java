@@ -2,7 +2,6 @@ package buildcraft.additionalpipes.utils;
 
 import buildcraft.api.transport.pipe.PipeDefinition;
 import buildcraft.lib.registry.RegistrationHelper;
-import buildcraft.lib.registry.TagManager;
 import buildcraft.transport.item.ItemPipeHolder;
 
 public class PipeCreator
@@ -45,13 +44,10 @@ public class PipeCreator
 	 * @return
 	 */
 	public static ItemPipeHolder createPipeItem(PipeDefinition pipeDef)
-	{
-		TagManager.registerTag("item.pipe.additionalpipes." + pipeDef.identifier.getResourcePath())
-			.reg(pipeDef.identifier.getResourcePath())
-			.locale("pipe.ap." + pipeDef.identifier.getResourcePath())
-			.tab("apcreativetab");		
-		
-		ItemPipeHolder item = new ItemPipeHolder(pipeDef);
+	{		
+		ItemPipeHolder item = ItemPipeHolder.create(pipeDef);
+		item.setRegistryName(pipeDef.identifier.getResourcePath());
+		item.setUnlocalizedName("pipe.ap." + pipeDef.identifier.getResourcePath());
 		item.registerWithPipeApi();
 		
 		regHelper.addItem(item);

@@ -12,7 +12,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "6.0.0.2"
+version = "6.0.0.3"
 group= "com.buildcraft.additionalpipes" 
 archivesBaseName = "additionalpipes"
 
@@ -43,7 +43,7 @@ repositories {
 }
 
 dependencies {
-	compile name: 'buildcraft', version: "7.99.13", classifier: "dev", ext: 'jar'
+	compile name: 'buildcraft', version: "7.99.14", classifier: "dev", ext: 'jar'
 	
 	// compile against the JEI API but do not include it at runtime
 	deobfProvided "mezz.jei:jei_${mc_version}:${jei_version}:api"
