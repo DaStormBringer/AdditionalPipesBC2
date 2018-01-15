@@ -1,14 +1,25 @@
 package buildcraft.additionalpipes.utils;
 
+import java.util.HashSet;
+
+import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.api.transport.pipe.PipeDefinition;
 import buildcraft.lib.registry.RegistrationHelper;
 import buildcraft.transport.item.ItemPipeHolder;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
+import net.minecraftforge.registries.IForgeRegistry;
 
 public class PipeCreator
 {
 
 	// saves items during preInit, then registers them during the RegisterEvent
     private static final RegistrationHelper regHelper = new RegistrationHelper();
+    
+    private static final HashSet<IRecipe> recipesToRegister = new HashSet<>();
 
 	/**
 	 * Creates and registers a buildcraft pipe from the provided class.
@@ -23,18 +34,30 @@ public class PipeCreator
 	{
 	
 		ItemPipeHolder pipe = createPipeItem(pipeDef);
-		for(Object obj : recipe) {
-			if(obj == null)
-				return pipe;
-		}
-		if(shapeless)
+		try 
 		{
-			//ForgeRegistries.RECIPES.register(new ShapelessOreRecipe(new ResourceLocation(AdditionalPipes.MODID, "recipes/" + pipeDef.identifier.getResourcePath()), new ItemStack(pipe, output), recipe));
+			ResourceLocation registryName = new ResourceLocation(AdditionalPipes.MODID, "recipes/" + pipeDef.identifier.getResourcePath());
+			
+			IRecipe recipeToAdd;
+			if(shapeless)
+			{
+				recipeToAdd = new ShapelessOreRecipe(registryName, new ItemStack(pipe, output), recipe);
+			}
+			else
+			{
+				recipeToAdd = new ShapedOreRecipe(registryName, new ItemStack(pipe, output), recipe);
+			}
+			
+			recipeToAdd.setRegistryName(registryName);
+			
+			recipesToRegister.add(recipeToAdd);
 		}
-		else
+		catch(IllegalArgumentException ex)
 		{
-			//ForgeRegistries.RECIPES.register(new ShapedOreRecipe(new ResourceLocation(AdditionalPipes.MODID, "recipes/" + pipeDef.identifier.getResourcePath()), new ItemStack(pipe, output), recipe));
+			Log.fatal("Failed to create recipe for " + pipeDef.identifier.getResourcePath() + ": " + ex.getMessage());
+			ex.printStackTrace();
 		}
+
 		return pipe;
 	}
 
@@ -53,6 +76,11 @@ public class PipeCreator
 		regHelper.addItem(item);
 		
 		return item;
+	}
+	
+	public static void onRecipeRegisterEvent(IForgeRegistry<IRecipe> registry)
+	{
+		registry.registerAll(recipesToRegister.toArray(new IRecipe[recipesToRegister.size()]));
 	}
 
 	/*public static Item createPipeTooltip(Class<? extends APPipe<?>> clas, String tooltip)

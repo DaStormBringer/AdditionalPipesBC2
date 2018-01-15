@@ -107,7 +107,7 @@ public class APPipeDefintions
 		distributionPipeItem = PipeCreator.createPipeItemAndRecipe(1, distributionPipeDef, false, " r ", "IgI", 'r', "dustRedstone", 'I', "ingotIron", 'g', "blockGlass");
 		
 		gravityFeedPipeDef = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipe_items_gravity_feed").texSuffixes("_up", "_sides").logic(PipeBehaviorGravityFeed::new, PipeBehaviorGravityFeed::new).define();
-		gravityFeedPipeItem = PipeCreator.createPipeItemAndRecipe(1, gravityFeedPipeDef, false, "   ", "IgI", " I ", 'S', "stone", 'I', "ingotIron", 'g', "blockGlass");
+		gravityFeedPipeItem = PipeCreator.createPipeItemAndRecipe(1, gravityFeedPipeDef, false, " S ", "IgI", " I ", 'S', "stone", 'I', "ingotIron", 'g', "blockGlass");
 		
 		PipeDefinitionBuilder priorityPipeDefBuilder = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipe_items_priority").logic(PipeBehaviorPriorityInsertion::new, PipeBehaviorPriorityInsertion::new);
 		attachSidedSuffixes(priorityPipeDefBuilder);
@@ -146,7 +146,7 @@ public class APPipeDefintions
 		
 		waterPumpPipeDef = new PipeDefinitionBuilder().flowFluid().idTexPrefix("pipe_fluids_water_pump").logic(PipeBehaviorWaterPump::new, PipeBehaviorWaterPump::new).define();
 		waterPumpPipeItem = PipeCreator.createPipeItemAndRecipe(1, waterPumpPipeDef, false, " L ", "rPr", " W ", 'r', "dustRedstone", 'P', "gearIron", 'L',
-				BCTransportItems.pipeFluidGold, 'w', BCTransportItems.waterproof, 'W', BCTransportItems.pipeFluidWood);
+				BCTransportItems.pipeFluidGold, 'W', BCTransportItems.pipeFluidWood);
 	}
 	
 	public static void setFluidCapacities()

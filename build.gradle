@@ -12,7 +12,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "6.0.0.3"
+version = "6.0.0.4"
 group= "com.buildcraft.additionalpipes" 
 archivesBaseName = "additionalpipes"
 
@@ -27,6 +27,10 @@ repositories {
 	ivy {
 		name "BuildCraft"
 		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
+	}
+	ivy {
+		name "BuildCraftCompat"
+		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraftCompat/[revision]/[module]-[revision]-[classifier].[ext]"
 	}
 	maven 
 	{

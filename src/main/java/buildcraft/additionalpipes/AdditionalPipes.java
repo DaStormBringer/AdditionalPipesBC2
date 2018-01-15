@@ -15,6 +15,7 @@ import buildcraft.additionalpipes.pipes.TeleportManager;
 import buildcraft.additionalpipes.sound.APSounds;
 import buildcraft.additionalpipes.test.TeleportManagerTest;
 import buildcraft.additionalpipes.utils.Log;
+import buildcraft.additionalpipes.utils.PipeCreator;
 import buildcraft.api.statements.ITriggerInternal;
 import buildcraft.api.statements.StatementManager;
 import buildcraft.lib.registry.CreativeTabManager;
@@ -47,7 +48,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 public class AdditionalPipes {
 	public static final String MODID = "additionalpipes";
 	public static final String NAME = "Additional Pipes";
-	public static final String VERSION = "6.0.0.3";
+	public static final String VERSION = "6.0.0.4";
 
 	@Instance(MODID)
 	public static AdditionalPipes instance;
@@ -127,6 +128,8 @@ public class AdditionalPipes {
 	public void registerRecipes(RegistryEvent.Register<IRecipe> event)
 	{
 		Log.info("Registering recipes");
+		
+		PipeCreator.onRecipeRegisterEvent(event.getRegistry());
 		
 		ShapedOreRecipe deaggravatorRecipe = new ShapedOreRecipe(new ResourceLocation(MODID, "recipes/dog_deaggravator"), dogDeaggravator, "gsg", "gig", "g g", 'i', "ingotIron", 'g', "ingotGold", 's', "stickWood");
 		deaggravatorRecipe.setRegistryName("dog_deaggravator");
