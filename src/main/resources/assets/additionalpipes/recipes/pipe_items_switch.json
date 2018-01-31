@@ -1,0 +1,26 @@
+{
+	"type": "forge:ore_shaped",
+	"pattern": [
+		"GgI"
+	],
+	"key": {
+		"G": {
+			"type": "forge:ore_dict",
+			"ore": "gearGold"
+		},
+		"I": {
+			"type": "forge:ore_dict",
+			"ore": "gearIron"
+		},
+		"g": {
+			"type": "forge:ore_dict",
+			"ore": "blockGlass"
+		}
+	},
+	"result": {
+		"item": "additionalpipes:pipe_items_switch",
+		"count": 8,
+		"data": 0
+	}
+
+}

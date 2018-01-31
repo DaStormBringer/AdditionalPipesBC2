@@ -12,7 +12,6 @@ import buildcraft.additionalpipes.pipes.PipeBehaviorPriorityInsertion;
 import buildcraft.additionalpipes.pipes.PipeBehaviorSwitch;
 import buildcraft.additionalpipes.pipes.PipeBehaviorTeleportFluids;
 import buildcraft.additionalpipes.pipes.PipeBehaviorTeleportItems;
-import buildcraft.additionalpipes.pipes.PipeBehaviorTeleportPower;
 import buildcraft.additionalpipes.pipes.PipeBehaviorWaterPump;
 import buildcraft.additionalpipes.utils.PipeCreator;
 import buildcraft.api.mj.MjAPI;
@@ -92,32 +91,32 @@ public class APPipeDefintions
 	public static void createPipes()
 	{
 		additionPipeDef = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipe_items_addition").logic(PipeBehaviorAddition::new, PipeBehaviorAddition::new).define();
-		additionPipeItem = PipeCreator.createPipeItemAndRecipe(1, additionPipeDef, false, " R ", "RCR", " R ", 'C', BCTransportItems.pipeItemClay, 'R', "dustRedstone");
+		additionPipeItem = PipeCreator.createPipeItem(additionPipeDef);
 		
 		advWoodPipeDef = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipe_items_adv_wood").texSuffixes("_output", "_input").logic(PipeBehaviorAdvWood::new, PipeBehaviorAdvWood::new).define();
-		advWoodPipeItem = PipeCreator.createPipeItemAndRecipe(8, advWoodPipeDef, false, "WgW", 'W', "gearWood", 'g', "blockGlass");
+		advWoodPipeItem = PipeCreator.createPipeItem(advWoodPipeDef);
 		
 		closedPipeDef = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipe_items_closed").texSuffixes("_open", "_closed").logic(PipeBehaviorClosed::new, PipeBehaviorClosed::new).define();
-		closedPipeItem = PipeCreator.createPipeItemAndRecipe(1, closedPipeDef, true, BCTransportItems.pipeItemVoid, "gearIron");
+		closedPipeItem = PipeCreator.createPipeItem(closedPipeDef);
 		
 		PipeDefinitionBuilder distPipeDefBuilder = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipe_items_distribution").logic(PipeBehaviorDistribution::new, PipeBehaviorDistribution::new);
 		attachSidedSuffixes(distPipeDefBuilder);
 		distPipeDefBuilder.itemTex(EnumFacing.EAST.ordinal());
 		distributionPipeDef = distPipeDefBuilder.define();
-		distributionPipeItem = PipeCreator.createPipeItemAndRecipe(1, distributionPipeDef, false, " r ", "IgI", 'r', "dustRedstone", 'I', "ingotIron", 'g', "blockGlass");
+		distributionPipeItem = PipeCreator.createPipeItem(distributionPipeDef);
 		
 		gravityFeedPipeDef = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipe_items_gravity_feed").texSuffixes("_up", "_sides").logic(PipeBehaviorGravityFeed::new, PipeBehaviorGravityFeed::new).define();
-		gravityFeedPipeItem = PipeCreator.createPipeItemAndRecipe(1, gravityFeedPipeDef, false, " S ", "IgI", " I ", 'S', "stone", 'I', "ingotIron", 'g', "blockGlass");
+		gravityFeedPipeItem = PipeCreator.createPipeItem(gravityFeedPipeDef);
 		
 		PipeDefinitionBuilder priorityPipeDefBuilder = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipe_items_priority").logic(PipeBehaviorPriorityInsertion::new, PipeBehaviorPriorityInsertion::new);
 		attachSidedSuffixes(priorityPipeDefBuilder);
 		priorityPipeDef = priorityPipeDefBuilder.define();
-		priorityPipeItem = PipeCreator.createPipeItemAndRecipe(2, priorityPipeDef, true, distributionPipeItem, BCTransportItems.pipeItemClay);
+		priorityPipeItem = PipeCreator.createPipeItem(priorityPipeDef);
 		
 		PipeDefinitionBuilder jeweledPipeDefBuilder = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipe_items_jeweled").logic(PipeBehaviorJeweled::new, PipeBehaviorJeweled::new);
 		attachSidedSuffixes(jeweledPipeDefBuilder);
 		jeweledPipeDef = jeweledPipeDefBuilder.define();
-		jeweledPipeItem = PipeCreator.createPipeItemAndRecipe(2, jeweledPipeDef, false, " D ", "DGD", " D ", 'D', BCTransportItems.pipeItemDiamond, 'G', "gearGold");
+		jeweledPipeItem = PipeCreator.createPipeItem(jeweledPipeDef);
 		
 		itemsTeleportPipeDef = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipe_items_teleport").logic(PipeBehaviorTeleportItems::new, PipeBehaviorTeleportItems::new).define();
 		itemsTeleportPipeItem = PipeCreator.createPipeItem(itemsTeleportPipeDef);	
@@ -130,23 +129,22 @@ public class APPipeDefintions
 		AssemblyRecipeRegistry.register(new AssemblyRecipeBasic("teleportPipe", 10000 * MjAPI.MJ, tpRecipeIngredients, new ItemStack(itemsTeleportPipeItem, 8)));
 		
 		liquidsTeleportPipeDef = new PipeDefinitionBuilder().flowFluid().idTexPrefix("pipe_fluids_teleport").logic(PipeBehaviorTeleportFluids::new, PipeBehaviorTeleportFluids::new).define();
-		liquidsTeleportPipeItem = PipeCreator.createPipeItemAndRecipe(1, liquidsTeleportPipeDef, true, new Object[] {BCTransportItems.waterproof, itemsTeleportPipeItem});
+		liquidsTeleportPipeItem = PipeCreator.createPipeItem(liquidsTeleportPipeDef);
 		
-		powerTeleportPipeDef = new PipeDefinitionBuilder().flowPower().idTexPrefix("pipe_power_teleport").logic(PipeBehaviorTeleportPower::new, PipeBehaviorTeleportPower::new).define();
-		powerTeleportPipeItem = PipeCreator.createPipeItemAndRecipe(1, powerTeleportPipeDef, true, new Object[] {"dustRedstone", itemsTeleportPipeItem});
+		//powerTeleportPipeDef = new PipeDefinitionBuilder().flowPower().idTexPrefix("pipe_power_teleport").logic(PipeBehaviorTeleportPower::new, PipeBehaviorTeleportPower::new).define();
+		//powerTeleportPipeItem = PipeCreator.createPipeItemAndRecipe(1, powerTeleportPipeDef, true, new Object[] {"dustRedstone", itemsTeleportPipeItem});
 		
 		itemsSwitchPipeDef = new PipeDefinitionBuilder().flowItem().idTexPrefix("pipe_items_switch").texSuffixes("_closed", "_open").logic(PipeBehaviorSwitch::new, PipeBehaviorSwitch::new).define();
-		itemsSwitchPipeItem = PipeCreator.createPipeItemAndRecipe(8, itemsSwitchPipeDef, false, "GgI", 'g', "blockGlass", 'G', "gearGold", 'I', "gearIron");
+		itemsSwitchPipeItem = PipeCreator.createPipeItem(itemsSwitchPipeDef);
 		
 		fluidsSwitchPipeDef = new PipeDefinitionBuilder().flowFluid().idTexPrefix("pipe_fluids_switch").texSuffixes("_closed", "_open").logic(PipeBehaviorSwitch::new, PipeBehaviorSwitch::new).define();
-		fluidsSwitchPipeItem = PipeCreator.createPipeItemAndRecipe(1, fluidsSwitchPipeDef, true, new Object[] {BCTransportItems.waterproof, itemsSwitchPipeItem});
+		fluidsSwitchPipeItem = PipeCreator.createPipeItem(fluidsSwitchPipeDef);
 		
 		powerSwitchPipeDef = new PipeDefinitionBuilder().flowPower().idTexPrefix("pipe_power_switch").texSuffixes("_closed", "_open").logic(PipeBehaviorSwitch::new, PipeBehaviorSwitch::new).define();
-		powerSwitchPipeItem = PipeCreator.createPipeItemAndRecipe(1, powerSwitchPipeDef, true, new Object[] {"dustRedstone", itemsSwitchPipeItem});
+		powerSwitchPipeItem = PipeCreator.createPipeItem(powerSwitchPipeDef);
 		
 		waterPumpPipeDef = new PipeDefinitionBuilder().flowFluid().idTexPrefix("pipe_fluids_water_pump").logic(PipeBehaviorWaterPump::new, PipeBehaviorWaterPump::new).define();
-		waterPumpPipeItem = PipeCreator.createPipeItemAndRecipe(1, waterPumpPipeDef, false, " L ", "rPr", " W ", 'r', "dustRedstone", 'P', "gearIron", 'L',
-				BCTransportItems.pipeFluidGold, 'W', BCTransportItems.pipeFluidWood);
+		waterPumpPipeItem = PipeCreator.createPipeItem(waterPumpPipeDef);
 	}
 	
 	public static void setFluidCapacities()

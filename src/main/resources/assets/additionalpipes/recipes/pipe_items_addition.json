@@ -1,0 +1,23 @@
+{
+	"type": "forge:ore_shaped",
+	"pattern": [
+		" R ",
+		"RCR",
+		" R "
+	],
+	"key": {
+		"C": {
+			"item": "buildcrafttransport:pipe_clay_item",
+			"data": 0
+		},
+		"R": {
+			"type": "forge:ore_dict",
+			"ore": "dustRedstone"
+		}
+	},
+	"result": {
+		"item": "additionalpipes:pipe_items_addition",
+		"data": 0
+	}
+
+}

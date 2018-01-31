@@ -1,0 +1,26 @@
+{
+	"type": "forge:ore_shaped",
+	"pattern": [
+		"GSG",
+		"GIG",
+		"G G"
+	],
+	"key": { 	
+		"I": {
+			"type": "forge:ore_dict", 
+			"ore": "ingotIron"
+		},
+		"G": {
+			"type": "forge:ore_dict", 
+			"ore": "ingotGold"
+		},
+		"S": {
+			"type": "forge:ore_dict", 
+			"ore": "stickWood"
+		}
+	},
+	"result": {
+		"item": "additionalpipes:dog_deaggravator"
+	}
+	
+}

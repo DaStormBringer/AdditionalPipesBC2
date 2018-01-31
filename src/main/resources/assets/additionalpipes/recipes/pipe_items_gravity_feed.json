@@ -1,0 +1,28 @@
+{
+	"type": "forge:ore_shaped",
+	"pattern": [
+		" S ",
+		"IgI",
+		" S "
+	],
+	"key": {
+		"I": {
+			"type": "forge:ore_dict",
+			"ore": "ingotIron"
+		},
+		"g": {
+			"type": "forge:ore_dict",
+			"ore": "blockGlass"
+		},
+		"S": {
+			"type": "forge:ore_dict",
+			"ore": "stone"
+		}
+	},
+	"result": {
+		"item": "additionalpipes:pipe_items_gravity_feed",
+		"count": 1,
+		"data": 0
+	}
+
+}

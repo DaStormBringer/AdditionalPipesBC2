@@ -1,0 +1,18 @@
+{
+	"type": "forge:ore_shapeless",
+	"ingredients": [{
+			"item": "buildcrafttransport:pipe_clay_item",
+			"data": 0
+		},
+		{
+			"item": "additionalpipes:pipe_items_distribution",
+			"data": 0
+		}
+	],
+	"result": {
+		"item": "additionalpipes:pipe_items_priority",
+		"count": 2,
+		"data": 0
+	}
+
+}
