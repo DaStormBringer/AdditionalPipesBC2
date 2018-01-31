@@ -1,0 +1,17 @@
+{
+    "entry_mask": "<mod>:compat/buildcraft/guide/<lang>/<type>/<page>",
+    "default_tags": {
+        "mod": "additionalpipes"
+    },
+    "contents": [
+        {
+            "title": "item.pipe.ap.pipe_items_teleport.name",
+            "item_stack": "(additionalpipes:pipe_items_teleport)",
+            "page": "pipe_items_teleport.md",
+            "type_tags": {
+                "type": "pipe",
+                "sub_type": "pipe_item"
+            }
+        }
+    ]
+}
