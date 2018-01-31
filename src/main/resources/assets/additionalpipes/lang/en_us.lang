@@ -11,7 +11,6 @@ item.pipe.ap.pipe_fluids_switch.name=Switch Fluid Pipe
 item.pipe.ap.pipe_items_switch.name=Switch Transport Pipe
 item.pipe.ap.pipe_fluids_water_pump.name=Water Pump Pipe
 item.pipe.ap.pipe_items_addition.name=Addition Transport Pipe
-item.PipeLiquidsObsidian.name=Obsidian Fluid Pipe
 item.pipe.ap.pipe_items_jeweled.name=Jeweled Transport Pipe
 
 #regular items & blocks
@@ -23,6 +22,22 @@ gui.priority_insertion.title=Priority Insertion Pipe
 
 #Distribution Pipe
 gui.distribution_pipe.title=Distribution Pipe
+
+# Pipe Tooltips
+tip.pipe.ap.pipe_items_priority=Fills each connected side in a user-defined order
+tip.pipe.ap.pipe_items_adv_wood=Extraction pipe allowing simple item filtering
+tip.pipe.ap.pipe_items_gravity_feed=Extracts items slowly from the bottom of an inventory without needing power
+tip.pipe.ap.pipe_items_teleport=Instantly transports items between linked pipes
+tip.pipe.ap.pipe_items_distribution=Outputs a configurable ratio of items to each side
+tip.pipe.ap.pipe_items_closed=Instead of dropping items, stores them in its internal inventory
+tip.pipe.ap.pipe_fluids_teleport=Instantly transports fluids between connected pipes
+tip.pipe.ap.pipe_power_teleport=Instantly transports power between connected pipes
+tip.pipe.ap.pipe_power_switch=Disconnects from neighboring pipes if it receives a redstone signal
+tip.pipe.ap.pipe_fluids_switch=Disconnects from neighboring pipes if it receives a redstone signal
+tip.pipe.ap.pipe_items_switch=Disconnects from neighboring pipes if it receives a redstone signal
+tip.pipe.ap.pipe_fluids_water_pump=Outputs a small amount of water if placed over a water source block
+tip.pipe.ap.pipe_items_addition=Adds items to adjacent inventories only if they already have that item
+tip.pipe.ap.pipe_items_jeweled=Highly capable and configurable sorting pipe
 
 # Jeweled Pipe GUI
 gui.jeweled_pipe.title=Jeweled Pipe
@@ -75,9 +90,12 @@ tooltip.dog_deaggravator=Calms down your dogs
 itemGroup.apcreativetab=Additional Pipes
 
 # chat stuff
-command.ap.usage=/additionalpipes teleport <items|fluids|power>
+command.ap.usage=Usage: /additionalpipes teleport <items|fluids|power>
 command.ap.pipelist_header=Teleport Pipes: 
 message.ap.accessdenied=Access denied!  This pipe belongs to %s
 
 # Subtitle for when the Dog Deaggravator is used
-subtitle.ap.dog_deaggravator=Dingdingding!
+subtitle.ap.dog_deaggravator=Bell ringing
+
+# Name of Additional Pipes chapter in the BC Guide
+buildcraft.guide.chapter.mod.additionalpipes=Additional Pipes
