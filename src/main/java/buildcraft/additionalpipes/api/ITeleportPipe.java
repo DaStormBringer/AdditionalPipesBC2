@@ -13,7 +13,7 @@ import net.minecraft.util.math.BlockPos;
  * @author Jamie
  *
  */
-public interface ITeleportPipe 
+public interface ITeleportPipe
 {
 	public void setFrequency(int freq);
 	
@@ -47,4 +47,9 @@ public interface ITeleportPipe
 	public String getOwnerName();
 
 	public TilePipeHolder getContainer();
+	
+	/**
+	 * Checks two teleport pipes for equality.  The teleport manager will remove entries that are equal according to this method when adding a new pipe.
+	 */
+	public boolean equals(Object obj);
 }

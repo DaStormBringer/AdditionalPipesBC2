@@ -57,7 +57,7 @@ public class TileTeleportTether extends TileEntity {
 		stopChunkLoading();
 		chunkTicket = ticket;
 		for(ChunkPos coord : getLoadArea()) {
-			Log.info(String.format("Force loading chunk %s in %s", coord, getWorld().provider.getClass()));
+			Log.info(String.format("Teleport Tether @ %s: Force loading chunk %s in %s", getPos().toString(), coord, getWorld().provider.getClass()));
 			ForgeChunkManager.forceChunk(chunkTicket, coord);
 		}
 	}

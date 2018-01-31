@@ -15,7 +15,6 @@ import buildcraft.additionalpipes.pipes.TeleportManager;
 import buildcraft.additionalpipes.sound.APSounds;
 import buildcraft.additionalpipes.test.TeleportManagerTest;
 import buildcraft.additionalpipes.utils.Log;
-import buildcraft.additionalpipes.utils.PipeCreator;
 import buildcraft.api.statements.ITriggerInternal;
 import buildcraft.api.statements.StatementManager;
 import buildcraft.lib.registry.CreativeTabManager;
@@ -39,6 +38,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -48,7 +48,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 public class AdditionalPipes {
 	public static final String MODID = "additionalpipes";
 	public static final String NAME = "Additional Pipes";
-	public static final String VERSION = "6.0.0.4";
+	public static final String VERSION = "6.0.0.5";
 
 	@Instance(MODID)
 	public static AdditionalPipes instance;
@@ -127,13 +127,7 @@ public class AdditionalPipes {
 	@SubscribeEvent
 	public void registerRecipes(RegistryEvent.Register<IRecipe> event)
 	{
-		Log.info("Registering recipes");
-		
-		PipeCreator.onRecipeRegisterEvent(event.getRegistry());
-		
-		ShapedOreRecipe deaggravatorRecipe = new ShapedOreRecipe(new ResourceLocation(MODID, "recipes/dog_deaggravator"), dogDeaggravator, "gsg", "gig", "g g", 'i', "ingotIron", 'g', "ingotGold", 's', "stickWood");
-		deaggravatorRecipe.setRegistryName("dog_deaggravator");
-		event.getRegistry().register(deaggravatorRecipe);
+		Log.info("Registering recipes");		
 		
 		if(APConfiguration.enableChunkloaderRecipe)
 		{
@@ -193,6 +187,11 @@ public class AdditionalPipes {
 	@EventHandler
 	public void onServerStart(FMLServerStartingEvent event) {
 		event.registerServerCommand(new CommandAdditionalPipes());
+	}
+
+	@EventHandler
+	public void onServerStopped(FMLServerStoppedEvent event) {
+		Log.debug("World unloaded, clearing teleport manager");
 		TeleportManager.instance.reset();
 	}
 

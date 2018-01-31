@@ -35,7 +35,14 @@ public abstract class APPipe extends PipeBehaviour
 	 */
 	public BlockPos getPos()
 	{
-		return pipe.getHolder().getPipePos();
+		if(pipe!= null && pipe.getHolder() != null)
+		{
+			return pipe.getHolder().getPipePos();
+		}
+		else
+		{
+			return null;
+		}
 	}
 	
 	/**
@@ -57,11 +64,11 @@ public abstract class APPipe extends PipeBehaviour
 	}
 	
 	/**
-	 * Returns true if this behavior is instantiated on the server
+	 * Returns true if this behavior is instantiated on a dedicated or integrated server
 	 * @return
 	 */
 	protected boolean isServer()
 	{
-		return pipe.getHolder().getPipeWorld().isRemote;
+		return !pipe.getHolder().getPipeWorld().isRemote;
 	}
 }

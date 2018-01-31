@@ -25,7 +25,7 @@ public class CommandAdditionalPipes extends CommandBase {
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		if(args.length > 0 && "teleport".equals(args[0])) 
+		if(args.length > 1 && "teleport".equals(args[0])) 
 		{
 			//let's be a bit lenient with plurals
 			
@@ -62,6 +62,10 @@ public class CommandAdditionalPipes extends CommandBase {
 				sb.append(pipe.ownerName);
 				sender.sendMessage(new TextComponentString(sb.toString()));
 			}
+		}
+		else
+		{
+			sender.sendMessage(new TextComponentTranslation("command.ap.usage"));
 		}
 	}
 

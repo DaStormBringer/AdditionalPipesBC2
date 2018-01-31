@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import com.google.common.collect.LinkedListMultimap;
@@ -14,8 +15,6 @@ import buildcraft.additionalpipes.api.TeleportManagerBase;
 import buildcraft.additionalpipes.api.TeleportPipeType;
 import buildcraft.additionalpipes.utils.Log;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
 
 
 public class TeleportManager extends TeleportManagerBase
@@ -51,33 +50,52 @@ public class TeleportManager extends TeleportManagerBase
 	}
 
 	@Override
-	public void add(ITeleportPipe pipe, int frequency)
+	public void add(ITeleportPipe newPipe, int frequency)
 	{
-		pipes.get(pipe.getType()).put(frequency, pipe);
-
-		//if unit tests are being run, pipe.container will be null.
-		if(pipe.getContainer() != null)
+		
+		Collection<ITeleportPipe> pipesInChannel = pipes.get(newPipe.getType()).get(frequency);
+		
+		// check if this pipe was left in the teleport manager because it didn't unload cleanly for some reason
+		// This should not normally happen, but I am trying to be a bit defensive here since the users have been complaining about bugs
+		for(Iterator<ITeleportPipe> pipesIter = pipesInChannel.iterator(); pipesIter.hasNext(); )
 		{
-			Log.debug(String.format("[TeleportManager] Pipe added: %s @ (%s), %d pipes in channel", pipe.getType().toString().toLowerCase(),
-					pipe.getPosition().toString(), getPipesInChannel(frequency, pipe.getType()).size()));
+			ITeleportPipe pipe = pipesIter.next();
+			if(pipe.equals(newPipe))
+			{
+				pipesIter.remove();
+			}
+		}
+		
+		pipesInChannel.add(newPipe);
+		
+		//if unit tests are being run, pipe.container will be null.
+		if(newPipe.getContainer() != null)
+		{
+			Log.debug(String.format("[TeleportManager] Pipe added: %s @ (%s), %d pipes in channel", newPipe.getType().toString().toLowerCase(),
+					newPipe.getPosition().toString(), getPipesInChannel(frequency, newPipe.getType()).size()));
 		}
 	}
 
 	@Override
-	public void remove(ITeleportPipe pipe, int frequency)
+	public void remove(ITeleportPipe pipeToRemove, int frequency)
 	{
-		if(FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+		Collection<ITeleportPipe> pipesInChannel = pipes.get(pipeToRemove.getType()).get(frequency);
+		
+		// Remove all pipes matching the one provided
+		for(Iterator<ITeleportPipe> pipesIter = pipesInChannel.iterator(); pipesIter.hasNext(); )
 		{
-			return;
-
+			ITeleportPipe pipe = pipesIter.next();
+			if(pipe.equals(pipeToRemove))
+			{
+				pipesIter.remove();
+			}
 		}
-		pipes.get(pipe.getType()).remove(frequency, pipe);
 
 		//if unit tests are being run, pipe.container will be null.
-		if(pipe.getContainer() != null)
+		if(pipeToRemove.getContainer() != null)
 		{
-			Log.debug(String.format("[TeleportManager] Pipe removed: %s @ (%s), %d pipes in channel", pipe.getType().toString().toLowerCase(),
-					pipe.getPosition().toString(), getPipesInChannel(frequency, pipe.getType()).size()));
+			Log.debug(String.format("[TeleportManager] Pipe removed: %s @ (%s), %d pipes in channel", pipeToRemove.getType().toString().toLowerCase(),
+					pipeToRemove.getPosition().toString(), getPipesInChannel(frequency, pipeToRemove.getType()).size()));
 		}
 	}
 
@@ -89,7 +107,7 @@ public class TeleportManager extends TeleportManagerBase
 		}
 
 		frequencyNames.clear();
-		Log.info("Reset teleport manager.");
+		Log.debug("Reset teleport manager.");
 	}
 
 	/**

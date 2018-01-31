@@ -129,13 +129,10 @@ public class ContainerTeleportPipe extends ContainerBC_Neptune {
 		super.onContainerClosed(player);
 		if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 		{
-			if(originalfreq != freq)
-			{
-				//remove the pipe from the old frequency
-				TeleportManager.instance.remove(pipe, originalfreq);
-				//re-add the pipe to the new frequency
-				TeleportManager.instance.add(pipe, freq);
-			}
+			//remove the pipe from the old frequency
+			TeleportManager.instance.remove(pipe, originalfreq);
+			//re-add the pipe to the new frequency
+			TeleportManager.instance.add(pipe, freq);
 
 		}
 	}

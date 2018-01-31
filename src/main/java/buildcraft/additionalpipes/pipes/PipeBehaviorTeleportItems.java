@@ -45,7 +45,10 @@ public class PipeBehaviorTeleportItems extends PipeBehaviorTeleport
 	{
 		NBTTagCompound nbt = super.writeToNbt();
 		
-		nbt.setByte("teleportSide", (byte) getTeleportSide().ordinal());
+		if(getTeleportSide() != null)
+		{
+			nbt.setByte("teleportSide", (byte) getTeleportSide().ordinal());
+		}
 		
 		return nbt;
 	}

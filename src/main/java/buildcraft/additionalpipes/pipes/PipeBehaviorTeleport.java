@@ -1,5 +1,6 @@
 package buildcraft.additionalpipes.pipes;
 
+import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
@@ -7,10 +8,13 @@ import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.additionalpipes.api.ITeleportPipe;
 import buildcraft.additionalpipes.api.TeleportPipeType;
 import buildcraft.additionalpipes.gui.GuiHandler;
+import buildcraft.additionalpipes.utils.Log;
 import buildcraft.additionalpipes.utils.PlayerUtils;
 import buildcraft.api.core.EnumPipePart;
 import buildcraft.api.transport.pipe.IPipe;
 import buildcraft.api.transport.pipe.PipeBehaviour;
+import buildcraft.api.transport.pipe.PipeEventHandler;
+import buildcraft.api.transport.pipe.PipeEventTileState;
 import buildcraft.lib.misc.EntityUtil;
 import buildcraft.transport.tile.TilePipeHolder;
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,6 +45,12 @@ public abstract class PipeBehaviorTeleport extends APPipe implements ITeleportPi
 	{
 		super(pipe);
 		this.type = type;
+		
+		if(isServer())
+		{
+			TeleportManager.instance.add(this, frequency);
+		}
+
 	}
 	
 	public PipeBehaviorTeleport(IPipe pipe, NBTTagCompound tagCompound, TeleportPipeType type)
@@ -56,6 +66,11 @@ public abstract class PipeBehaviorTeleport extends APPipe implements ITeleportPi
 			ownerName = tagCompound.getString("ownerName");
 		}
 		isPublic = tagCompound.getBoolean("isPublic");
+		
+		if(isServer())
+		{
+			TeleportManager.instance.add(this, frequency);
+		}
 	}
 	
 	@Override
@@ -110,25 +125,32 @@ public abstract class PipeBehaviorTeleport extends APPipe implements ITeleportPi
 		return type;
 	}
 	
-	// temporary, until Buildcraft events needed for state keeping are added
-	boolean isAddedToManager = false;
-	public void onTick()
+	@PipeEventHandler
+	public void onInvalidate(PipeEventTileState.Invalidate event)
 	{
-		if(((TilePipeHolder)pipe.getHolder()).isInvalid())
+		if(isServer())
 		{
-			if(isAddedToManager)
-			{
-				TeleportManager.instance.remove(this, frequency);
-				isAddedToManager = false;
-			}
+			Log.debug("Teleport pipe at " + getPos() + " invalidated");
+			TeleportManager.instance.remove(this, frequency);
 		}
-		else
+	}
+	
+	@PipeEventHandler
+	public void onChunkUnload(PipeEventTileState.ChunkUnload event)
+	{
+		if(isServer())
 		{
-			if(!isAddedToManager)
-			{
-				TeleportManager.instance.add(this, frequency);
-				isAddedToManager = true;
-			}
+			Log.debug("Teleport pipe at " + getPos() + " unloaded");
+			TeleportManager.instance.remove(this, frequency);
+		}
+	}
+	
+	@PipeEventHandler
+	public void onValidate(PipeEventTileState.Validate event)
+	{
+		if(isServer())
+		{
+			Log.debug("Teleport pipe at " + getPos() + " validated");
 		}
 	}
 
@@ -141,7 +163,7 @@ public abstract class PipeBehaviorTeleport extends APPipe implements ITeleportPi
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		TeleportManager.instance.remove(this, frequency);
+		
 	}
 
 	@Override
@@ -149,6 +171,8 @@ public abstract class PipeBehaviorTeleport extends APPipe implements ITeleportPi
 		super.onChunkUnload();
 		TeleportManager.instance.remove(this, frequency);
 	}*/
+	
+	
 	
 	@Override
 	public boolean onPipeActivate(EntityPlayer player, RayTraceResult trace, float hitX, float hitY, float hitZ, EnumPipePart part)  
@@ -196,6 +220,40 @@ public abstract class PipeBehaviorTeleport extends APPipe implements ITeleportPi
         	player.openGui(AdditionalPipes.instance, GuiHandler.PIPE_TP, pipe.getHolder().getPipeWorld(), pipePos.getX(), pipePos.getY(), pipePos.getZ());
         }
         return true;
+	}
+
+	/**
+	 * Checks two teleport pipes for equality.  The teleport manager will remove entries that are equal according to this method when adding a new pipe.
+	 */
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(obj instanceof ITeleportPipe)
+		{
+			ITeleportPipe pipe = (ITeleportPipe)obj;
+			
+			if(pipe.getType() == getType())
+			{
+				if(pipe.getState() == getState())
+				{
+					if(pipe.isPublic() == isPublic())
+					{
+						if(Objects.equals(pipe.getOwnerUUID(), getOwnerUUID()))
+						{
+							if(Objects.equals(pipe.getPosition(), getPosition()))
+							{
+								if(pipe.getFrequency() == getFrequency())
+								{
+									return true;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return false;
 	}
 
 	public void setFrequency(int freq) {
