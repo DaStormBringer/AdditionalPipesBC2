@@ -10,10 +10,14 @@ MinecraftForge-*.txt
 
 /minecraft/*
 /minecraft.1.7.10
+/minecraft-server
 !/minecraft/mods
 /build
 /.settings
 /.gradle
 
-/minecraft-server
 /buildcraft_resources
+
+*.iml
+/.idea/
+/classes/
