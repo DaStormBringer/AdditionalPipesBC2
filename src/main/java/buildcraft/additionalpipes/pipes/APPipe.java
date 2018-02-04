@@ -60,6 +60,10 @@ public abstract class APPipe extends PipeBehaviour
 	 */
 	protected boolean isClient()
 	{
+		if(pipe == null)
+		{
+			return false;
+		}
 		return pipe.getHolder().getPipeWorld().isRemote;
 	}
 	
@@ -69,6 +73,11 @@ public abstract class APPipe extends PipeBehaviour
 	 */
 	protected boolean isServer()
 	{
+		if(pipe == null)
+		{
+			return false;
+		}
+		
 		return !pipe.getHolder().getPipeWorld().isRemote;
 	}
 }
