@@ -29,7 +29,7 @@ public class GuiTeleportPipe extends GuiBC8<ContainerTeleportPipe> {
 		final static int OVERLAY_COLOR = 0xffd46c1f;
 		
 		public TeleportPipeLedger() {
-			super(GuiTeleportPipe.this, OVERLAY_COLOR, true);
+			super(GuiTeleportPipe.this.mainGui, OVERLAY_COLOR, true);
 			this.title = "gui.teleport.ledger.title";
 			
 			appendText(() -> ((pipe.state & 0x1) >= 1) ? I18n.format("gui.teleport.ledger.outputs", container.connectedPipes) : I18n.format("gui.teleport.ledger.inputs", container.connectedPipes), headerColour);
@@ -74,7 +74,7 @@ public class GuiTeleportPipe extends GuiBC8<ContainerTeleportPipe> {
 		xSize = 228;
 		ySize = 117;
 		
-		shownElements.add(new TeleportPipeLedger());
+		mainGui.shownElements.add(new TeleportPipeLedger());
 	}
 
 	@Override

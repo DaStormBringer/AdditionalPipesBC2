@@ -1,5 +1,6 @@
 package buildcraft.additionalpipes.utils;
 
+import buildcraft.additionalpipes.AdditionalPipes;
 import buildcraft.api.transport.pipe.PipeDefinition;
 import buildcraft.lib.registry.RegistrationHelper;
 import buildcraft.transport.item.ItemPipeHolder;
@@ -22,6 +23,7 @@ public class PipeCreator
 		item.setRegistryName(pipeDef.identifier.getResourcePath());
 		item.setUnlocalizedName("pipe.ap." + pipeDef.identifier.getResourcePath());
 		item.registerWithPipeApi();
+		item.setCreativeTab(AdditionalPipes.instance.creativeTab);
 		
 		regHelper.addItem(item);
 		

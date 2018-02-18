@@ -48,7 +48,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 public class AdditionalPipes {
 	public static final String MODID = "additionalpipes";
 	public static final String NAME = "Additional Pipes";
-	public static final String VERSION = "6.0.0.6";
+	public static final String VERSION = "6.0.0.7";
 
 	@Instance(MODID)
 	public static AdditionalPipes instance;
@@ -168,8 +168,12 @@ public class AdditionalPipes {
 		//set creative tab icon
 		creativeTab.setItem(new ItemStack(APPipeDefintions.itemsTeleportPipeItem));
 		
-		Log.info("Running Teleport Manager Tests");
-		TeleportManagerTest.runAllTests();
+		// having debug logging is a good indicator that we're in a development environment
+		if(APConfiguration.enableDebugLog)
+		{
+			Log.info("Running Teleport Manager Tests");
+			TeleportManagerTest.runAllTests();
+		}
 		
 		//set the reference in the API
 		TeleportManagerBase.INSTANCE = TeleportManager.instance;

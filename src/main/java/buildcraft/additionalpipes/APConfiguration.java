@@ -64,7 +64,7 @@ public class APConfiguration
 			filterRightclicksProperty.setComment("When right clicking on something with a gui, do not show the gui if you have a pipe in your hand");
 			filterRightclicks = filterRightclicksProperty.getBoolean();
 			
-			Property enableDebugLogProperty = config.get(Configuration.CATEGORY_GENERAL, "enableDebugLog", false);
+			Property enableDebugLogProperty = config.get(Configuration.CATEGORY_GENERAL, "enableDebugLog", true);
 			enableDebugLogProperty.setComment("Enable debug logging for development");
 			enableDebugLog = enableDebugLogProperty.getBoolean();
 			

@@ -63,24 +63,42 @@ public class PipeBehaviorTeleportItems extends PipeBehaviorTeleport
 	 * @return
 	 */
 	public EnumFacing getTeleportSide()
-	{		
+	{
+		// teleportSide can only be calculated on the server
+		if(isClient())
+		{
+			return null;
+		}
+		
 		// check if we need to recalculate the teleport side
 		if(teleportSide == null || pipe.isConnected(teleportSide) || !pipe.isConnected(teleportSide.getOpposite()))
 		{
-			Log.debug("[ItemTeleportPipe] Recalculating teleport side...");
+			Log.debug("[ItemTeleportPipe]" + getPosition().toString() + " Recalculating teleport side...");
 			teleportSide = null;
+			
+			boolean allSidesConnected = true;
 			
 			// for recalculation: 
 			// find the first unconnected side that is opposite to a connected side
 			for(EnumFacing side : EnumFacing.VALUES)
 			{
+				Log.debug("isConnected(" + side + ") = " + pipe.isConnected(side));
 				if(!pipe.isConnected(side) && pipe.isConnected(side.getOpposite()))
 				{
 					teleportSide = side;
+					break;
 				}
+				
+				allSidesConnected = allSidesConnected && pipe.isConnected(side);
 			}
 			
-			Log.debug("[ItemTeleportPipe] Teleport side set to " + String.valueOf(teleportSide));
+			// failing that, if all sides are connected, just arbitrarily choose down.
+			if(teleportSide == null && allSidesConnected)
+			{
+				teleportSide = EnumFacing.DOWN;
+			}
+			
+			Log.debug("[ItemTeleportPipe]" + getPosition().toString() + " Teleport side set to " + String.valueOf(teleportSide));
 
 		}
 		
@@ -151,11 +169,12 @@ public class PipeBehaviorTeleportItems extends PipeBehaviorTeleport
 		//couldn't find any, so give up
 		if(!found)
 		{
+			Log.debug("[ItemTeleportPipe]" + getPosition().toString() + "Unable to find a destination, dropping item " + event.getStack());
 			return;
 		}
 		
 		((PipeFlowItems)otherPipe.pipe.getFlow()).insertItemsForce(event.getStack(), otherPipe.getTeleportSide(), null, TELEPORTED_ITEM_SPEED); 
-		Log.debug(event.getStack() + " from " + getPosition() + " to " + otherPipe.getPosition());
+		Log.debug("[ItemTeleportPipe]" + getPosition().toString() + event.getStack() + " from " + getPosition() + " to " + otherPipe.getPosition());
 		event.setStack(ItemStack.EMPTY);
 	}
 	
@@ -164,7 +183,18 @@ public class PipeBehaviorTeleportItems extends PipeBehaviorTeleport
 	{
 		if(event.from != getTeleportSide())
 		{
-			event.increasePriority(getTeleportSide(), 100);
+			try
+			{
+				event.increasePriority(getTeleportSide(), 100);
+			}
+			catch(NullPointerException ex)
+			{
+				// it seems like if a connected pipe is being broken right as event.increasePriority() is called, the event gets a null priorities array,
+				// and we get this.
+				// Just ignore it.
+				Log.debug("Caught NPE from SideCheck.increasePriority()");
+			}
 		}
 	}
+	
 }

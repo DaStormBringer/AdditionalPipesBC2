@@ -8,6 +8,7 @@
 
 package buildcraft.additionalpipes.pipes;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -214,7 +215,7 @@ public class PipeBehaviorDistribution extends APPipe {
     }
     
     @Override
-    public void readPayload(PacketBuffer buffer, Side side, MessageContext ctx)
+    public void readPayload(PacketBuffer buffer, Side side, MessageContext ctx) throws IOException
     {
         super.readPayload(buffer, side, ctx);
         if (side == Side.CLIENT) 
