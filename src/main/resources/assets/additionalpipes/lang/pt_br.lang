@@ -1,18 +1,101 @@
-tile.teleport_tether.name=Teletransporte Tether
-item.PipeLiquidsRedstone.name=Tube de Redstone Fluida
-item.PipeItemsRedstone.name=Tubo de Transporte de Redstone
-item.PipeItemsAdvancedInsertion.name=Tubo de Inserção de Transporte
+item.pipe.ap.pipe_items_priority.name=Tubo de Inserção por Prioridade
 item.pipe.ap.pipe_items_adv_wood.name=Tubo de Transporte Avançado de Madeira
+item.pipe.ap.pipe_items_gravity_feed.name=Tubo de Alimentação por Gravidade 
 item.pipe.ap.pipe_items_distribution.name=Tubo de Distribuição de Transporte
-item.pipe.ap.pipe_items_closed.name=Tubo de Transporte Fechado [WIP]
-item.pipe.ap.pipe_items_teleport.name=Tubo de Transporte em Fase
-item.pipe.ap.pipe_fluids_teleport.name=Tubo de Fluido em Fase
-item.pipe.ap.pipe_power_teleport.name=Tubo Kinético em Fase
-item.pipe.ap.pipe_power_switch.name=Tube de Troca Kinético 
-item.pipe.ap.pipe_fluids_switch.name=Tube de Troca de Fluido
+item.pipe.ap.pipe_items_closed.name=Tubo de Transporte Fechado
+item.pipe.ap.pipe_items_teleport.name=Tubo de Teletransporte
+item.pipe.ap.pipe_fluids_teleport.name=Tubo de Teletransporte de Fluídos
+item.pipe.ap.pipe_power_teleport.name=Tubo de Teletransporte de Energia
+item.pipe.ap.pipe_power_switch.name=Tubo de Troca Kinético
+item.pipe.ap.pipe_fluids_switch.name=Tubo de Troca de Fluido
 item.pipe.ap.pipe_items_switch.name=Tubo de Troca de Transporte
 item.pipe.ap.pipe_fluids_water_pump.name=Tubo da Bomba d'água
+item.pipe.ap.pipe_items_addition.name=Addition Transport Pipe
+item.pipe.ap.pipe_items_jeweled.name=Tubo de Transporte de Diamante Avançado 
 
-key.lasers=Alterna a exibição dos 'chunks' carregados
+#regular items & blocks
+item.dog_deaggravator.name=Acalmador de Cães
+tile.teleport_tether.name=Fluxo de teletransporte
 
-tip.teleportPipe=Transporta seu material sem a necessidade para uma longa tubulação
+# Priority Insertion Pipe
+gui.priority_insertion.title=Tubo de Inserção por Prioridade
+
+#Distribution Pipe
+gui.distribution_pipe.title=Distribution Pipe
+
+# Pipe Tooltips
+tip.pipe.ap.pipe_items_priority=Fills each connected side in a user-defined order
+tip.pipe.ap.pipe_items_adv_wood=Tubo de extração que permite uma simples filtragem de itens
+tip.pipe.ap.pipe_items_gravity_feed=Extrai itens devagar, do bloco acima deste tubo, sem precisar de energia
+tip.pipe.ap.pipe_items_teleport=Transporta itens entre os tubos ligados no mesmo canal
+tip.pipe.ap.pipe_items_distribution=Outputs a configurable ratio of items to each side
+tip.pipe.ap.pipe_items_closed=Ao invés de derrubar itens, armazena no inventório interno
+tip.pipe.ap.pipe_fluids_teleport=Transporta fluídos entre os tubos ligados no mesmo canal
+tip.pipe.ap.pipe_power_teleport=Transporta energia entre os tubos ligados no mesmo canal
+tip.pipe.ap.pipe_power_switch=Desconecta dos tubos vizinhos ao receber sinal de redstone
+tip.pipe.ap.pipe_fluids_switch=Desconecta dos tubos vizinhos ao receber sinal de redstone
+tip.pipe.ap.pipe_items_switch=Desconecta dos tubos vizinhos ao receber sinal de redstone
+tip.pipe.ap.pipe_fluids_water_pump=Libera uma pequena quantidade de água se posto abaixo de uma fonte de água
+tip.pipe.ap.pipe_items_addition=Adds items to adjacent inventories only if they already have that item
+tip.pipe.ap.pipe_items_jeweled=Tubo de diamante avançado, com alta capacidade de roteamento de itens
+
+# Jeweled Pipe GUI
+gui.jeweled_pipe.title=Tubo de Diamante Avançado
+#tab names
+gui.jeweled_pipe.tab.up=Topo
+gui.jeweled_pipe.tab.down=Baixo
+gui.jeweled_pipe.tab.north=Norte
+gui.jeweled_pipe.tab.south=Sul
+gui.jeweled_pipe.tab.east=Leste
+gui.jeweled_pipe.tab.west=Oeste
+#buttons
+gui.jeweled_pipe.match=Match:
+gui.jeweled_pipe.NBT=NBT
+gui.jeweled_pipe.metadata=Meta
+gui.jeweled_pipe.acceptUnsorted=Aceitar desord.
+
+# Closed Pipe GUI
+gui.closed_pipe.title=Closed Pipe
+
+# Adv. Wood Pipe GUI
+gui.advwood_pipe.title=Tubo de Madeira Avançado
+gui.advwood_pipe.blacklist=Itens excluídos
+gui.advwood_pipe.whitelist=Itens requeridos
+
+# Teleport Pipe GUI
+# NOTE: "ledger" refers to the menu that expands on the side of the Teleport Pipe GUI when you click the icon
+gui.teleport.ledger.title=Tubos conectados
+gui.teleport.ledger.owner=Dono: %s
+gui.teleport.ledger.outputs=Saídas: %d
+gui.teleport.ledger.inputs=Entradas: %s
+gui.teleport.frequency=Frequência: %d
+gui.teleport.coordPair=Coords: (%d, %d, %d)
+gui.teleport.send_only=Envio apenas
+gui.teleport.send_and_receive=Enviar e Receber
+gui.teleport.receive_only=Receber apenas
+gui.teleport.disabled=Desativado
+gui.teleport.public=Publico
+gui.teleport.private=Privado
+
+# name of "closed pipe is closed" trigger
+trigger.pipe_closed=Tubo fechado (armazenando items) 
+
+key.lasers=Mostrar lasers de chunks
+
+#tooltips for teleport pipes
+tip.teleportPipe=Chega de longas tubulações!
+
+tooltip.dog_deaggravator=Acalma seus cães
+
+itemGroup.apcreativetab=Additional Pipes
+
+# chat stuff
+command.ap.usage=Usage: /additionalpipes teleport <items|fluids|power>
+command.ap.pipelist_header=Teleport Pipes: 
+message.ap.accessdenied=Acesso negado! Este tubo pertence a %s
+
+# Subtitle for when the Dog Deaggravator is used
+subtitle.ap.dog_deaggravator=Sininho tocando
+
+# Name of Additional Pipes chapter in the BC Guide
+buildcraft.guide.chapter.mod.additionalpipes=Additional Pipes
