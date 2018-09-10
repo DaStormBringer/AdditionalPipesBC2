@@ -73,7 +73,7 @@ public class SideFilterData implements ICapabilityProvider
     
     public void readFromNBT(NBTTagCompound nbtTagCompound)
     {
-    	inventory.deserializeNBT(nbtTagCompound);
+    	inventory.deserializeNBT(nbtTagCompound.getCompoundTag("inventory"));
         
         matchNBT = nbtTagCompound.getBoolean("matchNBT");
         matchMetadata = nbtTagCompound.getBoolean("matchMetadata");
