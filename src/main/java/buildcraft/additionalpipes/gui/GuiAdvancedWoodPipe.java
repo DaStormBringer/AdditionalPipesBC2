@@ -52,6 +52,13 @@ public class GuiAdvancedWoodPipe extends GuiContainer {
 		buttons[0] = new GuiButton(1, guiX + 8, guiY + 40, 140, 20, "");
 		buttonList.add(buttons[0]);
 	}
+	
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) 
+    {
+        this.drawDefaultBackground();
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        this.renderHoveredToolTip(mouseX, mouseY);
+    }
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int p1, int p2) 
