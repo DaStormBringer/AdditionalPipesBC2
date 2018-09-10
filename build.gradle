@@ -12,7 +12,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "6.0.0.7"
+version = "6.0.0.8"
 group= "com.buildcraft.additionalpipes" 
 archivesBaseName = "additionalpipes"
 
@@ -47,7 +47,7 @@ repositories {
 }
 
 dependencies {
-	compile name: 'buildcraft', version: "7.99.15", classifier: "dev", ext: 'jar'
+	compile name: 'buildcraft', version: "7.99.17", classifier: "dev", ext: 'jar'
 	//compile name: 'buildcraft-compat', version: "7.99.14", classifier: "dev", ext: 'jar'
 	
 	// compile against the JEI API but do not include it at runtime
