@@ -268,7 +268,7 @@ public abstract class PipeBehaviorTeleport extends APPipe implements ITeleportPi
 	@Override
 	public TilePipeHolder getContainer()
 	{
-		// if unit tests are being run, pipe will br null
+		// if unit tests are being run, pipe will be null
 		if(pipe != null)
 		{
 			return (TilePipeHolder) pipe.getHolder();

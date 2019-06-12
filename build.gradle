@@ -26,11 +26,7 @@ minecraft {
 repositories {
 	ivy {
 		name "BuildCraft"
-		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
-	}
-	ivy {
-		name "BuildCraftCompat"
-		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraftCompat/[revision]/[module]-[revision]-[classifier].[ext]"
+		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-main-[revision]-[classifier].[ext]"
 	}
 	maven 
 	{
@@ -47,8 +43,7 @@ repositories {
 }
 
 dependencies {
-	compile name: 'buildcraft', version: "7.99.17", classifier: "dev", ext: 'jar'
-	//compile name: 'buildcraft-compat', version: "7.99.14", classifier: "dev", ext: 'jar'
+	compile name: 'buildcraft', version: "7.99.24.1", classifier: "dev", ext: 'jar'
 	
 	// compile against the JEI API but do not include it at runtime
 	deobfProvided "mezz.jei:jei_${mc_version}:${jei_version}:api"

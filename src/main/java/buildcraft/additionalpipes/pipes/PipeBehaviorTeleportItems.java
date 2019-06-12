@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import buildcraft.additionalpipes.api.TeleportPipeType;
 import buildcraft.additionalpipes.utils.Log;
 import buildcraft.api.transport.pipe.IPipe;
+import buildcraft.api.transport.pipe.PipeBehaviour;
 import buildcraft.api.transport.pipe.PipeEventHandler;
 import buildcraft.api.transport.pipe.PipeEventItem;
 import buildcraft.transport.pipe.flow.PipeFlowItems;
@@ -53,6 +54,27 @@ public class PipeBehaviorTeleportItems extends PipeBehaviorTeleport
 		return nbt;
 	}
 	
+	@Override
+	public boolean canConnect(EnumFacing face, PipeBehaviour other)
+	{
+		// can't connect to all 6 sides since one side has to be the teleport side
+		int numConnectedSides = 0; 
+		for(EnumFacing direction : EnumFacing.VALUES)
+		{
+			if(pipe.isConnected(direction))
+			{
+				++numConnectedSides;
+			}
+		}
+		
+		if(numConnectedSides >= 5)
+		{
+			return false;
+		}
+		
+		return super.canConnect(face, other);
+	}
+	
 	/**
 	 * Get the side of the pipe that items are teleported into and out of.
 	 * Items that come from this side are not teleported again.
@@ -82,7 +104,7 @@ public class PipeBehaviorTeleportItems extends PipeBehaviorTeleport
 			// find the first unconnected side that is opposite to a connected side
 			for(EnumFacing side : EnumFacing.VALUES)
 			{
-				Log.debug("isConnected(" + side + ") = " + pipe.isConnected(side));
+				//Log.debug("isConnected(" + side + ") = " + pipe.isConnected(side));
 				if(!pipe.isConnected(side) && pipe.isConnected(side.getOpposite()))
 				{
 					teleportSide = side;
@@ -92,9 +114,9 @@ public class PipeBehaviorTeleportItems extends PipeBehaviorTeleport
 				allSidesConnected = allSidesConnected && pipe.isConnected(side);
 			}
 			
-			// failing that, if all sides are connected, just arbitrarily choose down.
 			if(teleportSide == null && allSidesConnected)
 			{
+				// should never happen -- just arbitrarily choose down.
 				teleportSide = EnumFacing.DOWN;
 			}
 			
@@ -107,14 +129,19 @@ public class PipeBehaviorTeleportItems extends PipeBehaviorTeleport
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@PipeEventHandler
-	public void onTryDrop(PipeEventItem.Drop event)
+	public void onReachCenter(PipeEventItem.ReachCenter event)
 	{
+		// only process event on server side
 		if(pipe.getHolder().getPipeWorld().isRemote || !canSend()) 
 		{
 			return;
 		}
 		
-		// if the item is going to the teleportSide, teleport it.
+		// if the item is coming from the teleportSide, it has already been teleported, so leave it be
+		if(event.from == getTeleportSide())
+		{
+			return;
+		}
 
 		ArrayList<PipeBehaviorTeleportItems> connectedTeleportPipes = (ArrayList)TeleportManager.instance.getConnectedPipes(this, false, true);
 		
@@ -173,7 +200,7 @@ public class PipeBehaviorTeleportItems extends PipeBehaviorTeleport
 			return;
 		}
 		
-		((PipeFlowItems)otherPipe.pipe.getFlow()).insertItemsForce(event.getStack(), otherPipe.getTeleportSide(), null, TELEPORTED_ITEM_SPEED); 
+		((PipeFlowItems)otherPipe.pipe.getFlow()).insertItemsForce(event.getStack(), otherPipe.getTeleportSide(), event.colour, TELEPORTED_ITEM_SPEED); 
 		Log.debug("[ItemTeleportPipe]" + getPosition().toString() + event.getStack() + " from " + getPosition() + " to " + otherPipe.getPosition());
 		event.setStack(ItemStack.EMPTY);
 	}
@@ -181,6 +208,7 @@ public class PipeBehaviorTeleportItems extends PipeBehaviorTeleport
 	@PipeEventHandler
 	public void orderSides(PipeEventItem.SideCheck event)
 	{
+		// if an item is going to be teleported, make sure it goes toward the teleport side and not another pipe input
 		if(event.from != getTeleportSide())
 		{
 			try
