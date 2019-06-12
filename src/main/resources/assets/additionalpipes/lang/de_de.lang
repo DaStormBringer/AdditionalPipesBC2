@@ -1,14 +1,101 @@
-tile.teleport_tether.name=Teleport-Synchronisierer
-item.PipeLiquidsRedstone.name=Redstone-Wasserrohr
-item.PipeItemsRedstone.name=Redstone-Transportrohr
-item.PipeItemsAdvancedInsertion.name=Fortgeschr. Einfügungs-Transportrohr
+item.pipe.ap.pipe_items_priority.name=Priorität Einführungsrohr
 item.pipe.ap.pipe_items_adv_wood.name=Fortgeschr. Hölzernes Transportrohr
-item.pipe.ap.pipe_items_distribution.name=Verteilungs-Transportrohr
-item.pipe.ap.pipe_items_closed.name=Geschlossenes Transportrohr
-item.pipe.ap.pipe_items_teleport.name=Synchronisierbares Transportrohr
-item.pipe.ap.pipe_fluids_teleport.name=Synchronisierbares Wasserrohr
-item.pipe.ap.pipe_power_teleport.name=Synchronisierbare Energieleitung
+item.pipe.ap.pipe_items_gravity_feed.name=Schwerkrafttransportrohr
+item.pipe.ap.pipe_items_distribution.name=Verteilung Transportrohr
+item.pipe.ap.pipe_items_closed.name=Geschlossene Transportrohr
+item.pipe.ap.pipe_items_teleport.name=Teleportierendes Transportrohr
+item.pipe.ap.pipe_fluids_teleport.name=Teleportierendes Wasserrohr
+item.pipe.ap.pipe_power_teleport.name=Teleportierende Energieleitung [WIP]
 item.pipe.ap.pipe_power_switch.name=Schaltbare Energieleitung
 item.pipe.ap.pipe_fluids_switch.name=Schaltbares Wasserrohr
 item.pipe.ap.pipe_items_switch.name=Schaltbares Transportrohr
 item.pipe.ap.pipe_fluids_water_pump.name=Wasserpumprohr
+item.pipe.ap.pipe_items_addition.name=Zusatztransportrohr
+item.pipe.ap.pipe_items_jeweled.name=Juwelenbesetzt Transportrohr
+
+#regular items & blocks
+item.dog_deaggravator.name=Dog Deaggravator
+tile.teleport_tether.name=Teleport Tether [WIP]
+
+# Priority Insertion Pipe
+gui.priority_insertion.title=Priorität Einführungsrohr
+
+#Distribution Pipe
+gui.distribution_pipe.title=Verteilung Transportrohr
+
+# Pipe Tooltips
+tip.pipe.ap.pipe_items_priority=Füllt jede verbundene Seite in einer benutzerdefinierten Reihenfolge
+tip.pipe.ap.pipe_items_adv_wood=Extraktionsrohr für einfaches Filtern von Gegenständen
+tip.pipe.ap.pipe_items_gravity_feed=Extrahiert Gegenstände langsam aus dem unteren Bereich eines Inventars, ohne dass Strom benötigt wird
+tip.pipe.ap.pipe_items_teleport=Transportiert Gegenstände sofort zwischen verbundenen Rohren
+tip.pipe.ap.pipe_items_distribution=Gibt ein konfigurierbares Verhältnis von Elementen zu jeder Seite aus
+tip.pipe.ap.pipe_items_closed=Speichert die Objekte in ihrem internen Inventar, anstatt sie zu löschen
+tip.pipe.ap.pipe_fluids_teleport=Instantly transports fluids between connected pipes
+tip.pipe.ap.pipe_power_teleport=Transportiert Flüssigkeiten sofort zwischen angeschlossenen Rohren
+tip.pipe.ap.pipe_power_switch=Trennt die Verbindung zu benachbarten Rohren, wenn ein Redstone-Signal empfangen wird
+tip.pipe.ap.pipe_fluids_switch=Trennt die Verbindung zu benachbarten Rohren, wenn ein Redstone-Signal empfangen wird
+tip.pipe.ap.pipe_items_switch=Trennt die Verbindung zu benachbarten Rohren, wenn ein Redstone-Signal empfangen wird
+tip.pipe.ap.pipe_fluids_water_pump=Gibt eine kleine Menge Wasser aus, wenn es über einem Wasserquellenblock platziert wird
+tip.pipe.ap.pipe_items_addition=Fügt Gegenstände nur dann zu benachbarten Inventaren hinzu, wenn sie bereits über diesen Gegenstand verfügen
+tip.pipe.ap.pipe_items_jeweled=Hochleistungsfähiges und konfigurierbares Sortierrohr
+
+# Jeweled Pipe GUI
+gui.jeweled_pipe.title=Juwelenbesetzt Transportrohr
+#tab names
+gui.jeweled_pipe.tab.up=Oben
+gui.jeweled_pipe.tab.down=Unten
+gui.jeweled_pipe.tab.north=Nord
+gui.jeweled_pipe.tab.south=Süd
+gui.jeweled_pipe.tab.east=Ost
+gui.jeweled_pipe.tab.west=West
+#buttons
+gui.jeweled_pipe.match=Match:
+gui.jeweled_pipe.NBT=NBT
+gui.jeweled_pipe.metadata=Meta
+gui.jeweled_pipe.acceptUnsorted=Akzept. unsortiert
+
+# Closed Pipe GUI
+gui.closed_pipe.title=Geschlossenes Rohr
+
+# Adv. Wood Pipe GUI
+gui.advwood_pipe.title=Fortgeschr. Hölzernes Transportrohr
+gui.advwood_pipe.blacklist=Diese Gegenstände sind ausgeschlossen
+gui.advwood_pipe.whitelist=Diese Gegenstände sind erforderlich
+
+# Teleport Pipe GUI
+# NOTE: "ledger" refers to the menu that expands on the side of the Teleport Pipe GUI when you click the icon
+gui.teleport.ledger.title=Verbundene Rohre
+gui.teleport.ledger.owner=Eigentümer: %s
+gui.teleport.ledger.outputs=Ausgang: %d
+gui.teleport.ledger.inputs=Eingang: %s
+gui.teleport.frequency=Häufigkeit: %d
+gui.teleport.coordPair=Koordinaten: (%d, %d, %d)
+gui.teleport.send_only=Nur senden
+gui.teleport.send_and_receive=Senden & empfangen
+gui.teleport.receive_only=Nur empfangen
+gui.teleport.disabled=Deaktiviert
+gui.teleport.public=Öffentlich
+gui.teleport.private=Privat
+
+# name of "closed pipe is closed" trigger
+trigger.pipe_closed=Rohr geschlossen (Gegenstände lagern)
+
+key.lasers=Chunk ladegrenze anzeigen
+
+#tooltips for teleport pipes
+tip.teleportPipe=Schluss mit langen Pipelines!
+
+tooltip.dog_deaggravator=Beruhigt deine Hunde
+
+itemGroup.apcreativetab=Zusätzliche Rohre
+
+# chat stuff
+command.ap.usage=Verwendung: /additionalpipes teleport <items|fluids|power>
+command.ap.pipelist_header=Teleportierendes Rohr: 
+message.ap.accessdenied=Zugriff verweigert! Diese Rohr gehört %s
+
+# Subtitle for when the Dog Deaggravator is used
+subtitle.ap.dog_deaggravator=Glocke läutet
+
+# Name of Additional Pipes chapter in the BC Guide
+buildcraft.guide.chapter.mod.additionalpipes=Additional Pipes
