@@ -1,0 +1,10 @@
+{
+	"bellRing": {
+		"category": "master",
+		"sounds": [{
+			"name": "additionalpipes:copper-bell",
+			"stream": false
+		}],
+		"subtitle": "subtitle.ap.dog_deaggravator"
+	}
+}

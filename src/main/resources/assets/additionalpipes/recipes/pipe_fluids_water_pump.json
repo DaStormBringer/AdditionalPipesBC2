@@ -1,0 +1,32 @@
+{
+	"type": "forge:ore_shaped",
+	"pattern": [
+		" L ",
+		"rPr",
+		" W "
+	],
+	"key": {
+		"P": {
+			"type": "forge:ore_dict",
+			"ore": "gearIron"
+		},
+		"L": {
+			"item": "buildcrafttransport:pipe_gold_fluid",
+			"data": 0
+		},
+		"W": {
+			"item": "buildcrafttransport:pipe_wood_fluid",
+			"data": 0
+		},
+		"r": {
+			"type": "forge:ore_dict",
+			"ore": "dustRedstone"
+		}
+	},
+	"result": {
+		"item": "additionalpipes:pipe_fluids_water_pump",
+		"count": 1,
+		"data": 0
+	}
+
+}

@@ -1,0 +1,17 @@
+{
+	"type": "forge:ore_shapeless",
+	"ingredients": [{
+			"item": "buildcrafttransport:pipe_void_item",
+			"data": 0
+		},
+		{
+			"type": "forge:ore_dict",
+			"ore": "gearIron"
+		}
+	],
+	"result": {
+		"item": "additionalpipes:pipe_items_closed",
+		"data": 0
+	}
+
+}

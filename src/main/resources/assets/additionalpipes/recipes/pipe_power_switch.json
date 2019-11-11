@@ -1,0 +1,17 @@
+{
+	"type": "forge:ore_shapeless",
+	"ingredients": [{
+			"item": "additionalpipes:pipe_items_switch",
+			"data": 0
+		},
+		{
+			"type": "forge:ore_dict",
+			"ore": "dustRedstone"
+		}
+	],
+	"result": {
+		"item": "additionalpipes:pipe_power_switch",
+		"data": 0
+	}
+
+}

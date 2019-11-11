@@ -1,0 +1,95 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = "6.0.0.8"
+group= "com.buildcraft.additionalpipes" 
+archivesBaseName = "additionalpipes"
+
+minecraft {
+    version = "${mc_version}-14.23.0.2544"
+    runDir = "minecraft"
+	mappings = "snapshot_20171120"
+
+}
+// http://maven.apache.org/guides/mini/guide-naming-conventions.html
+repositories {
+	ivy {
+		name "BuildCraft"
+		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-main-[revision]-[classifier].[ext]"
+	}
+	maven 
+	{
+		// location of the maven that hosts JEI files
+    	name = "Progwml6 maven"
+    	url = "http://dvs1.progwml6.com/files/maven"
+  	}
+	maven
+	{
+    	// location of a maven mirror for JEI files, as a fallback
+    	name = "ModMaven"
+    	url = "modmaven.k-4u.nl"
+	}
+}
+
+dependencies {
+	compile name: 'buildcraft', version: "7.99.24.1", classifier: "dev", ext: 'jar'
+	
+	// compile against the JEI API but do not include it at runtime
+	deobfProvided "mezz.jei:jei_${mc_version}:${jei_version}:api"
+	// at runtime, use the full JEI jar
+	runtime "mezz.jei:jei_${mc_version}:${jei_version}"
+}
+// 30 96 254
+sourceSets {
+    api {
+        java {
+            srcDir 'src/java/buildcraft/additionalpipes/api'
+        }
+    }
+}
+
+sourceCompatibility = targetCompatibility = "1.8" // Need this here so eclipse task generates correctly.
+compileJava {
+    sourceCompatibility = targetCompatibility = "1.8"
+}
+
+processResources
+{
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+		
+	//exclude Paint.NET pdn files
+	exclude '**/*.pdn'
+
+    // replace stuff in mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        
+		include 'mcmod.info'
+		include 'AdditionalPipes.java'
+                
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+        
+    // copy everything else, that's not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'dev'
+}

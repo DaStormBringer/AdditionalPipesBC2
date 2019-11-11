@@ -1,0 +1,28 @@
+{
+	"type": "forge:ore_shaped",
+	"pattern": [
+		" r ",
+		"IgI",
+		" r "
+	],
+	"key": {
+		"I": {
+			"type": "forge:ore_dict",
+			"ore": "ingotIron"
+		},
+		"g": {
+			"type": "forge:ore_dict",
+			"ore": "blockGlass"
+		},
+		"r": {
+			"type": "forge:ore_dict",
+			"ore": "dustRedstone"
+		}
+	},
+	"result": {
+		"item": "additionalpipes:pipe_items_distribution",
+		"count": 1,
+		"data": 0
+	}
+
+}

@@ -1,0 +1,16 @@
+{
+	"type": "forge:ore_shapeless",
+	"ingredients": [{
+			"item": "additionalpipes:pipe_items_teleport",
+			"data": 0
+		},
+		{
+			"item": "buildcrafttransport:waterproof"
+		}
+	],
+	"result": {
+		"item": "additionalpipes:pipe_fluids_teleport",
+		"data": 0
+	}
+
+}

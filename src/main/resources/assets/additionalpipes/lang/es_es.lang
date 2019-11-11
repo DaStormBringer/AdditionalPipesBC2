@@ -1,0 +1,14 @@
+tile.teleport_tether.name=Atadura de Teleportación
+item.PipeLiquidsRedstone.name=Tubería de Fluidos de Piedra Roja
+item.PipeItemsRedstone.name=Tubería de Transporte de Piedra Roja
+item.PipeItemsAdvancedInsertion.name=Tubería de Transporte de Inserción
+item.pipe.ap.pipe_items_adv_wood.name=Tubería de Transporte de Madera Avanzada
+item.pipe.ap.pipe_items_distribution.name=Tubería de Transporte de Distribución
+item.pipe.ap.pipe_items_closed.name=Tuberia de Transporte Cerrada
+item.pipe.ap.pipe_items_teleport.name=Tubería de Transporte Escalonada
+item.pipe.ap.pipe_fluids_teleport.name=Tubería de Fluidos Escalonada
+item.pipe.ap.pipe_power_teleport.name=Tubería Kinetica Escalonada
+item.pipe.ap.pipe_power_switch.name=Tubería Kinetica con Interruptor
+item.pipe.ap.pipe_fluids_switch.name=Tubería de Fluidos con Interruptor
+item.pipe.ap.pipe_items_switch.name=Tubería de Transporte con Interruptor
+item.pipe.ap.pipe_fluids_water_pump.name=Tubería de Fluidos con Bomba

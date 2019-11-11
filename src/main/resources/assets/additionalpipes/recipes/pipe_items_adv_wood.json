@@ -1,0 +1,22 @@
+{
+	"type": "forge:ore_shaped",
+	"pattern": [
+		"WgW"
+	],
+	"key": {
+		"W": {
+			"type": "forge:ore_dict",
+			"ore": "gearWood"
+		},
+		"g": {
+			"type": "forge:ore_dict",
+			"ore": "blockGlass"
+		}
+	},
+	"result": {
+		"item": "additionalpipes:pipe_items_adv_wood",
+		"count": 8,
+		"data": 0
+	}
+
+}

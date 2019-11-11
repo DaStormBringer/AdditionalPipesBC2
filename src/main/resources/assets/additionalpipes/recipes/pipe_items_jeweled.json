@@ -1,0 +1,24 @@
+{
+	"type": "forge:ore_shaped",
+	"pattern": [
+		" D ",
+		"DGD",
+		" D "
+	],
+	"key": {
+		"D": {
+			"item": "buildcrafttransport:pipe_diamond_item",
+			"data": 0
+		},
+		"G": {
+			"item": "buildcraftsilicon:redstone_chipset",
+			"data": 2
+		}
+	},
+	"result": {
+		"item": "additionalpipes:pipe_items_jeweled",
+		"count": 2,
+		"data": 0
+	}
+
+}

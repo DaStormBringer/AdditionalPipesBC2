@@ -1,0 +1,10 @@
+[{
+  "modid": "additionalpipes",
+  "name": "Additional Pipes",
+  "version": "${version}",
+  "url": "https://github.com/tcooc/AdditionalPipesBC/",
+  "updateUrl": "",
+  "description": "Teleport, insertion, extraction, and other pipes.",
+  "credits": "Zeldo, DaStormBringer, AlexIIL",
+  "authorList": [ "Zeldo", "DaStormBringer", "MultipleMonomials", "Additional Pipes Contributors" ]
+}]
